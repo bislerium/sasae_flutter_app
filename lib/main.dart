@@ -1,6 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import './widgets/ngos.dart';
+import './screens/login_screen.dart';
+import './widgets/setting.dart';
 
 void main() => runApp(const MyApp());
 
@@ -11,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Sasae',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -22,15 +23,18 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
+        cardColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
+      routes: {LoginScreen.routeName: (context) => const LoginScreen()},
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -41,45 +45,156 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
+    String subtitle, VoidCallback func) {
+  return ListTile(
+    leading: Icon(
+      icon,
+      size: 30,
+      color: Theme.of(ctx).primaryColor,
+    ),
+    title: Text(title),
+    subtitle: Text(subtitle),
+    onTap: func,
+  );
+}
+
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void showModalSheet(BuildContext ctx) {
+    showModalBottomSheet(
+      context: ctx,
+      builder: (_) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              getPostModalItem(
+                  _, Icons.alarm, 'Normal Post', 'Hear the Image!', () => {}),
+              getPostModalItem(
+                  _, Icons.poll, 'Poll Post', 'Poll the Options!', () => {}),
+              getPostModalItem(_, Icons.request_quote, 'Request Post',
+                  'Request to Change!', () => {}),
+            ],
+          ),
+        );
+      },
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+            bottomRight: Radius.circular(0),
+            bottomLeft: Radius.circular(0)),
+      ),
+    );
   }
 
-  PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
+  var _selectedNavIndex = 0;
 
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.home),
-        title: ("Home"),
-        activeColorPrimary: CupertinoColors.activeBlue,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
+  List<Map<String, dynamic>> get screens => [
+        {
+          'widget': const Center(
+            child: NGOs(),
+          ),
+          'title': 'NGO',
+        },
+        {
+          'widget': const Center(
+            child: Icon(Icons.feed),
+          ),
+          'title': 'Feed',
+        },
+        {
+          'widget': const Center(
+            child: Icon(Icons.notifications),
+          ),
+          'title': 'Notification',
+        },
+        {
+          'widget': const Center(
+            child: Icon(Icons.person),
+          ),
+          'title': 'Profile',
+        },
+        {
+          'widget': const Setting(),
+          'title': 'Setting',
+        }
+      ];
+
+  FloatingActionButton getFloatingActionButton(
+      {required String text,
+      required IconData icon,
+      required VoidCallback function,
+      Color? buttonColor}) {
+    return FloatingActionButton.extended(
+      onPressed: function,
+      label: Text(text),
+      icon: Icon(icon),
+      backgroundColor: buttonColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15.0),
+        ),
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.settings),
-        title: ("Settings"),
-        activeColorPrimary: CupertinoColors.activeBlue,
-        inactiveColorPrimary: CupertinoColors.systemGrey,
-      ),
-    ];
+    );
   }
+
+  FloatingActionButton? _fabPerNavIndex() {
+    switch (_selectedNavIndex) {
+      case 1:
+        {
+          return getFloatingActionButton(
+            text: 'Post',
+            icon: Icons.post_add,
+            function: () => showModalSheet(context),
+          );
+        }
+      case 4:
+        {
+          return getFloatingActionButton(
+            text: 'Logout',
+            icon: Icons.logout,
+            function: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text('Logout?'),
+                content: const Text('"Do it with Passion or Not at all"'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context)
+                        .pushNamedAndRemoveUntil(LoginScreen.routeName,
+                            (Route<dynamic> route) => false),
+                    child: const Text('OK'),
+                  ),
+                ],
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
+                  ),
+                ),
+              ),
+              barrierDismissible: false,
+            ),
+            buttonColor: Colors.red,
+          );
+        }
+      default:
+        {
+          return null;
+        }
+    }
+  }
+
+  final _pc = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,47 +208,55 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(screens[_selectedNavIndex]['title']),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black87,
+        elevation: 0,
       ),
-      body: PersistentTabView(
-        context,
-        controller: _controller,
-        screens: [
-          Scaffold(
-            body: const Text('wowo'),
+      body: PageView(
+        children: screens.map((e) => e['widget'] as Widget).toList(),
+        onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
+        controller: _pc,
+      ),
+      floatingActionButton: _fabPerNavIndex(),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'NGO',
           ),
-          Scaffold(
-            body: const Text('wowo'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feed),
+            label: 'Feed',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notification',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Setting',
           ),
         ],
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Colors.white, // Default is Colors.white.
-        handleAndroidBackButtonPress: true, // Default is true.
-        resizeToAvoidBottomInset:
-            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        stateManagement: true, // Default is true.
-        hideNavigationBarWhenKeyboardShows:
-            true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: Colors.white,
-        ),
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: ItemAnimationProperties(
-          // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation(
-          // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle:
-            NavBarStyle.style1, // Choose the nav bar style with this property.
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        currentIndex: _selectedNavIndex, //New
+        onTap: (index) => {
+          setState(() {
+            _selectedNavIndex = index;
+            // _pc.jumpToPage(index);
+            _pc.animateToPage(
+              _selectedNavIndex,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.ease,
+            );
+          })
+        },
       ),
     );
   }
