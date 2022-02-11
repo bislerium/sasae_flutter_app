@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import './widgets/ngos.dart';
 import './screens/login_screen.dart';
 import './widgets/setting.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  FlutterNativeSplash.removeAfter(initialization);
+  runApp(const MyApp());
+}
+
+void initialization(BuildContext context) async {
+  // This is where you can initialize the resources needed by your app while
+  // the splash screen is displayed.  Remove the following example because
+  // delaying the user experience is a bad design practice!
+  // ignore_for_file: avoid_print
+  print('ready in 3...');
+  await Future.delayed(const Duration(seconds: 1));
+  print('ready in 2...');
+  await Future.delayed(const Duration(seconds: 1));
+  print('ready in 1...');
+  await Future.delayed(const Duration(seconds: 1));
+  print('go!');
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -28,13 +46,17 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
       ),
       home: const MyHomePage(),
-      routes: {LoginScreen.routeName: (context) => const LoginScreen()},
+      routes: {
+        LoginScreen.routeName: (context) => const LoginScreen(),
+        MyHomePage.routeName: (context) => const MyHomePage(),
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+  static const routeName = '/home';
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -73,12 +95,19 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              getPostModalItem(_, Icons.file_present_sharp, 'Normal Post',
+                  'Attach an Image!', () {
+                Navigator.pop(context);
+              }),
+              getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
+                  () {
+                Navigator.pop(context);
+              }),
               getPostModalItem(
-                  _, Icons.alarm, 'Normal Post', 'Hear the Image!', () => {}),
-              getPostModalItem(
-                  _, Icons.poll, 'Poll Post', 'Poll the Options!', () => {}),
-              getPostModalItem(_, Icons.request_quote, 'Request Post',
-                  'Request to Change!', () => {}),
+                  _, Icons.help_center, 'Request Post', 'Request to Change!',
+                  () {
+                Navigator.pop(context);
+              }),
             ],
           ),
         );
@@ -93,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  var _selectedNavIndex = 0;
+  var _selectedNavIndex = 1;
 
   List<Map<String, dynamic>> get screens => [
         {
@@ -194,7 +223,13 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  final _pc = PageController();
+  PageController? _pc;
+
+  @override
+  void initState() {
+    super.initState();
+    _pc = PageController(initialPage: 1);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -213,10 +248,13 @@ class _MyHomePageState extends State<MyHomePage> {
         foregroundColor: Colors.black87,
         elevation: 0,
       ),
-      body: PageView(
-        children: screens.map((e) => e['widget'] as Widget).toList(),
-        onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
-        controller: _pc,
+      body: SafeArea(
+        child: PageView(
+          children: screens.map((e) => e['widget'] as Widget).toList(),
+          onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
+          controller: _pc,
+          physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
+        ),
       ),
       floatingActionButton: _fabPerNavIndex(),
       bottomNavigationBar: BottomNavigationBar(
@@ -249,8 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onTap: (index) => {
           setState(() {
             _selectedNavIndex = index;
-            // _pc.jumpToPage(index);
-            _pc.animateToPage(
+            _pc!.animateToPage(
               _selectedNavIndex,
               duration: const Duration(milliseconds: 300),
               curve: Curves.ease,

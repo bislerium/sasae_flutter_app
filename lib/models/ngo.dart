@@ -6,7 +6,8 @@ class NGO {
   String? longitude;
   String? ngoURL;
   String? orgName;
-  String? estDate;
+  String? orgPhoto;
+  DateTime? estDate;
   List<String>? fieldOfWork;
   String? address;
   String? phone;
@@ -23,6 +24,7 @@ class NGO {
     this.longitude,
     this.ngoURL,
     this.orgName,
+    this.orgPhoto,
     this.estDate,
     this.fieldOfWork,
     this.address,
