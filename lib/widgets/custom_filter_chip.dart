@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomFilterChip extends StatefulWidget {
   final String chipLabel;
-  final List<CustomFilterChip> selectionList;
+  final List<String> selectionList;
 
   const CustomFilterChip(
       {Key? key, required this.chipLabel, required this.selectionList})
@@ -15,12 +15,6 @@ class CustomFilterChip extends StatefulWidget {
 class _CustomFilterChipState extends State<CustomFilterChip> {
   var _isSelected = false;
 
-  void unselect() {
-    setState(() {
-      _isSelected = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FilterChip(
@@ -31,8 +25,8 @@ class _CustomFilterChipState extends State<CustomFilterChip> {
         setState(() {
           _isSelected = value;
           _isSelected
-              ? widget.selectionList.add(widget)
-              : widget.selectionList.remove(widget);
+              ? widget.selectionList.add(widget.chipLabel)
+              : widget.selectionList.remove(widget.chipLabel);
         });
       },
     );

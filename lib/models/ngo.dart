@@ -1,7 +1,7 @@
 import 'bank.dart';
 
 class NGO {
-  int? id;
+  int id;
   String? latitude;
   String? longitude;
   String? ngoURL;
@@ -19,7 +19,7 @@ class NGO {
   String? panCertificateURL;
 
   NGO({
-    this.id,
+    required this.id,
     this.latitude,
     this.longitude,
     this.ngoURL,

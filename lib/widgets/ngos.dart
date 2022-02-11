@@ -1,10 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/widgets/ngo_tile.dart';
 import '../widgets/custom_filter_chip.dart';
 import '../models/ngo.dart';
 import 'package:faker/faker.dart';
-import 'package:filter_list/filter_list.dart';
 
 class NGOs extends StatefulWidget {
   const NGOs({Key? key}) : super(key: key);
@@ -18,6 +18,15 @@ class _NGOsState extends State<NGOs> {
 
   List<NGO> ngoDataList = []; // Actual Untouched DataList
   List<NGO> dataToShow = []; // Filtered/search data
+  List<String> selectedChips = [];
+  List<Widget> filterChips = [];
+  var filtered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getNGOData();
+  }
 
   void _getNGOData() {
     int length = Random().nextInt(100 - 20) + 20;
@@ -27,7 +36,7 @@ class _NGOsState extends State<NGOs> {
         return NGO(
           id: index,
           orgName: faker.company.name(),
-          orgPhoto: 'https://picsum.photos/500/500',
+          orgPhoto: faker.image.image(random: true),
           estDate: faker.date.dateTime(minYear: 2000, maxYear: 2022),
           address: faker.address.city(),
           fieldOfWork: List.generate(
@@ -41,19 +50,10 @@ class _NGOsState extends State<NGOs> {
     getFilterChips();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _getNGOData();
-  }
-
-  Future<void> _refresh() async {
+  Future<void> _refresh(BuildContext context) async {
     // await Future.delayed(Duration(seconds: 2));
-    setState(
-      () {
-        _getNGOData();
-      },
-    );
+    _getNGOData();
+    clear(context);
   }
 
   void _searchByName(String enteredName) {
@@ -72,10 +72,8 @@ class _NGOsState extends State<NGOs> {
     );
   }
 
-  List<CustomFilterChip> selectedChips = [];
-  List<Widget> filterChips = [];
-
   void getFilterChips() {
+    filtered = false;
     Set<String> fieldOfWork = {};
     for (var ngo in ngoDataList) {
       for (var field in ngo.fieldOfWork!) {
@@ -91,18 +89,34 @@ class _NGOsState extends State<NGOs> {
   }
 
   void applyFilter() {
-    List<String> fieldOfWork = selectedChips.map((e) {
-      return e.chipLabel;
-    }).toList();
     setState(() {
+      filtered = true;
       dataToShow = ngoDataList.where((element) {
         return element.fieldOfWork!
-            .any((element) => fieldOfWork.contains(element));
+            .any((element) => selectedChips.contains(element));
       }).toList();
     });
   }
 
+  void clear(BuildContext context) {
+    searchController.clear();
+    selectedChips.clear();
+    filtered = false;
+    setState(() {
+      dataToShow = ngoDataList;
+    });
+    FocusScope.of(context).unfocus();
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    searchController.dispose();
+    super.dispose();
+  }
+
   void showFilterModal(BuildContext ctx) {
+    selectedChips.clear();
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
@@ -115,7 +129,7 @@ class _NGOsState extends State<NGOs> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                  fontSize: 16,
                 ),
               ),
             ),
@@ -131,47 +145,52 @@ class _NGOsState extends State<NGOs> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const Spacer(
-                  flex: 1,
+            SizedBox(
+              height: 60,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 10,
+                      child: TextButton(
+                        child: const Text('Reset'),
+                        onPressed: () {
+                          clear(context);
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Flexible(
+                      fit: FlexFit.tight,
+                      flex: 10,
+                      child: ElevatedButton(
+                        child: const Text('Apply'),
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          )),
+                        ),
+                        onPressed: () {
+                          if (selectedChips.isNotEmpty) {
+                            applyFilter();
+                            Navigator.of(context).pop();
+                          }
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 4,
-                  child: TextButton(
-                    child: const Text('Reset'),
-                    onPressed: () {
-                      if (selectedChips.isNotEmpty) {
-                        selectedChips.clear();
-                        clear(context);
-                      }
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 4,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Navigator.of(context).pop();
-                      selectedChips.forEach((element) {
-                        print(element.chipLabel);
-                      });
-                      applyFilter();
-                    },
-                    child: const Text('Apply'),
-                  ),
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-              ],
+              ),
             ),
           ],
         );
@@ -187,21 +206,6 @@ class _NGOsState extends State<NGOs> {
     );
   }
 
-  void clear(BuildContext context) {
-    searchController.clear();
-    setState(() {
-      dataToShow = ngoDataList;
-    });
-    FocusScope.of(context).unfocus();
-  }
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -214,7 +218,7 @@ class _NGOsState extends State<NGOs> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: Theme.of(context).primaryColor.withAlpha(30),
+                    color: Theme.of(context).primaryColorLight,
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -222,7 +226,7 @@ class _NGOsState extends State<NGOs> {
                       children: [
                         Icon(
                           Icons.search,
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).primaryColorDark,
                         ),
                         Expanded(
                           child: Padding(
@@ -243,7 +247,7 @@ class _NGOsState extends State<NGOs> {
                             onTap: () => clear(context),
                             child: Icon(
                               Icons.clear,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).primaryColorDark,
                             ),
                           )
                       ],
@@ -253,12 +257,19 @@ class _NGOsState extends State<NGOs> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: IconButton(
-                  onPressed: () => showFilterModal(context),
-                  icon: Icon(
-                    Icons.filter_list,
-                    size: 30,
-                    color: Theme.of(context).primaryColor,
+                child: ClipOval(
+                  child: Container(
+                    color: filtered
+                        ? Theme.of(context).primaryColorLight
+                        : Colors.transparent,
+                    child: IconButton(
+                      color: Theme.of(context).primaryColorDark,
+                      onPressed: () => showFilterModal(context),
+                      icon: const Icon(
+                        Icons.filter_list,
+                        size: 30,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -269,133 +280,31 @@ class _NGOsState extends State<NGOs> {
           child: Container(
             margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
             child: RefreshIndicator(
-              onRefresh: _refresh,
-              child: dataToShow.isEmpty
-                  ? Center(
-                      child: searchController.text.isEmpty
-                          ? const Text('Empty NGO List, Please Refresh!')
-                          : const Text('No NGO found 😔'),
+              onRefresh: () => _refresh(context),
+              child: dataToShow.isEmpty && searchController.text.isNotEmpty
+                  ? const Center(
+                      child: Text('No NGO found 😔'),
                     )
-                  : ListView.builder(
+                  : ListView(
                       keyboardDismissBehavior:
                           ScrollViewKeyboardDismissBehavior.onDrag,
-                      itemCount: dataToShow.length,
                       physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Card(
-                            elevation: 12,
-                            shadowColor: Theme.of(context).primaryColorLight,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(14.0),
-                                      child: Image.network(
-                                        dataToShow[index].orgPhoto!,
-                                        fit: BoxFit.cover,
-                                        height: 100.0,
-                                        width: 100.0,
-                                      ),
+                      children: dataToShow.isEmpty
+                          ? [
+                              const Center(
+                                child: Text('Empty NGO List, Please Refresh!'),
+                              )
+                            ]
+                          : dataToShow
+                              .map((e) => Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: NGOTile(
+                                      key: ValueKey(e.id),
+                                      ngo: e,
                                     ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 100,
-                                        padding: const EdgeInsets.fromLTRB(
-                                            8, 0, 0, 0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.location_pin,
-                                                      size: 18,
-                                                      color: Theme.of(context)
-                                                          .primaryColor,
-                                                    ),
-                                                    Text(
-                                                      dataToShow[index]
-                                                          .address!,
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                    )
-                                                  ],
-                                                ),
-                                                Text(dataToShow[index]
-                                                    .estDate!
-                                                    .year
-                                                    .toString()),
-                                              ],
-                                            ),
-                                            Text(
-                                              dataToShow[index].orgName!,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 16),
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                              child: ListView.builder(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                itemCount: dataToShow[index]
-                                                    .fieldOfWork!
-                                                    .length,
-                                                itemBuilder: (context, _) {
-                                                  return Padding(
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        horizontal: 2),
-                                                    child: Chip(
-                                                      label: Text(
-                                                        dataToShow[index]
-                                                            .fieldOfWork![_],
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                      backgroundColor:
-                                                          Theme.of(context)
-                                                              .primaryColor
-                                                              .withAlpha(220),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () =>
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('You have clicked'),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                                  ))
+                              .toList(),
                     ),
             ),
           ),

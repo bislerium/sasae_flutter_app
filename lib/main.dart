@@ -90,26 +90,23 @@ class _MyHomePageState extends State<MyHomePage> {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              getPostModalItem(_, Icons.file_present_sharp, 'Normal Post',
-                  'Attach an Image!', () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
-                  () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(
-                  _, Icons.help_center, 'Request Post', 'Request to Change!',
-                  () {
-                Navigator.pop(context);
-              }),
-            ],
-          ),
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            getPostModalItem(
+                _, Icons.file_present_sharp, 'Normal Post', 'Attach an Image!',
+                () {
+              Navigator.pop(context);
+            }),
+            getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
+                () {
+              Navigator.pop(context);
+            }),
+            getPostModalItem(
+                _, Icons.help_center, 'Request Post', 'Request to Change!', () {
+              Navigator.pop(context);
+            }),
+          ],
         );
       },
       shape: const RoundedRectangleBorder(
