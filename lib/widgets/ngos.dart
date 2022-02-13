@@ -62,6 +62,7 @@ class _NGOsState extends State<NGOs> {
         if (enteredName.isEmpty) {
           dataToShow = ngoDataList;
         } else {
+          filtered = false;
           dataToShow = ngoDataList
               .where((ngo) => ngo.orgName!
                   .toLowerCase()
@@ -80,32 +81,36 @@ class _NGOsState extends State<NGOs> {
         fieldOfWork.add(field);
       }
     }
-    filterChips = fieldOfWork
+    List<CustomFilterChip> chips = fieldOfWork
         .map((e) => CustomFilterChip(
               chipLabel: e,
               selectionList: selectedChips,
             ))
         .toList();
+    chips.sort((a, b) => a.chipLabel.compareTo(b.chipLabel));
+    filterChips = chips;
   }
 
   void applyFilter() {
     setState(() {
       filtered = true;
+      searchController.clear();
       dataToShow = ngoDataList.where((element) {
         return element.fieldOfWork!
             .any((element) => selectedChips.contains(element));
       }).toList();
+      selectedChips.clear();
     });
   }
 
   void clear(BuildContext context) {
-    searchController.clear();
-    selectedChips.clear();
-    filtered = false;
     setState(() {
+      searchController.clear();
+      selectedChips.clear();
+      filtered = false;
       dataToShow = ngoDataList;
+      FocusScope.of(context).unfocus();
     });
-    FocusScope.of(context).unfocus();
   }
 
   @override
@@ -116,7 +121,6 @@ class _NGOsState extends State<NGOs> {
   }
 
   void showFilterModal(BuildContext ctx) {
-    selectedChips.clear();
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
@@ -183,6 +187,7 @@ class _NGOsState extends State<NGOs> {
                         onPressed: () {
                           if (selectedChips.isNotEmpty) {
                             applyFilter();
+                            FocusScope.of(context).unfocus();
                             Navigator.of(context).pop();
                           }
                         },
@@ -218,7 +223,9 @@ class _NGOsState extends State<NGOs> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(30),
-                    color: Theme.of(context).primaryColorLight,
+                    color: searchController.text.isNotEmpty
+                        ? Theme.of(context).primaryColorLight
+                        : Colors.black.withAlpha(10),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -264,7 +271,10 @@ class _NGOsState extends State<NGOs> {
                         : Colors.transparent,
                     child: IconButton(
                       color: Theme.of(context).primaryColorDark,
-                      onPressed: () => showFilterModal(context),
+                      onPressed: () {
+                        // clear(context);
+                        showFilterModal(context);
+                      },
                       icon: const Icon(
                         Icons.filter_list,
                         size: 30,
@@ -296,13 +306,9 @@ class _NGOsState extends State<NGOs> {
                               )
                             ]
                           : dataToShow
-                              .map((e) => Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 8),
-                                    child: NGOTile(
-                                      key: ValueKey(e.id),
-                                      ngo: e,
-                                    ),
+                              .map((e) => NGOTile(
+                                    key: ValueKey(e.id),
+                                    ngo: e,
                                   ))
                               .toList(),
                     ),

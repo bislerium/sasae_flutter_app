@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:sasae_flutter_app/widgets/post/post_list_screen.dart';
 import './widgets/ngos.dart';
 import './screens/login_screen.dart';
 import './widgets/setting.dart';
@@ -129,9 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
           'title': 'NGO',
         },
         {
-          'widget': const Center(
-            child: Icon(Icons.feed),
-          ),
+          'widget': const PostListScreen(),
           'title': 'Feed',
         },
         {

@@ -9,8 +9,9 @@ class NGOTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 10,
+      elevation: 5,
       shadowColor: Theme.of(context).primaryColorLight,
+      margin: const EdgeInsets.symmetric(vertical: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
       ),
@@ -72,9 +73,9 @@ class NGOTile extends StatelessWidget {
                               child: Chip(
                                 label: Text(
                                   ngo.fieldOfWork![_],
-                                  // style: const TextStyle(
-                                  //   color: Colors.white,
-                                  // ),
+                                  style: TextStyle(
+                                      color:
+                                          Theme.of(context).primaryColorDark),
                                 ),
                                 backgroundColor:
                                     Theme.of(context).primaryColorLight,
