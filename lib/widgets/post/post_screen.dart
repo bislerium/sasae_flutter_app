@@ -61,10 +61,10 @@ class _PostListScreenState extends State<PostListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _refresh,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+      child: RefreshIndicator(
+        onRefresh: _refresh,
         child: PostTileList(
           posts: posts,
         ),

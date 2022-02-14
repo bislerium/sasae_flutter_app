@@ -1,9 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/ngo_tile.dart';
-import '../widgets/custom_filter_chip.dart';
-import '../models/ngo.dart';
+import './ngo_list.dart';
+import './custom_filter_chip.dart';
+import '../../models/ngo.dart';
 import 'package:faker/faker.dart';
 
 class NGOs extends StatefulWidget {
@@ -25,7 +25,7 @@ class _NGOsState extends State<NGOs> {
   @override
   void initState() {
     super.initState();
-    _getNGOData();
+    // _getNGOData();
   }
 
   void _getNGOData() {
@@ -38,7 +38,7 @@ class _NGOsState extends State<NGOs> {
           orgName: faker.company.name(),
           orgPhoto: faker.image.image(random: true),
           estDate: faker.date.dateTime(minYear: 2000, maxYear: 2022),
-          address: faker.address.city(),
+          address: faker.address.city() + faker.address.streetAddress(),
           fieldOfWork: List.generate(
             Random().nextInt(8 - 1) + 1,
             (index) => faker.lorem.word(),
@@ -150,7 +150,7 @@ class _NGOsState extends State<NGOs> {
               ),
             ),
             SizedBox(
-              height: 60,
+              height: 55,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -177,13 +177,8 @@ class _NGOsState extends State<NGOs> {
                       flex: 10,
                       child: ElevatedButton(
                         child: const Text('Apply'),
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                        ),
+                        style: ElevatedButton.styleFrom(
+                            shape: const StadiumBorder()),
                         onPressed: () {
                           if (selectedChips.isNotEmpty) {
                             applyFilter();
@@ -213,109 +208,111 @@ class _NGOsState extends State<NGOs> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: searchController.text.isNotEmpty
-                        ? Theme.of(context).primaryColorLight
-                        : Colors.black.withAlpha(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color: Theme.of(context).primaryColorDark,
-                        ),
-                        Expanded(
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      child: dataToShow.isEmpty & searchController.text.isEmpty
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/gif/no_result.gif',
+                  height: 200,
+                ),
+                ElevatedButton.icon(
+                    onPressed: () => _refresh(context),
+                    style:
+                        ElevatedButton.styleFrom(shape: const StadiumBorder()),
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Refresh'))
+              ],
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            color: searchController.text.isNotEmpty
+                                ? Theme.of(context).primaryColorLight
+                                : Colors.white,
+                          ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextField(
-                              keyboardType: TextInputType.text,
-                              controller: searchController,
-                              onChanged: (value) => _searchByName(value),
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Search NGO by their Name',
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.search,
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: TextField(
+                                      keyboardType: TextInputType.text,
+                                      controller: searchController,
+                                      onChanged: (value) =>
+                                          _searchByName(value),
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: 'Search NGO by their Name',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                if (searchController.text.isNotEmpty)
+                                  InkWell(
+                                    onTap: () => clear(context),
+                                    child: Icon(
+                                      Icons.clear,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                  )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: ClipOval(
+                          child: Container(
+                            color: filtered
+                                ? Theme.of(context).primaryColorLight
+                                : Colors.transparent,
+                            child: IconButton(
+                              color: Theme.of(context).primaryColorDark,
+                              onPressed: () {
+                                // clear(context);
+                                showFilterModal(context);
+                              },
+                              icon: const Icon(
+                                Icons.filter_list,
+                                size: 30,
                               ),
                             ),
                           ),
                         ),
-                        if (searchController.text.isNotEmpty)
-                          InkWell(
-                            onTap: () => clear(context),
-                            child: Icon(
-                              Icons.clear,
-                              color: Theme.of(context).primaryColorDark,
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: ClipOval(
-                  child: Container(
-                    color: filtered
-                        ? Theme.of(context).primaryColorLight
-                        : Colors.transparent,
-                    child: IconButton(
-                      color: Theme.of(context).primaryColorDark,
-                      onPressed: () {
-                        // clear(context);
-                        showFilterModal(context);
-                      },
-                      icon: const Icon(
-                        Icons.filter_list,
-                        size: 30,
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 0.0),
-            child: RefreshIndicator(
-              onRefresh: () => _refresh(context),
-              child: dataToShow.isEmpty && searchController.text.isNotEmpty
-                  ? const Center(
-                      child: Text('No NGO found 😔'),
-                    )
-                  : ListView(
-                      keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      children: dataToShow.isEmpty
-                          ? [
-                              const Center(
-                                child: Text('Empty NGO List, Please Refresh!'),
-                              )
-                            ]
-                          : dataToShow
-                              .map((e) => NGOTile(
-                                    key: ValueKey(e.id),
-                                    ngo: e,
-                                  ))
-                              .toList(),
-                    ),
+                Expanded(
+                  child: dataToShow.isEmpty & searchController.text.isNotEmpty
+                      ? const Center(
+                          child: Text('No NGO found 😔'),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () => _refresh(context),
+                          child: NGOList(ngoList: dataToShow),
+                        ),
+                ),
+              ],
             ),
-          ),
-        ),
-      ],
     );
   }
 }

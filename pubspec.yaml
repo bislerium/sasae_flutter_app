@@ -67,6 +67,7 @@ flutter:
     - assets/images/ngo-logo-design.png
     - assets/images/branding_name.png
     - assets/icons/logo.png
+    - assets/gif/no_result.gif
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

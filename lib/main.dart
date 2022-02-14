@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:sasae_flutter_app/widgets/post/post_list_screen.dart';
-import './widgets/ngos.dart';
+import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
+import 'widgets/ngo/ngo_screen.dart';
 import './screens/login_screen.dart';
 import './widgets/setting.dart';
 
@@ -44,7 +44,8 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.purple,
         cardColor: Colors.white,
-        scaffoldBackgroundColor: Colors.white,
+        // colorScheme: const ColorScheme.light(),
+        scaffoldBackgroundColor: const Color.fromRGBO(238, 235, 242, 1),
       ),
       home: const MyHomePage(),
       routes: {
@@ -161,11 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
       label: Text(text),
       icon: Icon(icon),
       backgroundColor: buttonColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
-      ),
+      shape: const StadiumBorder(),
     );
   }
 

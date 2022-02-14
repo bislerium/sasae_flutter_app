@@ -12,92 +12,95 @@ class PostTile extends StatelessWidget {
     const whiteText = TextStyle(
       color: Colors.white,
     );
-    return Card(
-      elevation: 5,
-      shadowColor: Theme.of(context).primaryColorLight,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Colors.white,
       ),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
-        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('You have clicked'),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 50,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: post.relatedTo
-                      .map(
-                        (e) => Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                          child: Chip(
-                            backgroundColor:
-                                Theme.of(context).primaryColorLight,
-                            label: Text(
-                              e,
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColorDark),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          splashColor: Theme.of(context).primaryColorLight,
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 50,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: post.relatedTo
+                        .map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            child: Chip(
+                              backgroundColor:
+                                  Theme.of(context).primaryColorLight,
+                              label: Text(
+                                e,
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColorDark),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                      .toList(),
+                        )
+                        .toList(),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Text(
-                  post.postContent,
-                  style: const TextStyle(color: Colors.black87),
-                  maxLines: 5,
-                  textAlign: TextAlign.justify,
-                  overflow: TextOverflow.ellipsis,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Text(
+                    post.postContent,
+                    style: const TextStyle(color: Colors.black87),
+                    maxLines: 5,
+                    textAlign: TextAlign.justify,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 50,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Chip(
-                          label: Text(
-                            post.postType.split(' ').map((l) => l[0]).join(' '),
-                            style: whiteText,
-                          ),
-                          backgroundColor: Colors.purple,
-                        ),
-                        if (post.isPokedToNGO)
-                          const Chip(
+                SizedBox(
+                  height: 50,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Chip(
                             label: Text(
-                              'N',
+                              post.postType
+                                  .split(' ')
+                                  .map((l) => l[0])
+                                  .join(' '),
                               style: whiteText,
                             ),
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.purple,
                           ),
-                        if (post.isPostedAnonymously)
-                          const Chip(
-                            label: Text(
-                              'A',
-                              style: whiteText,
+                          if (post.isPokedToNGO)
+                            const Chip(
+                              label: Text(
+                                'N',
+                                style: whiteText,
+                              ),
+                              backgroundColor: Colors.blue,
                             ),
-                            backgroundColor: Colors.red,
-                          ),
-                      ],
-                    ),
-                    Text(DateFormat.yMMMd().format(post.postedOn))
-                  ],
+                          if (post.isPostedAnonymously)
+                            const Chip(
+                              label: Text(
+                                'A',
+                                style: whiteText,
+                              ),
+                              backgroundColor: Colors.red,
+                            ),
+                        ],
+                      ),
+                      Text(DateFormat.yMMMd().format(post.postedOn))
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
