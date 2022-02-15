@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
-import 'widgets/ngo/ngo_screen.dart';
-import './screens/login_screen.dart';
+import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
+import './widgets/auth/login_screen.dart';
+import './widgets/post/post_screen.dart';
+import './widgets/ngo/ngo_screen.dart';
 import './widgets/setting.dart';
 
 void main() {
@@ -47,17 +48,18 @@ class MyApp extends StatelessWidget {
         // colorScheme: const ColorScheme.light(),
         scaffoldBackgroundColor: const Color.fromRGBO(238, 235, 242, 1),
       ),
-      home: const MyHomePage(),
+      home: const HomePage(),
       routes: {
         LoginScreen.routeName: (context) => const LoginScreen(),
-        MyHomePage.routeName: (context) => const MyHomePage(),
+        RegisterScreen.routeName: (context) => const RegisterScreen(),
+        HomePage.routeName: (context) => const HomePage(),
       },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
   static const routeName = '/home';
 
   // This widget is the home page of your application. It is stateful, meaning
@@ -70,7 +72,7 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
@@ -87,7 +89,7 @@ ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
   );
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _HomePageState extends State<HomePage> {
   void showModalSheet(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
