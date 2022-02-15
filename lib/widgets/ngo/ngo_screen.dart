@@ -149,13 +149,11 @@ class _NGOsState extends State<NGOs> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 55,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: SizedBox(
+                height: 55,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Flexible(
@@ -178,7 +176,8 @@ class _NGOsState extends State<NGOs> {
                       child: ElevatedButton(
                         child: const Text('Apply'),
                         style: ElevatedButton.styleFrom(
-                            shape: const StadiumBorder()),
+                          shape: const StadiumBorder(),
+                        ),
                         onPressed: () {
                           if (selectedChips.isNotEmpty) {
                             applyFilter();
@@ -197,11 +196,9 @@ class _NGOsState extends State<NGOs> {
       },
       // isDismissible: false,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(0),
-            bottomLeft: Radius.circular(0)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
       ),
     );
   }

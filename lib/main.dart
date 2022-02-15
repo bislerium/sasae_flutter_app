@@ -94,31 +94,32 @@ class _HomePageState extends State<HomePage> {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            getPostModalItem(
-                _, Icons.file_present_sharp, 'Normal Post', 'Attach an Image!',
-                () {
-              Navigator.pop(context);
-            }),
-            getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
-                () {
-              Navigator.pop(context);
-            }),
-            getPostModalItem(
-                _, Icons.help_center, 'Request Post', 'Request to Change!', () {
-              Navigator.pop(context);
-            }),
-          ],
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              getPostModalItem(_, Icons.file_present_sharp, 'Normal Post',
+                  'Attach an Image!', () {
+                Navigator.pop(context);
+              }),
+              getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
+                  () {
+                Navigator.pop(context);
+              }),
+              getPostModalItem(
+                  _, Icons.help_center, 'Request Post', 'Request to Change!',
+                  () {
+                Navigator.pop(context);
+              }),
+            ],
+          ),
         );
       },
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-            bottomRight: Radius.circular(0),
-            bottomLeft: Radius.circular(0)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(25.0),
+        ),
       ),
     );
   }
@@ -174,6 +175,7 @@ class _HomePageState extends State<HomePage> {
         {
           return getFloatingActionButton(
             text: 'Post',
+            buttonColor: Theme.of(context).primaryColorDark,
             icon: Icons.post_add,
             function: () => showModalSheet(context),
           );
