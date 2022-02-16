@@ -122,6 +122,7 @@ class _NGOsState extends State<NGOs> {
 
   void showFilterModal(BuildContext ctx) {
     showModalBottomSheet(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: ctx,
       builder: (_) {
         return Column(
@@ -258,6 +259,7 @@ class _NGOsState extends State<NGOs> {
                                         border: InputBorder.none,
                                         hintText: 'Search NGO by their Name',
                                       ),
+                                      textInputAction: TextInputAction.search,
                                     ),
                                   ),
                                 ),

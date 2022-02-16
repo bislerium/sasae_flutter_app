@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:image_picker/image_picker.dart';
 import '../misc/custom_image_picker.dart';
 import '../misc/date_picker.dart';
 
@@ -18,20 +16,37 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   int _currentStep = 0;
 
-  final formKey = GlobalKey<FormState>();
+  final personalInfoFormKey = GlobalKey<FormState>();
+  final addressFormKey = GlobalKey<FormState>();
+  final contactFormKey = GlobalKey<FormState>();
+  final accountFormKey = GlobalKey<FormState>();
 
-  final ImagePicker _picker = ImagePicker();
-  File? _image;
+  var userNameField = TextEditingController();
+  var passwordField = TextEditingController();
+  var fullNameField = TextEditingController();
+  var countryField = TextEditingController();
+  var provinceField = TextEditingController();
+  var cityLocalityField = TextEditingController();
+  var stAddressHouseNumField = TextEditingController();
+  var phoneField = TextEditingController();
+  var emailField = TextEditingController();
+  String? dropdownValue;
+  DateTime? pickedDate;
+  File? profilePicture;
+  File? citizenshipPhoto;
 
-  Future pickImage(ImageSource source) async {
-    try {
-      final XFile? image = await _picker.pickImage(source: source);
-      if (image == null) return;
-      _image = File(image.path);
-    } on PlatformException catch (e) {
-      print(e);
-      print('failed to pick');
-    }
+  @override
+  void dispose() {
+    userNameField.dispose();
+    passwordField.dispose();
+    fullNameField.dispose();
+    countryField.dispose();
+    provinceField.dispose();
+    cityLocalityField.dispose();
+    stAddressHouseNumField.dispose();
+    phoneField.dispose();
+    emailField.dispose();
+    super.dispose();
   }
 
   ListTile getPostModalItem(
@@ -47,43 +62,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void showPickImageModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              getPostModalItem(_, Icons.file_upload, 'Pick image from gallery',
-                  () {
-                pickImage(ImageSource.gallery);
-                Navigator.pop(context);
-              }),
-              getPostModalItem(_, Icons.camera_alt, 'Click and pick image', () {
-                pickImage(ImageSource.camera);
-                Navigator.pop(context);
-              }),
-            ],
-          ),
-        );
-      },
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-    );
-  }
-
   List<String> genderList = [
     'Male',
     'Female',
     'LGBTQ+',
   ];
-
-  String? dropdownValue;
 
   Widget _dropDownGender() => DropdownButtonFormField<String>(
         decoration: const InputDecoration(
@@ -95,6 +78,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             dropdownValue = newValue;
           });
         },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Required field!';
+          } else {
+            return null;
+          }
+        },
         items: genderList
             .map((String value) => DropdownMenuItem<String>(
                   value: value,
@@ -103,145 +93,297 @@ class _RegisterScreenState extends State<RegisterScreen> {
             .toList(),
       );
 
+  final _stepErrors = [
+    false,
+    false,
+    false,
+    false,
+  ];
+
   List<Step> getSteps() => [
         Step(
-          state: _currentStep > 0 ? StepState.complete : StepState.indexed,
+          state: _stepErrors[0]
+              ? StepState.error
+              : _currentStep > 0
+                  ? StepState.complete
+                  : StepState.indexed,
           isActive: _currentStep >= 0,
           title: const Text('Personal Info'),
-          content: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Full Name'),
-                  icon: Icon(Icons.person),
+          content: Form(
+            key: personalInfoFormKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: fullNameField,
+                  decoration: const InputDecoration(
+                    label: Text('Full name'),
+                    icon: Icon(Icons.person),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              _dropDownGender(),
-              const SizedBox(
-                height: 10,
-              ),
-              const DatePickerField(),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                _dropDownGender(),
+                const SizedBox(
+                  height: 10,
+                ),
+                DatePickerField(
+                  setDateHandler: (value) => pickedDate = value,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
         Step(
-          state: _currentStep > 1 ? StepState.complete : StepState.indexed,
+          state: _stepErrors[1]
+              ? StepState.error
+              : _currentStep > 1
+                  ? StepState.complete
+                  : StepState.indexed,
           isActive: _currentStep >= 1,
           title: const Text('Address'),
-          content: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Country'),
-                  icon: Icon(Icons.flag_rounded),
+          content: Form(
+            key: addressFormKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: countryField,
+                  decoration: const InputDecoration(
+                    label: Text('Country'),
+                    icon: Icon(Icons.flag_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
                 ),
-                keyboardType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Province'),
-                  icon: Icon(Icons.local_parking_rounded),
+                const SizedBox(
+                  height: 10,
                 ),
-                keyboardType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('City/Locality'),
-                  icon: Icon(Icons.location_city_rounded),
+                TextFormField(
+                  controller: provinceField,
+                  decoration: const InputDecoration(
+                    label: Text('Province'),
+                    icon: Icon(Icons.local_parking_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
                 ),
-                keyboardType: TextInputType.text,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Street name/House number'),
-                  icon: Icon(Icons.near_me),
+                const SizedBox(
+                  height: 10,
                 ),
-                keyboardType: TextInputType.streetAddress,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                TextFormField(
+                  controller: cityLocalityField,
+                  decoration: const InputDecoration(
+                    label: Text('City/Locality'),
+                    icon: Icon(Icons.location_city_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: stAddressHouseNumField,
+                  decoration: const InputDecoration(
+                    label: Text('Street name/House number'),
+                    icon: Icon(Icons.near_me),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.streetAddress,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
         Step(
-          state: _currentStep > 2 ? StepState.complete : StepState.indexed,
+          state: _stepErrors[2]
+              ? StepState.error
+              : _currentStep > 2
+                  ? StepState.complete
+                  : StepState.indexed,
           isActive: _currentStep >= 2,
           title: const Text('Contact'),
           subtitle: const Text(
               'Email is not only used to contact\n but also to secure your account.'),
-          content: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
+          content: Form(
+            key: contactFormKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: phoneField,
+                  decoration: const InputDecoration(
                     label: Text('Phone'),
                     icon: Icon(Icons.phone_android_rounded),
-                    hintText: 'E.g. +9779800740959'),
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
+                    hintText: 'E.g. +9779800740959',
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: emailField,
+                  decoration: const InputDecoration(
                     label: Text('Email'),
                     icon: Icon(Icons.email_rounded),
-                    hintText: 'Only unique email is accepted'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                    hintText: 'Only unique email is accepted',
+                  ),
+                  validator: (value) {
+                    const pattern =
+                        r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                    final regExp = RegExp(pattern);
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else if (!regExp.hasMatch(value)) {
+                      return 'Enter a valid email!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.done,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
         Step(
-          state: _currentStep > 3 ? StepState.complete : StepState.indexed,
+          state: _stepErrors[3]
+              ? StepState.error
+              : _currentStep > 3
+                  ? StepState.complete
+                  : StepState.indexed,
           isActive: _currentStep >= 3,
           title: const Text('Account'),
-          content: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Username'),
-                  icon: Icon(Icons.account_circle_rounded),
+          subtitle: const Text('Profile picture is optional.'),
+          content: Form(
+            key: accountFormKey,
+            child: Column(
+              children: [
+                CustomImagePicker(
+                  title: 'Profile picture',
+                  icon: Icons.photo_camera_front_rounded,
+                  setImageFileHandler: (image) => profilePicture = image,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  label: Text('Password'),
-                  icon: Icon(Icons.password_rounded),
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const CustomImagePicker(
-                title: 'Profile Picture',
-                icon: Icons.photo_camera_front_rounded,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-            ],
+                TextFormField(
+                  controller: userNameField,
+                  decoration: const InputDecoration(
+                    label: Text('Username'),
+                    icon: Icon(Icons.account_circle_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required Field!';
+                    } else if (value.contains(' ')) {
+                      return 'Username must be spaceless!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: passwordField,
+                  decoration: const InputDecoration(
+                    label: Text('Password'),
+                    icon: Icon(Icons.password_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    label: Text('Confirm password'),
+                    icon: Icon(Icons.password_rounded),
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Required field!';
+                    } else if (passwordField.text != value) {
+                      return 'Passwords did not match!';
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+            ),
           ),
         ),
         Step(
@@ -251,17 +393,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
           subtitle: const Text(
               'This is optional.\n Profile verification might take some time!'),
           content: Column(
-            children: const [
+            children: [
               CustomImagePicker(
                 title: 'Citizenship Photo',
                 icon: Icons.folder_shared_rounded,
+                setImageFileHandler: (image) => citizenshipPhoto = image,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
             ],
           ),
         ),
+      ];
+
+  List<Function> validity() => [
+        () => personalInfoFormKey.currentState!.validate(),
+        () => addressFormKey.currentState!.validate(),
+        () => contactFormKey.currentState!.validate(),
+        () => accountFormKey.currentState!.validate(),
       ];
 
   @override
@@ -275,8 +425,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
         currentStep: _currentStep,
         onStepContinue: () {
           if (isLastStep) {
+            if (_stepErrors.contains(true)) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Please fill required fields!',
+                    textAlign: TextAlign.center,
+                    // style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Successfully Registered!',
+                    textAlign: TextAlign.center,
+                    // style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  backgroundColor: Colors.blue,
+                ),
+              );
+            }
           } else {
+            var valid = validity()[_currentStep]();
             setState(() {
+              _stepErrors[_currentStep] = !valid;
               _currentStep++;
             });
           }
@@ -292,6 +467,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
         onStepTapped: (value) {
           setState(() {
+            if (!isLastStep) {
+              var validities = validity();
+              for (int i = 0; i < validities.length; i++) {
+                _stepErrors[i] = validities[i]();
+              }
+            }
             _currentStep = value;
           });
         },

@@ -45,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         maxLength: 10,
+        textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
       );
 
@@ -65,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
             return null;
           }
         },
+        textInputAction: TextInputAction.done,
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
       );
@@ -201,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Forgot Paswword',
+                  'Forgot Password',
                   style: TextStyle(
                     color: Theme.of(context).primaryColorDark,
                     fontSize: 20,
@@ -237,9 +239,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
                       final regExp = RegExp(pattern);
                       if (value!.isEmpty) {
-                        return 'Enter an email';
+                        return 'Enter an email!';
                       } else if (!regExp.hasMatch(value)) {
-                        return 'Enter a valid email';
+                        return 'Enter a valid email!';
                       } else {
                         return null;
                       }

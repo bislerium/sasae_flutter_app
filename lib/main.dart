@@ -188,6 +188,7 @@ class _HomePageState extends State<HomePage> {
             function: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: const Text('Logout?'),
                 content: const Text('"Do it with Passion or Not at all"'),
                 actions: <Widget>[

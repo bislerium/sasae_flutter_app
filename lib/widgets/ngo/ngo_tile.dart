@@ -31,6 +31,10 @@ class NGOTile extends StatelessWidget {
                     fit: BoxFit.cover,
                     height: 100.0,
                     width: 100.0,
+                    loadingBuilder: (context, child, loadingProgress) =>
+                        loadingProgress == null
+                            ? child
+                            : const CircularProgressIndicator(),
                   ),
                 ),
                 Expanded(

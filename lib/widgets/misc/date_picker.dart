@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DatePickerField extends StatefulWidget {
-  const DatePickerField({Key? key}) : super(key: key);
+  final void Function(DateTime) setDateHandler;
+
+  const DatePickerField({Key? key, required this.setDateHandler})
+      : super(key: key);
 
   @override
   _DatePickerFieldState createState() => _DatePickerFieldState();
@@ -33,13 +36,20 @@ class _DatePickerFieldState extends State<DatePickerField> {
         children: [
           Expanded(
             child: TextFormField(
-              controller: dateField..text = getText(),
+              controller: dateField,
               decoration: const InputDecoration(
                 label: Text('Birthdate'),
                 icon: Icon(Icons.calendar_today_rounded),
               ),
               readOnly: true,
               onTap: () => pickDate(context),
+              validator: (value) {
+                if (date == null || value!.isEmpty) {
+                  return 'Required field!';
+                } else {
+                  return null;
+                }
+              },
             ),
           ),
         ],
@@ -52,8 +62,18 @@ class _DatePickerFieldState extends State<DatePickerField> {
       initialDate: date ?? initialDate,
       firstDate: DateTime(DateTime.now().year - 100),
       lastDate: DateTime.now(),
+      // builder: (BuildContext ctx, Widget? child) {
+      //   return Theme(
+      //     data: ThemeData.light(),
+      //     child: child!,
+      //   );
+      // },
     );
     if (newDate == null) return;
-    setState(() => date = newDate);
+    setState(() {
+      date = newDate;
+      dateField.text = getText();
+      widget.setDateHandler(date!);
+    });
   }
 }
