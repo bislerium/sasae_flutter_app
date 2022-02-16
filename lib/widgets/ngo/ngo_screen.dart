@@ -6,14 +6,15 @@ import './custom_filter_chip.dart';
 import '../../models/ngo.dart';
 import 'package:faker/faker.dart';
 
-class NGOs extends StatefulWidget {
-  const NGOs({Key? key}) : super(key: key);
+class NGOScreen extends StatefulWidget {
+  const NGOScreen({Key? key}) : super(key: key);
 
   @override
-  _NGOsState createState() => _NGOsState();
+  _NGOScreenState createState() => _NGOScreenState();
 }
 
-class _NGOsState extends State<NGOs> {
+class _NGOScreenState extends State<NGOScreen>
+    with AutomaticKeepAliveClientMixin {
   var searchController = TextEditingController();
 
   List<NGO> ngoDataList = []; // Actual Untouched DataList
@@ -206,6 +207,7 @@ class _NGOsState extends State<NGOs> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       child: dataToShow.isEmpty & searchController.text.isEmpty
@@ -235,8 +237,10 @@ class _NGOsState extends State<NGOs> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: searchController.text.isNotEmpty
-                                ? Theme.of(context).primaryColorLight
-                                : Colors.white,
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
+                                : Theme.of(context).colorScheme.surface,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -244,7 +248,9 @@ class _NGOsState extends State<NGOs> {
                               children: [
                                 Icon(
                                   Icons.search,
-                                  color: Theme.of(context).primaryColorDark,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -268,7 +274,9 @@ class _NGOsState extends State<NGOs> {
                                     onTap: () => clear(context),
                                     child: Icon(
                                       Icons.clear,
-                                      color: Theme.of(context).primaryColorDark,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer,
                                     ),
                                   )
                               ],
@@ -281,10 +289,14 @@ class _NGOsState extends State<NGOs> {
                         child: ClipOval(
                           child: Container(
                             color: filtered
-                                ? Theme.of(context).primaryColorLight
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .secondaryContainer
                                 : Colors.transparent,
                             child: IconButton(
-                              color: Theme.of(context).primaryColorDark,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
                               onPressed: () {
                                 // clear(context);
                                 showFilterModal(context);
@@ -314,4 +326,9 @@ class _NGOsState extends State<NGOs> {
             ),
     );
   }
+
+  @override
+  // ignore: todo
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -407,7 +407,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
       ];
 
-  List<Function> validity() => [
+  List<bool Function()> validity() => [
         () => personalInfoFormKey.currentState!.validate(),
         () => addressFormKey.currentState!.validate(),
         () => contactFormKey.currentState!.validate(),
@@ -427,24 +427,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
           if (isLastStep) {
             if (_stepErrors.contains(true)) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
                     'Please fill required fields!',
                     textAlign: TextAlign.center,
-                    // style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
                   ),
-                  backgroundColor: Colors.red,
+                  backgroundColor: Theme.of(context).colorScheme.error,
                 ),
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
                     'Successfully Registered!',
                     textAlign: TextAlign.center,
-                    // style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onInverseSurface,
+                    ),
                   ),
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Theme.of(context).colorScheme.inverseSurface,
                 ),
               );
             }
@@ -468,9 +472,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         onStepTapped: (value) {
           setState(() {
             if (!isLastStep) {
-              var validities = validity();
-              for (int i = 0; i < validities.length; i++) {
-                _stepErrors[i] = validities[i]();
+              for (int i = 0; i < value; i++) {
+                _stepErrors[i] = !validity()[i]();
               }
             }
             _currentStep = value;

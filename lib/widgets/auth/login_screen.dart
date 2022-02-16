@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/main.dart';
-import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
+import '../auth/register_screen.dart';
+import '../home_page.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Text(
             'Sasae',
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
@@ -188,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void showResetPasswordModal(BuildContext context) {
     showModalBottomSheet(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       isScrollControlled: true,
       context: context,
       builder: (_) {
@@ -205,19 +205,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(
                   'Forgot Password',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(
-                  height: 25,
+                  height: 20,
                 ),
-                const Text(
+                Text(
                   'Enter your email address associated with your sasae account. We\'ll send you a link to your email for password reset process.',
                   textAlign: TextAlign.justify,
                   style: TextStyle(
-                    fontSize: 14, color: Colors.black54,
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurface,
                     // fontWeight: FontWeight.bold,
                   ),
                 ),

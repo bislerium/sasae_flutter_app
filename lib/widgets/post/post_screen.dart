@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import '../../models/post.dart';
 import './post_list.dart';
 
-class PostListScreen extends StatefulWidget {
-  const PostListScreen({Key? key}) : super(key: key);
+class PostScreen extends StatefulWidget {
+  const PostScreen({Key? key}) : super(key: key);
 
   @override
-  State<PostListScreen> createState() => _PostListScreenState();
+  State<PostScreen> createState() => _PostScreenState();
 }
 
-class _PostListScreenState extends State<PostListScreen> {
+class _PostScreenState extends State<PostScreen>
+    with AutomaticKeepAliveClientMixin {
   List<Post> posts = [];
   List<String> postType = [
     'Post Normal',
@@ -61,6 +62,7 @@ class _PostListScreenState extends State<PostListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
       child: RefreshIndicator(
@@ -71,4 +73,9 @@ class _PostListScreenState extends State<PostListScreen> {
       ),
     );
   }
+
+  @override
+  // ignore: todo
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
+import './widgets/auth/register_screen.dart';
+import './widgets/home_page.dart';
 import './widgets/auth/login_screen.dart';
-import './widgets/post/post_screen.dart';
-import './widgets/ngo/ngo_screen.dart';
-import './widgets/setting.dart';
+import './lib_color_schemes.g.dart';
 
 void main() {
   FlutterNativeSplash.removeAfter(initialization);
@@ -25,10 +24,17 @@ void initialization(BuildContext context) async {
   print('go!');
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
+  bool darkMode = false;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -43,256 +49,17 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.purple,
-        cardColor: Colors.white,
-        // colorScheme: const ColorScheme.light(),
-        scaffoldBackgroundColor: const Color.fromRGBO(238, 235, 242, 1),
+        colorScheme: darkMode ? darkColorScheme : lightColorScheme,
+        backgroundColor: lightColorScheme.background,
+        primaryColor: lightColorScheme.primary,
       ),
-      home: const HomePage(),
+      home: HomePage(setDarkModeHandler: (value) => darkMode = value),
       routes: {
         LoginScreen.routeName: (context) => const LoginScreen(),
         RegisterScreen.routeName: (context) => const RegisterScreen(),
-        HomePage.routeName: (context) => const HomePage(),
+        HomePage.routeName: (context) =>
+            HomePage(setDarkModeHandler: (value) => darkMode = value),
       },
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-  static const routeName = '/home';
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
-    String subtitle, VoidCallback func) {
-  return ListTile(
-    leading: Icon(
-      icon,
-      size: 30,
-      color: Theme.of(ctx).primaryColor,
-    ),
-    title: Text(title),
-    subtitle: Text(subtitle),
-    onTap: func,
-  );
-}
-
-class _HomePageState extends State<HomePage> {
-  void showModalSheet(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              getPostModalItem(_, Icons.file_present_sharp, 'Normal Post',
-                  'Attach an Image!', () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
-                  () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(
-                  _, Icons.help_center, 'Request Post', 'Request to Change!',
-                  () {
-                Navigator.pop(context);
-              }),
-            ],
-          ),
-        );
-      },
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-    );
-  }
-
-  var _selectedNavIndex = 1;
-
-  List<Map<String, dynamic>> get screens => [
-        {
-          'widget': const Center(
-            child: NGOs(),
-          ),
-          'title': 'NGO',
-        },
-        {
-          'widget': const PostListScreen(),
-          'title': 'Feed',
-        },
-        {
-          'widget': const Center(
-            child: Icon(Icons.notifications),
-          ),
-          'title': 'Notification',
-        },
-        {
-          'widget': const Center(
-            child: Icon(Icons.person),
-          ),
-          'title': 'Profile',
-        },
-        {
-          'widget': const Setting(),
-          'title': 'Setting',
-        }
-      ];
-
-  FloatingActionButton getFloatingActionButton(
-      {required String text,
-      required IconData icon,
-      required VoidCallback function,
-      Color? buttonColor}) {
-    return FloatingActionButton.extended(
-      onPressed: function,
-      label: Text(text),
-      icon: Icon(icon),
-      backgroundColor: buttonColor,
-      shape: const StadiumBorder(),
-    );
-  }
-
-  FloatingActionButton? _fabPerNavIndex() {
-    switch (_selectedNavIndex) {
-      case 1:
-        {
-          return getFloatingActionButton(
-            text: 'Post',
-            buttonColor: Theme.of(context).primaryColorDark,
-            icon: Icons.post_add,
-            function: () => showModalSheet(context),
-          );
-        }
-      case 4:
-        {
-          return getFloatingActionButton(
-            text: 'Logout',
-            icon: Icons.logout,
-            function: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: const Text('Logout?'),
-                content: const Text('"Do it with Passion or Not at all"'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: const Text('Cancel'),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context)
-                        .pushNamedAndRemoveUntil(LoginScreen.routeName,
-                            (Route<dynamic> route) => false),
-                    child: const Text('OK'),
-                  ),
-                ],
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                ),
-              ),
-              barrierDismissible: false,
-            ),
-            buttonColor: Colors.red,
-          );
-        }
-      default:
-        {
-          return null;
-        }
-    }
-  }
-
-  PageController? _pc;
-
-  @override
-  void initState() {
-    super.initState();
-    _pc = PageController(initialPage: 1);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(screens[_selectedNavIndex]['title']),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black87,
-        elevation: 0,
-      ),
-      body: SafeArea(
-        child: PageView(
-          children: screens.map((e) => e['widget'] as Widget).toList(),
-          onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
-          controller: _pc,
-          physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
-        ),
-      ),
-      floatingActionButton: _fabPerNavIndex(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'NGO',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.feed),
-            label: 'Feed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notification',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
-          ),
-        ],
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        currentIndex: _selectedNavIndex, //New
-        onTap: (index) => {
-          setState(() {
-            _selectedNavIndex = index;
-            _pc!.animateToPage(
-              _selectedNavIndex,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.ease,
-            );
-          })
-        },
-      ),
     );
   }
 }

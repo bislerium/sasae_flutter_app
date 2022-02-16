@@ -20,7 +20,13 @@ class _CustomFilterChipState extends State<CustomFilterChip> {
     return FilterChip(
       label: Text(widget.chipLabel),
       selected: _isSelected,
-      selectedColor: Theme.of(context).primaryColorLight,
+      checkmarkColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      selectedColor: Theme.of(context).colorScheme.primaryContainer,
+      backgroundColor: Colors.transparent,
+      shape: StadiumBorder(
+          side: BorderSide(
+        color: Theme.of(context).colorScheme.outline,
+      )),
       onSelected: (value) {
         setState(() {
           _isSelected = value;

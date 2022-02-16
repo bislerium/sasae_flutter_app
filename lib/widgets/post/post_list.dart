@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './post_tile.dart';
+import 'post_card.dart';
 import '../../models/post.dart';
 
 class PostTileList extends StatefulWidget {
@@ -21,7 +21,7 @@ class _PostTileListState extends State<PostTileList> {
       shrinkWrap: true,
       itemBuilder: ((context, index) {
         var post = widget.posts[index];
-        return PostTile(
+        return PostCard(
           key: ValueKey(post.id),
           post: post,
         );

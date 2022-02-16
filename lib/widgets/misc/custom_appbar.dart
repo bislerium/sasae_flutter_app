@@ -18,8 +18,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(widget.title),
-      backgroundColor: Colors.transparent,
-      foregroundColor: Colors.black87,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      foregroundColor: Theme.of(context).colorScheme.onSurface,
       elevation: 0,
     );
   }
