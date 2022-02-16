@@ -22,7 +22,7 @@ class _CustomFilterChipState extends State<CustomFilterChip> {
       selected: _isSelected,
       checkmarkColor: Theme.of(context).colorScheme.onPrimaryContainer,
       selectedColor: Theme.of(context).colorScheme.primaryContainer,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       shape: StadiumBorder(
           side: BorderSide(
         color: Theme.of(context).colorScheme.outline,

@@ -38,10 +38,11 @@ class _HomePageState extends State<HomePage> {
   ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
       String subtitle, VoidCallback func) {
     return ListTile(
+      iconColor: Theme.of(context).colorScheme.primary,
+      textColor: Theme.of(context).colorScheme.onSurface,
       leading: Icon(
         icon,
         size: 30,
-        color: Theme.of(ctx).primaryColor,
       ),
       title: Text(title),
       subtitle: Text(subtitle),
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   void showModalSheet(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (_) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
@@ -122,48 +124,52 @@ class _HomePageState extends State<HomePage> {
         }
       case 4:
         {
-          return getFloatingActionButton(
-            text: 'Logout',
-            icon: Icons.logout,
-            function: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                elevation: 3,
-                title: const Text('Logout?'),
-                content: const Text('"Do it with Passion or Not at all"'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: Text(
-                      'Cancel',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+          return SizedBox(
+            height: 60,
+            width: 120,
+            child: getFloatingActionButton(
+              text: 'Logout',
+              icon: Icons.logout,
+              function: () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  elevation: 3,
+                  title: const Text('Logout?'),
+                  content: const Text('"Do it with Passion or Not at all"'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'Cancel'),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(context)
-                        .pushNamedAndRemoveUntil(LoginScreen.routeName,
-                            (Route<dynamic> route) => false),
-                    child: Text(
-                      'OK',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                    TextButton(
+                      onPressed: () => Navigator.of(context)
+                          .pushNamedAndRemoveUntil(LoginScreen.routeName,
+                              (Route<dynamic> route) => false),
+                      child: Text(
+                        'OK',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20),
+                  ],
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
                   ),
                 ),
+                barrierDismissible: false,
               ),
-              barrierDismissible: false,
+              foreground: Theme.of(context).colorScheme.onError,
+              buttonColor: Theme.of(context).colorScheme.error,
             ),
-            foreground: Theme.of(context).colorScheme.onError,
-            buttonColor: Theme.of(context).colorScheme.error,
           );
         }
       default:
@@ -176,9 +182,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: (screenTitle[_selectedNavIndex]),
-      ),
+      // appBar: CustomAppBar(
+      //   title: (screenTitle[_selectedNavIndex]),
+      // ),
       body: SafeArea(
         child: PageView(
           children: [

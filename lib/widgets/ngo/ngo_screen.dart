@@ -123,7 +123,7 @@ class _NGOScreenState extends State<NGOScreen>
 
   void showFilterModal(BuildContext ctx) {
     showModalBottomSheet(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       context: ctx,
       builder: (_) {
         return Column(
@@ -236,11 +236,7 @@ class _NGOScreenState extends State<NGOScreen>
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            color: searchController.text.isNotEmpty
-                                ? Theme.of(context)
-                                    .colorScheme
-                                    .secondaryContainer
-                                : Theme.of(context).colorScheme.surface,
+                            color: Theme.of(context).colorScheme.surface,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -292,11 +288,11 @@ class _NGOScreenState extends State<NGOScreen>
                                 ? Theme.of(context)
                                     .colorScheme
                                     .secondaryContainer
-                                : Colors.transparent,
+                                : Theme.of(context).colorScheme.background,
                             child: IconButton(
                               color: Theme.of(context)
                                   .colorScheme
-                                  .onTertiaryContainer,
+                                  .onSecondaryContainer,
                               onPressed: () {
                                 // clear(context);
                                 showFilterModal(context);
