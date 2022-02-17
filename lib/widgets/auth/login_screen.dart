@@ -28,9 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _userIDField() => TextFormField(
         controller: userIDField,
         decoration: InputDecoration(
-          prefixIcon: Icon(
+          iconColor: Theme.of(context).colorScheme.secondary,
+          prefixIcon: const Icon(
             Icons.account_circle_rounded,
-            color: Theme.of(context).primaryColor,
           ),
           labelText: 'Username',
           // floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -52,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _passwordField() => TextFormField(
         controller: passwordField,
         decoration: InputDecoration(
-          prefixIcon: Icon(
+          iconColor: Theme.of(context).colorScheme.secondary,
+          prefixIcon: const Icon(
             Icons.password_rounded,
-            color: Theme.of(context).primaryColor,
           ),
           labelText: 'Password',
           // floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -73,13 +73,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _loginButton() => Builder(builder: (context) {
         return ElevatedButton(
-          child: const Icon(
+          child: Icon(
             Icons.navigate_next_rounded,
             size: 45,
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
           ),
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
-            primary: Theme.of(context).primaryColor,
+            primary: Theme.of(context).colorScheme.secondaryContainer,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           ),
           onPressed: () {
@@ -93,13 +94,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     HomePage.routeName, (Route<dynamic> route) => false);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                  SnackBar(
                     content: Text(
-                      'Wrong User ID or Password!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      'Wrong Username or password!',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
                       textAlign: TextAlign.center,
                     ),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Theme.of(context).colorScheme.error,
                   ),
                 );
               }
@@ -110,8 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _forgetButton() => Builder(builder: (context) {
         return TextButton(
-          child: const Text(
+          child: Text(
             'Forget Password?',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
           ),
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
@@ -136,14 +140,14 @@ class _LoginScreenState extends State<LoginScreen> {
             textAlign: TextAlign.center,
             text: TextSpan(
               text: 'Don\'t have an account?  ',
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               children: [
                 TextSpan(
                   text: 'Register',
                   style: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.bold),
                 ),
               ],
@@ -270,14 +274,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       if (isValid) {
                         var email = resetEmailField.text;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
+                          SnackBar(
                             content: Text(
                               'Password reset email sent, Check your inbox!',
                               // style: TextStyle(fontWeight: FontWeight.bold),
                               textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                             ),
-                            backgroundColor: Colors.blue,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                         );
                         resetEmailField.clear();

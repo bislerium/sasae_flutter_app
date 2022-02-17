@@ -154,7 +154,7 @@ class _NGOScreenState extends State<NGOScreen>
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: SizedBox(
-                height: 55,
+                height: 60,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [

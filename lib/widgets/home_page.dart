@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                   backgroundColor: Theme.of(context).colorScheme.surface,
                   elevation: 3,
                   title: const Text('Logout?'),
-                  content: const Text('"Do it with Passion or Not at all"'),
+                  content: const Text('Do it with passion or not at all'),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context, 'Cancel'),

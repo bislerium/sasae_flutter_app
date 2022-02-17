@@ -37,6 +37,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    var colorScheme = darkMode ? darkColorScheme : lightColorScheme;
     return MaterialApp(
       title: 'Sasae',
       theme: ThemeData(
@@ -49,9 +50,10 @@ class _MyAppState extends State<MyApp> {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        colorScheme: darkMode ? darkColorScheme : lightColorScheme,
-        backgroundColor: lightColorScheme.background,
-        primaryColor: lightColorScheme.primary,
+        colorScheme: colorScheme,
+        backgroundColor: colorScheme.background,
+        primaryColor: colorScheme.primary,
+        errorColor: colorScheme.error,
       ),
       home: HomePage(setDarkModeHandler: (value) => darkMode = value),
       routes: {

@@ -29,6 +29,8 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
       children: [
         ListTile(
           leading: const Icon(Icons.info),
+          iconColor: Theme.of(context).colorScheme.secondary,
+          textColor: Theme.of(context).colorScheme.onBackground,
           title: const Text('About'),
           onTap: () => showDialog<void>(
             context: context,
@@ -82,6 +84,8 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
         ),
         ListTile(
           leading: const Icon(Icons.source),
+          iconColor: Theme.of(context).colorScheme.secondary,
+          textColor: Theme.of(context).colorScheme.onBackground,
           title: const Text('Licenses'),
           onTap: () {
             showLicensePage(
@@ -94,10 +98,13 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
           },
         ),
         ListTile(
+          iconColor: Theme.of(context).colorScheme.secondary,
+          textColor: Theme.of(context).colorScheme.onBackground,
           leading: const Icon(Icons.dark_mode_rounded),
           title: const Text('Dark Mode'),
           trailing: Switch(
             value: isSwitched,
+            activeColor: Theme.of(context).colorScheme.secondary,
             onChanged: (value) {
               setState(() {
                 isSwitched = value;
