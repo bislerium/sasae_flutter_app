@@ -40,7 +40,7 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
       leading: Icon(
         icon,
         size: 30,
-        color: Theme.of(ctx).primaryColor,
+        color: Theme.of(ctx).colorScheme.primary,
       ),
       title: Text(title),
       onTap: func,
@@ -65,7 +65,7 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
   void showPickImageModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       builder: (_) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),

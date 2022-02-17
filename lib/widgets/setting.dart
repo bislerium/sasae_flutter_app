@@ -26,6 +26,7 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ListTile(
           leading: const Icon(Icons.info),

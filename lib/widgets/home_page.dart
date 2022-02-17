@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:flutter/rendering.dart';
 import './profile/user_profile.dart';
 import './auth/login_screen.dart';
 import './post/post_screen.dart';
@@ -21,13 +21,15 @@ class _HomePageState extends State<HomePage> {
   final PageController _pc;
   int _selectedNavIndex;
   List<String> screenTitle;
+  bool showFAB;
 
   _HomePageState()
       : _selectedNavIndex = 1,
         _pc = PageController(
           initialPage: 1,
         ),
-        screenTitle = ['NGO', 'Feed', 'Notification', 'Profile', 'Setting'];
+        screenTitle = ['NGO', 'Feed', 'Notification', 'Profile', 'Setting'],
+        showFAB = true;
 
   @override
   void dispose() {
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget? _fabPerNavIndex() {
+  Widget? _indexPerFAB() {
     switch (_selectedNavIndex) {
       case 1:
         {
@@ -115,10 +117,24 @@ class _HomePageState extends State<HomePage> {
             width: 120,
             child: getFloatingActionButton(
               text: 'Post',
-              buttonColor: Theme.of(context).colorScheme.inversePrimary,
+              buttonColor: Theme.of(context).colorScheme.primary,
               icon: Icons.post_add,
               function: () => showModalSheet(context),
-              foreground: Theme.of(context).colorScheme.onPrimaryContainer,
+              foreground: Theme.of(context).colorScheme.onPrimary,
+            ),
+          );
+        }
+      case 3:
+        {
+          return SizedBox(
+            height: 60,
+            width: 150,
+            child: getFloatingActionButton(
+              text: 'Edit profile',
+              buttonColor: Theme.of(context).colorScheme.primary,
+              icon: Icons.edit,
+              function: () {},
+              foreground: Theme.of(context).colorScheme.onPrimary,
             ),
           );
         }
@@ -179,30 +195,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: CustomAppBar(
-      //   title: (screenTitle[_selectedNavIndex]),
-      // ),
-      body: SafeArea(
-        child: PageView(
-          children: [
-            const NGOScreen(),
-            const PostScreen(),
-            const Center(
-              child: Icon(Icons.notifications),
-            ),
-            const UserProfile(),
-            Setting(setDarkModeHandler: widget.setDarkModeHandler),
-          ],
-          onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
-          controller: _pc,
-          physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
-        ),
-      ),
-      floatingActionButton: _fabPerNavIndex(),
-      bottomNavigationBar: NavigationBarTheme(
+  Widget _getBottomNavBar() => NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
           iconTheme: MaterialStateProperty.all(
@@ -256,7 +249,45 @@ class _HomePageState extends State<HomePage> {
             })
           },
         ),
+      );
+
+  Widget _getPageView() => PageView(
+        children: [
+          const NGOScreen(),
+          const PostScreen(),
+          const Center(
+            child: Icon(Icons.notifications),
+          ),
+          const UserProfile(),
+          Setting(setDarkModeHandler: widget.setDarkModeHandler),
+        ],
+        onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
+        controller: _pc,
+        physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // appBar: CustomAppBar(
+      //   title: (screenTitle[_selectedNavIndex]),
+      // ),
+      body: SafeArea(
+        child: NotificationListener<UserScrollNotification>(
+          onNotification: (notification) {
+            setState(() {
+              notification.direction == ScrollDirection.reverse
+                  ? showFAB = false
+                  : showFAB = true;
+            });
+            return true;
+          },
+          child: _getPageView(),
+        ),
       ),
+      floatingActionButton: showFAB ? _indexPerFAB() : null,
+      bottomNavigationBar: _getBottomNavBar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

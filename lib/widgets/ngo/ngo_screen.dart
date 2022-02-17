@@ -26,7 +26,7 @@ class _NGOScreenState extends State<NGOScreen>
   @override
   void initState() {
     super.initState();
-    // _getNGOData();
+    _getNGOData();
   }
 
   void _getNGOData() {
