@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import '../../models/post.dart';
+import '../../models/post_.dart';
 import './post_list.dart';
 
 class PostScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  List<Post> posts = [];
+  List<Post_> posts = [];
   List<String> postType = [
     'Post Normal',
     'Post Poll',
@@ -42,7 +42,7 @@ class _PostScreenState extends State<PostScreen>
     posts = List.generate(
       length,
       (index) {
-        return Post(
+        return Post_(
           id: index,
           postURL: faker.internet.httpsUrl(),
           relatedTo: List.generate(

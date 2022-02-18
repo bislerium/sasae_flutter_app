@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import './ngo_list.dart';
 import './custom_filter_chip.dart';
-import '../../models/ngo.dart';
+import '../../models/ngo_.dart';
 import 'package:faker/faker.dart';
 
 class NGOScreen extends StatefulWidget {
@@ -17,8 +17,8 @@ class _NGOScreenState extends State<NGOScreen>
     with AutomaticKeepAliveClientMixin {
   var searchController = TextEditingController();
 
-  List<NGO> ngoDataList = []; // Actual Untouched DataList
-  List<NGO> dataToShow = []; // Filtered/search data
+  List<NGO_> ngoDataList = []; // Actual Untouched DataList
+  List<NGO_> dataToShow = []; // Filtered/search data
   List<String> selectedChips = [];
   List<Widget> filterChips = [];
   var filtered = false;
@@ -34,8 +34,9 @@ class _NGOScreenState extends State<NGOScreen>
     ngoDataList = List.generate(
       length,
       (index) {
-        return NGO(
+        return NGO_(
           id: index,
+          ngoURL: faker.internet.httpsUrl(),
           orgName: faker.company.name(),
           orgPhoto: faker.image.image(random: true),
           estDate: faker.date.dateTime(minYear: 2000, maxYear: 2022),
@@ -65,9 +66,8 @@ class _NGOScreenState extends State<NGOScreen>
         } else {
           filtered = false;
           dataToShow = ngoDataList
-              .where((ngo) => ngo.orgName!
-                  .toLowerCase()
-                  .contains(enteredName.toLowerCase()))
+              .where((ngo) =>
+                  ngo.orgName.toLowerCase().contains(enteredName.toLowerCase()))
               .toList();
         }
       },
@@ -78,7 +78,7 @@ class _NGOScreenState extends State<NGOScreen>
     filtered = false;
     Set<String> fieldOfWork = {};
     for (var ngo in ngoDataList) {
-      for (var field in ngo.fieldOfWork!) {
+      for (var field in ngo.fieldOfWork) {
         fieldOfWork.add(field);
       }
     }
@@ -97,7 +97,7 @@ class _NGOScreenState extends State<NGOScreen>
       filtered = true;
       searchController.clear();
       dataToShow = ngoDataList.where((element) {
-        return element.fieldOfWork!
+        return element.fieldOfWork
             .any((element) => selectedChips.contains(element));
       }).toList();
       selectedChips.clear();

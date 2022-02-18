@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../models/ngo.dart';
+import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
+import '../../models/ngo_.dart';
 
 class NGOCard extends StatelessWidget {
-  final NGO ngo;
+  final NGO_ ngo_;
 
-  const NGOCard({Key? key, required this.ngo}) : super(key: key);
+  const NGOCard({Key? key, required this.ngo_}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,14 @@ class NGOCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NGOProfileScreen(hyperlink: ngo_.ngoURL),
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
@@ -27,7 +35,7 @@ class NGOCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
-                  ngo.orgPhoto!,
+                  ngo_.orgPhoto,
                   fit: BoxFit.cover,
                   height: 100.0,
                   width: 100.0,
@@ -58,7 +66,7 @@ class NGOCard extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 child: Text(
-                                  ngo.address!,
+                                  ngo_.address,
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -69,12 +77,12 @@ class NGOCard extends StatelessWidget {
                             ],
                           ),
                           Text(
-                            ngo.estDate!.year.toString(),
+                            ngo_.estDate.year.toString(),
                           ),
                         ],
                       ),
                       Text(
-                        ngo.orgName!,
+                        ngo_.orgName,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
@@ -82,14 +90,14 @@ class NGOCard extends StatelessWidget {
                         height: 40,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: ngo.fieldOfWork!.length,
+                          itemCount: ngo_.fieldOfWork.length,
                           itemBuilder: (context, _) {
                             return Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 4),
                               child: Chip(
                                 label: Text(
-                                  ngo.fieldOfWork![_],
+                                  ngo_.fieldOfWork[_],
                                   style: TextStyle(
                                     color: Theme.of(context)
                                         .colorScheme

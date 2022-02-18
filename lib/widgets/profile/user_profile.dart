@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/user.dart';
+import '../misc/verified_chip.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -38,9 +39,10 @@ class _UserProfileState extends State<UserProfile>
   var gender = ['Male', 'Female', 'LGBTQ+'];
 
   void _getUser() {
+    var isVerified = faker.randomGenerator.boolean();
     user = User(
       id: faker.randomGenerator.integer(1000),
-      isVerified: faker.randomGenerator.boolean(),
+      isVerified: isVerified,
       displayPicture: faker.image.image(width: 600, height: 600, random: true),
       numOfPosts: faker.randomGenerator.integer(1000),
       userName: faker.person.firstName(),
@@ -51,34 +53,11 @@ class _UserProfileState extends State<UserProfile>
       phoneNumber: faker.phoneNumber.us(),
       email: faker.internet.email(),
       joinedDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
-      citizenshipPhoto: faker.randomGenerator.boolean()
+      citizenshipPhoto: isVerified
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
     );
   }
-
-  Widget verifiedChip(bool isVerified) => Chip(
-        backgroundColor: isVerified
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.error,
-        avatar: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: Icon(
-            isVerified ? Icons.verified : Icons.new_releases,
-            color: isVerified
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onError,
-          ),
-        ),
-        label: Text(
-          isVerified ? 'Verified' : 'Unverified',
-          style: TextStyle(
-            color: isVerified
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onError,
-          ),
-        ),
-      );
 
   Widget materialTile({required Widget child, Function? func}) => Container(
         margin: const EdgeInsets.all(5),
@@ -173,7 +152,9 @@ class _UserProfileState extends State<UserProfile>
                   const SizedBox(
                     height: 5,
                   ),
-                  verifiedChip(user!.isVerified),
+                  VerifiedChip(
+                    isVerified: user!.isVerified,
+                  ),
                 ],
               ),
               SizedBox(

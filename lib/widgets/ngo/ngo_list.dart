@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../models/ngo.dart';
+import '../../models/ngo_.dart';
 import 'ngo_card.dart';
 
 class NGOList extends StatefulWidget {
-  final List<NGO> ngoList;
+  final List<NGO_> ngoList;
 
   const NGOList({Key? key, required this.ngoList}) : super(key: key);
 
@@ -39,7 +39,7 @@ class _NGOListState extends State<NGOList> {
       children: widget.ngoList
           .map((e) => NGOCard(
                 key: ValueKey(e.id),
-                ngo: e,
+                ngo_: e,
               ))
           .toList(),
     );

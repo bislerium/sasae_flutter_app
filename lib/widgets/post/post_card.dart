@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../models/post.dart';
+import '../../models/post_.dart';
 
 class PostCard extends StatelessWidget {
-  final Post post;
+  final Post_ post;
 
   const PostCard({Key? key, required this.post}) : super(key: key);
 

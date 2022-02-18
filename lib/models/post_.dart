@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class Post {
+// ignore: camel_case_types
+class Post_ {
   final int id;
   final String postURL;
   final List<String> relatedTo;
@@ -11,7 +12,8 @@ class Post {
   final String postType;
   final bool isPostedAnonymously;
   final bool isPokedToNGO;
-  Post({
+
+  Post_({
     required this.id,
     required this.postURL,
     required this.relatedTo,
@@ -22,7 +24,7 @@ class Post {
     required this.isPokedToNGO,
   });
 
-  Post copyWith({
+  Post_ copyWith({
     int? id,
     String? postURL,
     List<String>? relatedTo,
@@ -32,7 +34,7 @@ class Post {
     bool? isPostedAnonymously,
     bool? isPokedToNGO,
   }) {
-    return Post(
+    return Post_(
       id: id ?? this.id,
       postURL: postURL ?? this.postURL,
       relatedTo: relatedTo ?? this.relatedTo,
@@ -57,8 +59,8 @@ class Post {
     };
   }
 
-  factory Post.fromMap(Map<String, dynamic> map) {
-    return Post(
+  factory Post_.fromMap(Map<String, dynamic> map) {
+    return Post_(
       id: map['id']?.toInt() ?? 0,
       postURL: map['postURL'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
@@ -72,7 +74,7 @@ class Post {
 
   String toJson() => json.encode(toMap());
 
-  factory Post.fromJson(String source) => Post.fromMap(json.decode(source));
+  factory Post_.fromJson(String source) => Post_.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -83,7 +85,7 @@ class Post {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Post &&
+    return other is Post_ &&
         other.id == id &&
         other.postURL == postURL &&
         listEquals(other.relatedTo, relatedTo) &&

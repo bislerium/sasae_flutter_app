@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'post_card.dart';
-import '../../models/post.dart';
+import '../../models/post_.dart';
 
 class PostTileList extends StatefulWidget {
-  final List<Post> posts;
+  final List<Post_> posts;
 
   const PostTileList({Key? key, required this.posts}) : super(key: key);
 
