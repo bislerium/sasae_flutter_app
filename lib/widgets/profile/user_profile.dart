@@ -117,7 +117,7 @@ class _UserProfileState extends State<UserProfile>
           child: Column(
             children: [
               SizedBox(
-                height: size.height * 0.08,
+                height: size.height * 0.1,
               ),
               Column(
                 children: [

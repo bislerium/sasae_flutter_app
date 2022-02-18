@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../auth/register_screen.dart';
 import '../home_page.dart';
+import '../misc/custom_widgets.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return ElevatedButton(
           child: Icon(
             Icons.navigate_next_rounded,
-            size: 45,
+            size: 50,
             color: Theme.of(context).colorScheme.onSecondaryContainer,
           ),
           style: ElevatedButton.styleFrom(
@@ -190,124 +191,103 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
 
-  void showResetPasswordModal(BuildContext context) {
-    showModalBottomSheet(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      isScrollControlled: true,
-      context: context,
-      builder: (_) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(_).viewInsets.bottom,
-          ),
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(40, 30, 40, 20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Forgot Password',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Enter your email address associated with your sasae account. We\'ll send you a link to your email for password reset process.',
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface,
-                    // fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Form(
-                  key: passwordResetFormKey,
-                  child: TextFormField(
-                    controller: resetEmailField,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.email_rounded),
-                      labelText: 'Email',
-                      hintText: 'xyz@email.com',
-                      // floatingLabelBehavior: FloatingLabelBehavior.never,
-                    ),
-                    validator: (value) {
-                      const pattern =
-                          r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
-                      final regExp = RegExp(pattern);
-                      if (value!.isEmpty) {
-                        return 'Enter an email!';
-                      } else if (!regExp.hasMatch(value)) {
-                        return 'Enter a valid email!';
-                      } else {
-                        return null;
-                      }
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(
-                      height: 50, width: double.infinity),
-                  child: ElevatedButton(
-                    child: const Text(
-                      'Request reset link',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    onPressed: () {
-                      final isValid =
-                          passwordResetFormKey.currentState!.validate();
-
-                      if (isValid) {
-                        var email = resetEmailField.text;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Password reset email sent, Check your inbox!',
-                              // style: TextStyle(fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
-                          ),
-                        );
-                        resetEmailField.clear();
-                        Navigator.of(_).pop();
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                    ),
-                  ),
-                ),
-              ],
+  void showResetPasswordModal(BuildContext ctx) => showModalSheet(
+        ctx: ctx,
+        topPadding: 30,
+        bottomPadding: 20,
+        leftPadding: 30,
+        rightPadding: 30,
+        children: [
+          Text(
+            'Forgot Password',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        );
-      },
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-    );
-  }
+          const SizedBox(
+            height: 30,
+          ),
+          Text(
+            'Enter your email address associated with your sasae account. We\'ll send you a link to your email for password reset process.',
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              fontSize: 14,
+              color: Theme.of(context).colorScheme.onSurface,
+              // fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Form(
+            key: passwordResetFormKey,
+            child: TextFormField(
+              controller: resetEmailField,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.email_rounded),
+                labelText: 'Email',
+                hintText: 'xyz@email.com',
+                // floatingLabelBehavior: FloatingLabelBehavior.never,
+              ),
+              validator: (value) {
+                const pattern =
+                    r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+                final regExp = RegExp(pattern);
+                if (value!.isEmpty) {
+                  return 'Enter an email!';
+                } else if (!regExp.hasMatch(value)) {
+                  return 'Enter a valid email!';
+                } else {
+                  return null;
+                }
+              },
+              keyboardType: TextInputType.emailAddress,
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints.tightFor(
+                height: 60, width: double.infinity),
+            child: ElevatedButton(
+              child: const Text(
+                'Request reset link',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              onPressed: () {
+                final isValid = passwordResetFormKey.currentState!.validate();
+
+                if (isValid) {
+                  var email = resetEmailField.text;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Password reset email sent, Check your inbox!',
+                        // style: TextStyle(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                    ),
+                  );
+                  resetEmailField.clear();
+                  Navigator.of(ctx).pop();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                shape: const StadiumBorder(),
+              ),
+            ),
+          ),
+        ],
+      );
 
   @override
   Widget build(BuildContext context) {

@@ -29,7 +29,7 @@ class _PostScreenState extends State<PostScreen>
   }
 
   Future<void> _refresh() async {
-    // await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     setState(() {
       _getPosts();
     });

@@ -5,6 +5,7 @@ import './auth/login_screen.dart';
 import './post/post_screen.dart';
 import './ngo/ngo_screen.dart';
 import './setting.dart';
+import 'misc/custom_widgets.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -52,40 +53,24 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void showModalSheet(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      builder: (_) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              getPostModalItem(_, Icons.file_present_sharp, 'Normal Post',
-                  'Attach an Image!', () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(_, Icons.poll, 'Poll Post', 'Poll the Options!',
-                  () {
-                Navigator.pop(context);
-              }),
-              getPostModalItem(
-                  _, Icons.help_center, 'Request Post', 'Request to Change!',
-                  () {
-                Navigator.pop(context);
-              }),
-            ],
-          ),
-        );
-      },
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-    );
-  }
+  void showPostOptionModal(BuildContext ctx) => showModalSheet(
+        ctx: ctx,
+        children: [
+          getPostModalItem(
+              ctx, Icons.file_present_sharp, 'Normal Post', 'Attach an Image!',
+              () {
+            Navigator.pop(context);
+          }),
+          getPostModalItem(ctx, Icons.poll, 'Poll Post', 'Poll the Options!',
+              () {
+            Navigator.pop(context);
+          }),
+          getPostModalItem(
+              ctx, Icons.help_center, 'Request Post', 'Request to Change!', () {
+            Navigator.pop(context);
+          }),
+        ],
+      );
 
   FloatingActionButton getFloatingActionButton({
     required String text,
@@ -119,7 +104,7 @@ class _HomePageState extends State<HomePage> {
               text: 'Post',
               buttonColor: Theme.of(context).colorScheme.primary,
               icon: Icons.post_add,
-              function: () => showModalSheet(context),
+              function: () => showPostOptionModal(context),
               foreground: Theme.of(context).colorScheme.onPrimary,
             ),
           );

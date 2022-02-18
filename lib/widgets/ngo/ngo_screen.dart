@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import '../misc/custom_widgets.dart';
 import './ngo_list.dart';
 import './custom_filter_chip.dart';
 import '../../models/ngo_.dart';
@@ -121,89 +122,76 @@ class _NGOScreenState extends State<NGOScreen>
     super.dispose();
   }
 
-  void showFilterModal(BuildContext ctx) {
-    showModalBottomSheet(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      context: ctx,
-      builder: (_) {
-        return Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                'Filter by Field of Work',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+  void showFilterModal(BuildContext ctx) => showModalSheet(
+        ctx: ctx,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Text(
+              'Filter by Field of Work',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 10,
+                  children: filterChips,
                 ),
               ),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 10,
-                    children: filterChips,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: SizedBox(
+              height: 60,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 10,
+                    child: TextButton(
+                      child: const Text('Reset'),
+                      onPressed: () {
+                        clear(context);
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: SizedBox(
-                height: 60,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 10,
-                      child: TextButton(
-                        child: const Text('Reset'),
-                        onPressed: () {
-                          clear(context);
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 10,
+                    child: ElevatedButton(
+                      child: const Text('Apply'),
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                      ),
+                      onPressed: () {
+                        if (selectedChips.isNotEmpty) {
+                          applyFilter();
+                          FocusScope.of(context).unfocus();
                           Navigator.of(context).pop();
-                        },
-                      ),
+                        }
+                      },
                     ),
-                    const Spacer(
-                      flex: 1,
-                    ),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      flex: 10,
-                      child: ElevatedButton(
-                        child: const Text('Apply'),
-                        style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                        ),
-                        onPressed: () {
-                          if (selectedChips.isNotEmpty) {
-                            applyFilter();
-                            FocusScope.of(context).unfocus();
-                            Navigator.of(context).pop();
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        );
-      },
-      // isDismissible: false,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(25.0),
-        ),
-      ),
-    );
-  }
+          ),
+        ],
+      );
 
   @override
   Widget build(BuildContext context) {

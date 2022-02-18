@@ -41,6 +41,12 @@ dependencies:
   filter_list: ^1.0.1
   image_picker: ^0.8.4+8
   url_launcher: ^6.0.20
+  http: ^0.13.4
+  provider: ^6.0.2
+  polls: ^1.0.1
+  charts_flutter: ^0.12.0
+  map_launcher: ^2.2.1+1
+  khalti_flutter: ^2.0.1
 
 dev_dependencies:
   flutter_test:

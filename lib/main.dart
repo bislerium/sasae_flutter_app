@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import './widgets/auth/register_screen.dart';
 import './widgets/home_page.dart';
 import './widgets/auth/login_screen.dart';
