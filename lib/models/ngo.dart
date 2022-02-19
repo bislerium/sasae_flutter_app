@@ -16,11 +16,10 @@ class NGO {
   final String phone;
   final String email;
   final bool isVerified;
-  final String epayAccount;
+  final String? epayAccount;
   final Bank? bank;
   final String? swcCertificateURL;
   final String? panCertificateURL;
-
   NGO({
     required this.id,
     required this.latitude,
@@ -33,7 +32,7 @@ class NGO {
     required this.phone,
     required this.email,
     required this.isVerified,
-    required this.epayAccount,
+    this.epayAccount,
     this.bank,
     this.swcCertificateURL,
     this.panCertificateURL,
@@ -108,7 +107,7 @@ class NGO {
       phone: map['phone'] ?? '',
       email: map['email'] ?? '',
       isVerified: map['isVerified'] ?? false,
-      epayAccount: map['epayAccount'] ?? '',
+      epayAccount: map['epayAccount'],
       bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
       swcCertificateURL: map['swcCertificateURL'],
       panCertificateURL: map['panCertificateURL'],
