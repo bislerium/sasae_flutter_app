@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,12 +25,12 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
   _NGOProfileScreenState()
       : isloaded = false,
         paymentField = TextEditingController(),
-        passwordResetFormKey = GlobalKey<FormState>();
+        paymentFormKey = GlobalKey<FormState>();
 
   Future<NGO>? _ngo;
   bool isloaded;
   TextEditingController paymentField;
-  GlobalKey<FormState> passwordResetFormKey;
+  GlobalKey<FormState> paymentFormKey;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
       ),
       estDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
       address: faker.address.streetAddress(),
-      phone: faker.phoneNumber.us(),
+      phone: faker.randomGenerator.fromPattern([r'(^[9][678][0-9]{8}$)']),
       email: faker.internet.email(),
       epayAccount: faker.phoneNumber.us(),
       bank: faker.randomGenerator.boolean()
@@ -134,7 +135,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Form(
-              key: passwordResetFormKey,
+              key: paymentFormKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -167,11 +168,46 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                         ),
                       ),
                       onPressed: () {
-                        final isValid =
-                            passwordResetFormKey.currentState!.validate();
-
+                        final isValid = paymentFormKey.currentState!.validate();
                         if (isValid) {
-                          Navigator.of(context).pop();
+                          KhaltiScope.of(context).pay(
+                            config: PaymentConfig(
+                              amount: int.parse(paymentField.text) * 100,
+                              productIdentity: 'dells-sssssg5-g5510-2021',
+                              productName: 'NGO Donation: ${ngo.orgName}',
+                              mobile: ngo.epayAccount,
+                              mobileReadOnly: true,
+                            ),
+                            preferences: [
+                              PaymentPreference.khalti,
+                              PaymentPreference.connectIPS,
+                              PaymentPreference.eBanking,
+                              PaymentPreference.mobileBanking,
+                              PaymentPreference.sct,
+                            ],
+                            onSuccess: (su) {
+                              const successsnackBar = SnackBar(
+                                content: Text('Payment Successful'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(successsnackBar);
+                            },
+                            onFailure: (fa) {
+                              const failedsnackBar = SnackBar(
+                                content: Text('Payment Failed'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(failedsnackBar);
+                            },
+                            onCancel: () {
+                              const cancelsnackBar = SnackBar(
+                                content: Text('Payment Cancelled'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(cancelsnackBar);
+                            },
+                          );
+                          // Navigator.of(context).pop();
                         }
                       },
                       style: ElevatedButton.styleFrom(

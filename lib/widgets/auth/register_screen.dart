@@ -257,11 +257,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   decoration: const InputDecoration(
                     label: Text('Phone'),
                     icon: Icon(Icons.phone_android_rounded),
-                    hintText: 'E.g. +9779800740959',
+                    hintText: 'E.g. 9800740959',
                   ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Required field!';
+                    } else if (RegExp(r'(^[9][678][0-9]{8}$)')
+                        .hasMatch(value)) {
+                      return 'Invalid phone number!';
                     } else {
                       return null;
                     }
