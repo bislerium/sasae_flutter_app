@@ -4,9 +4,10 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
-import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:randexp/randexp.dart';
 
+import '../../models/bank.dart';
 import '../../models/ngo.dart';
 import '../misc/custom_widgets.dart';
 import '../misc/verified_chip.dart';
@@ -23,13 +24,12 @@ class NGOProfileScreen extends StatefulWidget {
 
 class _NGOProfileScreenState extends State<NGOProfileScreen> {
   _NGOProfileScreenState()
-      : isloaded = false,
-        paymentField = TextEditingController(),
+      : donationAmountField = TextEditingController(),
         paymentFormKey = GlobalKey<FormState>();
 
   Future<NGO>? _ngo;
-  bool isloaded;
-  TextEditingController paymentField;
+  Future<bool>? isloaded;
+  TextEditingController donationAmountField;
   GlobalKey<FormState> paymentFormKey;
 
   @override
@@ -40,9 +40,12 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
 
   @override
   void dispose() {
-    paymentField.dispose();
+    donationAmountField.dispose();
     super.dispose();
   }
+
+  //Generates Nepal Phone Number
+  String getRandPhoneNumber() => RandExp(RegExp(r'(^[9][678][0-9]{8}$)')).gen();
 
   NGO _randomUser() {
     var verified = faker.randomGenerator.boolean();
@@ -61,16 +64,18 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
       ),
       estDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
       address: faker.address.streetAddress(),
-      phone: faker.randomGenerator.fromPattern([r'(^[9][678][0-9]{8}$)']),
+      phone: getRandPhoneNumber(),
       email: faker.internet.email(),
-      epayAccount: faker.phoneNumber.us(),
+      epayAccount: getRandPhoneNumber(),
       bank: faker.randomGenerator.boolean()
           ? Bank(
               bankName: faker.company.name(),
               bankBranch: faker.address.city(),
-              bankBSB: faker.randomGenerator.integer(6, min: 6),
+              bankBSB: int.parse(faker.randomGenerator.numberOfLength(6)),
               bankAccountName: ngoName,
-              bankAccountNumber: faker.randomGenerator.integer(17, min: 6))
+              bankAccountNumber: int.parse(faker.randomGenerator
+                  .numberOfLength(faker.randomGenerator.integer(16, min: 9))),
+            )
           : null,
       panCertificateURL: verified
           ? faker.image.image(width: 800, height: 600, random: true)
@@ -82,7 +87,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
   }
 
   Future<NGO> _getNGO() async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
     return _randomUser();
   }
 
@@ -139,7 +144,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: paymentField,
+                    controller: donationAmountField,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.money_rounded),
                       labelText: 'Amount',
@@ -148,6 +153,9 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Enter donation amount!';
+                      } else if (!RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$')
+                          .hasMatch(value)) {
+                        return 'Invalid amount: No alphabets, symbols and spaces allowed!';
                       } else {
                         return null;
                       }
@@ -170,20 +178,20 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                       onPressed: () {
                         final isValid = paymentFormKey.currentState!.validate();
                         if (isValid) {
-                          KhaltiScope.of(context).pay(
+                          KhaltiScope.of(context)
+                              .pay(
                             config: PaymentConfig(
-                              amount: int.parse(paymentField.text) * 100,
+                              amount: int.parse(donationAmountField.text) * 100,
                               productIdentity: 'dells-sssssg5-g5510-2021',
                               productName: 'NGO Donation: ${ngo.orgName}',
                               mobile: ngo.epayAccount,
                               mobileReadOnly: true,
                             ),
                             preferences: [
+                              // Not providing this will enable all the payment methods.
                               PaymentPreference.khalti,
                               PaymentPreference.connectIPS,
-                              PaymentPreference.eBanking,
                               PaymentPreference.mobileBanking,
-                              PaymentPreference.sct,
                             ],
                             onSuccess: (su) {
                               const successsnackBar = SnackBar(
@@ -206,8 +214,11 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(cancelsnackBar);
                             },
-                          );
-                          // Navigator.of(context).pop();
+                          )
+                              .then((value) {
+                            Navigator.of(context).pop();
+                            donationAmountField.clear();
+                          });
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -303,7 +314,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
           Widget? widget;
           if (snapshot.hasData) {
             NGO ngo = snapshot.data!;
-            isloaded = true;
+            isloaded = Future.value(true);
             widget = RefreshIndicator(
               onRefresh: _refresh,
               child: SingleChildScrollView(
@@ -402,6 +413,10 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                                 ).toString());
                               }),
                             ),
+                            customTile(
+                              Icons.account_balance_wallet_rounded,
+                              ngo.epayAccount,
+                            ),
                             if (ngo.isVerified)
                               materialTile(
                                 child: Padding(
@@ -459,6 +474,42 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                           padding: const EdgeInsets.all(10.0),
                           child: Column(
                             children: [
+                              ListTile(
+                                leading: Icon(
+                                  Icons.account_balance_rounded,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                title: Text(
+                                  'Bank',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                trailing: TextButton.icon(
+                                  onPressed: () {
+                                    String text =
+                                        'Bank Name:\t\t ${ngo.bank!.bankName}\nBank Branch:\t\t ${ngo.bank!.bankBranch}\nBank BSB:\t\t ${ngo.bank!.bankBSB}\nAccount Name:\t ${ngo.bank!.bankAccountName}\nAccount Number:\t ${ngo.bank!.bankAccountNumber}';
+                                    copyToClipboard(
+                                      ctx: context,
+                                      text: text,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.copy_rounded,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  label: Text(
+                                    'Copy',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
                               customTile(
                                 Icons.ac_unit,
                                 ngo.bank!.bankName,
@@ -492,20 +543,14 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: isloaded
-          ? getCustomFAB(
-              text: 'Donate',
-              icon: Icons.hail_rounded,
-              background: Theme.of(context).colorScheme.primary,
-              foreground: Theme.of(context).colorScheme.onPrimary,
-              func: () => showDonationModalSheet(context, _randomUser()),
-            )
-          : null,
+      floatingActionButton: getCustomFAB(
+        text: 'Donate',
+        icon: Icons.hail_rounded,
+        background: Theme.of(context).colorScheme.primary,
+        foreground: Theme.of(context).colorScheme.onPrimary,
+        func: () => showDonationModalSheet(context, _randomUser()),
+        width: 130,
+      ),
     );
   }
-
-  // @override
-  // // ignore: todo
-  // // TODO: implement wantKeepAlive
-  // bool get wantKeepAlive => true;
 }

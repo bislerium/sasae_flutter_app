@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:map_launcher/map_launcher.dart';
 
 Widget getCustomFAB({
@@ -7,10 +8,12 @@ Widget getCustomFAB({
   required VoidCallback func,
   required Color background,
   required Color foreground,
+  double height = 60,
+  double width = 120,
 }) =>
     SizedBox(
-      height: 60,
-      width: 120,
+      height: height,
+      width: width,
       child: FloatingActionButton.extended(
         elevation: 3,
         onPressed: func,
@@ -41,7 +44,7 @@ void showSnackBar({
   Color? textColor,
   Color? background,
 }) =>
-    SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
         textAlign: TextAlign.center,
@@ -51,7 +54,7 @@ void showSnackBar({
       ),
       backgroundColor:
           background ?? Theme.of(context).colorScheme.inverseSurface,
-    );
+    ));
 
 void showModalSheet({
   required BuildContext ctx,
@@ -95,4 +98,10 @@ Future<void> launchMap(
       title: title,
     );
   }
+}
+
+Future<void> copyToClipboard(
+    {required BuildContext ctx, required String text}) async {
+  await Clipboard.setData(ClipboardData(text: text));
+  showSnackBar(context: ctx, message: 'Copiied to clipboard!');
 }

@@ -134,6 +134,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  discontinuous_range:
+    dependency: transitive
+    description:
+      name: discontinuous_range
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -450,6 +464,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.2"
+  randexp:
+    dependency: "direct main"
+    description:
+      name: randexp
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
+  ret:
+    dependency: transitive
+    description:
+      name: ret
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -25,9 +25,9 @@ class _HomePageState extends State<HomePage> {
   bool showFAB;
 
   _HomePageState()
-      : _selectedNavIndex = 1,
+      : _selectedNavIndex = 2,
         _pc = PageController(
-          initialPage: 1,
+          initialPage: 2,
         ),
         screenTitle = ['NGO', 'Feed', 'Notification', 'Profile', 'Setting'],
         showFAB = true;
@@ -95,21 +95,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget? _indexPerFAB() {
     switch (_selectedNavIndex) {
-      case 1:
-        {
-          return SizedBox(
-            height: 60,
-            width: 120,
-            child: getFloatingActionButton(
-              text: 'Post',
-              buttonColor: Theme.of(context).colorScheme.primary,
-              icon: Icons.post_add,
-              function: () => showPostOptionModal(context),
-              foreground: Theme.of(context).colorScheme.onPrimary,
-            ),
-          );
-        }
-      case 3:
+      case 0:
         {
           return SizedBox(
             height: 60,
@@ -119,6 +105,20 @@ class _HomePageState extends State<HomePage> {
               buttonColor: Theme.of(context).colorScheme.primary,
               icon: Icons.edit,
               function: () {},
+              foreground: Theme.of(context).colorScheme.onPrimary,
+            ),
+          );
+        }
+      case 2:
+        {
+          return SizedBox(
+            height: 60,
+            width: 120,
+            child: getFloatingActionButton(
+              text: 'Post',
+              buttonColor: Theme.of(context).colorScheme.primary,
+              icon: Icons.post_add,
+              function: () => showPostOptionModal(context),
               foreground: Theme.of(context).colorScheme.onPrimary,
             ),
           );
@@ -197,6 +197,11 @@ class _HomePageState extends State<HomePage> {
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: const [
             NavigationDestination(
+              icon: Icon(Icons.person_outline),
+              selectedIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+            NavigationDestination(
               icon: Icon(Icons.health_and_safety_outlined),
               selectedIcon: Icon(Icons.health_and_safety),
               label: 'NGO',
@@ -210,11 +215,6 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.notifications_outlined),
               selectedIcon: Icon(Icons.notifications),
               label: 'Notification',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: 'Profile',
             ),
             NavigationDestination(
               icon: Icon(Icons.settings_outlined),
@@ -238,12 +238,12 @@ class _HomePageState extends State<HomePage> {
 
   Widget _getPageView() => PageView(
         children: [
+          const UserProfile(),
           const NGOScreen(),
           const PostScreen(),
           const Center(
             child: Icon(Icons.notifications),
           ),
-          const UserProfile(),
           Setting(setDarkModeHandler: widget.setDarkModeHandler),
         ],
         onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},

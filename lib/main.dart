@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
             localizationsDelegates: const [
               KhaltiLocalizations.delegate,
             ],
+            debugShowCheckedModeBanner: false,
             theme: ThemeData(
               // This is the theme of your application.
               //
