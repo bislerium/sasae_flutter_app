@@ -124,6 +124,7 @@ class _NGOScreenState extends State<NGOScreen>
 
   void showFilterModal(BuildContext ctx) => showModalSheet(
         ctx: ctx,
+        height: MediaQuery.of(ctx).size.height * 0.6,
         children: [
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),

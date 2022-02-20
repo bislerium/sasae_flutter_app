@@ -61,11 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
           // floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
         validator: (value) {
-          if (value!.isEmpty) {
-            return 'Enter the password!';
-          } else {
-            return null;
-          }
+          return checkValue(
+            value: value!,
+            checkEmptyOnly: true,
+          );
         },
         textInputAction: TextInputAction.done,
         keyboardType: TextInputType.visiblePassword,
@@ -94,17 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.of(context).pushNamedAndRemoveUntil(
                     HomePage.routeName, (Route<dynamic> route) => false);
               } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Wrong Username or password!',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onError,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                  ),
+                showSnackBar(
+                  context: context,
+                  message: 'Wrong Username or password!',
+                  errorSnackBar: true,
                 );
               }
             }
@@ -232,16 +224,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 // floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
               validator: (value) {
-                const pattern =
-                    r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
-                final regExp = RegExp(pattern);
-                if (value!.isEmpty) {
-                  return 'Enter an email!';
-                } else if (!regExp.hasMatch(value)) {
-                  return 'Enter a valid email!';
-                } else {
-                  return null;
-                }
+                return checkValue(
+                  value: value!,
+                  pattern:
+                      r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                  patternMessage: 'Invalid email!',
+                );
               },
               keyboardType: TextInputType.emailAddress,
             ),
@@ -264,18 +252,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 if (isValid) {
                   var email = resetEmailField.text;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Password reset email sent, Check your inbox!',
-                        // style: TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                    ),
+                  showSnackBar(
+                    context: ctx,
+                    message: 'Password reset email sent, Check your inbox!',
                   );
                   resetEmailField.clear();
                   Navigator.of(ctx).pop();

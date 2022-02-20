@@ -155,14 +155,10 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                       // floatingLabelBehavior: FloatingLabelBehavior.never,
                     ),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Enter donation amount!';
-                      } else if (!RegExp(r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$')
-                          .hasMatch(value)) {
-                        return 'Invalid amount: No alphabets, symbols and spaces allowed!';
-                      } else {
-                        return null;
-                      }
+                      return checkValue(
+                        value: value!,
+                        checkInt: true,
+                      );
                     },
                     keyboardType: TextInputType.number,
                   ),
@@ -217,7 +213,6 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                           )
                               .then((value) {
                             Navigator.of(context).pop();
-                            FocusScope.of(context).unfocus();
                             donationAmountField.clear();
                           });
                         }
@@ -256,19 +251,28 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
         ),
       );
 
-  Widget customTile(IconData icon, String title, {Function? func}) =>
+  Widget customTile(IconData? leadingIcon, String trailing,
+          {String? leading, Function? func}) =>
       materialTile(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                icon,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+              leading == null
+                  ? Icon(
+                      leadingIcon,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    )
+                  : Text(
+                      leading,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
               Text(
-                title,
+                trailing,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -369,7 +373,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: size.height * 0.06,
+                        height: size.height * 0.05,
                       ),
                       Card(
                         color: Theme.of(context).colorScheme.surface,
@@ -521,15 +525,28 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                                 customTile(
                                   Icons.ac_unit,
                                   _ngo!.bank!.bankName,
+                                  leading: 'Name',
                                 ),
                                 customTile(
-                                    Icons.ac_unit, _ngo!.bank!.bankBranch),
-                                customTile(Icons.ac_unit,
-                                    _ngo!.bank!.bankBSB.toString()),
+                                  Icons.ac_unit,
+                                  _ngo!.bank!.bankBranch,
+                                  leading: 'Branch',
+                                ),
                                 customTile(
-                                    Icons.ac_unit, _ngo!.bank!.bankAccountName),
-                                customTile(Icons.ac_unit,
-                                    _ngo!.bank!.bankAccountNumber.toString()),
+                                  Icons.ac_unit,
+                                  _ngo!.bank!.bankBSB.toString(),
+                                  leading: 'BSB',
+                                ),
+                                customTile(
+                                  Icons.ac_unit,
+                                  _ngo!.bank!.bankAccountName,
+                                  leading: 'Account Name',
+                                ),
+                                customTile(
+                                  Icons.ac_unit,
+                                  _ngo!.bank!.bankAccountNumber.toString(),
+                                  leading: 'Account Number',
+                                ),
                               ],
                             ),
                           ),
@@ -550,7 +567,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
               icon: Icons.hail_rounded,
               background: Theme.of(context).colorScheme.primary,
               foreground: Theme.of(context).colorScheme.onPrimary,
-              func: () => showDonationModalSheet(context, _randomUser()),
+              func: () => showDonationModalSheet(context, _ngo!),
               width: 130,
             )
           : null,

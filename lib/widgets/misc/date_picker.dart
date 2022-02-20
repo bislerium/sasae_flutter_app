@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'custom_widgets.dart';
+
 class DatePickerField extends StatefulWidget {
   final void Function(DateTime) setDateHandler;
 
@@ -44,11 +46,10 @@ class _DatePickerFieldState extends State<DatePickerField> {
               readOnly: true,
               onTap: () => pickDate(context),
               validator: (value) {
-                if (date == null || value!.isEmpty) {
-                  return 'Required field!';
-                } else {
-                  return null;
-                }
+                return checkValue(
+                  value: value!,
+                  checkEmptyOnly: true,
+                );
               },
             ),
           ),

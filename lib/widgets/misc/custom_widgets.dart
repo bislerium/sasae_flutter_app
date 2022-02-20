@@ -41,19 +41,23 @@ AppBar getCustomAppBar(
 void showSnackBar({
   required BuildContext context,
   required String message,
-  Color? textColor,
+  Color? foreground,
   Color? background,
+  bool errorSnackBar = false,
 }) =>
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(
         message,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: textColor ?? Theme.of(context).colorScheme.onInverseSurface,
+          color: foreground ??= errorSnackBar
+              ? Theme.of(context).colorScheme.onError
+              : Theme.of(context).colorScheme.onInverseSurface,
         ),
       ),
-      backgroundColor:
-          background ?? Theme.of(context).colorScheme.inverseSurface,
+      backgroundColor: background ??= errorSnackBar
+          ? Theme.of(context).colorScheme.error
+          : Theme.of(context).colorScheme.inverseSurface,
     ));
 
 void showModalSheet({
@@ -63,6 +67,7 @@ void showModalSheet({
   double bottomPadding = 10,
   double leftPadding = 15,
   double rightPadding = 15,
+  double? height,
 }) {
   showModalBottomSheet(
     context: ctx,
@@ -75,9 +80,12 @@ void showModalSheet({
             bottom: MediaQuery.of(_).viewInsets.bottom + bottomPadding,
             left: leftPadding,
             right: rightPadding),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: children,
+        child: SizedBox(
+          height: height,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: children,
+          ),
         ),
       );
     },
@@ -104,4 +112,29 @@ Future<void> copyToClipboard(
     {required BuildContext ctx, required String text}) async {
   await Clipboard.setData(ClipboardData(text: text));
   showSnackBar(context: ctx, message: 'Copiied to clipboard!');
+}
+
+String? checkValue({
+  String? value,
+  bool checkEmptyOnly = false,
+  String emptyMessage = 'Required Field!',
+  String? pattern,
+  String? patternMessage,
+  bool checkInt = false,
+  bool checkDecimal = false,
+}) {
+  bool isValueEmpty = value == null || value.isEmpty;
+  var intPattern = r'^-?(([0-9]*))$';
+  var decimalPattern = r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$';
+  if (isValueEmpty) return emptyMessage;
+  if (checkEmptyOnly && !isValueEmpty) return null;
+  if (checkInt) {
+    pattern = intPattern;
+    patternMessage = 'Only numeric non-decimal values accepted!';
+  }
+  if (checkDecimal) {
+    pattern = decimalPattern;
+    patternMessage = 'Only numeric values accepted!';
+  }
+  return RegExp(pattern!).hasMatch(value) ? null : patternMessage;
 }

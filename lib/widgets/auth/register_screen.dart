@@ -79,11 +79,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           });
         },
         validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Required field!';
-          } else {
-            return null;
-          }
+          return checkValue(
+            value: value,
+            checkEmptyOnly: true,
+          );
         },
         items: genderList
             .map((String value) => DropdownMenuItem<String>(
@@ -120,11 +119,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.person),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.name,
@@ -165,11 +163,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.flag_rounded),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -184,11 +181,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.local_parking_rounded),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -203,11 +199,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.location_city_rounded),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
@@ -222,11 +217,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.near_me),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.streetAddress,
@@ -260,14 +254,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'E.g. 9800740959',
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else if (RegExp(r'(^[9][678][0-9]{8}$)')
-                        .hasMatch(value)) {
-                      return 'Invalid phone number!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      pattern: r'(^[9][678][0-9]{8}$)',
+                      patternMessage: 'Invalid phone number!',
+                    );
                   },
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.next,
@@ -283,16 +274,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     hintText: 'Only unique email is accepted',
                   ),
                   validator: (value) {
-                    const pattern =
-                        r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
-                    final regExp = RegExp(pattern);
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else if (!regExp.hasMatch(value)) {
-                      return 'Enter a valid email!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      pattern:
+                          r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                      patternMessage: 'Invalid email!',
+                    );
                   },
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
@@ -353,11 +340,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.password_rounded),
                   ),
                   validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else {
-                      return null;
-                    }
+                    return checkValue(
+                      value: value,
+                      checkEmptyOnly: true,
+                    );
                   },
                   keyboardType: TextInputType.visiblePassword,
                   textInputAction: TextInputAction.next,
