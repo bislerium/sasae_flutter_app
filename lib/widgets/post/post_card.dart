@@ -53,11 +53,13 @@ class PostCard extends StatelessWidget {
                                 Theme.of(context).colorScheme.primaryContainer,
                             label: Text(
                               e,
-                              style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer),
                             ),
                           ),
                         ),
@@ -69,8 +71,11 @@ class PostCard extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
                   post.postContent,
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
                   maxLines: 5,
-                  textAlign: TextAlign.justify,
+                  // textAlign: TextAlign.justify,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
@@ -84,8 +89,13 @@ class PostCard extends StatelessWidget {
                         Chip(
                           label: Text(
                             post.postType.split(' ').map((l) => l[0]).join(' '),
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.onPrimary),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle2
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                           ),
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
@@ -94,10 +104,13 @@ class PostCard extends StatelessWidget {
                           Chip(
                             label: Text(
                               'N',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSecondaryContainer),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondaryContainer),
                             ),
                             backgroundColor: Theme.of(context)
                                 .colorScheme
@@ -107,10 +120,13 @@ class PostCard extends StatelessWidget {
                           Chip(
                             label: Text(
                               'A',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onTertiaryContainer),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle2
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onTertiaryContainer),
                             ),
                             backgroundColor:
                                 Theme.of(context).colorScheme.tertiaryContainer,

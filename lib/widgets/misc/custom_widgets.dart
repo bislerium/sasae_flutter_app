@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:map_launcher/map_launcher.dart';
@@ -32,7 +34,12 @@ Widget getCustomFAB({
 AppBar getCustomAppBar(
         {required BuildContext context, required String title}) =>
     AppBar(
-      title: Text(title),
+      title: Text(
+        title,
+        style: Theme.of(context).textTheme.headline6?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+      ),
       backgroundColor: Colors.transparent,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
       elevation: 0,
@@ -139,5 +146,13 @@ String? checkValue({
   return RegExp(pattern!).hasMatch(value) ? null : patternMessage;
 }
 
-String countNum(int number) =>
-    number < 1000 ? number.toString() : '${(number / 1000).truncate()}k';
+num turnicate(num value, {int decimalPlace = 1}) {
+  var _ = pow(10, decimalPlace);
+  var turnicatedValue = (value * _).truncateToDouble() / _;
+  return turnicatedValue % 1 == 0 ? turnicatedValue.toInt() : turnicatedValue;
+}
+
+String numToK(int number) {
+  var k = 1000;
+  return number < k ? number.toString() : '${turnicate(number / k)}k';
+}

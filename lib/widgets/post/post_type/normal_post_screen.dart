@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import '../../../models/post/normal_post.dart';
 import '../../misc/custom_widgets.dart';
 import 'voting_bar.dart';
@@ -7,7 +6,10 @@ import 'voting_bar.dart';
 class PostNormalScreen extends StatefulWidget {
   final String hyperlink;
 
-  const PostNormalScreen({Key? key, required this.hyperlink}) : super(key: key);
+  const PostNormalScreen({
+    Key? key,
+    required this.hyperlink,
+  }) : super(key: key);
 
   @override
   _PostNormalScreenState createState() => _PostNormalScreenState();
@@ -16,16 +18,21 @@ class PostNormalScreen extends StatefulWidget {
 class _PostNormalScreenState extends State<PostNormalScreen> {
   _PostNormalScreenState()
       : isLoaded = false,
-        showReactionBar = true;
+        scrollController = ScrollController();
 
   NormalPost? _postNormal;
   bool isLoaded;
-  bool showReactionBar;
+  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     _getNormalPost();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   Future<void> _getNormalPost() async {
@@ -45,49 +52,31 @@ class _PostNormalScreenState extends State<PostNormalScreen> {
     return Scaffold(
       appBar: getCustomAppBar(context: context, title: 'View Normal Post'),
       body: isLoaded
-          ? NotificationListener<UserScrollNotification>(
-              onNotification: (notification) {
-                setState(() {
-                  notification.direction == ScrollDirection.reverse
-                      ? showReactionBar = false
-                      : showReactionBar = true;
-                });
-                return true;
-              },
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                child: Stack(
-                  alignment: AlignmentDirectional.bottomCenter,
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            ...List.generate(
-                                40,
-                                (index) => Container(
-                                    margin: EdgeInsets.all(10),
-                                    height: 40,
-                                    color: Colors.red))
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (showReactionBar)
-                      const Positioned(
-                        child: VotingBar(
-                          postID: 1,
-                          upvoteCount: 999,
-                          downvoteCount: 999,
-                          isDownvoted: true,
-                        ),
-                      ),
-                  ],
-                ),
+          ? RefreshIndicator(
+              onRefresh: _refresh,
+              child: ListView(
+                controller: scrollController,
+                children: [
+                  ...List.generate(
+                      40,
+                      (index) => Container(
+                          margin: EdgeInsets.all(10),
+                          height: 40,
+                          color: Colors.red.withBlue(2 * index)
+                            ..withGreen(5 * index)
+                            ..withRed(2 * index)))
+                ],
               ),
             )
           : const LinearProgressIndicator(),
+      bottomNavigationBar: isLoaded
+          ? VotingBar(
+              postID: 1,
+              upvoteCount: 999,
+              downvoteCount: 999,
+              scrollController: scrollController,
+            )
+          : null,
     );
   }
 }

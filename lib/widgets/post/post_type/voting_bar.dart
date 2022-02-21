@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../misc/custom_widgets.dart';
 
@@ -8,6 +9,7 @@ class VotingBar extends StatefulWidget {
   final bool isUpvoted;
   final bool isDownvoted;
   final int postID;
+  final ScrollController scrollController;
 
   const VotingBar({
     Key? key,
@@ -16,6 +18,7 @@ class VotingBar extends StatefulWidget {
     required this.downvoteCount,
     this.isUpvoted = false,
     this.isDownvoted = false,
+    required this.scrollController,
   }) : super(key: key);
 
   @override
@@ -27,6 +30,7 @@ class _VotingBarState extends State<VotingBar> {
   late bool isDownvoted;
   late int upvoteCount;
   late int downvoteCount;
+  late bool showVotingBar;
 
   @override
   void initState() {
@@ -35,6 +39,28 @@ class _VotingBarState extends State<VotingBar> {
     isDownvoted = widget.isDownvoted;
     upvoteCount = widget.upvoteCount;
     downvoteCount = widget.downvoteCount;
+    widget.scrollController.addListener(listenScroll);
+    showVotingBar = true;
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.removeListener(listenScroll);
+    widget.scrollController.dispose();
+    super.dispose();
+  }
+
+  void listenScroll() {
+    var direction = widget.scrollController.position.userScrollDirection;
+    direction == ScrollDirection.reverse ? hide() : show();
+  }
+
+  void show() {
+    if (!showVotingBar) setState(() => showVotingBar = true);
+  }
+
+  void hide() {
+    if (showVotingBar) setState(() => showVotingBar = false);
   }
 
   Future<void> react() async {}
@@ -66,7 +92,7 @@ class _VotingBarState extends State<VotingBar> {
   Widget upvoteCounter() => Row(
         children: [
           Text(
-            countNum(upvoteCount),
+            numToK(upvoteCount),
             style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
@@ -89,9 +115,9 @@ class _VotingBarState extends State<VotingBar> {
   Widget downvoteCounter() => Row(
         children: [
           Text(
-            countNum(downvoteCount),
+            '-${numToK(downvoteCount)}',
             style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
+              color: Theme.of(context).colorScheme.error,
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -146,39 +172,54 @@ class _VotingBarState extends State<VotingBar> {
       );
 
   @override
-  Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Theme.of(context).colorScheme.surface,
-        ),
-        height: 70,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            children: [
-              Row(
-                children: [
-                  upvoteCounter(),
-                  VerticalDivider(
-                    thickness: 2,
-                    width: 22,
-                    indent: 12,
-                    endIndent: 12,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+  Widget build(BuildContext context) => AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        // Provide an optional curve to make the animation feel smoother.
+        // curve: Curves.fastOutSlowIn,
+        height: showVotingBar ? 70 : 0,
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          height: 60,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      children: [
+                        upvoteCounter(),
+                        SizedBox(
+                          height: 60,
+                          child: VerticalDivider(
+                            thickness: 2,
+                            width: 20,
+                            indent: 20,
+                            endIndent: 20,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                        downvoteCounter(),
+                      ],
+                    ),
                   ),
-                  downvoteCounter(),
-                ],
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  upvoteButton(),
-                  downvoteButton(),
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Row(
+                  children: [
+                    upvoteButton(),
+                    downvoteButton(),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

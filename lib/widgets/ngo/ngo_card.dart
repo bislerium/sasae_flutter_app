@@ -67,10 +67,14 @@ class NGOCard extends StatelessWidget {
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 child: Text(
                                   ngo_.address,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -78,13 +82,22 @@ class NGOCard extends StatelessWidget {
                           ),
                           Text(
                             ngo_.estDate.year.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
+                                ),
                           ),
                         ],
                       ),
                       Text(
                         ngo_.orgName,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
+                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       SizedBox(
                         height: 40,
@@ -98,11 +111,14 @@ class NGOCard extends StatelessWidget {
                               child: Chip(
                                 label: Text(
                                   ngo_.fieldOfWork[_],
-                                  style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimaryContainer,
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimaryContainer,
+                                      ),
                                 ),
                                 backgroundColor: Theme.of(context)
                                     .colorScheme

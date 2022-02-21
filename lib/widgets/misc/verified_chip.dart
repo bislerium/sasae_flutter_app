@@ -21,11 +21,11 @@ class VerifiedChip extends StatelessWidget {
         ),
         label: Text(
           isVerified ? 'Verified' : 'Unverified',
-          style: TextStyle(
-            color: isVerified
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onError,
-          ),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                color: isVerified
+                    ? Theme.of(context).colorScheme.onPrimary
+                    : Theme.of(context).colorScheme.onError,
+              ),
         ),
       );
 }
