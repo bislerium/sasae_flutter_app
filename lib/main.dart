@@ -30,15 +30,23 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
 }
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-  bool darkMode = false;
+  bool _darkMode = false;
+
+  void enableDarkMode(bool value) {
+    setState(() {
+      _darkMode = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var colorScheme = darkMode ? darkColorScheme : lightColorScheme;
+    var colorScheme = _darkMode ? darkColorScheme : lightColorScheme;
     return KhaltiScope(
         publicKey: "test_public_key_30e12814fed64afa9a7d4a92a2194aeb",
         builder: (context, navigatorKey) {
@@ -68,12 +76,11 @@ class _MyAppState extends State<MyApp> {
               errorColor: colorScheme.error,
             ),
             title: 'Sasae',
-            home: HomePage(setDarkModeHandler: (value) => darkMode = value),
+            home: const HomePage(),
             routes: {
               LoginScreen.routeName: (context) => const LoginScreen(),
               RegisterScreen.routeName: (context) => const RegisterScreen(),
-              HomePage.routeName: (context) =>
-                  HomePage(setDarkModeHandler: (value) => darkMode = value),
+              HomePage.routeName: (context) => const HomePage(),
             },
           );
         });

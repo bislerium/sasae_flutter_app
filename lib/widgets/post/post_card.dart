@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import '../../models/post_.dart';
 
 class PostCard extends StatelessWidget {
@@ -10,6 +11,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      key: ValueKey(post.id),
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -20,7 +22,20 @@ class PostCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,
-        onTap: () {},
+        onTap: () {
+          Widget Function(BuildContext)? postScreenRedirection;
+          if (post.postType == 'Normal Post') {
+            postScreenRedirection =
+                (context) => PostNormalScreen(hyperlink: post.postURL);
+          }
+          if (postScreenRedirection == null) return;
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: postScreenRedirection,
+            ),
+          );
+        },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
@@ -32,7 +47,7 @@ class PostCard extends StatelessWidget {
                   children: post.relatedTo
                       .map(
                         (e) => Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                           child: Chip(
                             backgroundColor:
                                 Theme.of(context).colorScheme.primaryContainer,

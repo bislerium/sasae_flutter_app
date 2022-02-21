@@ -138,3 +138,6 @@ String? checkValue({
   }
   return RegExp(pattern!).hasMatch(value) ? null : patternMessage;
 }
+
+String countNum(int number) =>
+    number < 1000 ? number.toString() : '${(number / 1000).truncate()}k';

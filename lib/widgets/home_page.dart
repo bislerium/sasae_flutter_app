@@ -9,10 +9,8 @@ import 'misc/custom_widgets.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
-  final void Function(bool) setDarkModeHandler;
 
-  const HomePage({Key? key, required this.setDarkModeHandler})
-      : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -237,14 +235,14 @@ class _HomePageState extends State<HomePage> {
       );
 
   Widget _getPageView() => PageView(
-        children: [
-          const UserProfile(),
-          const NGOScreen(),
-          const PostScreen(),
-          const Center(
+        children: const [
+          UserProfile(),
+          NGOScreen(),
+          PostScreen(),
+          Center(
             child: Icon(Icons.notifications),
           ),
-          Setting(setDarkModeHandler: widget.setDarkModeHandler),
+          Setting(),
         ],
         onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
         controller: _pc,

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/main.dart';
 
 class Setting extends StatefulWidget {
-  final void Function(bool) setDarkModeHandler;
-
-  const Setting({Key? key, required this.setDarkModeHandler}) : super(key: key);
+  const Setting({Key? key}) : super(key: key);
 
   @override
   State<Setting> createState() => _SettingState();
@@ -109,7 +108,7 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
             onChanged: (value) {
               setState(() {
                 isSwitched = value;
-                widget.setDarkModeHandler(isSwitched);
+                MyApp.of(context)?.enableDarkMode(value);
               });
             },
           ),

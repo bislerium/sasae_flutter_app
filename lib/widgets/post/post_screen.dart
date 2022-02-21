@@ -16,10 +16,10 @@ class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
   List<Post_> posts = [];
   List<String> postType = [
-    'Post Normal',
-    'Post Poll',
-    'Post Request Join',
-    'Post Request Petition'
+    'Normal Post',
+    'Poll Post',
+    'Join Request Post',
+    'Petition Request Post'
   ];
 
   @override

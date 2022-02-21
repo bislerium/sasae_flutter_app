@@ -47,7 +47,7 @@ class _DatePickerFieldState extends State<DatePickerField> {
               onTap: () => pickDate(context),
               validator: (value) {
                 return checkValue(
-                  value: value!,
+                  value: value,
                   checkEmptyOnly: true,
                 );
               },
