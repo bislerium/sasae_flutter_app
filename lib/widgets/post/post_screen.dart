@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import '../../models/post_.dart';
+import '../../models/post/post_.dart';
 import './post_list.dart';
 
 class PostScreen extends StatefulWidget {

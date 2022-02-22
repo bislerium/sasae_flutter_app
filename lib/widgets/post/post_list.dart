@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'post_card.dart';
-import '../../models/post_.dart';
+import '../../models/post/post_.dart';
 
 class PostTileList extends StatefulWidget {
   final List<Post_> posts;

@@ -271,40 +271,24 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              Text(
-                trailing,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  child: Text(
+                    trailing,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
         ),
         func: func,
-      );
-
-  Widget getFieldOfWorkChips(List<String> fieldOfWork) => Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 8,
-          runSpacing: -5,
-          children: fieldOfWork
-              .map(
-                (e) => Chip(
-                  label: Text(
-                    e,
-                    style: TextStyle(
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer),
-                  ),
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                ),
-              )
-              .toList(),
-        ),
       );
 
   @override
@@ -351,7 +335,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                             ),
                           ),
                           const SizedBox(
-                            height: 15,
+                            height: 20,
                           ),
                           Text(
                             _ngo!.orgName,
@@ -369,7 +353,14 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                           VerifiedChip(
                             isVerified: _ngo!.isVerified,
                           ),
-                          getFieldOfWorkChips(_ngo!.fieldOfWork),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: getWrappedChips(
+                              context: context,
+                              list: _ngo!.fieldOfWork,
+                            ),
+                          ),
                         ],
                       ),
                       SizedBox(

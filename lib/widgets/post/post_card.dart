@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
-import '../../models/post_.dart';
+import './post_type/normal_post_screen.dart';
+import '../../models/post/post_.dart';
 
 class PostCard extends StatelessWidget {
   final Post_ post;
@@ -100,37 +100,37 @@ class PostCard extends StatelessWidget {
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
                         ),
-                        if (post.isPokedToNGO)
+                        if (post.isPokedToNGO) ...[
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Chip(
-                            label: Text(
-                              'N',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle2
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSecondaryContainer),
+                            label: Icon(
+                              Icons.health_and_safety_outlined,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
                             ),
                             backgroundColor: Theme.of(context)
                                 .colorScheme
                                 .secondaryContainer,
                           ),
-                        if (post.isPostedAnonymously)
+                        ],
+                        if (post.isPostedAnonymously) ...[
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Chip(
-                            label: Text(
-                              'A',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle2
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onTertiaryContainer),
+                            label: Icon(
+                              Icons.person_off,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onTertiaryContainer,
                             ),
                             backgroundColor:
                                 Theme.of(context).colorScheme.tertiaryContainer,
                           ),
+                        ],
                       ],
                     ),
                     Text(DateFormat.yMMMd().format(post.postedOn))

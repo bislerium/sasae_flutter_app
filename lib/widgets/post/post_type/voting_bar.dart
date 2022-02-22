@@ -40,6 +40,12 @@ class _VotingBarState extends State<VotingBar> {
     upvoteCount = widget.upvoteCount;
     downvoteCount = widget.downvoteCount;
     widget.scrollController.addListener(listenScroll);
+    print('..............................');
+
+    print(widget.upvoteCount);
+    print(widget.downvoteCount);
+    print('..............................');
+
     showVotingBar = true;
   }
 
@@ -174,14 +180,10 @@ class _VotingBarState extends State<VotingBar> {
   @override
   Widget build(BuildContext context) => AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        // Provide an optional curve to make the animation feel smoother.
-        // curve: Curves.fastOutSlowIn,
         height: showVotingBar ? 70 : 0,
         child: Container(
-          margin: const EdgeInsets.all(5),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.surfaceVariant,
           ),
           height: 60,
           child: Padding(
@@ -201,7 +203,8 @@ class _VotingBarState extends State<VotingBar> {
                             width: 20,
                             indent: 20,
                             endIndent: 20,
-                            color: Theme.of(context).colorScheme.onSurface,
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
                           ),
                         ),
                         downvoteCounter(),

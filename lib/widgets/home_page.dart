@@ -129,42 +129,12 @@ class _HomePageState extends State<HomePage> {
             child: getFloatingActionButton(
               text: 'Logout',
               icon: Icons.logout,
-              function: () => showDialog<String>(
+              function: () => showCustomDialog(
                 context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  backgroundColor: Theme.of(context).colorScheme.surface,
-                  elevation: 3,
-                  title: const Text('Logout?'),
-                  content: const Text('Do it with passion or not at all'),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'Cancel'),
-                      child: Text(
-                        'Cancel',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(context)
-                          .pushNamedAndRemoveUntil(LoginScreen.routeName,
-                              (Route<dynamic> route) => false),
-                      child: Text(
-                        'OK',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ],
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                ),
-                barrierDismissible: false,
+                title: 'Logout',
+                content: 'Do it with passion or not at all',
+                okFunc: () => Navigator.of(context).pushNamedAndRemoveUntil(
+                    LoginScreen.routeName, (Route<dynamic> route) => false),
               ),
               foreground: Theme.of(context).colorScheme.onError,
               buttonColor: Theme.of(context).colorScheme.error,

@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:map_launcher/map_launcher.dart';
 
+import '../../models/post/ngo__.dart';
+import '../ngo/ngo_profile_screen.dart';
+
 Widget getCustomFAB({
   required String text,
   required IconData icon,
@@ -156,3 +159,105 @@ String numToK(int number) {
   var k = 1000;
   return number < k ? number.toString() : '${turnicate(number / k)}k';
 }
+
+void showCustomDialog(
+        {required BuildContext context,
+        required String title,
+        required String content,
+        required void Function() okFunc,
+        required}) =>
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        elevation: 3,
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'Cancel'),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: okFunc,
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20),
+          ),
+        ),
+      ),
+      barrierDismissible: false,
+    );
+
+Widget getWrappedChips(
+        {required BuildContext context,
+        required List<String> list,
+        bool center = true}) =>
+    Wrap(
+      alignment: center ? WrapAlignment.center : WrapAlignment.start,
+      spacing: 8,
+      runSpacing: -5,
+      children: list
+          .map(
+            (e) => Chip(
+              label: Text(
+                e,
+                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                    color: Theme.of(context).colorScheme.onSecondaryContainer),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            ),
+          )
+          .toList(),
+    );
+
+Widget getWrappedClickableChips(
+        {required BuildContext context, required List<NGO__> list}) =>
+    Wrap(
+      spacing: 8,
+      runSpacing: -5,
+      children: list
+          .map(
+            // ignore: non_constant_identifier_names
+            (ngo__) => ActionChip(
+              key: ValueKey(ngo__.id),
+              labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              avatar: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  ngo__.orgPhoto,
+                ),
+              ),
+              label: Text(
+                ngo__.orgName,
+                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                      color: Theme.of(context).colorScheme.onTertiaryContainer,
+                    ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+              pressElevation: 2,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        NGOProfileScreen(hyperlink: ngo__.ngoURL),
+                  ),
+                );
+              },
+            ),
+          )
+          .toList(),
+    );
