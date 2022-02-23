@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import '../../models/ngo_.dart';
 
@@ -9,14 +10,7 @@ class NGOCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      shadowColor: Theme.of(context).colorScheme.shadow,
-      color: Theme.of(context).colorScheme.surface,
-      margin: const EdgeInsets.symmetric(vertical: 8),
+    return CustomCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,

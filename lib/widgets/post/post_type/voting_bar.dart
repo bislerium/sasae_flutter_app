@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-import '../../misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class VotingBar extends StatefulWidget {
   final int upvoteCount;
@@ -40,19 +39,12 @@ class _VotingBarState extends State<VotingBar> {
     upvoteCount = widget.upvoteCount;
     downvoteCount = widget.downvoteCount;
     widget.scrollController.addListener(listenScroll);
-    print('..............................');
-
-    print(widget.upvoteCount);
-    print(widget.downvoteCount);
-    print('..............................');
-
     showVotingBar = true;
   }
 
   @override
   void dispose() {
     widget.scrollController.removeListener(listenScroll);
-    widget.scrollController.dispose();
     super.dispose();
   }
 
