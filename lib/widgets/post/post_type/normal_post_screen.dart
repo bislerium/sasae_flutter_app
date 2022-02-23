@@ -7,11 +7,11 @@ import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/poked_ngo_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_author_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_content_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_related_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_tail_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_content_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/voting_bar.dart';
 
 class NormalPostScreen extends StatefulWidget {

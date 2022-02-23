@@ -2,16 +2,17 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:polls/polls.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/poked_ngo_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_author_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_content_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_related_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_tail_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_content_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 
 import '../../misc/custom_widgets.dart';
 
@@ -86,8 +87,8 @@ class _PollPostScreenState extends State<PollPostScreen> {
           minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
       polls: pollOptions,
       choice: faker.randomGenerator.boolean()
-          ? (faker.randomGenerator.fromPattern(pollOptions) as PollOption)
-              .option
+          ? (faker.randomGenerator
+              .fromPattern(pollOptions.map((e) => e.option).toList()))
           : null,
     );
   }
@@ -102,12 +103,6 @@ class _PollPostScreenState extends State<PollPostScreen> {
 
   Future<void> _refresh() async {
     await _getPollPost();
-  }
-
-  Widget poll() {
-    return CustomCard(
-      child: Text('on Construction'),
-    );
   }
 
   @override
@@ -138,7 +133,10 @@ class _PollPostScreenState extends State<PollPostScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    poll(),
+                    PollCard(
+                      list: _pollPost!.polls,
+                      choice: _pollPost!.choice,
+                    ),
                     const SizedBox(
                       height: 10,
                     ),
