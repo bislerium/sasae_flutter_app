@@ -215,7 +215,7 @@ Widget getWrappedChips(
             (e) => Chip(
               label: Text(
                 e,
-                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
                     color: Theme.of(context).colorScheme.onSecondaryContainer),
               ),
               backgroundColor: Theme.of(context).colorScheme.secondaryContainer,

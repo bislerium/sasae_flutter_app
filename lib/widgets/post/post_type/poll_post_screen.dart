@@ -2,43 +2,44 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-
+import 'package:polls/polls.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
-import 'package:sasae_flutter_app/models/post/normal_post.dart';
+import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
+import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_content_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_common_widgets/post_tail_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/voting_bar.dart';
 
-class NormalPostScreen extends StatefulWidget {
+import '../../misc/custom_widgets.dart';
+
+class PollPostScreen extends StatefulWidget {
   final String hyperlink;
 
-  const NormalPostScreen({
+  const PollPostScreen({
     Key? key,
     required this.hyperlink,
   }) : super(key: key);
 
   @override
-  _NormalPostScreenState createState() => _NormalPostScreenState();
+  _PollPostScreenState createState() => _PollPostScreenState();
 }
 
-class _NormalPostScreenState extends State<NormalPostScreen> {
-  _NormalPostScreenState()
+class _PollPostScreenState extends State<PollPostScreen> {
+  _PollPostScreenState()
       : isLoaded = false,
         scrollController = ScrollController();
 
-  NormalPost? _normalPost;
+  PollPost? _pollPost;
   bool isLoaded;
   ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
-    _getNormalPost();
+    _getPollPost();
   }
 
   @override
@@ -47,17 +48,16 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
     super.dispose();
   }
 
-  NormalPost _randomNormalPost() {
+  PollPost _randomPollPost() {
     Random rand = Random();
-    bool upvoted = faker.randomGenerator.boolean();
-    return NormalPost(
-      attachedImage: faker.randomGenerator.boolean()
-          ? faker.image.image(random: true)
-          : null,
-      upVote: faker.randomGenerator.integer(1500),
-      downVote: faker.randomGenerator.integer(1500),
-      upVoted: upvoted,
-      downVoted: upvoted ? false : faker.randomGenerator.boolean(),
+    var pollOptions = List.generate(
+      faker.randomGenerator.integer(10, min: 2),
+      (index) => PollOption(
+        option: faker.food.dish(),
+        numReaction: faker.randomGenerator.integer(500),
+      ),
+    );
+    return PollPost(
       content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
@@ -82,69 +82,38 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
         (index) => faker.lorem.word(),
       ),
       author: faker.person.firstName(),
+      endsOn: faker.date.dateTime(
+          minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
+      polls: pollOptions,
+      choice: faker.randomGenerator.boolean()
+          ? (faker.randomGenerator.fromPattern(pollOptions) as PollOption)
+              .option
+          : null,
     );
   }
 
-  Future<void> _getNormalPost({bool isDemo = true}) async {
+  Future<void> _getPollPost({bool isDemo = true}) async {
     await Future.delayed(const Duration(seconds: 1));
     setState(() {
-      if (isDemo) _normalPost = _randomNormalPost();
+      if (isDemo) _pollPost = _randomPollPost();
       if (!isLoaded) isLoaded = true;
     });
   }
 
   Future<void> _refresh() async {
-    await _getNormalPost();
+    await _getPollPost();
   }
 
-  Widget postImageAttachment() => CustomCard(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Image Attachment:',
-                style: Theme.of(context).textTheme.headline6?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: AspectRatio(
-                  aspectRatio: 1 / 1,
-                  child: Image.network(
-                    _normalPost!.attachedImage!,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) =>
-                        loadingProgress == null
-                            ? child
-                            : const LinearProgressIndicator(),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _votingBar() => VotingBar(
-        key: ValueKey(_normalPost!.id),
-        postID: _normalPost!.id,
-        upvoteCount: _normalPost!.upVote,
-        downvoteCount: _normalPost!.downVote,
-        isUpvoted: _normalPost!.upVoted,
-        isDownvoted: _normalPost!.downVoted,
-        scrollController: scrollController,
-      );
+  Widget poll() {
+    return CustomCard(
+      child: Text('on Construction'),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getCustomAppBar(context: context, title: 'View Normal Post'),
+      appBar: getCustomAppBar(context: context, title: 'View Poll Post'),
       body: isLoaded
           ? RefreshIndicator(
               onRefresh: _refresh,
@@ -153,39 +122,37 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                 child: ListView(
                   controller: scrollController,
                   children: [
-                    PostRelatedCard(list: _normalPost!.relatedTo),
+                    PostRelatedCard(list: _pollPost!.relatedTo),
                     const SizedBox(
                       height: 10,
                     ),
-                    if (_normalPost!.pokedNGO.isNotEmpty) ...[
-                      PokedNGOCard(list: _normalPost!.pokedNGO),
+                    if (_pollPost!.pokedNGO.isNotEmpty) ...[
+                      PokedNGOCard(list: _pollPost!.pokedNGO),
                       const SizedBox(
                         height: 10,
                       ),
                     ],
                     PostContentCard(
-                      content: _normalPost!.content,
+                      content: _pollPost!.content,
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    if (_normalPost!.attachedImage != null) ...[
-                      postImageAttachment(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                    if (_normalPost!.isAnonymous) ...[
+                    poll(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (_pollPost!.isAnonymous) ...[
                       PostAuthorCard(
-                        author: _normalPost!.author,
+                        author: _pollPost!.author,
                       ),
                       const SizedBox(
                         height: 10,
                       ),
                     ],
                     PostTailCard(
-                      postID: _normalPost!.id,
-                      createdOn: _normalPost!.createdOn,
+                      postID: _pollPost!.id,
+                      createdOn: _pollPost!.createdOn,
                     ),
                     const SizedBox(
                       height: 20,
@@ -195,7 +162,6 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
               ),
             )
           : const LinearProgressIndicator(),
-      bottomNavigationBar: isLoaded ? _votingBar() : null,
     );
   }
 }
