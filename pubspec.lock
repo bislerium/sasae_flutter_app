@@ -188,6 +188,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_color:
+    dependency: "direct main"
+    description:
+      name: flutter_color
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -216,6 +223,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  flutter_rounded_progress_bar:
+    dependency: "direct main"
+    description:
+      name: flutter_rounded_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   flutter_svg:
     dependency: transitive
     description:
@@ -485,13 +499,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
-  percent_indicator:
-    dependency: "direct main"
-    description:
-      name: percent_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   petitparser:
     dependency: transitive
     description:

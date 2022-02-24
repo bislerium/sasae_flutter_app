@@ -48,7 +48,8 @@ dependencies:
   khalti_flutter: ^2.0.1
   randexp: ^0.0.1
   google_fonts: ^2.3.1
-  percent_indicator: ^4.0.0
+  flutter_rounded_progress_bar: ^0.2.0
+  flutter_color: ^2.0.0
 
 dev_dependencies:
   flutter_test:

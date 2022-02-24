@@ -2,11 +2,9 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
@@ -58,6 +56,10 @@ class _PollPostScreenState extends State<PollPostScreen> {
         numReaction: faker.randomGenerator.integer(500),
       ),
     );
+    String? choice = faker.randomGenerator.boolean()
+        ? (faker.randomGenerator
+            .fromPattern(pollOptions.map((e) => e.option).toList()))
+        : null;
     return PollPost(
       content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
@@ -86,10 +88,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
       endsOn: faker.date.dateTime(
           minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
       polls: pollOptions,
-      choice: faker.randomGenerator.boolean()
-          ? (faker.randomGenerator
-              .fromPattern(pollOptions.map((e) => e.option).toList()))
-          : null,
+      choice: choice,
     );
   }
 
@@ -134,6 +133,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                       height: 10,
                     ),
                     PollCard(
+                      key: ValueKey(_pollPost!.id),
                       list: _pollPost!.polls,
                       choice: _pollPost!.choice,
                     ),

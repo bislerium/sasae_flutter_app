@@ -2,7 +2,7 @@ import 'dart:convert';
 
 class PollOption {
   final String option;
-  final int numReaction;
+  int numReaction;
 
   PollOption({
     required this.option,
