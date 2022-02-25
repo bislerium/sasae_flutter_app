@@ -8,7 +8,7 @@ import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 
 class PollPost implements AbstractPost {
   final List<PollOption> polls;
-  final DateTime endsOn;
+  final DateTime? endsOn;
   final String? choice;
 
   @override
@@ -34,9 +34,10 @@ class PollPost implements AbstractPost {
 
   @override
   List<String> relatedTo;
+
   PollPost({
     required this.polls,
-    required this.endsOn,
+    this.endsOn,
     this.choice,
     required this.author,
     required this.content,
@@ -79,7 +80,7 @@ class PollPost implements AbstractPost {
   Map<String, dynamic> toMap() {
     return {
       'polls': polls.map((x) => x.toMap()).toList(),
-      'endsOn': endsOn.millisecondsSinceEpoch,
+      'endsOn': endsOn?.millisecondsSinceEpoch,
       'choice': choice,
       'author': author,
       'content': content,
@@ -96,7 +97,9 @@ class PollPost implements AbstractPost {
     return PollPost(
       polls: List<PollOption>.from(
           map['polls']?.map((x) => PollOption.fromMap(x))),
-      endsOn: DateTime.fromMillisecondsSinceEpoch(map['endsOn']),
+      endsOn: map['endsOn'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['endsOn'])
+          : null,
       choice: map['choice'],
       author: map['author'] ?? '',
       content: map['content'] ?? '',

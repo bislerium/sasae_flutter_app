@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
@@ -27,24 +26,15 @@ class PollPostScreen extends StatefulWidget {
 }
 
 class _PollPostScreenState extends State<PollPostScreen> {
-  _PollPostScreenState()
-      : isLoaded = false,
-        scrollController = ScrollController();
+  _PollPostScreenState() : isLoaded = false;
 
   PollPost? _pollPost;
   bool isLoaded;
-  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     _getPollPost();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
   }
 
   PollPost _randomPollPost() {
@@ -57,9 +47,9 @@ class _PollPostScreenState extends State<PollPostScreen> {
       ),
     );
     String? choice = faker.randomGenerator.boolean()
-        ? (faker.randomGenerator
-            .fromPattern(pollOptions.map((e) => e.option).toList()))
-        : null;
+        ? null
+        : (faker.randomGenerator
+            .fromPattern(pollOptions.map((e) => e.option).toList()));
     return PollPost(
       content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
@@ -85,8 +75,10 @@ class _PollPostScreenState extends State<PollPostScreen> {
         (index) => faker.lorem.word(),
       ),
       author: faker.person.firstName(),
-      endsOn: faker.date.dateTime(
-          minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
+      endsOn: faker.randomGenerator.boolean()
+          ? faker.date.dateTime(
+              minYear: DateTime.now().year, maxYear: DateTime.now().year + 1)
+          : null,
       polls: pollOptions,
       choice: choice,
     );
@@ -114,7 +106,6 @@ class _PollPostScreenState extends State<PollPostScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                 child: ListView(
-                  controller: scrollController,
                   children: [
                     PostRelatedCard(list: _pollPost!.relatedTo),
                     const SizedBox(
@@ -136,6 +127,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                       key: ValueKey(_pollPost!.id),
                       list: _pollPost!.polls,
                       choice: _pollPost!.choice,
+                      endsOn: _pollPost!.endsOn,
                     ),
                     const SizedBox(
                       height: 10,
