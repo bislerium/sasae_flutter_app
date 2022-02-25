@@ -9,10 +9,10 @@ import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_content_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/voting_bar.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/voting_bar.dart';
 
 class NormalPostScreen extends StatefulWidget {
   final String hyperlink;
@@ -71,14 +71,9 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),
-      postType: faker.randomGenerator.element([
-        'Normal Post',
-        'Poll Post',
-        'Join Request Post',
-        'Petition Request Post'
-      ]),
+      postType: 'Normal Post',
       relatedTo: List.generate(
-        Random().nextInt(8 - 1) + 1,
+        rand.nextInt(8 - 1) + 1,
         (index) => faker.lorem.word(),
       ),
       author: faker.person.firstName(),

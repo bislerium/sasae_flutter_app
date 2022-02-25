@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:randexp/randexp.dart';
 
@@ -553,7 +554,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
           : const LinearProgressIndicator(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: showFAB && isLoaded && _ngo!.isVerified
-          ? getCustomFAB(
+          ? CustomFAB(
               text: 'Donate',
               icon: Icons.hail_rounded,
               background: Theme.of(context).colorScheme.primary,

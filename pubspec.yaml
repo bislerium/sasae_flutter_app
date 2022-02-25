@@ -43,13 +43,13 @@ dependencies:
   url_launcher: ^6.0.20
   http: ^0.13.4
   provider: ^6.0.2
-  charts_flutter: ^0.12.0
   map_launcher: ^2.2.1+1
   khalti_flutter: ^2.0.1
   randexp: ^0.0.1
   google_fonts: ^2.3.1
   flutter_rounded_progress_bar: ^0.2.0
   flutter_color: ^2.0.0
+  syncfusion_flutter_charts: ^19.4.53
 
 dev_dependencies:
   flutter_test:

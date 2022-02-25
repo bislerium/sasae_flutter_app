@@ -14,13 +14,8 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  List<Post_> posts = [];
-  List<String> postType = [
-    'Normal Post',
-    'Poll Post',
-    'Join Request Post',
-    'Petition Request Post'
-  ];
+  _PostScreenState() : posts = [];
+  List<Post_> posts;
 
   @override
   void initState() {
@@ -52,7 +47,12 @@ class _PostScreenState extends State<PostScreen>
           postContent:
               faker.lorem.sentences(random.nextInt(15 - 2) + 2).join(' '),
           postedOn: faker.date.dateTime(minYear: 2018, maxYear: 2022),
-          postType: postType[random.nextInt(postType.length)],
+          postType: faker.randomGenerator.fromPattern([
+            'Normal Post',
+            'Poll Post',
+            'Join Request Post',
+            'Petition Request Post'
+          ]),
           isPostedAnonymously: faker.randomGenerator.boolean(),
           isPokedToNGO: faker.randomGenerator.boolean(),
         );

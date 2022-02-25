@@ -16,7 +16,7 @@ class PostContentCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Content:',
+              'Description:',
               style: Theme.of(context).textTheme.headline6?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),

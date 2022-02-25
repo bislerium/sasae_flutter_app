@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
 import './post_type/normal_post_screen.dart';
 import '../../models/post/post_.dart';
 
@@ -27,6 +28,11 @@ class PostCard extends StatelessWidget {
           if (post.postType == 'Poll Post') {
             postScreenRedirection =
                 (context) => PollPostScreen(hyperlink: post.postURL);
+          }
+          if (post.postType == 'Join Request Post' ||
+              post.postType == 'Petition Request Post') {
+            postScreenRedirection =
+                (context) => RequestPostScreen(hyperlink: post.postURL);
           }
           if (postScreenRedirection == null) return;
           Navigator.push(

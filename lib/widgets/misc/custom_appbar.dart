@@ -17,8 +17,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(widget.title),
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: Text(
+        widget.title,
+        style: Theme.of(context).textTheme.headline6?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+            ),
+      ),
+      backgroundColor: Colors.transparent,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
       elevation: 0,
     );

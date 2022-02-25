@@ -7,7 +7,7 @@ import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_content_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 
@@ -64,14 +64,9 @@ class _PollPostScreenState extends State<PollPostScreen> {
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),
-      postType: faker.randomGenerator.element([
-        'Normal Post',
-        'Poll Post',
-        'Join Request Post',
-        'Petition Request Post'
-      ]),
+      postType: 'Poll Post',
       relatedTo: List.generate(
-        Random().nextInt(8 - 1) + 1,
+        rand.nextInt(8 - 1) + 1,
         (index) => faker.lorem.word(),
       ),
       author: faker.person.firstName(),

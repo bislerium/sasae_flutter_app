@@ -7,33 +7,6 @@ import 'package:map_launcher/map_launcher.dart';
 import '../../models/post/ngo__.dart';
 import '../ngo/ngo_profile_screen.dart';
 
-Widget getCustomFAB({
-  required String text,
-  required IconData icon,
-  required VoidCallback func,
-  required Color background,
-  required Color foreground,
-  double height = 60,
-  double width = 120,
-}) =>
-    SizedBox(
-      height: height,
-      width: width,
-      child: FloatingActionButton.extended(
-        elevation: 3,
-        onPressed: func,
-        label: Text(
-          text,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        icon: Icon(icon),
-        backgroundColor: background,
-        foregroundColor: foreground,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
-      ),
-    );
-
 AppBar getCustomAppBar(
         {required BuildContext context, required String title}) =>
     AppBar(
