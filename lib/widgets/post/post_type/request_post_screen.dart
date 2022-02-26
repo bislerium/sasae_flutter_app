@@ -4,13 +4,13 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/request_fab.dart';
 
 import 'post_dependent_widgets/request_card.dart';
 
@@ -25,15 +25,24 @@ class RequestPostScreen extends StatefulWidget {
 }
 
 class _RequestPostScreenState extends State<RequestPostScreen> {
-  _RequestPostScreenState() : isLoaded = false;
+  _RequestPostScreenState()
+      : isLoaded = false,
+        scrollController = ScrollController();
 
   RequestPost? _requestPost;
   bool isLoaded;
+  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     _getRequestPost();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   RequestPost _randomRequestPost() {
@@ -66,7 +75,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
       author: faker.person.firstName(),
       endsOn: faker.date.dateTime(
           minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
-      isReacted: numReaction > 0 ? faker.randomGenerator.boolean() : false,
+      isParticipated: numReaction > 0 ? faker.randomGenerator.boolean() : false,
       min: min,
       target: target,
       max: max,
@@ -87,10 +96,6 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
     await _getRequestPost();
   }
 
-  Future<void> signPetition() async {}
-
-  Future<void> joinForm() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,6 +106,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                 child: ListView(
+                  controller: scrollController,
                   children: [
                     PostRelatedCard(list: _requestPost!.relatedTo),
                     const SizedBox(
@@ -119,7 +125,6 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                       max: _requestPost!.max,
                       requestType: _requestPost!.requestType,
                       numReaction: _requestPost!.numReaction,
-                      isReacted: _requestPost!.isReacted,
                       endsOn: _requestPost!.endsOn,
                     ),
                     const SizedBox(
@@ -153,14 +158,12 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
           : const LinearProgressIndicator(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: isLoaded
-          ? CustomFAB(
-              text: _requestPost!.requestType == 'Petition' ? 'Sign' : 'Join',
-              icon: _requestPost!.requestType == 'Petition'
-                  ? Icons.account_tree_rounded
-                  : Icons.access_alarm,
-              func: _requestPost!.requestType == 'Petition'
-                  ? signPetition
-                  : joinForm,
+          ? RequestFAB(
+              key: ValueKey(_requestPost!.id),
+              postID: _requestPost!.id,
+              isParticipated: _requestPost!.isParticipated,
+              requestType: _requestPost!.requestType,
+              scrollController: scrollController,
             )
           : null,
     );

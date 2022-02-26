@@ -11,18 +11,16 @@ class RequestCard extends StatefulWidget {
   final int numReaction;
   final DateTime endsOn;
   final String requestType;
-  final bool isReacted;
 
-  const RequestCard(
-      {Key? key,
-      required this.min,
-      required this.target,
-      this.max,
-      required this.numReaction,
-      required this.endsOn,
-      required this.requestType,
-      required this.isReacted})
-      : super(key: key);
+  const RequestCard({
+    Key? key,
+    required this.min,
+    required this.target,
+    this.max,
+    required this.numReaction,
+    required this.endsOn,
+    required this.requestType,
+  }) : super(key: key);
 
   @override
   State<RequestCard> createState() => _RequestCardState();
@@ -40,10 +38,10 @@ class _RequestCardState extends State<RequestCard> {
   }
 
   List<LinearCounts> getChartData() => [
-        LinearCounts('min', widget.min),
-        LinearCounts('target', widget.target),
-        if (widget.max != null) LinearCounts('max', widget.max!),
-        LinearCounts('reactions', widget.numReaction),
+        LinearCounts('Minimum', widget.min),
+        LinearCounts('Target', widget.target),
+        if (widget.max != null) LinearCounts('Maximum', widget.max!),
+        LinearCounts('Participation', widget.numReaction),
       ];
 
   @override
@@ -66,12 +64,12 @@ class _RequestCardState extends State<RequestCard> {
                       ),
                 ),
                 Chip(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.secondary,
                   label: Text(
                     DateFormat.yMMMEd().format(widget.endsOn),
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
+                    style: Theme.of(context).textTheme.caption?.copyWith(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                        ),
                   ),
                 ),
               ],

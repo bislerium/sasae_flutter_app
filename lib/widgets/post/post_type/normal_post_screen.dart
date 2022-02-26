@@ -12,7 +12,7 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/voting_bar.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/normal_voting_bar.dart';
 
 class NormalPostScreen extends StatefulWidget {
   final String hyperlink;
