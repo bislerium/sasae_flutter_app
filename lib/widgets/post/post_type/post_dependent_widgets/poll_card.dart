@@ -55,9 +55,9 @@ class _PollCardState extends State<PollCard> {
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     label: Text(
                       DateFormat.yMMMEd().format(widget.endsOn!),
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                      ),
+                      style: Theme.of(context).textTheme.caption?.copyWith(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                          ),
                     ),
                   ),
               ],

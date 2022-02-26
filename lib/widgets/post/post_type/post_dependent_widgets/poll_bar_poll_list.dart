@@ -22,10 +22,11 @@ class PollBarPollList extends StatelessWidget {
                   child: RoundedProgressBar(
                     percent: 0,
                     style: RoundedProgressBarStyle(
+                      colorBorder: Theme.of(context).colorScheme.surface,
                       borderWidth: 0,
                       widthShadow: 0,
                       backgroundProgress:
-                          Theme.of(context).colorScheme.tertiaryContainer,
+                          Theme.of(context).colorScheme.surfaceVariant,
                     ),
                     childCenter: Text(
                       e,

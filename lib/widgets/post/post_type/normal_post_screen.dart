@@ -158,18 +158,18 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                         height: 10,
                       ),
                     ],
-                    PostContentCard(
-                      content: _normalPost!.content,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     if (_normalPost!.attachedImage != null) ...[
                       postImageAttachment(),
                       const SizedBox(
                         height: 10,
                       ),
                     ],
+                    PostContentCard(
+                      content: _normalPost!.content,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     if (_normalPost!.isAnonymous) ...[
                       PostAuthorCard(
                         author: _normalPost!.author,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/request_pyramid_visualization.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/request_radial_visualization.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class RequestCard extends StatefulWidget {
@@ -78,8 +78,8 @@ class _RequestCardState extends State<RequestCard> {
               height: 15,
             ),
             SizedBox(
-              height: 500,
-              child: RequestPyramidVisualization(
+              height: 400,
+              child: RequestRadialVisualization(
                 chartData: _chartData,
                 tooltipBehavior: _tooltipBehavior,
               ),

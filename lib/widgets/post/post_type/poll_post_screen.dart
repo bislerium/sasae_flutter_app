@@ -112,17 +112,17 @@ class _PollPostScreenState extends State<PollPostScreen> {
                         height: 10,
                       ),
                     ],
-                    PostContentCard(
-                      content: _pollPost!.content,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     PollCard(
                       key: ValueKey(_pollPost!.id),
                       list: _pollPost!.polls,
                       choice: _pollPost!.choice,
                       endsOn: _pollPost!.endsOn,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    PostContentCard(
+                      content: _pollPost!.content,
                     ),
                     const SizedBox(
                       height: 10,
