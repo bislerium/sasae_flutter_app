@@ -5,9 +5,13 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class RequestRadialVisualization extends StatelessWidget {
   final List<LinearCounts> chartData;
   final TooltipBehavior tooltipBehavior;
+  final double? animationDuration;
 
   const RequestRadialVisualization(
-      {Key? key, required this.chartData, required this.tooltipBehavior})
+      {Key? key,
+      required this.chartData,
+      required this.tooltipBehavior,
+      this.animationDuration})
       : super(key: key);
 
   @override
@@ -21,6 +25,7 @@ class RequestRadialVisualization extends StatelessWidget {
       tooltipBehavior: tooltipBehavior,
       series: <CircularSeries>[
         RadialBarSeries<LinearCounts, String>(
+          animationDuration: animationDuration,
           radius: '150',
           innerRadius: '40',
           dataSource: chartData,

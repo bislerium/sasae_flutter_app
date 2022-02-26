@@ -32,6 +32,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
   RequestPost? _requestPost;
   bool isLoaded;
   ScrollController scrollController;
+  double? animationDuration;
 
   @override
   void initState() {
@@ -44,6 +45,12 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
     scrollController.dispose();
     super.dispose();
   }
+
+  void updateParticipation() => setState(() {
+        _requestPost!.numParticipation++;
+        _requestPost!.isParticipated = true;
+        animationDuration = 0;
+      });
 
   RequestPost _randomRequestPost() {
     Random rand = Random();
@@ -79,7 +86,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
       min: min,
       target: target,
       max: max,
-      numReaction: numReaction,
+      numParticipation: numReaction,
       requestType: faker.randomGenerator.fromPattern(['Join', 'Petition']),
     );
   }
@@ -119,13 +126,14 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                       ),
                     ],
                     RequestCard(
-                      key: ValueKey(_requestPost!.id),
+                      key: ValueKey(_requestPost!.hashCode),
                       min: _requestPost!.min,
                       target: _requestPost!.target,
                       max: _requestPost!.max,
                       requestType: _requestPost!.requestType,
-                      numReaction: _requestPost!.numReaction,
+                      numReaction: _requestPost!.numParticipation,
                       endsOn: _requestPost!.endsOn,
+                      animationDuration: animationDuration,
                     ),
                     const SizedBox(
                       height: 10,
@@ -163,7 +171,9 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
               postID: _requestPost!.id,
               isParticipated: _requestPost!.isParticipated,
               requestType: _requestPost!.requestType,
+              endsOn: _requestPost!.endsOn,
               scrollController: scrollController,
+              handler: updateParticipation,
             )
           : null,
     );

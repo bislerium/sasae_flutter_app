@@ -30,8 +30,8 @@ class PollBar extends StatelessWidget {
       milliseconds: milliseconds,
       percent: percent.toDouble(),
       style: RoundedProgressBarStyle(
-        borderWidth: 0,
         colorBorder: Theme.of(context).colorScheme.surface,
+        borderWidth: 0,
         widthShadow: 0,
         colorProgress: progress,
         backgroundProgress: Theme.of(context).colorScheme.surface,

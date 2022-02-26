@@ -7,7 +7,9 @@ class RequestFAB extends StatefulWidget {
   final int postID;
   final ScrollController scrollController;
   final String requestType;
+  final DateTime endsOn;
   final bool isParticipated;
+  final VoidCallback handler;
 
   const RequestFAB({
     Key? key,
@@ -15,6 +17,8 @@ class RequestFAB extends StatefulWidget {
     required this.scrollController,
     required this.isParticipated,
     required this.requestType,
+    required this.endsOn,
+    required this.handler,
   }) : super(key: key);
 
   @override
@@ -28,9 +32,9 @@ class _RequestFABState extends State<RequestFAB> {
   @override
   void initState() {
     super.initState();
-    widget.scrollController.addListener(listenScroll);
     showFAB = true;
     isParticipated = widget.isParticipated;
+    widget.scrollController.addListener(listenScroll);
   }
 
   @override
@@ -57,25 +61,35 @@ class _RequestFABState extends State<RequestFAB> {
       showSnackBar(
           context: context,
           message: widget.requestType == 'Petition'
-              ? 'Already signed'
-              : 'Already joined',
+              ? 'Already signed!'
+              : 'Already joined!',
           errorSnackBar: true);
-    } else {
-      late String message;
-      if (widget.requestType == 'Petition') {
-        await signPetition();
-        message = 'signed';
-      }
-      if (widget.requestType == 'Join') {
-        await joinForm();
-        message = 'joined';
-      }
-      isParticipated = true;
+      return;
+    }
+
+    if (DateTime.now().isAfter(widget.endsOn)) {
       showSnackBar(
         context: context,
-        message: 'Successfully $message',
+        message: '${widget.requestType} request expired!',
+        errorSnackBar: true,
       );
+      return;
     }
+    late String message;
+    if (widget.requestType == 'Petition') {
+      await signPetition();
+      message = 'signed';
+    }
+    if (widget.requestType == 'Join') {
+      await joinForm();
+      message = 'joined';
+    }
+    isParticipated = true;
+    widget.handler();
+    showSnackBar(
+      context: context,
+      message: 'Successfully $message!',
+    );
   }
 
   Future<void> signPetition() async {}

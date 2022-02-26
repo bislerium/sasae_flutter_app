@@ -67,7 +67,7 @@ class _PollCardState extends State<PollCard> {
             ),
             if (_choice == null &&
                 (widget.endsOn == null ||
-                    DateTime.now().isBefore(widget.endsOn!)))
+                    DateTime.now().isAfter(widget.endsOn!)))
               PollBarPollList(
                 list: widget.list.map((e) => e.option).toList(),
                 handler: setChoice,

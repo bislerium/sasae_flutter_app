@@ -11,6 +11,7 @@ class RequestCard extends StatefulWidget {
   final int numReaction;
   final DateTime endsOn;
   final String requestType;
+  final double? animationDuration;
 
   const RequestCard({
     Key? key,
@@ -20,6 +21,7 @@ class RequestCard extends StatefulWidget {
     required this.numReaction,
     required this.endsOn,
     required this.requestType,
+    this.animationDuration,
   }) : super(key: key);
 
   @override
@@ -82,6 +84,7 @@ class _RequestCardState extends State<RequestCard> {
               child: RequestRadialVisualization(
                 chartData: _chartData,
                 tooltipBehavior: _tooltipBehavior,
+                animationDuration: widget.animationDuration,
               ),
             ),
           ],

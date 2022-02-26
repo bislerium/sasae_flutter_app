@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import './profile/user_profile.dart';
 import './auth/login_screen.dart';
 import './post/post_screen.dart';
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               text: 'Post',
               buttonColor: Theme.of(context).colorScheme.primary,
               icon: Icons.post_add,
-              function: () => showPostOptionModal(context),
+              function: () => Navigator.pushNamed(context, PostForm.routeName),
               foreground: Theme.of(context).colorScheme.onPrimary,
             ),
           );

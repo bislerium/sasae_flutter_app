@@ -9,10 +9,10 @@ class RequestPost implements AbstractPost {
   final int min;
   final int target;
   final int? max;
-  final int numReaction;
+  int numParticipation;
   final DateTime endsOn;
   final String requestType;
-  final bool isParticipated;
+  bool isParticipated;
 
   @override
   String author;
@@ -41,7 +41,7 @@ class RequestPost implements AbstractPost {
     required this.min,
     required this.target,
     this.max,
-    required this.numReaction,
+    required this.numParticipation,
     required this.endsOn,
     required this.requestType,
     required this.isParticipated,
@@ -59,7 +59,7 @@ class RequestPost implements AbstractPost {
     int? min,
     int? target,
     int? max,
-    int? numReaction,
+    int? numParticipation,
     DateTime? endsOn,
     String? requestType,
     bool? isParticipated,
@@ -76,7 +76,7 @@ class RequestPost implements AbstractPost {
       min: min ?? this.min,
       target: target ?? this.target,
       max: max ?? this.max,
-      numReaction: numReaction ?? this.numReaction,
+      numParticipation: numParticipation ?? this.numParticipation,
       endsOn: endsOn ?? this.endsOn,
       requestType: requestType ?? this.requestType,
       isParticipated: isParticipated ?? this.isParticipated,
@@ -96,7 +96,7 @@ class RequestPost implements AbstractPost {
       'min': min,
       'target': target,
       'max': max,
-      'numReaction': numReaction,
+      'numParticipation': numParticipation,
       'endsOn': endsOn.millisecondsSinceEpoch,
       'requestType': requestType,
       'isParticipated': isParticipated,
@@ -116,7 +116,7 @@ class RequestPost implements AbstractPost {
       min: map['min']?.toInt() ?? 0,
       target: map['target']?.toInt() ?? 0,
       max: map['max']?.toInt(),
-      numReaction: map['numReaction']?.toInt() ?? 0,
+      numParticipation: map['numParticipation']?.toInt() ?? 0,
       endsOn: DateTime.fromMillisecondsSinceEpoch(map['endsOn']),
       requestType: map['requestType'] ?? '',
       isParticipated: map['isParticipated'] ?? false,
@@ -138,7 +138,7 @@ class RequestPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'RequestPost(min: $min, target: $target, max: $max, numReaction: $numReaction, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, content: $content, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'RequestPost(min: $min, target: $target, max: $max, numParticipation: $numParticipation, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, content: $content, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -149,7 +149,7 @@ class RequestPost implements AbstractPost {
         other.min == min &&
         other.target == target &&
         other.max == max &&
-        other.numReaction == numReaction &&
+        other.numParticipation == numParticipation &&
         other.endsOn == endsOn &&
         other.requestType == requestType &&
         other.isParticipated == isParticipated &&
@@ -168,7 +168,7 @@ class RequestPost implements AbstractPost {
     return min.hashCode ^
         target.hashCode ^
         max.hashCode ^
-        numReaction.hashCode ^
+        numParticipation.hashCode ^
         endsOn.hashCode ^
         requestType.hashCode ^
         isParticipated.hashCode ^
