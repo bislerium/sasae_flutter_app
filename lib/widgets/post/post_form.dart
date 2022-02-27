@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
+import 'post_type/post_dependent_widgets/form_card_normal_post.dart';
+import 'post_type/post_dependent_widgets/form_card_poll_post.dart';
+
 class PostForm extends StatefulWidget {
   static const routeName = '/postform';
 
@@ -12,7 +15,11 @@ class PostForm extends StatefulWidget {
 }
 
 class _PostFormState extends State<PostForm> {
-  final descriptionKey = GlobalKey<FormState>();
+  _PostFormState()
+      : pollItems = [],
+        descriptionKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> descriptionKey;
+  final List<String> pollItems;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +51,10 @@ class _PostFormState extends State<PostForm> {
             ),
             const SizedBox(
               height: 10,
+            ),
+            const FormCardNormalPost(),
+            FormCardPollPost(
+              pollItems: pollItems,
             ),
           ],
         ),

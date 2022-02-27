@@ -101,7 +101,13 @@ class _RequestFABState extends State<RequestFAB> {
     return Visibility(
       visible: showFAB,
       child: CustomFAB(
-        text: widget.requestType == 'Petition' ? 'Sign' : 'Join',
+        text: widget.requestType == 'Petition'
+            ? isParticipated
+                ? 'Signed'
+                : 'Sign'
+            : isParticipated
+                ? 'Joined'
+                : 'Join',
         icon: widget.requestType == 'Petition'
             ? Icons.gesture
             : Icons.emoji_people_rounded,
