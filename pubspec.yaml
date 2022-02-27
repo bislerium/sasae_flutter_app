@@ -50,6 +50,8 @@ dependencies:
   flutter_rounded_progress_bar: ^0.2.0
   flutter_color: ^2.0.0
   syncfusion_flutter_charts: ^19.4.53
+  flutter_form_builder: ^7.1.1
+  form_builder_validators: ^7.6.1
 
 dev_dependencies:
   flutter_test:

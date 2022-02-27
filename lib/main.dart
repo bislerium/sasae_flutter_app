@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import './widgets/auth/register_screen.dart';
@@ -60,6 +61,7 @@ class _MyAppState extends State<MyApp> {
             ],
             localizationsDelegates: const [
               KhaltiLocalizations.delegate,
+              FormBuilderLocalizations.delegate,
             ],
             // debugShowCheckedModeBanner: false,
             theme: ThemeData(

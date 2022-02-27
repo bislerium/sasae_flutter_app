@@ -12,23 +12,46 @@ class DissmissableTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      // Each Dismissible must contain a Key. Keys allow Flutter to
-      // uniquely identify widgets.
       key: Key(item),
-      // Provide a function that tells the app
-      // what to do after an item has been swiped away.
       direction: DismissDirection.startToEnd,
       background: Container(
-        color: Theme.of(context).colorScheme.error,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.error,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Text(
+              'Remove',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onError,
+              ),
+            ),
+          ),
+        ),
       ),
       onDismissed: (direction) {
-        // Remove the item from the data source.
         removeHandler(item);
-        // Then show a snackbar.
         showSnackBar(context: context, message: 'Item: $item removed!');
       },
-      child: ListTile(
-        title: Text(item),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        padding: const EdgeInsets.all(10),
+        height: 50,
+        child: Center(
+          child: Text(
+            item,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
+        ),
       ),
     );
   }

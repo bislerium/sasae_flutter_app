@@ -4,6 +4,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 import 'post_type/post_dependent_widgets/form_card_normal_post.dart';
 import 'post_type/post_dependent_widgets/form_card_poll_post.dart';
+import 'post_type/post_dependent_widgets/form_card_request_post.dart';
 
 class PostForm extends StatefulWidget {
   static const routeName = '/postform';
@@ -56,6 +57,7 @@ class _PostFormState extends State<PostForm> {
             FormCardPollPost(
               pollItems: pollItems,
             ),
+            const FormCardRequestPost(),
           ],
         ),
       ),
@@ -75,7 +77,7 @@ class _PostFormState extends State<PostForm> {
                       Icons.file_present_rounded,
                       color: iconColor,
                     ),
-                    iconSize: 35,
+                    iconSize: 30,
                     tooltip: 'Normal Post',
                   ),
                   IconButton(
@@ -84,7 +86,7 @@ class _PostFormState extends State<PostForm> {
                       Icons.poll_rounded,
                       color: iconColor,
                     ),
-                    iconSize: 35,
+                    iconSize: 30,
                     tooltip: 'Poll Post',
                   ),
                   IconButton(
@@ -93,49 +95,30 @@ class _PostFormState extends State<PostForm> {
                       Icons.help_center,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    iconSize: 35,
+                    iconSize: 30,
                     tooltip: 'Request Post',
                   ),
                 ],
               ),
               const Spacer(),
-              Row(
-                children: [
-                  Material(
-                    type: MaterialType.button,
-                    clipBehavior: Clip.antiAlias,
-                    borderRadius: BorderRadius.circular(15),
-                    color: Theme.of(context).colorScheme.error,
-                    child: IconButton(
-                      icon: const Icon(Icons.clear_all_rounded),
-                      color: Theme.of(context).colorScheme.onError,
-                      onPressed: () {},
-                      tooltip: 'Clear all Field',
-                    ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(
+                  height: 50,
+                  width: 120,
+                ),
+                child: ElevatedButton.icon(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.post_add_rounded,
                   ),
-                  const SizedBox(
-                    width: 10,
+                  label: const Text(
+                    'Post',
                   ),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints.tightFor(
-                      height: 50,
-                      width: 120,
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.post_add_rounded,
-                      ),
-                      label: const Text(
-                        'Post',
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: const StadiumBorder(),
-                      ),
-                    ),
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
                   ),
-                ],
-              )
+                ),
+              ),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/dismissable_tile.dart';
 
 class FormCardPollPost extends StatefulWidget {
@@ -13,9 +14,12 @@ class FormCardPollPost extends StatefulWidget {
 }
 
 class _FormCardPollPostState extends State<FormCardPollPost> {
-  _FormCardPollPostState() : itemTEC = TextEditingController();
+  _FormCardPollPostState()
+      : itemTEC = TextEditingController(),
+        _formKey = GlobalKey<FormBuilderState>();
 
-  TextEditingController itemTEC;
+  final TextEditingController itemTEC;
+  final GlobalKey<FormBuilderState> _formKey;
 
   @override
   void dispose() {
@@ -24,11 +28,11 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
   }
 
   void addItem(String item) => setState(() {
-        widget.pollItems.add(item);
+        widget.pollItems.add(item.trim());
       });
 
-  void removeItem(String index) => setState(() {
-        widget.pollItems.remove(index);
+  void removeItem(String item) => setState(() {
+        widget.pollItems.remove(item);
       });
 
   @override
@@ -38,35 +42,70 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         padding: const EdgeInsets.all(15),
         child: Column(
           children: [
-            ElevatedButton(
-              onPressed: () {
-                showModalSheet(ctx: context, children: [
-                  TextField(
-                    controller: itemTEC,
+            Row(
+              children: [
+                FormBuilder(
+                  key: _formKey,
+                  child: Expanded(
+                    child: FormBuilderTextField(
+                      name: 'age',
+                      controller: itemTEC,
+                      decoration: const InputDecoration(
+                        labelText: 'Option',
+                        hintText: 'Add poll option',
+                      ),
+                      maxLength: 30,
+                      validator: FormBuilderValidators.compose(
+                        [
+                          FormBuilderValidators.required(context),
+                          (value) => widget.pollItems.any((element) =>
+                                  element.toLowerCase() ==
+                                  value!.trim().toLowerCase())
+                              ? 'The poll option is already added.'
+                              : null,
+                        ],
+                      ),
+                      keyboardType: TextInputType.text,
+                    ),
                   ),
-                  ElevatedButton(
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                ConstrainedBox(
+                  constraints:
+                      const BoxConstraints.tightFor(width: 80, height: 50),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                    ),
                     onPressed: () {
-                      addItem(itemTEC.text);
-                      itemTEC.clear();
-                      Navigator.of(context).pop();
+                      if (_formKey.currentState!.validate()) {
+                        addItem(itemTEC.text);
+                        itemTEC.clear();
+                      }
                     },
-                    child: Text('Add'),
+                    child: const Text('Add'),
                   ),
-                ]);
-              },
-              child: Text('Add poll'),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 800,
-              child: ListView.builder(
-                itemCount: widget.pollItems.length,
-                itemBuilder: (context, index) {
-                  String pollItem = widget.pollItems[index];
-                  return DissmissableTile(
-                      item: pollItem,
-                      removeHandler: (value) => removeItem(pollItem));
-                },
+            if (widget.pollItems.isNotEmpty)
+              const SizedBox(
+                height: 10,
               ),
+            Column(
+              children: widget.pollItems
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: DissmissableTile(
+                        item: e,
+                        removeHandler: (value) => removeItem(e),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
         ),
