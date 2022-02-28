@@ -4,7 +4,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 class FormCardRequestPost extends StatefulWidget {
-  const FormCardRequestPost({Key? key}) : super(key: key);
+  final GlobalKey<FormBuilderState> formKey;
+  const FormCardRequestPost({Key? key, required this.formKey})
+      : super(key: key);
 
   @override
   _FormCardRequestPostState createState() => _FormCardRequestPostState();
@@ -13,114 +15,145 @@ class FormCardRequestPost extends StatefulWidget {
 class _FormCardRequestPostState extends State<FormCardRequestPost> {
   List<String> requestType;
 
-  _FormCardRequestPostState() : requestType = ['Join', 'Petition'];
+  _FormCardRequestPostState()
+      : requestType = ['Join', 'Petition'],
+        minTEC = TextEditingController(),
+        targetTEC = TextEditingController(),
+        maxTEC = TextEditingController(),
+        endsOnTEC = TextEditingController();
+
+  final TextEditingController minTEC;
+  final TextEditingController targetTEC;
+  final TextEditingController maxTEC;
+  String? requestTypeTEC;
+  final TextEditingController endsOnTEC;
+
+  @override
+  void dispose() {
+    minTEC.dispose();
+    targetTEC.dispose();
+    maxTEC.dispose();
+    endsOnTEC.dispose();
+    super.dispose();
+  }
+
+  Widget minField() => Expanded(
+        child: FormBuilderTextField(
+          name: 'min',
+          controller: minTEC,
+          decoration: const InputDecoration(
+            labelText: 'Minimum',
+          ),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.numeric(context),
+            FormBuilderValidators.max(context, 70),
+          ]),
+          keyboardType: TextInputType.number,
+        ),
+      );
+
+  Widget targetField() => Expanded(
+        child: FormBuilderTextField(
+          name: 'target',
+          controller: targetTEC,
+          decoration: const InputDecoration(
+            labelText: 'Target',
+          ),
+          validator: FormBuilderValidators.compose(
+            [
+              FormBuilderValidators.numeric(context),
+              FormBuilderValidators.max(context, 70),
+            ],
+          ),
+          keyboardType: TextInputType.number,
+        ),
+      );
+
+  Widget maximumField() => Expanded(
+        child: FormBuilderTextField(
+          name: 'max',
+          controller: maxTEC,
+          decoration: const InputDecoration(
+            labelText: 'Maximum',
+          ),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.numeric(context),
+            FormBuilderValidators.max(context, 70),
+          ]),
+          keyboardType: TextInputType.number,
+        ),
+      );
+
+  Widget requestTypeField() => Expanded(
+        child: FormBuilderDropdown(
+          name: 'requestType',
+          decoration: const InputDecoration(
+            labelText: 'Request type',
+          ),
+          allowClear: true,
+          hint: const Text(
+            'Select type',
+          ),
+          onChanged: (value) => requestTypeTEC = value as String?,
+          validator: FormBuilderValidators.compose(
+              [FormBuilderValidators.required(context)]),
+          items: requestType
+              .map((gender) => DropdownMenuItem(
+                    value: gender,
+                    child: Text(gender),
+                  ))
+              .toList(),
+        ),
+      );
+
+  Widget datetimeField() => FormBuilderDateTimePicker(
+        name: 'Request duration',
+        controller: endsOnTEC,
+        inputType: InputType.both,
+        decoration: const InputDecoration(
+          labelText: 'End Time',
+        ),
+        firstDate: DateTime.now(),
+      );
 
   @override
   Widget build(BuildContext context) {
-    var dateTime = DateTime.now();
-
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: FormBuilderTextField(
-                    name: 'min',
-                    decoration: const InputDecoration(
-                      labelText: 'Minimum',
-                    ),
-                    onChanged: (value) {},
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(context),
-                      FormBuilderValidators.numeric(context),
-                      FormBuilderValidators.max(context, 70),
-                    ]),
-                    keyboardType: TextInputType.number,
+        child: FormBuilder(
+          key: widget.formKey,
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  minField(),
+                  const SizedBox(
+                    width: 20,
                   ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: FormBuilderTextField(
-                    name: 'target',
-                    decoration: const InputDecoration(
-                      labelText: 'Target',
-                    ),
-                    onChanged: (value) {},
-                    validator: FormBuilderValidators.compose(
-                      [
-                        FormBuilderValidators.required(context),
-                        FormBuilderValidators.numeric(context),
-                        FormBuilderValidators.max(context, 70),
-                      ],
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: FormBuilderTextField(
-                    name: 'max',
-                    decoration: const InputDecoration(
-                      labelText: 'Maximum',
-                    ),
-                    onChanged: (value) {},
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(context),
-                      FormBuilderValidators.numeric(context),
-                      FormBuilderValidators.max(context, 70),
-                    ]),
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: FormBuilderDropdown(
-                    name: 'requestType',
-                    decoration: const InputDecoration(
-                      labelText: 'Request type',
-                    ),
-                    allowClear: true,
-                    hint: const Text(
-                      'Select type',
-                    ),
-                    validator: FormBuilderValidators.compose(
-                        [FormBuilderValidators.required(context)]),
-                    items: requestType
-                        .map((gender) => DropdownMenuItem(
-                              value: gender,
-                              child: Text(gender),
-                            ))
-                        .toList(),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            FormBuilderDateTimePicker(
-              name: 'Request duration',
-              inputType: InputType.both,
-              decoration: const InputDecoration(
-                labelText: 'End Time',
+                  targetField(),
+                ],
               ),
-              initialValue: dateTime,
-              firstDate: dateTime,
-            ),
-          ],
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  maximumField(),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  requestTypeField(),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              datetimeField(),
+            ],
+          ),
         ),
       ),
     );

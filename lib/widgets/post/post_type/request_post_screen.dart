@@ -61,7 +61,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         : null;
     int numReaction = faker.randomGenerator.integer(max ?? (target * 2));
     return RequestPost(
-      content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -139,7 +139,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                       height: 10,
                     ),
                     PostContentCard(
-                      content: _requestPost!.content,
+                      content: _requestPost!.description,
                     ),
                     const SizedBox(
                       height: 10,

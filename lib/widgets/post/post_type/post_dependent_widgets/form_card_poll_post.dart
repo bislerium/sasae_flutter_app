@@ -6,8 +6,11 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 
 class FormCardPollPost extends StatefulWidget {
   final List<String> pollItems;
+  final TextEditingController pollDuration;
 
-  const FormCardPollPost({Key? key, required this.pollItems}) : super(key: key);
+  const FormCardPollPost(
+      {Key? key, required this.pollItems, required this.pollDuration})
+      : super(key: key);
 
   @override
   _FormCardPollPostState createState() => _FormCardPollPostState();
@@ -24,6 +27,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
   @override
   void dispose() {
     itemTEC.dispose();
+    widget.pollItems.clear();
     super.dispose();
   }
 
@@ -35,6 +39,71 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         widget.pollItems.remove(item);
       });
 
+  Widget pollTextField() => FormBuilder(
+        key: _formKey,
+        child: Expanded(
+          child: FormBuilderTextField(
+            name: 'age',
+            controller: itemTEC,
+            decoration: const InputDecoration(
+              labelText: 'Option',
+              hintText: 'Add at least two poll options',
+            ),
+            maxLength: 30,
+            validator: FormBuilderValidators.compose(
+              [
+                FormBuilderValidators.required(context),
+                (value) => widget.pollItems.any((element) =>
+                        element.toLowerCase() == value!.trim().toLowerCase())
+                    ? 'The poll option is already added.'
+                    : null,
+              ],
+            ),
+            keyboardType: TextInputType.text,
+          ),
+        ),
+      );
+
+  Widget addPollButton() => ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(width: 80, height: 50),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: const StadiumBorder(),
+          ),
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              addItem(itemTEC.text);
+              itemTEC.clear();
+            }
+          },
+          child: const Text('Add'),
+        ),
+      );
+
+  Widget polls() => Column(
+        children: widget.pollItems
+            .map(
+              (e) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                child: DissmissableTile(
+                  item: e,
+                  removeHandler: (value) => removeItem(e),
+                ),
+              ),
+            )
+            .toList(),
+      );
+
+  Widget datetimeField() => FormBuilderDateTimePicker(
+        name: 'pollDuration',
+        controller: widget.pollDuration,
+        inputType: InputType.both,
+        decoration: const InputDecoration(
+          labelText: 'Poll duration',
+        ),
+        firstDate: DateTime.now(),
+      );
+
   @override
   Widget build(BuildContext context) {
     return CustomCard(
@@ -44,69 +113,22 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
           children: [
             Row(
               children: [
-                FormBuilder(
-                  key: _formKey,
-                  child: Expanded(
-                    child: FormBuilderTextField(
-                      name: 'age',
-                      controller: itemTEC,
-                      decoration: const InputDecoration(
-                        labelText: 'Option',
-                        hintText: 'Add poll option',
-                      ),
-                      maxLength: 30,
-                      validator: FormBuilderValidators.compose(
-                        [
-                          FormBuilderValidators.required(context),
-                          (value) => widget.pollItems.any((element) =>
-                                  element.toLowerCase() ==
-                                  value!.trim().toLowerCase())
-                              ? 'The poll option is already added.'
-                              : null,
-                        ],
-                      ),
-                      keyboardType: TextInputType.text,
-                    ),
-                  ),
-                ),
+                pollTextField(),
                 const SizedBox(
                   width: 10,
                 ),
-                ConstrainedBox(
-                  constraints:
-                      const BoxConstraints.tightFor(width: 80, height: 50),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        addItem(itemTEC.text);
-                        itemTEC.clear();
-                      }
-                    },
-                    child: const Text('Add'),
-                  ),
-                ),
+                addPollButton(),
               ],
             ),
             if (widget.pollItems.isNotEmpty)
               const SizedBox(
                 height: 10,
               ),
-            Column(
-              children: widget.pollItems
-                  .map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5.0),
-                      child: DissmissableTile(
-                        item: e,
-                        removeHandler: (value) => removeItem(e),
-                      ),
-                    ),
-                  )
-                  .toList(),
+            polls(),
+            const SizedBox(
+              height: 10,
             ),
+            datetimeField(),
           ],
         ),
       ),

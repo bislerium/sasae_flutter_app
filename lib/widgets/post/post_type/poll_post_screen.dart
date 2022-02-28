@@ -51,7 +51,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
         : (faker.randomGenerator
             .fromPattern(pollOptions.map((e) => e.option).toList()));
     return PollPost(
-      content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -122,7 +122,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                       height: 10,
                     ),
                     PostContentCard(
-                      content: _pollPost!.content,
+                      content: _pollPost!.description,
                     ),
                     const SizedBox(
                       height: 10,

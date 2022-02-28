@@ -15,7 +15,7 @@ class PollPost implements AbstractPost {
   String author;
 
   @override
-  String content;
+  String description;
 
   @override
   DateTime createdOn;
@@ -40,7 +40,7 @@ class PollPost implements AbstractPost {
     this.endsOn,
     this.choice,
     required this.author,
-    required this.content,
+    required this.description,
     required this.createdOn,
     required this.id,
     required this.isAnonymous,
@@ -67,7 +67,7 @@ class PollPost implements AbstractPost {
       endsOn: endsOn ?? this.endsOn,
       choice: choice ?? this.choice,
       author: author ?? this.author,
-      content: content ?? this.content,
+      description: content ?? this.description,
       createdOn: createdOn ?? this.createdOn,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
@@ -83,7 +83,7 @@ class PollPost implements AbstractPost {
       'endsOn': endsOn?.millisecondsSinceEpoch,
       'choice': choice,
       'author': author,
-      'content': content,
+      'content': description,
       'createdOn': createdOn.millisecondsSinceEpoch,
       'id': id,
       'isAnonymous': isAnonymous,
@@ -102,7 +102,7 @@ class PollPost implements AbstractPost {
           : null,
       choice: map['choice'],
       author: map['author'] ?? '',
-      content: map['content'] ?? '',
+      description: map['content'] ?? '',
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['isAnonymous'] ?? false,
@@ -119,7 +119,7 @@ class PollPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'PollPost(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, content: $content, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'PollPost(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, content: $description, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -131,7 +131,7 @@ class PollPost implements AbstractPost {
         other.endsOn == endsOn &&
         other.choice == choice &&
         other.author == author &&
-        other.content == content &&
+        other.description == description &&
         other.createdOn == createdOn &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
@@ -146,7 +146,7 @@ class PollPost implements AbstractPost {
         endsOn.hashCode ^
         choice.hashCode ^
         author.hashCode ^
-        content.hashCode ^
+        description.hashCode ^
         createdOn.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^

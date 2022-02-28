@@ -58,7 +58,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
       downVote: faker.randomGenerator.integer(1500),
       upVoted: upvoted,
       downVoted: upvoted ? false : faker.randomGenerator.boolean(),
-      content: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -165,7 +165,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                       ),
                     ],
                     PostContentCard(
-                      content: _normalPost!.content,
+                      content: _normalPost!.description,
                     ),
                     const SizedBox(
                       height: 10,

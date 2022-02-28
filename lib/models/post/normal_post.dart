@@ -17,7 +17,7 @@ class NormalPost implements AbstractPost {
   String author;
 
   @override
-  String content;
+  String description;
 
   @override
   DateTime createdOn;
@@ -43,7 +43,7 @@ class NormalPost implements AbstractPost {
     required this.upVoted,
     required this.downVoted,
     required this.author,
-    required this.content,
+    required this.description,
     required this.createdOn,
     required this.id,
     required this.isAnonymous,
@@ -74,7 +74,7 @@ class NormalPost implements AbstractPost {
       upVoted: upVoted ?? this.upVoted,
       downVoted: downVoted ?? this.downVoted,
       author: author ?? this.author,
-      content: content ?? this.content,
+      description: content ?? this.description,
       createdOn: createdOn ?? this.createdOn,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
@@ -92,7 +92,7 @@ class NormalPost implements AbstractPost {
       'upVoted': upVoted,
       'downVoted': downVoted,
       'author': author,
-      'content': content,
+      'content': description,
       'createdOn': createdOn.millisecondsSinceEpoch,
       'id': id,
       'isAnonymous': isAnonymous,
@@ -110,7 +110,7 @@ class NormalPost implements AbstractPost {
       upVoted: map['upVoted'] ?? false,
       downVoted: map['downVoted'] ?? false,
       author: map['author'] ?? '',
-      content: map['content'] ?? '',
+      description: map['content'] ?? '',
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['isAnonymous'] ?? false,
@@ -127,7 +127,7 @@ class NormalPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'NormalPost(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, content: $content, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'NormalPost(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, content: $description, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -141,7 +141,7 @@ class NormalPost implements AbstractPost {
         other.upVoted == upVoted &&
         other.downVoted == downVoted &&
         other.author == author &&
-        other.content == content &&
+        other.description == description &&
         other.createdOn == createdOn &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
@@ -158,7 +158,7 @@ class NormalPost implements AbstractPost {
         upVoted.hashCode ^
         downVoted.hashCode ^
         author.hashCode ^
-        content.hashCode ^
+        description.hashCode ^
         createdOn.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
