@@ -126,7 +126,17 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
         child: FormBuilder(
           key: widget.formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text(
+                'Request post',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
               Row(
                 children: [
                   minField(),

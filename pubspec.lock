@@ -127,13 +127,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
-  dropdown_search:
-    dependency: transitive
-    description:
-      name: dropdown_search
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   equatable:
     dependency: transitive
     description:
@@ -195,20 +188,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  flutter_colorpicker:
-    dependency: transitive
-    description:
-      name: flutter_colorpicker
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.3"
-  flutter_datetime_picker_bdaya:
-    dependency: transitive
-    description:
-      name: flutter_datetime_picker_bdaya
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   flutter_form_builder:
     dependency: "direct main"
     description:
@@ -216,27 +195,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.1.1"
-  flutter_keyboard_visibility:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.2.0"
-  flutter_keyboard_visibility_platform_interface:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  flutter_keyboard_visibility_web:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility_web
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -270,13 +228,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
-  flutter_rating_bar:
-    dependency: transitive
-    description:
-      name: flutter_rating_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.0.0"
   flutter_rounded_progress_bar:
     dependency: "direct main"
     description:
@@ -296,32 +247,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_touch_spin:
-    dependency: transitive
-    description:
-      name: flutter_touch_spin
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
-  flutter_typeahead:
-    dependency: transitive
-    description:
-      name: flutter_typeahead
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.2.4"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
-  form_builder_extra_fields:
-    dependency: "direct main"
-    description:
-      name: form_builder_extra_fields
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "7.1.0"
   form_builder_image_picker:
     dependency: "direct main"
     description:
@@ -623,13 +553,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
-  signature:
-    dependency: transitive
-    description:
-      name: signature
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

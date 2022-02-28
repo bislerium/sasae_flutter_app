@@ -54,6 +54,7 @@ class _PostFormState extends State<PostForm> {
   @override
   void dispose() {
     descriptionTEC.dispose();
+    pollDuration.dispose();
     super.dispose();
   }
 
@@ -158,18 +159,31 @@ class _PostFormState extends State<PostForm> {
     double width = MediaQuery.of(context).size.width - 60;
     return CustomCard(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: FormBuilderImagePicker(
-          name: 'photos',
-          decoration: const InputDecoration(
-            labelText: 'Attach a photo',
-            border: InputBorder.none,
-          ),
-          previewWidth: width,
-          previewHeight: width,
-          maxImages: 1,
-        ),
-      ),
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Normal post',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              FormBuilderImagePicker(
+                name: 'photos',
+                decoration: const InputDecoration(
+                  labelText: 'Attach a photo',
+                  border: InputBorder.none,
+                ),
+                previewWidth: width,
+                previewHeight: width,
+                maxImages: 1,
+              ),
+            ],
+          )),
     );
   }
 
@@ -199,19 +213,69 @@ class _PostFormState extends State<PostForm> {
         ),
       );
 
+  Widget buttonsPerPostType() {
+    Color activeColor = Theme.of(context).colorScheme.primary;
+    Color inActiveColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => setState(() {
+            setPostTypeIndex(postType.normalPost);
+          }),
+          icon: const Icon(
+            Icons.file_present_rounded,
+          ),
+          color: postTypeIndex == postType.normalPost
+              ? activeColor
+              : inActiveColor,
+          iconSize: 30,
+          tooltip: 'Normal Post',
+        ),
+        IconButton(
+          onPressed: () => setState(() {
+            setPostTypeIndex(postType.pollPost);
+          }),
+          icon: const Icon(
+            Icons.poll_rounded,
+          ),
+          color:
+              postTypeIndex == postType.pollPost ? activeColor : inActiveColor,
+          iconSize: 30,
+          tooltip: 'Poll Post',
+        ),
+        IconButton(
+          onPressed: () => setState(() {
+            setPostTypeIndex(postType.requestPost);
+          }),
+          icon: const Icon(
+            Icons.help_center,
+          ),
+          color: postTypeIndex == postType.requestPost
+              ? activeColor
+              : inActiveColor,
+          iconSize: 30,
+          tooltip: 'Request Post',
+        ),
+      ],
+    );
+  }
+
   Widget fieldsPerPostType() {
     late Widget widget;
     switch (postTypeIndex) {
       case postType.normalPost:
+        print('1-----------------------');
         widget = imageField();
         break;
       case postType.pollPost:
+        print('2-----------------------');
         widget = FormCardPollPost(
           pollItems: pollItems,
           pollDuration: pollDuration,
         );
         break;
       case postType.requestPost:
+        print('3-----------------------');
         widget = FormCardRequestPost(
           formKey: requestFormKey,
         );
@@ -220,26 +284,44 @@ class _PostFormState extends State<PostForm> {
     return widget;
   }
 
+  Widget postButton() => ConstrainedBox(
+        constraints: const BoxConstraints.tightFor(
+          height: 60,
+          width: 120,
+        ),
+        child: ElevatedButton.icon(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.post_add_rounded,
+          ),
+          label: const Text(
+            'Post',
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: const StadiumBorder(),
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
-    Color activeColor = Theme.of(context).colorScheme.primary;
-    Color inActiveColor = Theme.of(context).colorScheme.onSurfaceVariant;
-
     return Scaffold(
       appBar: const CustomAppBar(title: 'Post a Post'),
       body: Container(
         margin: const EdgeInsets.symmetric(horizontal: 15),
-        child: ListView(
-          children: [
-            superPostFields(),
-            const SizedBox(
-              height: 10,
-            ),
-            fieldsPerPostType(),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              superPostFields(),
+              const SizedBox(
+                height: 10,
+              ),
+              fieldsPerPostType(),
+              const SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Container(
@@ -250,68 +332,9 @@ class _PostFormState extends State<PostForm> {
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => setState(() {
-                      setPostTypeIndex(postType.normalPost);
-                    }),
-                    icon: const Icon(
-                      Icons.file_present_rounded,
-                    ),
-                    color: postTypeIndex == postType.normalPost
-                        ? activeColor
-                        : inActiveColor,
-                    iconSize: 30,
-                    tooltip: 'Normal Post',
-                  ),
-                  IconButton(
-                    onPressed: () => setState(() {
-                      setPostTypeIndex(postType.pollPost);
-                    }),
-                    icon: const Icon(
-                      Icons.poll_rounded,
-                    ),
-                    color: postTypeIndex == postType.pollPost
-                        ? activeColor
-                        : inActiveColor,
-                    iconSize: 30,
-                    tooltip: 'Poll Post',
-                  ),
-                  IconButton(
-                    onPressed: () => setState(() {
-                      setPostTypeIndex(postType.requestPost);
-                    }),
-                    icon: const Icon(
-                      Icons.help_center,
-                    ),
-                    color: postTypeIndex == postType.requestPost
-                        ? activeColor
-                        : inActiveColor,
-                    iconSize: 30,
-                    tooltip: 'Request Post',
-                  ),
-                ],
-              ),
+              buttonsPerPostType(),
               const Spacer(),
-              ConstrainedBox(
-                constraints: const BoxConstraints.tightFor(
-                  height: 50,
-                  width: 120,
-                ),
-                child: ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.post_add_rounded,
-                  ),
-                  label: const Text(
-                    'Post',
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                  ),
-                ),
-              ),
+              postButton(),
             ],
           ),
         ),

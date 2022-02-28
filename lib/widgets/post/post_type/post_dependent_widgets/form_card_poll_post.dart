@@ -43,7 +43,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         key: _formKey,
         child: Expanded(
           child: FormBuilderTextField(
-            name: 'age',
+            name: 'pollOption',
             controller: itemTEC,
             decoration: const InputDecoration(
               labelText: 'Option',
@@ -101,6 +101,12 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         decoration: const InputDecoration(
           labelText: 'Poll duration',
         ),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(context),
+          (value) => value!.isBefore(DateTime.now())
+              ? 'Must have minimum one hour duration'
+              : null
+        ]),
         firstDate: DateTime.now(),
       );
 
@@ -110,7 +116,17 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              'Poll post',
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Row(
               children: [
                 pollTextField(),
