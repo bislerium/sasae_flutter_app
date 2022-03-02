@@ -1,4 +1,6 @@
 import 'package:faker/faker.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -105,177 +107,197 @@ class _UserProfileState extends State<UserProfile>
         func: func,
       );
 
+  Widget displayPicture() => ClipRRect(
+        borderRadius: BorderRadius.circular(40),
+        child: AspectRatio(
+          aspectRatio: 1 / 1,
+          child: Image.network(
+            user!.displayPicture,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) =>
+                loadingProgress == null
+                    ? child
+                    : const LinearProgressIndicator(),
+          ),
+        ),
+      );
+
+  Widget fab() => CustomFAB(
+        width: 150,
+        text: 'Edit profile',
+        background: Theme.of(context).colorScheme.primary,
+        icon: Icons.edit,
+        func: () {
+          Navigator.pushNamed(context, UserProfileEditScreen.routeName,
+              arguments: {'user': user});
+        },
+        foreground: Theme.of(context).colorScheme.onPrimary,
+      );
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     var size = MediaQuery.of(context).size;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      child: RefreshIndicator(
-        onRefresh: _refresh,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: size.height * 0.1,
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: size.width * 0.4,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: AspectRatio(
-                        aspectRatio: 1 / 1,
-                        child: Image.network(
-                          user!.displayPicture,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, loadingProgress) =>
-                              loadingProgress == null
-                                  ? child
-                                  : const LinearProgressIndicator(),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Text(
-                    user!.userName,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  VerifiedChip(
-                    isVerified: user!.isVerified,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: size.height * 0.04,
-              ),
-              Card(
-                color: Theme.of(context).colorScheme.surface,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    return Scaffold(
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: size.height * 0.1,
                 ),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                  child: Column(
-                    children: [
-                      customTile(
-                        Icons.person_rounded,
-                        user!.fullName,
+                Column(
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.4,
+                      child: displayPicture(),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      user!.userName,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    VerifiedChip(
+                      isVerified: user!.isVerified,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: size.height * 0.04,
+                ),
+                Card(
+                  color: Theme.of(context).colorScheme.surface,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 15),
+                    child: Column(
+                      children: [
+                        customTile(
+                          Icons.person_rounded,
+                          user!.fullName,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 3,
+                                child: customTile(
+                                    Icons.transgender, user!.gender)),
+                            Expanded(
+                              flex: 5,
+                              child: customTile(Icons.cake_rounded,
+                                  DateFormat.yMMMd().format(user!.birthDate)),
+                            ),
+                          ],
+                        ),
+                        customTile(
+                          Icons.location_pin,
+                          user!.address,
+                        ),
+                        customTile(
+                          Icons.phone_android_rounded,
+                          user!.phoneNumber,
+                          func: () => setState(() {
+                            launch(Uri(
+                              scheme: 'tel',
+                              path: user!.phoneNumber,
+                            ).toString());
+                          }),
+                        ),
+                        customTile(
+                          Icons.email_rounded,
+                          user!.email,
+                          func: () => setState(() {
+                            launch(Uri(
+                              scheme: 'mailto',
+                              path: user!.email,
+                            ).toString());
+                          }),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              flex: 5,
+                              child: customTile(
+                                Icons.person_add_rounded,
+                                DateFormat.yMMMd().format(user!.joinedDate),
+                              ),
+                            ),
+                            Expanded(
                               flex: 3,
-                              child:
-                                  customTile(Icons.transgender, user!.gender)),
-                          Expanded(
-                            flex: 5,
-                            child: customTile(Icons.cake_rounded,
-                                DateFormat.yMMMd().format(user!.birthDate)),
-                          ),
-                        ],
-                      ),
-                      customTile(
-                        Icons.location_pin,
-                        user!.address,
-                      ),
-                      customTile(
-                        Icons.phone_android_rounded,
-                        user!.phoneNumber,
-                        func: () => setState(() {
-                          launch(Uri(
-                            scheme: 'tel',
-                            path: user!.phoneNumber,
-                          ).toString());
-                        }),
-                      ),
-                      customTile(
-                        Icons.email_rounded,
-                        user!.email,
-                        func: () => setState(() {
-                          launch(Uri(
-                            scheme: 'mailto',
-                            path: user!.email,
-                          ).toString());
-                        }),
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: customTile(
-                              Icons.person_add_rounded,
-                              DateFormat.yMMMd().format(user!.joinedDate),
+                              child: customTile(
+                                Icons.post_add_rounded,
+                                user!.numOfPosts.toString(),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: customTile(
-                              Icons.post_add_rounded,
-                              user!.numOfPosts.toString(),
-                            ),
-                          ),
-                        ],
-                      ),
-                      if (user!.citizenshipPhoto != null)
-                        materialTile(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(10, 0, 10, 20),
-                                  child: Text(
-                                    'Citizenship photo',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurfaceVariant,
-                                    ),
-                                  ),
-                                ),
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: AspectRatio(
-                                    aspectRatio: 6 / 4,
-                                    child: Image.network(
-                                      user!.citizenshipPhoto!,
-                                      fit: BoxFit.cover,
-                                      loadingBuilder: (context, child,
-                                              loadingProgress) =>
-                                          loadingProgress == null
-                                              ? child
-                                              : const LinearProgressIndicator(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          ],
                         ),
-                    ],
+                        if (user!.citizenshipPhoto != null)
+                          materialTile(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10, 0, 10, 20),
+                                    child: Text(
+                                      'Citizenship photo',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: AspectRatio(
+                                      aspectRatio: 6 / 4,
+                                      child: Image.network(
+                                        user!.citizenshipPhoto!,
+                                        fit: BoxFit.cover,
+                                        loadingBuilder: (context, child,
+                                                loadingProgress) =>
+                                            loadingProgress == null
+                                                ? child
+                                                : const LinearProgressIndicator(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: fab(),
     );
   }
 

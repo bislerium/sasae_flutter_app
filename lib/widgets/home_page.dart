@@ -94,20 +94,20 @@ class _HomePageState extends State<HomePage> {
 
   Widget? _indexPerFAB() {
     switch (_selectedNavIndex) {
-      case 0:
-        {
-          return SizedBox(
-            height: 60,
-            width: 150,
-            child: getFloatingActionButton(
-              text: 'Edit profile',
-              buttonColor: Theme.of(context).colorScheme.primary,
-              icon: Icons.edit,
-              function: () {},
-              foreground: Theme.of(context).colorScheme.onPrimary,
-            ),
-          );
-        }
+      // case 0:
+      //   {
+      //     return SizedBox(
+      //       height: 60,
+      //       width: 150,
+      //       child: getFloatingActionButton(
+      //         text: 'Edit profile',
+      //         buttonColor: Theme.of(context).colorScheme.primary,
+      //         icon: Icons.edit,
+      //         function: () {},
+      //         foreground: Theme.of(context).colorScheme.onPrimary,
+      //       ),
+      //     );
+      //   }
       case 2:
         {
           return SizedBox(

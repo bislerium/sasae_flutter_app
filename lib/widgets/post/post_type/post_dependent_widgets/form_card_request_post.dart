@@ -112,7 +112,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
       );
 
   Widget datetimeField() => FormBuilderDateTimePicker(
-        name: 'Request duration',
+        name: 'RequestDuration',
         controller: endsOnTEC,
         inputType: InputType.both,
         decoration: const InputDecoration(

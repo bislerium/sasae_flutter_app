@@ -108,7 +108,7 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
             onChanged: (value) {
               setState(() {
                 isSwitched = value;
-                MyApp.of(context)?.enableDarkMode(value);
+                MyApp.of(context)?.enableDarkMode();
               });
             },
           ),

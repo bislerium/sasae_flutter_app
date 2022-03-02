@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
+import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
 import './widgets/auth/register_screen.dart';
 import './widgets/home_page.dart';
 import './widgets/auth/login_screen.dart';
@@ -41,9 +42,9 @@ class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
   bool _darkMode = false;
 
-  void enableDarkMode(bool value) {
+  void enableDarkMode() {
     setState(() {
-      _darkMode = value;
+      _darkMode = !_darkMode;
     });
   }
 
@@ -51,84 +52,99 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     var colorScheme = _darkMode ? darkColorScheme : lightColorScheme;
     return KhaltiScope(
-        publicKey: "test_public_key_30e12814fed64afa9a7d4a92a2194aeb",
-        builder: (context, navigatorKey) {
-          return MaterialApp(
-            navigatorKey: navigatorKey,
-            supportedLocales: const [
-              Locale('en', 'US'),
-              Locale('ne', 'NP'),
-            ],
-            localizationsDelegates: const [
-              KhaltiLocalizations.delegate,
-              FormBuilderLocalizations.delegate,
-            ],
-            // debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: colorScheme,
-              backgroundColor: colorScheme.background,
-              primaryColor: colorScheme.primary,
-              errorColor: colorScheme.error,
-              textTheme: TextTheme(
-                headline1: GoogleFonts.roboto(
-                    fontSize: 96,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -1.5),
-                headline2: GoogleFonts.roboto(
-                    fontSize: 60,
-                    fontWeight: FontWeight.w300,
-                    letterSpacing: -0.5),
-                headline3: GoogleFonts.roboto(
-                    fontSize: 48, fontWeight: FontWeight.w400),
-                headline4: GoogleFonts.roboto(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.25),
-                headline5: GoogleFonts.roboto(
-                    fontSize: 24, fontWeight: FontWeight.w400),
-                headline6: GoogleFonts.roboto(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.15),
-                subtitle1: GoogleFonts.roboto(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.15),
-                subtitle2: GoogleFonts.roboto(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.1),
-                bodyText1: GoogleFonts.roboto(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.5),
-                bodyText2: GoogleFonts.roboto(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.25),
-                button: GoogleFonts.roboto(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 1.25),
-                caption: GoogleFonts.roboto(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 0.4),
-                overline: GoogleFonts.roboto(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400,
-                    letterSpacing: 1.5),
-              ),
+      publicKey: "test_public_key_30e12814fed64afa9a7d4a92a2194aeb",
+      builder: (context, navigatorKey) {
+        return MaterialApp(
+          navigatorKey: navigatorKey,
+          supportedLocales: const [
+            Locale('en', 'US'),
+            Locale('ne', 'NP'),
+          ],
+          localizationsDelegates: const [
+            KhaltiLocalizations.delegate,
+            FormBuilderLocalizations.delegate,
+          ],
+          // debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: colorScheme,
+            backgroundColor: colorScheme.background,
+            primaryColor: colorScheme.primary,
+            errorColor: colorScheme.error,
+            textTheme: TextTheme(
+              headline1: GoogleFonts.roboto(
+                  fontSize: 96,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: -1.5),
+              headline2: GoogleFonts.roboto(
+                  fontSize: 60,
+                  fontWeight: FontWeight.w300,
+                  letterSpacing: -0.5),
+              headline3:
+                  GoogleFonts.roboto(fontSize: 48, fontWeight: FontWeight.w400),
+              headline4: GoogleFonts.roboto(
+                  fontSize: 34,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.25),
+              headline5:
+                  GoogleFonts.roboto(fontSize: 24, fontWeight: FontWeight.w400),
+              headline6: GoogleFonts.roboto(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.15),
+              subtitle1: GoogleFonts.roboto(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.15),
+              subtitle2: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.1),
+              bodyText1: GoogleFonts.roboto(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.5),
+              bodyText2: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.25),
+              button: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 1.25),
+              caption: GoogleFonts.roboto(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0.4),
+              overline: GoogleFonts.roboto(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 1.5),
             ),
-            title: 'Sasae',
-            home: const HomePage(),
-            routes: {
-              LoginScreen.routeName: (context) => const LoginScreen(),
-              RegisterScreen.routeName: (context) => const RegisterScreen(),
-              HomePage.routeName: (context) => const HomePage(),
-              PostForm.routeName: (context) => const PostForm(),
-            },
-          );
-        });
+          ),
+          title: 'Sasae',
+          home: const HomePage(),
+          onGenerateRoute: (settings) {
+            if (settings.name == UserProfileEditScreen.routeName) {
+              final args = settings.arguments as Map;
+              return MaterialPageRoute(
+                builder: (context) {
+                  return UserProfileEditScreen(
+                    user: args['user'],
+                  );
+                },
+              );
+            }
+            assert(false, 'Need to implement ${settings.name}');
+            return null;
+          },
+          routes: {
+            LoginScreen.routeName: (context) => const LoginScreen(),
+            RegisterScreen.routeName: (context) => const RegisterScreen(),
+            HomePage.routeName: (context) => const HomePage(),
+            PostForm.routeName: (context) => const PostForm(),
+          },
+        );
+      },
+    );
   }
 }
