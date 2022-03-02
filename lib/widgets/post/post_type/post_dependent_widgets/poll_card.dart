@@ -52,13 +52,14 @@ class _PollCardState extends State<PollCard> {
                 ),
                 if (widget.endsOn != null)
                   Chip(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    label: Text(
-                      DateFormat.yMMMEd().format(widget.endsOn!),
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                            color: Theme.of(context).colorScheme.onSecondary,
-                          ),
-                    ),
+                    backgroundColor: DateTime.now().isAfter(widget.endsOn!)
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.primary,
+                    label: Text(DateFormat.yMMMEd().format(widget.endsOn!),
+                        style: Theme.of(context).textTheme.caption?.copyWith(
+                            color: DateTime.now().isAfter(widget.endsOn!)
+                                ? Theme.of(context).colorScheme.onError
+                                : Theme.of(context).colorScheme.onSecondary)),
                   ),
               ],
             ),

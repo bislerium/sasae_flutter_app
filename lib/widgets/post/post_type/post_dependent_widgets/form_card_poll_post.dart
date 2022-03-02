@@ -7,9 +7,13 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 class FormCardPollPost extends StatefulWidget {
   final List<String> pollItems;
   final TextEditingController pollDuration;
+  final GlobalKey<FormBuilderState> formKey;
 
   const FormCardPollPost(
-      {Key? key, required this.pollItems, required this.pollDuration})
+      {Key? key,
+      required this.formKey,
+      required this.pollItems,
+      required this.pollDuration})
       : super(key: key);
 
   @override
@@ -47,7 +51,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             controller: itemTEC,
             decoration: const InputDecoration(
               labelText: 'Option',
-              hintText: 'Add at least two poll options',
+              hintText: 'Add a poll option',
             ),
             maxLength: 30,
             validator: FormBuilderValidators.compose(
@@ -60,6 +64,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
               ],
             ),
             keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
           ),
         ),
       );
@@ -80,18 +85,35 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         ),
       );
 
-  Widget polls() => Column(
-        children: widget.pollItems
-            .map(
-              (e) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: DissmissableTile(
-                  item: e,
-                  removeHandler: (value) => removeItem(e),
-                ),
-              ),
-            )
-            .toList(),
+  Widget polls() => FormBuilderField(
+        name: 'pollField',
+        validator: FormBuilderValidators.compose([
+          (value) => (widget.pollItems.isEmpty || widget.pollItems.length < 2)
+              ? 'Add at least two poll options'
+              : null
+        ]),
+        builder: (FormFieldState<dynamic> field) {
+          return InputDecorator(
+            decoration: InputDecoration(
+              labelText: "Poll Options",
+              contentPadding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
+              errorText: field.errorText,
+            ),
+            child: Column(
+              children: widget.pollItems
+                  .map(
+                    (e) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5.0),
+                      child: DissmissableTile(
+                        item: e,
+                        removeHandler: (value) => removeItem(e),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+        },
       );
 
   Widget datetimeField() => FormBuilderDateTimePicker(
@@ -102,8 +124,8 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
           labelText: 'Poll duration',
         ),
         validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(context),
-          (value) => value!.isBefore(DateTime.now())
+          (value) => value != null &&
+                  value.isBefore(DateTime.now().add(const Duration(hours: 1)))
               ? 'Must have minimum one hour duration'
               : null
         ]),
@@ -115,37 +137,40 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Poll post',
-              style: Theme.of(context).textTheme.headline6?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
+        child: FormBuilder(
+          key: widget.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Poll post',
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  pollTextField(),
+                  const SizedBox(
+                    width: 10,
                   ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              children: [
-                pollTextField(),
+                  addPollButton(),
+                ],
+              ),
+              if (widget.pollItems.isNotEmpty)
                 const SizedBox(
-                  width: 10,
+                  height: 10,
                 ),
-                addPollButton(),
-              ],
-            ),
-            if (widget.pollItems.isNotEmpty)
+              polls(),
               const SizedBox(
                 height: 10,
               ),
-            polls(),
-            const SizedBox(
-              height: 10,
-            ),
-            datetimeField(),
-          ],
+              datetimeField(),
+            ],
+          ),
         ),
       ),
     );

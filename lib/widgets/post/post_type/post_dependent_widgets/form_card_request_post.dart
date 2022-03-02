@@ -50,6 +50,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
             FormBuilderValidators.max(context, 70),
           ]),
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.next,
         ),
       );
 
@@ -67,6 +68,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
             ],
           ),
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.next,
         ),
       );
 
@@ -83,6 +85,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
             FormBuilderValidators.max(context, 70),
           ]),
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.next,
         ),
       );
 
@@ -116,6 +119,14 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
           labelText: 'End Time',
         ),
         firstDate: DateTime.now(),
+        currentDate: DateTime.now(),
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(context),
+          (value) =>
+              value!.isBefore(DateTime.now().add(const Duration(hours: 1)))
+                  ? 'Must have minimum one hour duration'
+                  : null
+        ]),
       );
 
   @override

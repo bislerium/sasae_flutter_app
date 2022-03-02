@@ -72,7 +72,8 @@ class _PollPostScreenState extends State<PollPostScreen> {
       author: faker.person.firstName(),
       endsOn: faker.randomGenerator.boolean()
           ? faker.date.dateTime(
-              minYear: DateTime.now().year, maxYear: DateTime.now().year + 1)
+              minYear: DateTime.now().year - 1,
+              maxYear: DateTime.now().year + 1)
           : null,
       polls: pollOptions,
       choice: choice,

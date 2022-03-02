@@ -31,6 +31,7 @@ class _PostFormState extends State<PostForm> {
   late List<String> ngoOptionList;
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
+  late final GlobalKey<FormBuilderState> pollFormKey;
   late final GlobalKey<ChipsInputState> _chipKey;
   final TextEditingController descriptionTEC;
   final TextEditingController pollDuration;
@@ -46,6 +47,7 @@ class _PostFormState extends State<PostForm> {
     super.initState();
     superPostKey = GlobalKey<FormBuilderState>();
     requestFormKey = GlobalKey<FormBuilderState>();
+    pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
     relatedToOptionList = getRelatedToOptions();
     ngoOptionList = getNGOOptions();
@@ -123,7 +125,7 @@ class _PostFormState extends State<PostForm> {
         color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
       validator: (value) =>
-          value!.isEmpty ? 'Select what\'s your post related to!' : null);
+          value!.isEmpty ? 'Select what\'s your post related to.' : null);
 
   Widget descriptionField() => FormBuilderTextField(
         name: 'min',
@@ -264,18 +266,16 @@ class _PostFormState extends State<PostForm> {
     late Widget widget;
     switch (postTypeIndex) {
       case postType.normalPost:
-        print('1-----------------------');
         widget = imageField();
         break;
       case postType.pollPost:
-        print('2-----------------------');
         widget = FormCardPollPost(
+          formKey: pollFormKey,
           pollItems: pollItems,
           pollDuration: pollDuration,
         );
         break;
       case postType.requestPost:
-        print('3-----------------------');
         widget = FormCardRequestPost(
           formKey: requestFormKey,
         );
@@ -290,7 +290,22 @@ class _PostFormState extends State<PostForm> {
           width: 120,
         ),
         child: ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            bool isSuperPostFormValid = superPostKey.currentState!.validate();
+            bool isOtherPostFormValid = false;
+            switch (postTypeIndex) {
+              case postType.normalPost:
+                isOtherPostFormValid = true;
+                break;
+              case postType.pollPost:
+                isOtherPostFormValid = pollFormKey.currentState!.validate();
+                break;
+              case postType.requestPost:
+                isOtherPostFormValid = requestFormKey.currentState!.validate();
+                break;
+            }
+            if (isSuperPostFormValid && isOtherPostFormValid) {}
+          },
           icon: const Icon(
             Icons.post_add_rounded,
           ),
