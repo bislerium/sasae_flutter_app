@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import '../../models/post/post_.dart';
 import './post_list.dart';
 
@@ -14,13 +16,23 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  _PostScreenState() : posts = [];
+  _PostScreenState()
+      : posts = [],
+        scrollController = ScrollController();
+
   List<Post_> posts;
+  ScrollController scrollController;
 
   @override
   void initState() {
     super.initState();
     _getPosts();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> _refresh() async {
@@ -60,17 +72,31 @@ class _PostScreenState extends State<PostScreen>
     );
   }
 
+  Widget fab() => CustomFAB(
+        text: 'Post',
+        background: Theme.of(context).colorScheme.primary,
+        icon: Icons.post_add,
+        func: () => Navigator.pushNamed(context, PostForm.routeName),
+        foreground: Theme.of(context).colorScheme.onPrimary,
+        scrollController: scrollController,
+      );
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-      child: RefreshIndicator(
-        onRefresh: _refresh,
-        child: PostTileList(
-          posts: posts,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: PostTileList(
+            posts: posts,
+            scrollController: scrollController,
+          ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: fab(),
     );
   }
 

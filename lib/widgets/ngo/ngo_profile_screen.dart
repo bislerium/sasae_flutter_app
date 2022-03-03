@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
@@ -29,11 +28,11 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
       : donationAmountField = TextEditingController(),
         paymentFormKey = GlobalKey<FormState>(),
         isLoaded = false,
-        showFAB = true;
+        scrollController = ScrollController();
 
   NGO? _ngo;
   bool isLoaded;
-  bool showFAB;
+  ScrollController scrollController;
   TextEditingController donationAmountField;
   GlobalKey<FormState> paymentFormKey;
 
@@ -46,6 +45,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
   @override
   void dispose() {
     donationAmountField.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -298,262 +298,248 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
     return Scaffold(
       appBar: getCustomAppBar(context: context, title: 'View NGO'),
       body: isLoaded
-          ? NotificationListener<UserScrollNotification>(
-              onNotification: (notification) {
-                setState(() {
-                  notification.direction == ScrollDirection.reverse
-                      ? showFAB = false
-                      : showFAB = true;
-                });
-                return true;
-              },
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: size.height * 0.08,
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            width: size.width * 0.4,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(40),
-                              child: AspectRatio(
-                                aspectRatio: 1 / 1,
-                                child: Image.network(
-                                  _ngo!.orgPhoto,
-                                  fit: BoxFit.cover,
-                                  loadingBuilder:
-                                      (context, child, loadingProgress) =>
-                                          loadingProgress == null
-                                              ? child
-                                              : const LinearProgressIndicator(),
-                                ),
+          ? RefreshIndicator(
+              onRefresh: _refresh,
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: size.height * 0.08,
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          width: size.width * 0.4,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: AspectRatio(
+                              aspectRatio: 1 / 1,
+                              child: Image.network(
+                                _ngo!.orgPhoto,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child,
+                                        loadingProgress) =>
+                                    loadingProgress == null
+                                        ? child
+                                        : const LinearProgressIndicator(),
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Text(
+                          _ngo!.orgName,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
                           ),
-                          Text(
-                            _ngo!.orgName,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryContainer,
-                            ),
+                        ),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        VerifiedChip(
+                          isVerified: _ngo!.isVerified,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: getWrappedChips(
+                            context: context,
+                            list: _ngo!.fieldOfWork,
                           ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          VerifiedChip(
-                            isVerified: _ngo!.isVerified,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: getWrappedChips(
-                              context: context,
-                              list: _ngo!.fieldOfWork,
-                            ),
-                          ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: size.height * 0.05,
+                    ),
+                    Card(
+                      color: Theme.of(context).colorScheme.surface,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      SizedBox(
-                        height: size.height * 0.05,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 15),
+                        child: Column(
+                          children: [
+                            customTile(
+                              Icons.calendar_today_rounded,
+                              DateFormat.yMMMd().format(_ngo!.estDate),
+                            ),
+                            customTile(
+                              Icons.location_pin,
+                              _ngo!.address,
+                              func: () {
+                                launchMap(
+                                  title: _ngo!.orgName,
+                                  lat: _ngo!.latitude,
+                                  lon: _ngo!.longitude,
+                                );
+                              },
+                            ),
+                            customTile(
+                              Icons.phone_android_rounded,
+                              _ngo!.phone,
+                              func: () => setState(() {
+                                launch(Uri(
+                                  scheme: 'tel',
+                                  path: _ngo!.phone,
+                                ).toString());
+                              }),
+                            ),
+                            customTile(
+                              Icons.email_rounded,
+                              _ngo!.email,
+                              func: () => setState(() {
+                                launch(Uri(
+                                  scheme: 'mailto',
+                                  path: _ngo!.email,
+                                ).toString());
+                              }),
+                            ),
+                            if (_ngo!.isVerified)
+                              customTile(
+                                Icons.account_balance_wallet_rounded,
+                                _ngo!.epayAccount!,
+                              ),
+                            if (_ngo!.isVerified)
+                              materialTile(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 20),
+                                        child: Text(
+                                          ' Social Welfare Council Affilation',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: AspectRatio(
+                                          aspectRatio: 6 / 4,
+                                          child: Image.network(
+                                            _ngo!.swcCertificateURL!,
+                                            fit: BoxFit.cover,
+                                            loadingBuilder: (context, child,
+                                                    loadingProgress) =>
+                                                loadingProgress == null
+                                                    ? child
+                                                    : const LinearProgressIndicator(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    if (_ngo!.isVerified)
                       Card(
                         color: Theme.of(context).colorScheme.surface,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 15),
+                          padding: const EdgeInsets.all(10.0),
                           child: Column(
                             children: [
-                              customTile(
-                                Icons.calendar_today_rounded,
-                                DateFormat.yMMMd().format(_ngo!.estDate),
-                              ),
-                              customTile(
-                                Icons.location_pin,
-                                _ngo!.address,
-                                func: () {
-                                  launchMap(
-                                    title: _ngo!.orgName,
-                                    lat: _ngo!.latitude,
-                                    lon: _ngo!.longitude,
-                                  );
-                                },
-                              ),
-                              customTile(
-                                Icons.phone_android_rounded,
-                                _ngo!.phone,
-                                func: () => setState(() {
-                                  launch(Uri(
-                                    scheme: 'tel',
-                                    path: _ngo!.phone,
-                                  ).toString());
-                                }),
-                              ),
-                              customTile(
-                                Icons.email_rounded,
-                                _ngo!.email,
-                                func: () => setState(() {
-                                  launch(Uri(
-                                    scheme: 'mailto',
-                                    path: _ngo!.email,
-                                  ).toString());
-                                }),
-                              ),
-                              if (_ngo!.isVerified)
-                                customTile(
-                                  Icons.account_balance_wallet_rounded,
-                                  _ngo!.epayAccount!,
+                              ListTile(
+                                leading: Icon(
+                                  Icons.account_balance_rounded,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
-                              if (_ngo!.isVerified)
-                                materialTile(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              10, 0, 10, 20),
-                                          child: Text(
-                                            ' Social Welfare Council Affilation',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurfaceVariant,
-                                            ),
-                                          ),
-                                        ),
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: AspectRatio(
-                                            aspectRatio: 6 / 4,
-                                            child: Image.network(
-                                              _ngo!.swcCertificateURL!,
-                                              fit: BoxFit.cover,
-                                              loadingBuilder: (context, child,
-                                                      loadingProgress) =>
-                                                  loadingProgress == null
-                                                      ? child
-                                                      : const LinearProgressIndicator(),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                title: Text(
+                                  'Bank',
+                                  style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                trailing: TextButton.icon(
+                                  onPressed: () {
+                                    String text =
+                                        'Bank Name:\t\t ${_ngo!.bank!.bankName}\nBank Branch:\t\t ${_ngo!.bank!.bankBranch}\nBank BSB:\t\t ${_ngo!.bank!.bankBSB}\nAccount Name:\t ${_ngo!.bank!.bankAccountName}\nAccount Number:\t ${_ngo!.bank!.bankAccountNumber}';
+                                    copyToClipboard(
+                                      ctx: context,
+                                      text: text,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.copy_rounded,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                  label: Text(
+                                    'Copy',
+                                    style: TextStyle(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
                                     ),
                                   ),
                                 ),
+                              ),
+                              customTile(
+                                Icons.ac_unit,
+                                _ngo!.bank!.bankName,
+                                leading: 'Name',
+                              ),
+                              customTile(
+                                Icons.ac_unit,
+                                _ngo!.bank!.bankBranch,
+                                leading: 'Branch',
+                              ),
+                              customTile(
+                                Icons.ac_unit,
+                                _ngo!.bank!.bankBSB.toString(),
+                                leading: 'BSB',
+                              ),
+                              customTile(
+                                Icons.ac_unit,
+                                _ngo!.bank!.bankAccountName,
+                                leading: 'Account Name',
+                              ),
+                              customTile(
+                                Icons.ac_unit,
+                                _ngo!.bank!.bankAccountNumber.toString(),
+                                leading: 'Account Number',
+                              ),
                             ],
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      if (_ngo!.isVerified)
-                        Card(
-                          color: Theme.of(context).colorScheme.surface,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  leading: Icon(
-                                    Icons.account_balance_rounded,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                  title: Text(
-                                    'Bank',
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  trailing: TextButton.icon(
-                                    onPressed: () {
-                                      String text =
-                                          'Bank Name:\t\t ${_ngo!.bank!.bankName}\nBank Branch:\t\t ${_ngo!.bank!.bankBranch}\nBank BSB:\t\t ${_ngo!.bank!.bankBSB}\nAccount Name:\t ${_ngo!.bank!.bankAccountName}\nAccount Number:\t ${_ngo!.bank!.bankAccountNumber}';
-                                      copyToClipboard(
-                                        ctx: context,
-                                        text: text,
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.copy_rounded,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                                    label: Text(
-                                      'Copy',
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                customTile(
-                                  Icons.ac_unit,
-                                  _ngo!.bank!.bankName,
-                                  leading: 'Name',
-                                ),
-                                customTile(
-                                  Icons.ac_unit,
-                                  _ngo!.bank!.bankBranch,
-                                  leading: 'Branch',
-                                ),
-                                customTile(
-                                  Icons.ac_unit,
-                                  _ngo!.bank!.bankBSB.toString(),
-                                  leading: 'BSB',
-                                ),
-                                customTile(
-                                  Icons.ac_unit,
-                                  _ngo!.bank!.bankAccountName,
-                                  leading: 'Account Name',
-                                ),
-                                customTile(
-                                  Icons.ac_unit,
-                                  _ngo!.bank!.bankAccountNumber.toString(),
-                                  leading: 'Account Number',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                  ],
                 ),
               ),
             )
           : const LinearProgressIndicator(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: showFAB && isLoaded && _ngo!.isVerified
+      floatingActionButton: isLoaded && _ngo!.isVerified
           ? CustomFAB(
               text: 'Donate',
               icon: Icons.hail_rounded,
@@ -561,6 +547,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
               foreground: Theme.of(context).colorScheme.onPrimary,
               func: () => showDonationModalSheet(context, _ngo!),
               width: 130,
+              scrollController: scrollController,
             )
           : null,
     );

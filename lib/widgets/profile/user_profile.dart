@@ -17,13 +17,17 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile>
     with AutomaticKeepAliveClientMixin {
+  _UserProfileState() : scrollController = ScrollController();
+
   User? user;
+  ScrollController scrollController;
   // bool _hasCallSupport = false;
 
   @override
   void initState() {
     super.initState();
     _getUser();
+
     // canLaunch('tel:123').then((bool result) {
     //   setState(() {
     //     _hasCallSupport = result;
@@ -132,6 +136,7 @@ class _UserProfileState extends State<UserProfile>
               arguments: {'user': user});
         },
         foreground: Theme.of(context).colorScheme.onPrimary,
+        scrollController: scrollController,
       );
 
   @override
@@ -144,6 +149,7 @@ class _UserProfileState extends State<UserProfile>
         child: RefreshIndicator(
           onRefresh: _refresh,
           child: SingleChildScrollView(
+            controller: scrollController,
             child: Column(
               children: [
                 SizedBox(

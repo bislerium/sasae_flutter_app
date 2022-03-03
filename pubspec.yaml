@@ -54,7 +54,7 @@ dependencies:
   form_builder_validators: ^7.6.1
   form_builder_image_picker: ^2.0.0
   flutter_chips_input: ^1.10.0
-  flutter_osm_plugin: ^0.31.0
+  # flutter_osm_plugin: ^0.31.0
   intl_phone_number_input: ^0.7.0+2
 
 dev_dependencies:

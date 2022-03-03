@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import './profile/user_profile.dart';
-import './auth/login_screen.dart';
 import './post/post_screen.dart';
 import './ngo/ngo_screen.dart';
 import './setting.dart';
-import 'misc/custom_widgets.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -20,7 +16,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final PageController _pc;
   int _selectedNavIndex;
-  List<String> screenTitle;
   bool showFAB;
 
   _HomePageState()
@@ -28,7 +23,6 @@ class _HomePageState extends State<HomePage> {
         _pc = PageController(
           initialPage: 2,
         ),
-        screenTitle = ['NGO', 'Feed', 'Notification', 'Profile', 'Setting'],
         showFAB = true;
 
   @override
@@ -37,119 +31,7 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  ListTile getPostModalItem(BuildContext ctx, IconData icon, String title,
-      String subtitle, VoidCallback func) {
-    return ListTile(
-      iconColor: Theme.of(context).colorScheme.primary,
-      textColor: Theme.of(context).colorScheme.onSurface,
-      leading: Icon(
-        icon,
-        size: 30,
-      ),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      onTap: func,
-    );
-  }
-
-  void showPostOptionModal(BuildContext ctx) => showModalSheet(
-        ctx: ctx,
-        children: [
-          getPostModalItem(
-              ctx, Icons.file_present_sharp, 'Normal Post', 'Attach an Image!',
-              () {
-            Navigator.pop(context);
-          }),
-          getPostModalItem(ctx, Icons.poll, 'Poll Post', 'Poll the Options!',
-              () {
-            Navigator.pop(context);
-          }),
-          getPostModalItem(
-              ctx, Icons.help_center, 'Request Post', 'Request to Change!', () {
-            Navigator.pop(context);
-          }),
-        ],
-      );
-
-  FloatingActionButton getFloatingActionButton({
-    required String text,
-    required IconData icon,
-    required VoidCallback function,
-    Color? buttonColor,
-    required Color foreground,
-  }) {
-    return FloatingActionButton.extended(
-      onPressed: function,
-      label: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      icon: Icon(icon),
-      backgroundColor: buttonColor,
-      foregroundColor: foreground,
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0))),
-    );
-  }
-
-  Widget? _indexPerFAB() {
-    switch (_selectedNavIndex) {
-      // case 0:
-      //   {
-      //     return SizedBox(
-      //       height: 60,
-      //       width: 150,
-      //       child: getFloatingActionButton(
-      //         text: 'Edit profile',
-      //         buttonColor: Theme.of(context).colorScheme.primary,
-      //         icon: Icons.edit,
-      //         function: () {},
-      //         foreground: Theme.of(context).colorScheme.onPrimary,
-      //       ),
-      //     );
-      //   }
-      case 2:
-        {
-          return SizedBox(
-            height: 60,
-            width: 120,
-            child: getFloatingActionButton(
-              text: 'Post',
-              buttonColor: Theme.of(context).colorScheme.primary,
-              icon: Icons.post_add,
-              function: () => Navigator.pushNamed(context, PostForm.routeName),
-              foreground: Theme.of(context).colorScheme.onPrimary,
-            ),
-          );
-        }
-      case 4:
-        {
-          return SizedBox(
-            height: 60,
-            width: 120,
-            child: getFloatingActionButton(
-              text: 'Logout',
-              icon: Icons.logout,
-              function: () => showCustomDialog(
-                context: context,
-                title: 'Logout',
-                content: 'Do it with passion or not at all',
-                okFunc: () => Navigator.of(context).pushNamedAndRemoveUntil(
-                    LoginScreen.routeName, (Route<dynamic> route) => false),
-              ),
-              foreground: Theme.of(context).colorScheme.onError,
-              buttonColor: Theme.of(context).colorScheme.error,
-            ),
-          );
-        }
-      default:
-        {
-          return null;
-        }
-    }
-  }
-
-  Widget _getBottomNavBar() => NavigationBarTheme(
+  Widget bottomNavBar() => NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
           iconTheme: MaterialStateProperty.all(
@@ -227,21 +109,9 @@ class _HomePageState extends State<HomePage> {
       //   title: (screenTitle[_selectedNavIndex]),
       // ),
       body: SafeArea(
-        child: NotificationListener<UserScrollNotification>(
-          onNotification: (notification) {
-            setState(() {
-              notification.direction == ScrollDirection.reverse
-                  ? showFAB = false
-                  : showFAB = true;
-            });
-            return true;
-          },
-          child: _getPageView(),
-        ),
+        child: _getPageView(),
       ),
-      floatingActionButton: showFAB ? _indexPerFAB() : null,
-      bottomNavigationBar: _getBottomNavBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      bottomNavigationBar: bottomNavBar(),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
-class CustomFAB extends StatelessWidget {
+class CustomFAB extends StatefulWidget {
   final String text;
   final IconData icon;
   final VoidCallback func;
@@ -8,6 +9,7 @@ class CustomFAB extends StatelessWidget {
   final Color? foreground;
   final double height;
   final double width;
+  final ScrollController? scrollController;
 
   const CustomFAB({
     Key? key,
@@ -18,25 +20,70 @@ class CustomFAB extends StatelessWidget {
     this.foreground,
     this.height = 60,
     this.width = 120,
+    this.scrollController,
   }) : super(key: key);
+
+  @override
+  State<CustomFAB> createState() => _CustomFABState();
+}
+
+class _CustomFABState extends State<CustomFAB> {
+  late bool showFAB;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.scrollController != null) {
+      widget.scrollController!.addListener(listenScroll);
+    }
+    showFAB = true;
+  }
+
+  @override
+  void dispose() {
+    if (widget.scrollController != null) {
+      widget.scrollController!.removeListener(listenScroll);
+    }
+    super.dispose();
+  }
+
+  void listenScroll() {
+    var direction = widget.scrollController!.position.userScrollDirection;
+    direction == ScrollDirection.reverse ? hide() : show();
+  }
+
+  void show() {
+    if (!showFAB) setState(() => showFAB = true);
+  }
+
+  void hide() {
+    if (showFAB) setState(() => showFAB = false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: height,
-      width: width,
-      child: FloatingActionButton.extended(
-        elevation: 3,
-        onPressed: func,
-        label: Text(
-          text,
-          style: const TextStyle(fontWeight: FontWeight.bold),
+      height: widget.height,
+      width: widget.width,
+      child: AnimatedSlide(
+        duration: const Duration(milliseconds: 200),
+        offset: showFAB ? Offset.zero : const Offset(0, 2),
+        child: FloatingActionButton.extended(
+          heroTag: null,
+          elevation: 3,
+          onPressed: widget.func,
+          label: Text(
+            widget.text,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          icon: Icon(widget.icon),
+          backgroundColor:
+              widget.background ?? Theme.of(context).colorScheme.primary,
+          foregroundColor:
+              widget.foreground ?? Theme.of(context).colorScheme.onPrimary,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16.0))),
         ),
-        icon: Icon(icon),
-        backgroundColor: background ?? Theme.of(context).colorScheme.primary,
-        foregroundColor: foreground ?? Theme.of(context).colorScheme.onPrimary,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(16.0))),
       ),
     );
   }

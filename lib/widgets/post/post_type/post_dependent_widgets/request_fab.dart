@@ -26,34 +26,12 @@ class RequestFAB extends StatefulWidget {
 }
 
 class _RequestFABState extends State<RequestFAB> {
-  late bool showFAB;
   late bool isParticipated;
 
   @override
   void initState() {
     super.initState();
-    showFAB = true;
     isParticipated = widget.isParticipated;
-    widget.scrollController.addListener(listenScroll);
-  }
-
-  @override
-  void dispose() {
-    widget.scrollController.removeListener(listenScroll);
-    super.dispose();
-  }
-
-  void listenScroll() {
-    var direction = widget.scrollController.position.userScrollDirection;
-    direction == ScrollDirection.reverse ? hide() : show();
-  }
-
-  void show() {
-    if (!showFAB) setState(() => showFAB = true);
-  }
-
-  void hide() {
-    if (showFAB) setState(() => showFAB = false);
   }
 
   Future<void> participate(BuildContext context) async {
@@ -98,21 +76,19 @@ class _RequestFABState extends State<RequestFAB> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: showFAB,
-      child: CustomFAB(
-        text: widget.requestType == 'Petition'
-            ? isParticipated
-                ? 'Signed'
-                : 'Sign'
-            : isParticipated
-                ? 'Joined'
-                : 'Join',
-        icon: widget.requestType == 'Petition'
-            ? Icons.gesture
-            : Icons.emoji_people_rounded,
-        func: () => participate(context),
-      ),
+    return CustomFAB(
+      text: widget.requestType == 'Petition'
+          ? isParticipated
+              ? 'Signed'
+              : 'Sign'
+          : isParticipated
+              ? 'Joined'
+              : 'Join',
+      icon: widget.requestType == 'Petition'
+          ? Icons.gesture
+          : Icons.emoji_people_rounded,
+      func: () => participate(context),
+      scrollController: widget.scrollController,
     );
   }
 }

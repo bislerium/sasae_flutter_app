@@ -4,8 +4,11 @@ import '../../models/post/post_.dart';
 
 class PostTileList extends StatefulWidget {
   final List<Post_> posts;
+  final ScrollController scrollController;
 
-  const PostTileList({Key? key, required this.posts}) : super(key: key);
+  const PostTileList(
+      {Key? key, required this.posts, required this.scrollController})
+      : super(key: key);
 
   @override
   _PostTileListState createState() => _PostTileListState();
@@ -15,6 +18,7 @@ class _PostTileListState extends State<PostTileList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      controller: widget.scrollController,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: widget.posts.length,

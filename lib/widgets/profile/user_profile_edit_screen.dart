@@ -5,6 +5,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 
 class UserProfileEditScreen extends StatefulWidget {
   static const String routeName = '/editProfile';
@@ -20,9 +21,25 @@ class UserProfileEditScreen extends StatefulWidget {
 }
 
 class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
-  @override
-  void initState() {
-    super.initState();
+  ScrollController scrollController;
+  GlobalKey<FormBuilderState> formKey;
+  _UserProfileEditScreenState()
+      : scrollController = ScrollController(),
+        formKey = GlobalKey<FormBuilderState>();
+
+  Widget displayPhotoField() {
+    double width = MediaQuery.of(context).size.width - 30;
+    return FormBuilderImagePicker(
+      name: 'displayPicture',
+      initialValue: [widget.user.displayPicture],
+      decoration: const InputDecoration(
+        labelText: 'Display Picture',
+        border: InputBorder.none,
+      ),
+      previewWidth: width,
+      previewHeight: width,
+      maxImages: 1,
+    );
   }
 
   Widget fullNameField() => FormBuilderTextField(
@@ -34,7 +51,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         initialValue: widget.user.fullName,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.numeric(context),
+            FormBuilderValidators.required(context),
           ],
         ),
         keyboardType: TextInputType.name,
@@ -79,6 +96,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         validator: FormBuilderValidators.compose([
           FormBuilderValidators.required(context),
         ]),
+        lastDate: DateTime.now(),
       );
 
   Widget emailField() => FormBuilderTextField(
@@ -90,7 +108,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         initialValue: widget.user.email,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.numeric(context),
+            FormBuilderValidators.required(context),
             FormBuilderValidators.email(context),
           ],
         ),
@@ -98,23 +116,26 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         textInputAction: TextInputAction.next,
       );
 
-  Widget phoneField() => FormBuilderField(
-        builder: (FormFieldState<dynamic> field) {
-          return InternationalPhoneNumberInput(
-            selectorConfig: const SelectorConfig(
-              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-            ),
-            // initialValue: PhoneNumber(phoneNumber: user.phoneNumber),
-            onInputChanged: (PhoneNumber value) {},
-          );
-        },
+  Widget phoneField() => FormBuilderTextField(
         name: 'phone',
+        // controller: targetTEC,
+        decoration: const InputDecoration(
+          labelText: 'Phone number',
+        ),
+        initialValue: widget.user.phoneNumber,
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+          ],
+        ),
+        keyboardType: TextInputType.phone,
+        textInputAction: TextInputAction.next,
       );
 
-  Widget imageField() {
-    double width = MediaQuery.of(context).size.width - 60;
+  Widget citizenshipPhotoField() {
+    double width = MediaQuery.of(context).size.width - 30;
     return FormBuilderImagePicker(
-      name: 'photos',
+      name: 'citizenship',
       initialValue: [widget.user.citizenshipPhoto],
       decoration: const InputDecoration(
         labelText: 'Attach a citizenship photo',
@@ -126,6 +147,20 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
     );
   }
 
+  Widget fab() => CustomFAB(
+        text: 'Done',
+        background: Theme.of(context).colorScheme.primary,
+        icon: Icons.done_rounded,
+        func: () {
+          bool validForm = formKey.currentState!.validate();
+          if (validForm) {
+            Navigator.of(context).pop();
+          }
+        },
+        foreground: Theme.of(context).colorScheme.onPrimary,
+        scrollController: scrollController,
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -135,33 +170,43 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
       body: Padding(
         padding: const EdgeInsets.all(15.0),
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              fullNameField(),
-              const SizedBox(
-                height: 10,
-              ),
-              genderField(),
-              const SizedBox(
-                height: 10,
-              ),
-              birthDateField(),
-              const SizedBox(
-                height: 10,
-              ),
-              phoneField(),
-              const SizedBox(
-                height: 10,
-              ),
-              emailField(),
-              const SizedBox(
-                height: 10,
-              ),
-              imageField(),
-            ],
+          controller: scrollController,
+          child: FormBuilder(
+            key: formKey,
+            child: Column(
+              children: [
+                displayPhotoField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                fullNameField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                genderField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                birthDateField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                phoneField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                emailField(),
+                const SizedBox(
+                  height: 10,
+                ),
+                citizenshipPhotoField(),
+              ],
+            ),
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: fab(),
     );
   }
 }
