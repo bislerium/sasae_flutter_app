@@ -54,8 +54,10 @@ dependencies:
   form_builder_validators: ^7.6.1
   form_builder_image_picker: ^2.0.0
   flutter_chips_input: ^1.10.0
+  # shared_preferences: ^2.0.13
   # flutter_osm_plugin: ^0.31.0
-  intl_phone_number_input: ^0.7.0+2
+  # intl_phone_number_input: ^0.7.0+2
+  # flutter_secure_storage: ^5.0.2
 
 dev_dependencies:
   flutter_test:

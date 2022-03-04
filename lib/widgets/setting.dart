@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/main.dart';
+import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/login_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -123,15 +125,11 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
         leading: const Icon(Icons.dark_mode_rounded),
         title: const Text('Dark Mode'),
         trailing: Switch(
-          value: isSwitched,
-          activeColor: Theme.of(context).colorScheme.secondary,
-          onChanged: (value) {
-            setState(() {
-              isSwitched = value;
-              MyApp.of(context)?.enableDarkMode();
-            });
-          },
-        ),
+            value: isSwitched,
+            activeColor: Theme.of(context).colorScheme.secondary,
+            onChanged: (value) {
+              Provider.of<AppPreferenceProvider>(context).toggleDarkMode();
+            }),
       );
 
   @override
