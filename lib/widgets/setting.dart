@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/main.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/login_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
@@ -33,8 +32,6 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
 
   final String applicationLegalese =
       'A Social Service Application to help NGO and the enthuhsiast people who wants to help others.';
-
-  var isSwitched = false;
 
   Widget fab() => CustomFAB(
         text: 'Logout',
@@ -119,17 +116,20 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
         },
       );
 
-  Widget darkMode() => ListTile(
-        iconColor: Theme.of(context).colorScheme.secondary,
-        textColor: Theme.of(context).colorScheme.onBackground,
-        leading: const Icon(Icons.dark_mode_rounded),
-        title: const Text('Dark Mode'),
-        trailing: Switch(
-            value: isSwitched,
+  Widget darkMode() => Consumer<AppPreferenceProvider>(
+        builder: (context, appPreference, child) => ListTile(
+          iconColor: Theme.of(context).colorScheme.secondary,
+          textColor: Theme.of(context).colorScheme.onBackground,
+          leading: const Icon(Icons.dark_mode_rounded),
+          title: const Text('Dark Mode'),
+          trailing: Switch(
             activeColor: Theme.of(context).colorScheme.secondary,
             onChanged: (value) {
-              Provider.of<AppPreferenceProvider>(context).toggleDarkMode();
-            }),
+              appPreference.toggleDarkMode();
+            },
+            value: appPreference.darkMode,
+          ),
+        ),
       );
 
   @override

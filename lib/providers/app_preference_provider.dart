@@ -5,15 +5,23 @@ class UserData {}
 
 class AppPreferenceProvider extends ChangeNotifier {
   late bool _darkMode;
-  SessionManager sessionManager;
+  late SessionManager sessionManager;
 
-  AppPreferenceProvider() : sessionManager = SessionManager();
-
-  void initAppPreference() {
-    // if (sessionManager.containsKey('darkmode')) {}
+  AppPreferenceProvider() {
+    sessionManager = SessionManager();
+    _darkMode = false;
+    initAppPreference();
   }
 
-  bool get getDarkMode => _darkMode;
+  Future<void> initAppPreference() async {
+    var value = await sessionManager.get('darkmode');
+    if (value != null && _darkMode != value) {
+      _darkMode = value;
+      notifyListeners();
+    }
+  }
+
+  bool get darkMode => _darkMode;
 
   void toggleDarkMode([bool? toogle]) {
     _darkMode = toogle ?? !_darkMode;

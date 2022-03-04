@@ -81,7 +81,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
       ),
       author: faker.person.firstName(),
       endsOn: faker.date.dateTime(
-          minYear: DateTime.now().year, maxYear: DateTime.now().year + 1),
+          minYear: DateTime.now().year - 1, maxYear: DateTime.now().year + 1),
       isParticipated: numReaction > 0 ? faker.randomGenerator.boolean() : false,
       min: min,
       target: target,

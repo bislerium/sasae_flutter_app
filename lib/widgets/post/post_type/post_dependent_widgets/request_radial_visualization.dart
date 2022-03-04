@@ -25,7 +25,7 @@ class RequestRadialVisualization extends StatelessWidget {
       tooltipBehavior: tooltipBehavior,
       series: <CircularSeries>[
         RadialBarSeries<LinearCounts, String>(
-          animationDuration: animationDuration,
+          animationDuration: animationDuration ?? 600,
           radius: '150',
           innerRadius: '40',
           dataSource: chartData,
