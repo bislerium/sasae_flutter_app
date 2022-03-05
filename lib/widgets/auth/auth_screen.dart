@@ -1,108 +1,121 @@
 import 'package:flutter/material.dart';
-import '../auth/register_screen.dart';
-import '../home_page.dart';
-import '../misc/custom_widgets.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
+import 'package:sasae_flutter_app/widgets/home_page.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
-class LoginScreen extends StatefulWidget {
+class AuthScreen extends StatefulWidget {
   static const routeName = '/login';
-  const LoginScreen({Key? key}) : super(key: key);
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final formKey = GlobalKey<FormState>();
-  final passwordResetFormKey = GlobalKey<FormState>();
-  var userIDField = TextEditingController();
-  var passwordField = TextEditingController();
-  var resetEmailField = TextEditingController();
+class _AuthScreenState extends State<AuthScreen> {
+  final GlobalKey<FormBuilderState> _loginFormKey;
+  final GlobalKey<FormBuilderState> _passwordResetFormKey;
+  final TextEditingController _userNameTEC;
+  final TextEditingController _passwordTEC;
+  final TextEditingController _resetEmailTEC;
+
+  _AuthScreenState()
+      : _loginFormKey = GlobalKey<FormBuilderState>(),
+        _passwordResetFormKey = GlobalKey<FormBuilderState>(),
+        _userNameTEC = TextEditingController(),
+        _passwordTEC = TextEditingController(),
+        _resetEmailTEC = TextEditingController();
 
   @override
   void dispose() {
-    userIDField.dispose();
-    passwordField.dispose();
-    resetEmailField.dispose();
+    _userNameTEC.dispose();
+    _passwordTEC.dispose();
+    _resetEmailTEC.dispose();
     super.dispose();
   }
 
-  Widget _userIDField() => TextFormField(
-        controller: userIDField,
+  Widget _userName() => FormBuilderTextField(
+        name: 'userName',
+        controller: _userNameTEC,
         decoration: InputDecoration(
           iconColor: Theme.of(context).colorScheme.secondary,
           prefixIcon: const Icon(
             Icons.account_circle_rounded,
           ),
           labelText: 'Username',
-          // floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
-        validator: (value) {
-          if (value!.isEmpty) {
-            return 'Enter your username!';
-          } else if (value.contains(' ')) {
-            return 'Username must be spaceless!';
-          } else {
-            return null;
-          }
-        },
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            (value) =>
+                value!.contains(' ') ? 'Username must be spaceless!' : null,
+          ],
+        ),
         maxLength: 10,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
       );
 
-  Widget _passwordField() => TextFormField(
-        controller: passwordField,
+  Widget _passwordField() => FormBuilderTextField(
+        name: 'password',
+        controller: _passwordTEC,
         decoration: InputDecoration(
           iconColor: Theme.of(context).colorScheme.secondary,
           prefixIcon: const Icon(
             Icons.password_rounded,
           ),
           labelText: 'Password',
-          // floatingLabelBehavior: FloatingLabelBehavior.never,
         ),
-        validator: (value) {
-          return checkValue(
-            value: value!,
-            checkEmptyOnly: true,
-          );
-        },
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+          ],
+        ),
         textInputAction: TextInputAction.done,
         keyboardType: TextInputType.visiblePassword,
         obscureText: true,
       );
 
-  Widget _loginButton() => Builder(builder: (context) {
-        return ElevatedButton(
-          child: Icon(
-            Icons.navigate_next_rounded,
-            size: 50,
-            color: Theme.of(context).colorScheme.onSecondaryContainer,
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            primary: Theme.of(context).colorScheme.secondaryContainer,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          ),
-          onPressed: () {
-            final isValid = formKey.currentState!.validate();
-            FocusScope.of(context).unfocus();
-            if (isValid) {
-              var userID = userIDField.text;
-              var password = passwordField.text;
-              if (userID == 'user' && password == 'user') {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    HomePage.routeName, (Route<dynamic> route) => false);
-              } else {
-                showSnackBar(
-                  context: context,
-                  message: 'Wrong Username or password!',
-                  errorSnackBar: true,
-                );
-              }
-            }
-          },
-        );
-      });
+  Widget _loginButton() => Consumer<AuthProvider>(
+        builder: ((context, auth, child) => ElevatedButton(
+              child: auth.isAuthOnGoing
+                  ? const Padding(
+                      padding: EdgeInsets.all(7.0),
+                      child: CircularProgressIndicator(),
+                    )
+                  : Icon(
+                      Icons.navigate_next_rounded,
+                      size: 50,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                primary: Theme.of(context).colorScheme.secondaryContainer,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              ),
+              onPressed: () async {
+                final isValid = _loginFormKey.currentState!.validate();
+                FocusScope.of(context).unfocus();
+                if (isValid) {
+                  await auth.login(_userNameTEC.text, _passwordTEC.text);
+                  if (auth.isAuth) {
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        HomePage.routeName, (Route<dynamic> route) => false);
+                  } else {
+                    showSnackBar(
+                      context: context,
+                      message: 'Unable to login!',
+                      errorSnackBar: true,
+                    );
+                  }
+                }
+              },
+            )),
+      );
 
   Widget _forgetButton() => Builder(builder: (context) {
         return TextButton(
@@ -154,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Image.asset(
             'assets/images/logo.png',
-            height: 100,
+            height: 120,
           ),
           const SizedBox(
             height: 10,
@@ -170,11 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       );
 
-  Widget _loginForm() => Form(
-        key: formKey,
+  Widget _loginForm() => FormBuilder(
+        key: _loginFormKey,
         child: Column(
           children: <Widget>[
-            _userIDField(),
+            _userName(),
             const SizedBox(
               height: 2,
             ),
@@ -213,24 +226,20 @@ class _LoginScreenState extends State<LoginScreen> {
           const SizedBox(
             height: 10,
           ),
-          Form(
-            key: passwordResetFormKey,
-            child: TextFormField(
-              controller: resetEmailField,
+          FormBuilder(
+            key: _passwordResetFormKey,
+            child: FormBuilderTextField(
+              name: 'passwordReset',
+              controller: _resetEmailTEC,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.email_rounded),
                 labelText: 'Email',
                 hintText: 'xyz@email.com',
-                // floatingLabelBehavior: FloatingLabelBehavior.never,
               ),
-              validator: (value) {
-                return checkValue(
-                  value: value!,
-                  pattern:
-                      r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
-                  patternMessage: 'Invalid email!',
-                );
-              },
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(context),
+                FormBuilderValidators.email(context),
+              ]),
               keyboardType: TextInputType.emailAddress,
             ),
           ),
@@ -247,17 +256,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontSize: 16,
                 ),
               ),
-              onPressed: () {
-                final isValid = passwordResetFormKey.currentState!.validate();
-
+              onPressed: () async {
+                final isValid = _passwordResetFormKey.currentState!.validate();
                 if (isValid) {
-                  var email = resetEmailField.text;
-                  showSnackBar(
-                    context: ctx,
-                    message: 'Password reset email sent, Check your inbox!',
-                  );
-                  resetEmailField.clear();
-                  Navigator.of(ctx).pop();
+                  bool success =
+                      await Provider.of<AuthProvider>(context, listen: false)
+                          .resetPassword(_resetEmailTEC.text);
+                  if (success) {
+                    showSnackBar(
+                      context: ctx,
+                      message: 'Password reset email sent, Check your inbox!',
+                    );
+                    _resetEmailTEC.clear();
+                    Navigator.of(ctx).pop();
+                  } else {
+                    showSnackBar(
+                      context: ctx,
+                      message: 'Something went wrong!',
+                      errorSnackBar: true,
+                    );
+                  }
                 }
               },
               style: ElevatedButton.styleFrom(

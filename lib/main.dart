@@ -1,37 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
+import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
+import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
-import './widgets/auth/register_screen.dart';
-import './widgets/home_page.dart';
-import './widgets/auth/login_screen.dart';
-import './lib_color_schemes.g.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
 void main() async {
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await initialization();
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
-  FlutterNativeSplash.remove();
-}
-
-Future<void> initialization() async {
-  // This is where you can initialize the resources needed by your app while
-  // the splash screen is displayed.  Remove the following example because
-  // delaying the user experience is a bad design practice!
-  // ignore_for_file: avoid_print
-  print('ready in 3...');
-  await Future.delayed(const Duration(seconds: 1));
-  print('ready in 2...');
-  await Future.delayed(const Duration(seconds: 1));
-  print('ready in 1...');
-  await Future.delayed(const Duration(seconds: 1));
-  print('go!');
 }
 
 class MyApp extends StatefulWidget {
@@ -84,7 +68,7 @@ Route<dynamic>? argRoute(settings) {
 }
 
 Map<String, Widget Function(BuildContext)> nonArgRoute() => {
-      LoginScreen.routeName: (context) => const LoginScreen(),
+      AuthScreen.routeName: (context) => const AuthScreen(),
       RegisterScreen.routeName: (context) => const RegisterScreen(),
       HomePage.routeName: (context) => const HomePage(),
       PostForm.routeName: (context) => const PostForm(),
@@ -101,9 +85,12 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(
               create: (_) => AppPreferenceProvider(),
             ),
+            ChangeNotifierProvider(
+              create: (_) => AuthProvider(),
+            ),
           ],
-          child: Consumer<AppPreferenceProvider>(
-            builder: (context, appPreference, child) {
+          child: Consumer2<AppPreferenceProvider, AuthProvider>(
+            builder: (context, appPreference, auth, child) {
               var colorScheme =
                   appPreference.darkMode ? darkColorScheme : lightColorScheme;
               return MaterialApp(
@@ -125,7 +112,15 @@ class _MyAppState extends State<MyApp> {
                   textTheme: textTheme(),
                 ),
                 title: 'Sasae',
-                home: const HomePage(),
+                home: FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authSnapshot) =>
+                      authSnapshot.connectionState == ConnectionState.waiting
+                          ? const SplashScreen()
+                          : auth.isAuth
+                              ? const HomePage()
+                              : const AuthScreen(),
+                ),
                 onGenerateRoute: (settings) => argRoute(settings),
                 routes: nonArgRoute(),
               );

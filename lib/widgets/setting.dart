@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
-import 'package:sasae_flutter_app/widgets/auth/login_screen.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -37,12 +38,22 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
         text: 'Logout',
         icon: Icons.logout,
         func: () => showCustomDialog(
-          context: context,
-          title: 'Logout',
-          content: 'Do it with passion or not at all',
-          okFunc: () => Navigator.of(context).pushNamedAndRemoveUntil(
-              LoginScreen.routeName, (Route<dynamic> route) => false),
-        ),
+            context: context,
+            title: 'Logout',
+            content: 'Do it with passion or not at all',
+            okFunc: () async {
+              var _ = Provider.of<AuthProvider>(context, listen: false);
+              bool success = await _.logout();
+              if (success) {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                    AuthScreen.routeName, (Route<dynamic> route) => false);
+              } else {
+                showSnackBar(
+                    context: context,
+                    message: 'Unable to logout!',
+                    errorSnackBar: true);
+              }
+            }),
         foreground: Theme.of(context).colorScheme.onError,
         background: Theme.of(context).colorScheme.error,
       );
