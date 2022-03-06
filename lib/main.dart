@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
@@ -87,6 +88,9 @@ class _MyAppState extends State<MyApp> {
             ),
             ChangeNotifierProvider(
               create: (_) => AuthProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => NGOProvider(),
             ),
           ],
           child: Consumer2<AppPreferenceProvider, AuthProvider>(
