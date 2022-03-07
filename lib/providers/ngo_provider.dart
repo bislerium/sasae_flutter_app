@@ -81,10 +81,11 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> applyFieldOfWorkFilter(List<String> filters) async {
-    await Future(() => _dataToShow = _ngoDataList.where((element) {
-          return element.fieldOfWork
-              .any((element) => filters.contains(element));
-        }).toList());
+    await Future(
+      () => _dataToShow = _ngoDataList.where((element) {
+        return element.fieldOfWork.any((e) => filters.contains(e));
+      }).toList(),
+    );
     _isFiltered = true;
     notifyListeners();
   }

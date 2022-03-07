@@ -114,142 +114,152 @@ class _NGOScreenState extends State<NGOScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Consumer<NGOProvider>(
-      builder: (context, ngoP, child) => FutureBuilder(
-        future: ngoP.fetchNGO(),
-        builder: (context, snapshot) => snapshot.connectionState ==
-                ConnectionState.waiting
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  LinearProgressIndicator(),
-                ],
-              )
-            : Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15),
-                child: ngoP.ngoData.isEmpty & searchController.text.isEmpty
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/gif/no_result.gif',
-                            height: 200,
-                          ),
-                          ElevatedButton.icon(
-                              onPressed: () => ngoP.refresh(),
-                              style: ElevatedButton.styleFrom(
-                                  shape: const StadiumBorder()),
-                              icon: const Icon(Icons.refresh),
-                              label: const Text('Refresh'))
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      color:
-                                          Theme.of(context).colorScheme.surface,
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.search,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onPrimaryContainer,
-                                          ),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10),
-                                              child: TextField(
-                                                keyboardType:
-                                                    TextInputType.text,
-                                                controller: searchController,
-                                                onChanged: (value) =>
-                                                    ngoP.searchByName(value),
-                                                decoration:
-                                                    const InputDecoration(
-                                                  border: InputBorder.none,
-                                                  hintText:
-                                                      'Search NGO by their Name',
-                                                ),
-                                                textInputAction:
-                                                    TextInputAction.search,
-                                              ),
-                                            ),
-                                          ),
-                                          if (searchController.text.isNotEmpty)
-                                            InkWell(
-                                              onTap: () => ngoP.reset(),
-                                              child: Icon(
-                                                Icons.clear,
+    return FutureBuilder(
+      future: Provider.of<NGOProvider>(context, listen: false).fetchNGO(),
+      builder: (context, snapshot) => snapshot.connectionState ==
+              ConnectionState.waiting
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                LinearProgressIndicator(),
+              ],
+            )
+          : Consumer<NGOProvider>(
+              builder: ((context, ngoP, child) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                    child: ngoP.ngoData.isEmpty & searchController.text.isEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/gif/no_result.gif',
+                                height: 200,
+                              ),
+                              ElevatedButton.icon(
+                                  onPressed: () => ngoP.refresh(),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: const StadiumBorder()),
+                                  icon: const Icon(Icons.refresh),
+                                  label: const Text('Refresh'))
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .surface,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.search,
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .onPrimaryContainer,
                                               ),
-                                            )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12),
-                                  child: ClipOval(
-                                    child: Container(
-                                      color: ngoP.isFiltered
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .secondaryContainer
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .background,
-                                      child: IconButton(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onSecondaryContainer,
-                                        onPressed: () {
-                                          // clear(context);
-                                          showFilterModal(context, ngoP);
-                                        },
-                                        icon: const Icon(
-                                          Icons.filter_list,
-                                          size: 30,
+                                              Expanded(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10),
+                                                  child: TextField(
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    controller:
+                                                        searchController,
+                                                    onChanged: (value) => ngoP
+                                                        .searchByName(value),
+                                                    decoration:
+                                                        const InputDecoration(
+                                                      border: InputBorder.none,
+                                                      hintText:
+                                                          'Search NGO by their Name',
+                                                    ),
+                                                    textInputAction:
+                                                        TextInputAction.search,
+                                                  ),
+                                                ),
+                                              ),
+                                              if (searchController
+                                                  .text.isNotEmpty)
+                                                InkWell(
+                                                  onTap: () {
+                                                    ngoP.reset();
+                                                    searchController.clear();
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                  },
+                                                  child: Icon(
+                                                    Icons.clear,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimaryContainer,
+                                                  ),
+                                                )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 12),
+                                      child: ClipOval(
+                                        child: Container(
+                                          color: ngoP.isFiltered
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .secondaryContainer
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .background,
+                                          child: IconButton(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSecondaryContainer,
+                                            onPressed: () {
+                                              // clear(context);
+                                              showFilterModal(context, ngoP);
+                                            },
+                                            icon: const Icon(
+                                              Icons.filter_list,
+                                              size: 30,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                child: ngoP.ngoData.isEmpty &
+                                        searchController.text.isNotEmpty
+                                    ? const Center(
+                                        child: Text('No NGO found 😔'),
+                                      )
+                                    : RefreshIndicator(
+                                        onRefresh: () => ngoP.refresh(),
+                                        child: NGOList(ngoList: ngoP.ngoData),
+                                      ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: ngoP.ngoData.isEmpty &
-                                    searchController.text.isNotEmpty
-                                ? const Center(
-                                    child: Text('No NGO found 😔'),
-                                  )
-                                : RefreshIndicator(
-                                    onRefresh: () => ngoP.refresh(),
-                                    child: NGOList(ngoList: ngoP.ngoData),
-                                  ),
-                          ),
-                        ],
-                      ),
-              ),
-      ),
+                  )),
+            ),
     );
   }
 
