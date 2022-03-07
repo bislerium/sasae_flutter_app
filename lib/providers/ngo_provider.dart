@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
@@ -7,20 +6,27 @@ import 'package:sasae_flutter_app/models/ngo_.dart';
 class NGOProvider with ChangeNotifier {
   List<NGO_> _ngoDataList; // Actual Untouched DataList
   List<NGO_> _dataToShow; // Filtered/search data
-  bool _isFiltered;
   final Set<String> _fieldOfWork;
+  bool _isFiltered;
+  bool _isSearched;
+  bool _isRefreshing;
+  //Can be used to know if fetching was unsucessful or the fetched data is empty
 
   NGOProvider()
       : _ngoDataList = [],
         _dataToShow = [],
         _fieldOfWork = {},
-        _isFiltered = false;
+        _isFiltered = false,
+        _isSearched = false,
+        _isRefreshing = false;
 
   List<NGO_> get ngoData => _dataToShow;
   Set<String> get fieldOfWork => _fieldOfWork;
   bool get isFiltered => _isFiltered;
+  bool get isSearched => _isSearched;
+  bool get isRefreshing => _isRefreshing;
 
-  void _randNGO() {
+  void _randNGOs() {
     int length = Random().nextInt(100 - 20) + 20;
     _dataToShow = _ngoDataList = List.generate(
       length,
@@ -41,15 +47,20 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGO({bool isDemo = true}) async {
+  Future<void> fetchNGOs({bool isDemo = true}) async {
     await Future.delayed(const Duration(seconds: 2));
-    if (isDemo) _randNGO();
-    await _extractFoW();
+    if (isDemo) _randNGOs();
+    if (_dataToShow.isNotEmpty) await _extractFoW();
     _isFiltered = false;
   }
 
-  Future<void> refresh() async {
-    await fetchNGO();
+  void setRefreshingStatus(bool value) {
+    _isRefreshing = value;
+    notifyListeners();
+  }
+
+  Future<void> refreshNGOs() async {
+    await fetchNGOs();
     _isFiltered = false;
     notifyListeners();
   }
@@ -68,6 +79,7 @@ class NGOProvider with ChangeNotifier {
   Future<void> searchByName(String name) async {
     if (name.isEmpty) {
       _dataToShow = _ngoDataList;
+      _isSearched = false;
     } else {
       await Future(
         () => _dataToShow = _ngoDataList
@@ -75,7 +87,7 @@ class NGOProvider with ChangeNotifier {
                 (ngo) => ngo.orgName.toLowerCase().contains(name.toLowerCase()))
             .toList(),
       );
-      _isFiltered = false;
+      _isSearched = true;
     }
     notifyListeners();
   }
@@ -90,9 +102,10 @@ class NGOProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void reset() {
+  void clear() {
     _dataToShow = _ngoDataList;
     _isFiltered = false;
+    _isSearched = false;
     notifyListeners();
   }
 }

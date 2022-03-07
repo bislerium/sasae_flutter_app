@@ -8,23 +8,19 @@ import 'package:sasae_flutter_app/api_config.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _tokenKey;
-  bool _isAuthOnGoing;
+  bool _isAuthenticating;
   final SessionManager _sessionManager;
 
   AuthProvider()
       : _sessionManager = SessionManager(),
-        _isAuthOnGoing = false;
+        _isAuthenticating = false;
 
-  bool get isAuth {
-    return _tokenKey != null;
-  }
-
+  bool get isAuth => _tokenKey != null;
   String? get tokenKey => _tokenKey;
-
-  bool get isAuthOnGoing => _isAuthOnGoing;
+  bool get isAuthenticating => _isAuthenticating;
 
   Future<void> _authenticate(String username, String password) async {
-    _isAuthOnGoing = true;
+    _isAuthenticating = true;
     try {
       final response = await http.post(
         Uri.parse('${getHostName()}$loginEndpoint'),
@@ -50,7 +46,7 @@ class AuthProvider with ChangeNotifier {
     } catch (error) {
       _tokenKey = null;
     }
-    _isAuthOnGoing = false;
+    _isAuthenticating = false;
     notifyListeners();
   }
 

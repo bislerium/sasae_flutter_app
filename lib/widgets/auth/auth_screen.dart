@@ -80,8 +80,8 @@ class _AuthScreenState extends State<AuthScreen> {
       );
 
   Widget _loginButton() => Consumer<AuthProvider>(
-        builder: ((context, auth, child) => ElevatedButton(
-              child: auth.isAuthOnGoing
+        builder: ((context, authP, child) => ElevatedButton(
+              child: authP.isAuthenticating
                   ? const Padding(
                       padding: EdgeInsets.all(7.0),
                       child: CircularProgressIndicator(),
@@ -101,8 +101,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 final isValid = _loginFormKey.currentState!.validate();
                 FocusScope.of(context).unfocus();
                 if (isValid) {
-                  await auth.login(_userNameTEC.text, _passwordTEC.text);
-                  if (auth.isAuth) {
+                  await authP.login(_userNameTEC.text, _passwordTEC.text);
+                  if (authP.isAuth) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         HomePage.routeName, (Route<dynamic> route) => false);
                   } else {

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
-import './post_type/normal_post_screen.dart';
-import '../../models/post/post_.dart';
 
 class PostCard extends StatelessWidget {
   final Post_ post;
@@ -15,7 +15,6 @@ class PostCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       key: ValueKey(post.id),
-      margin: const EdgeInsets.symmetric(vertical: 8),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,

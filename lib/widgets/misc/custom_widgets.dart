@@ -56,6 +56,7 @@ void showModalSheet({
     context: ctx,
     isScrollControlled: true,
     backgroundColor: Theme.of(ctx).colorScheme.surface,
+    isDismissible: false,
     builder: (_) {
       return Padding(
         padding: EdgeInsets.only(
