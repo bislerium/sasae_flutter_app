@@ -51,7 +51,7 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> fetchNGOs({bool isDemo = true}) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) _randNGOs();
     if (_ngosToShow.isNotEmpty) await _extractFoW();
     _isFiltered = false;
@@ -157,7 +157,7 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> fetchNGO({required int postID, bool isDemo = true}) async {
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) _randNGO();
   }
 
@@ -165,7 +165,6 @@ class NGOProvider with ChangeNotifier {
 
   Future<void> refreshNGO(int postID) async {
     await fetchNGO(postID: postID);
-    _ngo = null;
     notifyListeners();
   }
 }

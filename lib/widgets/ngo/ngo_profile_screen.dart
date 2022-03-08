@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
@@ -12,7 +12,7 @@ import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_donation_button.dart';
 
 class NGOProfileScreen extends StatefulWidget {
-  static const String routeName = '/ngo';
+  static const String routeName = '/ngo/profile';
   final int postID;
 
   const NGOProfileScreen({Key? key, required this.postID}) : super(key: key);
@@ -48,9 +48,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
     await Provider.of<NGOProvider>(context, listen: false).fetchNGO(
       postID: widget.postID,
     );
-    setState(() {
-      _isfetched = true;
-    });
+    setState(() => _isfetched = true);
   }
 
   @override
@@ -66,9 +64,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
               builder: (context, ngoP, child) => RefreshIndicator(
                 onRefresh: () => ngoP.refreshNGO(widget.postID),
                 child: ngoP.ngo == null
-                    ? const Center(
-                        child: Text('Something went wrong 😖'),
-                      )
+                    ? const FetchError()
                     : SingleChildScrollView(
                         controller: scrollController,
                         child: Column(

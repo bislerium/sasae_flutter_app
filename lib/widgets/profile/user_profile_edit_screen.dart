@@ -7,7 +7,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 
 class UserProfileEditScreen extends StatefulWidget {
-  static const String routeName = '/editProfile';
+  static const String routeName = '/profile/edit';
 
   final User user;
   const UserProfileEditScreen({

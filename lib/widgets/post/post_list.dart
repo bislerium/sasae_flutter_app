@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
-import 'post_card.dart';
-import '../../models/post/post_.dart';
+import 'package:sasae_flutter_app/models/post/post_.dart';
+import 'package:sasae_flutter_app/widgets/post/post_card.dart';
 
-class PostTileList extends StatefulWidget {
+class PostList extends StatefulWidget {
   final List<Post_> posts;
   final ScrollController scrollController;
 
-  const PostTileList(
+  const PostList(
       {Key? key, required this.posts, required this.scrollController})
       : super(key: key);
 
   @override
-  _PostTileListState createState() => _PostTileListState();
+  _PostListState createState() => _PostListState();
 }
 
-class _PostTileListState extends State<PostTileList> {
+class _PostListState extends State<PostList> {
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      controller: widget.scrollController,
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: widget.posts.length,
-      shrinkWrap: true,
-      itemBuilder: ((context, index) {
-        var post = widget.posts[index];
-        return PostCard(
-          key: ValueKey(post.id),
-          post: post,
-        );
-      }),
-    );
-  }
+  Widget build(BuildContext context) => ListView.builder(
+        controller: widget.scrollController,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: widget.posts.length,
+        shrinkWrap: true,
+        itemBuilder: ((context, index) {
+          var post = widget.posts[index];
+          return PostCard(
+            key: ValueKey(post.id),
+            post: post,
+          );
+        }),
+      );
 }

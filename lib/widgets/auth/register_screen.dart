@@ -7,7 +7,7 @@ import '../misc/custom_widgets.dart';
 import '../misc/date_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
-  static const routeName = '/register';
+  static const routeName = '/auth/register';
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override

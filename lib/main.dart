@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
-import 'package:khalti_flutter/khalti_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
 import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
@@ -54,36 +59,79 @@ TextTheme textTheme() => TextTheme(
           fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
     );
 
-Route<dynamic>? argRoute(settings) {
-  final args = settings.arguments as Map;
-  if (settings.name == UserProfileEditScreen.routeName) {
-    return MaterialPageRoute(
-      builder: (context) {
-        return UserProfileEditScreen(
+Route<dynamic>? screenRoutes(RouteSettings settings) {
+  final args = settings.arguments != null ? settings.arguments as Map : {};
+  PageTransitionType transitionType = PageTransitionType.leftToRightWithFade;
+  switch (settings.name) {
+    case (AuthScreen.routeName):
+      return PageTransition(
+        child: const AuthScreen(),
+        type: transitionType,
+        settings: settings,
+      );
+    case (RegisterScreen.routeName):
+      return PageTransition(
+        child: const RegisterScreen(),
+        type: transitionType,
+        settings: settings,
+      );
+    case (HomePage.routeName):
+      return PageTransition(
+        child: const HomePage(),
+        type: transitionType,
+        settings: settings,
+      );
+    case (PostForm.routeName):
+      return PageTransition(
+        child: const PostForm(),
+        type: transitionType,
+        settings: settings,
+      );
+    case (UserProfileEditScreen.routeName):
+      return PageTransition(
+        child: UserProfileEditScreen(
           user: args['user'],
-        );
-      },
-    );
-  }
-  if (settings.name == NGOProfileScreen.routeName) {
-    return MaterialPageRoute(
-      builder: (context) {
-        return NGOProfileScreen(
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    case (NGOProfileScreen.routeName):
+      return PageTransition(
+        child: NGOProfileScreen(
           postID: args['postID'],
-        );
-      },
-    );
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    case (NormalPostScreen.routeName):
+      return PageTransition(
+        child: NormalPostScreen(
+          postID: args['postID'],
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    case (PollPostScreen.routeName):
+      return PageTransition(
+        child: PollPostScreen(
+          postID: args['postID'],
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    case (RequestPostScreen.routeName):
+      return PageTransition(
+        child: RequestPostScreen(
+          postID: args['postID'],
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    default:
+      assert(false, 'Need to implement ${settings.name}');
+      return null;
   }
-  assert(false, 'Need to implement ${settings.name}');
-  return null;
 }
-
-Map<String, Widget Function(BuildContext)> nonArgRoute() => {
-      AuthScreen.routeName: (context) => const AuthScreen(),
-      RegisterScreen.routeName: (context) => const RegisterScreen(),
-      HomePage.routeName: (context) => const HomePage(),
-      PostForm.routeName: (context) => const PostForm(),
-    };
 
 class _MyAppState extends State<MyApp> {
   @override
@@ -102,6 +150,9 @@ class _MyAppState extends State<MyApp> {
             ChangeNotifierProvider(
               create: (context) => NGOProvider(),
             ),
+            ChangeNotifierProvider(
+              create: (context) => PostProvider(),
+            )
           ],
           child: Consumer2<AppPreferenceProvider, AuthProvider>(
             builder: (context, appPreference, auth, child) {
@@ -135,8 +186,7 @@ class _MyAppState extends State<MyApp> {
                               ? const HomePage()
                               : const AuthScreen(),
                 ),
-                onGenerateRoute: (settings) => argRoute(settings),
-                routes: nonArgRoute(),
+                onGenerateRoute: (settings) => screenRoutes(settings),
               );
             },
           ),

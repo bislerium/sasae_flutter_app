@@ -8,7 +8,7 @@ import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const routeName = '/login';
+  static const routeName = '/auth';
   const AuthScreen({Key? key}) : super(key: key);
 
   @override

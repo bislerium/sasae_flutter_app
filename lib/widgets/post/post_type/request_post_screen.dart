@@ -15,10 +15,10 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'post_dependent_widgets/request_card.dart';
 
 class RequestPostScreen extends StatefulWidget {
-  final String hyperlink;
+  static const routeName = '/post/request';
+  final int postID;
 
-  const RequestPostScreen({Key? key, required this.hyperlink})
-      : super(key: key);
+  const RequestPostScreen({Key? key, required this.postID}) : super(key: key);
 
   @override
   _RequestPostScreenState createState() => _RequestPostScreenState();

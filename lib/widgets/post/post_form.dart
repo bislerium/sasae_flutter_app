@@ -10,7 +10,7 @@ import 'post_type/post_dependent_widgets/form_card_poll_post.dart';
 import 'post_type/post_dependent_widgets/form_card_request_post.dart';
 
 class PostForm extends StatefulWidget {
-  static const routeName = '/postform';
+  static const routeName = '/post/form';
 
   const PostForm({Key? key}) : super(key: key);
 

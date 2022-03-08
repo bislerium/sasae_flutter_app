@@ -54,6 +54,7 @@ dependencies:
   form_builder_image_picker: ^2.0.0
   flutter_chips_input: ^1.10.0
   flutter_session_manager: ^1.0.3
+  page_transition: ^2.0.5
   # shared_preferences: ^2.0.13
   # flutter_osm_plugin: ^0.31.0
   # intl_phone_number_input: ^0.7.0+2

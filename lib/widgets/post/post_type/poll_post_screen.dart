@@ -13,11 +13,12 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 
 class PollPostScreen extends StatefulWidget {
-  final String hyperlink;
+  static const routeName = '/post/poll';
+  final int postID;
 
   const PollPostScreen({
     Key? key,
-    required this.hyperlink,
+    required this.postID,
   }) : super(key: key);
 
   @override

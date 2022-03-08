@@ -2,7 +2,11 @@ import 'dart:math';
 
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import '../../models/post/post_.dart';
 import './post_list.dart';
@@ -16,17 +20,17 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  _PostScreenState()
-      : posts = [],
-        scrollController = ScrollController();
-
-  List<Post_> posts;
   ScrollController scrollController;
+  bool _isfetched;
+
+  _PostScreenState()
+      : scrollController = ScrollController(),
+        _isfetched = false;
 
   @override
   void initState() {
     super.initState();
-    _getPosts();
+    _fetchPost();
   }
 
   @override
@@ -35,66 +39,49 @@ class _PostScreenState extends State<PostScreen>
     super.dispose();
   }
 
-  Future<void> _refresh() async {
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() {
-      _getPosts();
-    });
+  Future<void> _fetchPost() async {
+    await Provider.of<PostProvider>(context, listen: false).fetchPosts();
+    setState(() => _isfetched = true);
   }
 
-  void _getPosts() {
-    var random = Random();
-    int length = random.nextInt(100 - 20) + 20;
-
-    posts = List.generate(
-      length,
-      (index) {
-        return Post_(
-          id: index,
-          postURL: faker.internet.httpsUrl(),
-          relatedTo: List.generate(
-            random.nextInt(8 - 1) + 1,
-            (index) => faker.lorem.word(),
-          ),
-          postContent:
-              faker.lorem.sentences(random.nextInt(15 - 2) + 2).join(' '),
-          postedOn: faker.date.dateTime(minYear: 2018, maxYear: 2022),
-          postType: faker.randomGenerator.fromPattern([
-            'Normal Post',
-            'Poll Post',
-            'Join Request Post',
-            'Petition Request Post'
-          ]),
-          isPostedAnonymously: faker.randomGenerator.boolean(),
-          isPokedToNGO: faker.randomGenerator.boolean(),
-        );
-      },
-    );
-  }
-
-  Widget fab() => CustomFAB(
-        text: 'Post',
-        background: Theme.of(context).colorScheme.primary,
-        icon: Icons.post_add,
-        func: () => Navigator.pushNamed(context, PostForm.routeName),
-        foreground: Theme.of(context).colorScheme.onPrimary,
-        scrollController: scrollController,
+  Widget fab() => Visibility(
+        visible:
+            _isfetched && Provider.of<PostProvider>(context).postData != null,
+        child: CustomFAB(
+          text: 'Post',
+          background: Theme.of(context).colorScheme.primary,
+          icon: Icons.post_add,
+          func: () => Navigator.pushNamed(context, PostForm.routeName),
+          foreground: Theme.of(context).colorScheme.onPrimary,
+          scrollController: scrollController,
+        ),
       );
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: PostTileList(
-            posts: posts,
-            scrollController: scrollController,
-          ),
-        ),
-      ),
+      body: !_isfetched
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                LinearProgressIndicator(),
+              ],
+            )
+          : Consumer<PostProvider>(
+              builder: (context, postP, child) => RefreshIndicator(
+                onRefresh: postP.refreshPosts,
+                child: postP.postData == null
+                    ? const FetchError()
+                    : Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                        child: PostList(
+                          posts: postP.postData!,
+                          scrollController: scrollController,
+                        ),
+                      ),
+              ),
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: fab(),
     );

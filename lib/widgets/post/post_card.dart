@@ -19,27 +19,21 @@ class PostCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: () {
-          Widget Function(BuildContext)? postScreenRedirection;
-          if (post.postType == 'Normal Post') {
-            postScreenRedirection =
-                (context) => NormalPostScreen(hyperlink: post.postURL);
+          late String routeName;
+          switch (post.postType) {
+            case 'Normal Post':
+              routeName = NormalPostScreen.routeName;
+              break;
+            case 'Poll Post':
+              routeName = PollPostScreen.routeName;
+              break;
+            case 'Petition Request Post':
+            case 'Join Request Post':
+              routeName = RequestPostScreen.routeName;
+              break;
           }
-          if (post.postType == 'Poll Post') {
-            postScreenRedirection =
-                (context) => PollPostScreen(hyperlink: post.postURL);
-          }
-          if (post.postType == 'Join Request Post' ||
-              post.postType == 'Petition Request Post') {
-            postScreenRedirection =
-                (context) => RequestPostScreen(hyperlink: post.postURL);
-          }
-          if (postScreenRedirection == null) return;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: postScreenRedirection,
-            ),
-          );
+          Navigator.pushNamed(context, routeName,
+              arguments: {'postID': post.id});
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
