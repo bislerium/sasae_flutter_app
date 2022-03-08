@@ -4,7 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
@@ -106,7 +106,9 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getCustomAppBar(context: context, title: 'View Request Post'),
+      appBar: const CustomAppBar(
+        title: 'View Request Post',
+      ),
       body: isLoaded
           ? RefreshIndicator(
               onRefresh: _refresh,

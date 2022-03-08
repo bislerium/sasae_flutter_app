@@ -22,14 +22,6 @@ class _NGOListState extends State<NGOList> {
     super.dispose();
   }
 
-  void _scrollDown() {
-    listScroll.animateTo(
-      listScroll.position.minScrollExtent,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.linear,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView(

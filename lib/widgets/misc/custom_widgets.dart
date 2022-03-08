@@ -3,23 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:randexp/randexp.dart';
 
 import '../../models/post/ngo__.dart';
-import '../ngo/ngo_profile_screen.dart';
-
-AppBar getCustomAppBar(
-        {required BuildContext context, required String title}) =>
-    AppBar(
-      title: Text(
-        title,
-        style: Theme.of(context).textTheme.headline6?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-      ),
-      backgroundColor: Colors.transparent,
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
-      elevation: 0,
-    );
 
 void showSnackBar({
   required BuildContext context,
@@ -56,7 +42,6 @@ void showModalSheet({
     context: ctx,
     isScrollControlled: true,
     backgroundColor: Theme.of(ctx).colorScheme.surface,
-    isDismissible: false,
     builder: (_) {
       return Padding(
         padding: EdgeInsets.only(
@@ -80,6 +65,9 @@ void showModalSheet({
     ),
   );
 }
+
+//Generates Nepal Phone Number
+String getRandPhoneNumber() => RandExp(RegExp(r'(^[9][678][0-9]{8}$)')).gen();
 
 Future<void> launchMap(
     {required String title, required double lat, required double lon}) async {
@@ -222,15 +210,7 @@ Widget getWrappedClickableChips(
               ),
               backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
               pressElevation: 2,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        NGOProfileScreen(hyperlink: ngo__.ngoURL),
-                  ),
-                );
-              },
+              onPressed: () {},
             ),
           )
           .toList(),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import '../misc/custom_image_picker.dart';
 import '../misc/custom_widgets.dart';
 import '../misc/date_picker.dart';
@@ -407,8 +408,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     var isLastStep = _currentStep == getSteps().length - 1;
     return Scaffold(
-      appBar: getCustomAppBar(
-        context: context,
+      appBar: const CustomAppBar(
         title: 'Register',
       ),
       body: Stepper(

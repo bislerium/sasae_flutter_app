@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 

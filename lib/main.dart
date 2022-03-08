@@ -10,6 +10,7 @@ import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
+import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
 import 'package:sasae_flutter_app/widgets/splash_screen.dart';
@@ -54,12 +55,21 @@ TextTheme textTheme() => TextTheme(
     );
 
 Route<dynamic>? argRoute(settings) {
+  final args = settings.arguments as Map;
   if (settings.name == UserProfileEditScreen.routeName) {
-    final args = settings.arguments as Map;
     return MaterialPageRoute(
       builder: (context) {
         return UserProfileEditScreen(
           user: args['user'],
+        );
+      },
+    );
+  }
+  if (settings.name == NGOProfileScreen.routeName) {
+    return MaterialPageRoute(
+      builder: (context) {
+        return NGOProfileScreen(
+          postID: args['postID'],
         );
       },
     );

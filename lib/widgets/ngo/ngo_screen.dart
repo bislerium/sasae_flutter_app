@@ -58,7 +58,7 @@ class _NGOScreenState extends State<NGOScreen>
                               ),
                               const Spacer(),
                               Visibility(
-                                visible: ngoP.isRefreshing ? true : false,
+                                visible: ngoP.isNGOsLoading ? true : false,
                                 child: const LinearProgressIndicator(),
                               ),
                             ],
@@ -69,7 +69,7 @@ class _NGOScreenState extends State<NGOScreen>
                                 child: Text('No NGO found!'),
                               )
                             : RefreshIndicator(
-                                onRefresh: () => ngoP.refreshNGOs(),
+                                onRefresh: ngoP.refreshNGOs,
                                 child: Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15.0),

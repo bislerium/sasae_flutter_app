@@ -25,11 +25,11 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     super.dispose();
   }
 
-  void showFilterModal(BuildContext ctx, NGOProvider provider) {
+  void showFilterModal(NGOProvider provider) {
     _selectedChips.clear();
     showModalSheet(
-      ctx: ctx,
-      height: MediaQuery.of(ctx).size.height * 0.6,
+      ctx: context,
+      height: MediaQuery.of(context).size.height * 0.6,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -187,7 +187,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                                 ngoP.clear();
                               }
                               _searchTEC.clear();
-                              showFilterModal(context, ngoP);
+                              showFilterModal(ngoP);
                             },
                       icon: const Icon(
                         Icons.filter_list,

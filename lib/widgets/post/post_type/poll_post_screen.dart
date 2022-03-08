@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
-
-import '../../misc/custom_widgets.dart';
 
 class PollPostScreen extends StatefulWidget {
   final String hyperlink;
@@ -95,7 +94,9 @@ class _PollPostScreenState extends State<PollPostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getCustomAppBar(context: context, title: 'View Poll Post'),
+      appBar: const CustomAppBar(
+        title: 'View Poll Post',
+      ),
       body: isLoaded
           ? RefreshIndicator(
               onRefresh: _refresh,

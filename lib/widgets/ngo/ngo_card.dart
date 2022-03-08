@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
-import '../../models/ngo_.dart';
 
 class NGOCard extends StatelessWidget {
   final NGO_ ngo_;
@@ -15,12 +15,8 @@ class NGOCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NGOProfileScreen(hyperlink: ngo_.ngoURL),
-            ),
-          );
+          Navigator.pushNamed(context, NGOProfileScreen.routeName,
+              arguments: {'postID': ngo_.id});
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
