@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
-class RequestFAB extends StatefulWidget {
+class RequestFAB extends StatelessWidget {
   final int postID;
   final ScrollController scrollController;
   final String requestType;
   final DateTime endsOn;
   final bool isParticipated;
-  final VoidCallback handler;
+  final Future<bool> Function() handler;
 
   const RequestFAB({
     Key? key,
@@ -20,74 +20,58 @@ class RequestFAB extends StatefulWidget {
     required this.handler,
   }) : super(key: key);
 
-  @override
-  _RequestFABState createState() => _RequestFABState();
-}
-
-class _RequestFABState extends State<RequestFAB> {
-  late bool isParticipated;
-
-  @override
-  void initState() {
-    super.initState();
-    isParticipated = widget.isParticipated;
-  }
-
   Future<void> participate(BuildContext context) async {
     if (isParticipated) {
       showSnackBar(
           context: context,
-          message: widget.requestType == 'Petition'
-              ? 'Already signed!'
-              : 'Already joined!',
+          message:
+              requestType == 'Petition' ? 'Already signed!' : 'Already joined!',
           errorSnackBar: true);
       return;
     }
 
-    if (DateTime.now().isAfter(widget.endsOn)) {
+    if (DateTime.now().isAfter(endsOn)) {
       showSnackBar(
         context: context,
-        message: '${widget.requestType} request expired!',
+        message: '$requestType request expired!',
         errorSnackBar: true,
       );
       return;
     }
     late String message;
-    if (widget.requestType == 'Petition') {
-      await signPetition();
+    if (requestType == 'Petition') {
       message = 'signed';
     }
-    if (widget.requestType == 'Join') {
-      await joinForm();
+    if (requestType == 'Join') {
       message = 'joined';
     }
-    isParticipated = true;
-    widget.handler();
-    showSnackBar(
-      context: context,
-      message: 'Successfully $message!',
-    );
+    await handler()
+        ? showSnackBar(
+            context: context,
+            message: 'Successfully $message!',
+          )
+        : showSnackBar(
+            context: context,
+            message: 'Something went wrong.',
+            errorSnackBar: true,
+          );
   }
-
-  Future<void> signPetition() async {}
-
-  Future<void> joinForm() async {}
 
   @override
   Widget build(BuildContext context) {
     return CustomFAB(
-      text: widget.requestType == 'Petition'
+      text: requestType == 'Petition'
           ? isParticipated
               ? 'Signed'
               : 'Sign'
           : isParticipated
               ? 'Joined'
               : 'Join',
-      icon: widget.requestType == 'Petition'
+      icon: requestType == 'Petition'
           ? Icons.gesture
           : Icons.emoji_people_rounded,
       func: () => participate(context),
-      scrollController: widget.scrollController,
+      scrollController: scrollController,
     );
   }
 }

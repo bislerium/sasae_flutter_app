@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../models/ngo_.dart';
-import 'ngo_card.dart';
+import 'package:sasae_flutter_app/models/ngo_.dart';
+import 'package:sasae_flutter_app/widgets/ngo/ngo_card.dart';
 
 class NGOList extends StatefulWidget {
   final List<NGO_> ngoList;
@@ -24,16 +24,15 @@ class _NGOListState extends State<NGOList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return ListView.builder(
       controller: listScroll,
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const AlwaysScrollableScrollPhysics(),
-      children: widget.ngoList
-          .map((e) => NGOCard(
-                key: ValueKey(e.id),
-                ngo_: e,
-              ))
-          .toList(),
+      itemCount: widget.ngoList.length,
+      itemBuilder: (context, index) => NGOCard(
+        key: ValueKey('ngoCard-${widget.ngoList[index].id}'),
+        ngo_: widget.ngoList[index],
+      ),
     );
   }
 }

@@ -23,19 +23,12 @@ class NGOProfileScreen extends StatefulWidget {
 
 class _NGOProfileScreenState extends State<NGOProfileScreen> {
   ScrollController scrollController;
-  bool _isfetched;
+  bool _isFetched;
   late NGOProvider _provider;
 
   _NGOProfileScreenState()
       : scrollController = ScrollController(),
-        _isfetched = false;
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    _provider.nullifyNGO();
-    super.dispose();
-  }
+        _isFetched = false;
 
   @override
   void initState() {
@@ -44,11 +37,18 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
     _fetchNGO();
   }
 
+  @override
+  void dispose() {
+    scrollController.dispose();
+    _provider.nullifyNGO();
+    super.dispose();
+  }
+
   Future<void> _fetchNGO() async {
-    await Provider.of<NGOProvider>(context, listen: false).fetchNGO(
-      postID: widget.postID,
+    await _provider.fetchNGO(
+      ngoID: widget.postID,
     );
-    setState(() => _isfetched = true);
+    setState(() => _isFetched = true);
   }
 
   @override
@@ -58,8 +58,13 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
       appBar: const CustomAppBar(
         title: 'View NGO',
       ),
-      body: !_isfetched
-          ? const LinearProgressIndicator()
+      body: !_isFetched
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: const [
+                LinearProgressIndicator(),
+              ],
+            )
           : Consumer<NGOProvider>(
               builder: (context, ngoP, child) => RefreshIndicator(
                 onRefresh: () => ngoP.refreshNGO(widget.postID),

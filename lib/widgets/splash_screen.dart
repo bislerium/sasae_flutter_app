@@ -10,7 +10,7 @@ class SplashScreen extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            height: height * 0.45,
+            height: height * 0.4,
             width: double.infinity,
           ),
           Image.asset(

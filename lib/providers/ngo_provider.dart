@@ -156,15 +156,15 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGO({required int postID, bool isDemo = true}) async {
+  Future<void> fetchNGO({required int ngoID, bool isDemo = true}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) _randNGO();
   }
 
   void nullifyNGO() => _ngo = null;
 
-  Future<void> refreshNGO(int postID) async {
-    await fetchNGO(postID: postID);
+  Future<void> refreshNGO(int ngoID) async {
+    await fetchNGO(ngoID: ngoID);
     notifyListeners();
   }
 }

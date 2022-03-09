@@ -1,10 +1,8 @@
-import 'dart:math';
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/models/post/ngo__.dart';
-import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
-import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
@@ -26,70 +24,18 @@ class PollPostScreen extends StatefulWidget {
 }
 
 class _PollPostScreenState extends State<PollPostScreen> {
-  _PollPostScreenState() : isLoaded = false;
-
-  PollPost? _pollPost;
-  bool isLoaded;
+  late PostProvider _provider;
 
   @override
   void initState() {
     super.initState();
-    _getPollPost();
+    _provider = Provider.of<PostProvider>(context, listen: false);
   }
 
-  PollPost _randomPollPost() {
-    Random rand = Random();
-    var pollOptions = List.generate(
-      faker.randomGenerator.integer(10, min: 2),
-      (index) => PollOption(
-        option: faker.food.dish(),
-        numReaction: faker.randomGenerator.integer(500),
-      ),
-    );
-    String? choice = faker.randomGenerator.boolean()
-        ? null
-        : (faker.randomGenerator
-            .fromPattern(pollOptions.map((e) => e.option).toList()));
-    return PollPost(
-      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
-      createdOn:
-          faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
-      id: faker.randomGenerator.integer(1000),
-      isAnonymous: faker.randomGenerator.boolean(),
-      pokedNGO: List.generate(
-          faker.randomGenerator.integer(8, min: 0),
-          (index) => NGO__(
-                id: faker.randomGenerator.integer(1000),
-                ngoURL: faker.internet.httpsUrl(),
-                orgName: faker.company.name(),
-                orgPhoto: faker.image.image(random: true),
-              )),
-      postType: 'Poll Post',
-      relatedTo: List.generate(
-        rand.nextInt(8 - 1) + 1,
-        (index) => faker.lorem.word(),
-      ),
-      author: faker.person.firstName(),
-      endsOn: faker.randomGenerator.boolean()
-          ? faker.date.dateTime(
-              minYear: DateTime.now().year - 1,
-              maxYear: DateTime.now().year + 1)
-          : null,
-      polls: pollOptions,
-      choice: choice,
-    );
-  }
-
-  Future<void> _getPollPost({bool isDemo = true}) async {
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {
-      if (isDemo) _pollPost = _randomPollPost();
-      if (!isLoaded) isLoaded = true;
-    });
-  }
-
-  Future<void> _refresh() async {
-    await _getPollPost();
+  @override
+  void dispose() {
+    _provider.nullifyPost(PostType.poll);
+    super.dispose();
   }
 
   @override
@@ -98,58 +44,74 @@ class _PollPostScreenState extends State<PollPostScreen> {
       appBar: const CustomAppBar(
         title: 'View Poll Post',
       ),
-      body: isLoaded
-          ? RefreshIndicator(
-              onRefresh: _refresh,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                child: ListView(
-                  children: [
-                    PostRelatedCard(list: _pollPost!.relatedTo),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    if (_pollPost!.pokedNGO.isNotEmpty) ...[
-                      PokedNGOCard(list: _pollPost!.pokedNGO),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                    PollCard(
-                      key: ValueKey(_pollPost!.id),
-                      list: _pollPost!.polls,
-                      choice: _pollPost!.choice,
-                      endsOn: _pollPost!.endsOn,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    PostContentCard(
-                      content: _pollPost!.description,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    if (_pollPost!.isAnonymous) ...[
-                      PostAuthorCard(
-                        author: _pollPost!.author,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                    PostTailCard(
-                      postID: _pollPost!.id,
-                      createdOn: _pollPost!.createdOn,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+      body: FutureBuilder(
+        future: _provider.fetchPollPost(postID: widget.postID),
+        builder: (context, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  LinearProgressIndicator(),
+                ],
+              )
+            : Consumer<PostProvider>(
+                builder: (context, postP, child) => RefreshIndicator(
+                  onRefresh: () => postP.refreshPollPost(postID: widget.postID),
+                  child: postP.pollPostData == null
+                      ? const FetchError()
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                          child: ListView(
+                            children: [
+                              PostRelatedCard(
+                                  list: postP.pollPostData!.relatedTo),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (postP.pollPostData!.pokedNGO.isNotEmpty) ...[
+                                PokedNGOCard(
+                                    list: postP.pollPostData!.pokedNGO),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                              PollCard(
+                                key: ValueKey(
+                                    'pollPolls${postP.pollPostData!.id}'),
+                                list: postP.pollPostData!.polls,
+                                choice: postP.pollPostData!.choice,
+                                endsOn: postP.pollPostData!.endsOn,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              PostContentCard(
+                                content: postP.pollPostData!.description,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              if (postP.pollPostData!.isAnonymous) ...[
+                                PostAuthorCard(
+                                  author: postP.pollPostData!.author,
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              ],
+                              PostTailCard(
+                                postID: postP.pollPostData!.id,
+                                createdOn: postP.pollPostData!.createdOn,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
                 ),
               ),
-            )
-          : const LinearProgressIndicator(),
+      ),
     );
   }
 }
