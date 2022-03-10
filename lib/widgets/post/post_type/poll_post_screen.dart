@@ -24,17 +24,17 @@ class PollPostScreen extends StatefulWidget {
 }
 
 class _PollPostScreenState extends State<PollPostScreen> {
-  late PostProvider _provider;
+  late PollPostProvider _provider;
 
   @override
   void initState() {
     super.initState();
-    _provider = Provider.of<PostProvider>(context, listen: false);
+    _provider = Provider.of<PollPostProvider>(context, listen: false);
   }
 
   @override
   void dispose() {
-    _provider.nullifyPost(PostType.poll);
+    _provider.nullifyPollPost();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                   LinearProgressIndicator(),
                 ],
               )
-            : Consumer<PostProvider>(
+            : Consumer<PollPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
                   onRefresh: () => postP.refreshPollPost(postID: widget.postID),
                   child: postP.pollPostData == null

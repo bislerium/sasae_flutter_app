@@ -52,8 +52,14 @@ class PostProvider with ChangeNotifier {
     await fetchPosts();
   }
 
-  //------------------------------Normal Post --------------------------------//
+  Future<bool> report({required int postID}) async {
+    return true;
+  }
+}
 
+//------------------------------Normal Post --------------------------------//
+
+class NormalPostProvider with ChangeNotifier {
   NormalPost? _normalPost;
 
   NormalPost? get normalPostData => _normalPost;
@@ -102,8 +108,12 @@ class PostProvider with ChangeNotifier {
     await fetchNormalPost(postID: postID);
   }
 
-  //-------------------------------Poll Post ---------------------------------//
+  void nullifyNormalPost() => _normalPost = null;
+}
 
+//--------------------------------Poll Post ----------------------------------//
+
+class PollPostProvider with ChangeNotifier {
   PollPost? _pollPost;
 
   PollPost? get pollPostData => _pollPost;
@@ -160,8 +170,13 @@ class PostProvider with ChangeNotifier {
   Future<void> refreshPollPost({required int postID}) async {
     await fetchPollPost(postID: postID);
   }
-  //-----------------------------Request Post --------------------------------//
 
+  void nullifyPollPost() => _pollPost = null;
+}
+
+//-------------------------------Request Post --------------------------------//
+
+class RequestPostProvider with ChangeNotifier {
   RequestPost? _requestPost;
 
   RequestPost? get requestPostData => _requestPost;
@@ -224,23 +239,5 @@ class PostProvider with ChangeNotifier {
     return true;
   }
 
-  void nullifyPost(PostType postType) {
-    switch (postType) {
-      case PostType.normal:
-        _normalPost = null;
-        break;
-      case PostType.poll:
-        _pollPost = null;
-        break;
-      case PostType.request:
-        _requestPost = null;
-        break;
-    }
-  }
-
-  Future<bool> report({required int postID}) async {
-    return true;
-  }
+  void nullifyRequestPost() => _requestPost = null;
 }
-
-enum PostType { normal, poll, request }

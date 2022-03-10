@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 
-class UserData {}
-
 class AppPreferenceProvider extends ChangeNotifier {
   late bool _darkMode;
   late SessionManager sessionManager;

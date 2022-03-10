@@ -4,11 +4,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
@@ -32,7 +34,7 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-TextTheme textTheme() => TextTheme(
+TextTheme _textTheme() => TextTheme(
       headline1: GoogleFonts.roboto(
           fontSize: 96, fontWeight: FontWeight.w300, letterSpacing: -1.5),
       headline2: GoogleFonts.roboto(
@@ -59,7 +61,7 @@ TextTheme textTheme() => TextTheme(
           fontSize: 10, fontWeight: FontWeight.w400, letterSpacing: 1.5),
     );
 
-Route<dynamic>? screenRoutes(RouteSettings settings) {
+Route<dynamic>? _screenRoutes(RouteSettings settings) {
   final args = settings.arguments != null ? settings.arguments as Map : {};
   PageTransitionType transitionType = PageTransitionType.leftToRightWithFade;
   switch (settings.name) {
@@ -133,6 +135,35 @@ Route<dynamic>? screenRoutes(RouteSettings settings) {
   }
 }
 
+List<SingleChildWidget> _providers() => [
+      ChangeNotifierProvider(
+        create: (_) => AppPreferenceProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => NGOProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => PostProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => NormalPostProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => PollPostProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => RequestPostProvider(),
+      ),
+      ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
+        create: (context) => ProfileProvider(),
+        update: (context, authP, profileP) =>
+            ProfileProvider()..setAuth = authP,
+      ),
+    ];
+
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
@@ -140,20 +171,7 @@ class _MyAppState extends State<MyApp> {
       publicKey: "test_public_key_30e12814fed64afa9a7d4a92a2194aeb",
       builder: (context, navigatorKey) {
         return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => AppPreferenceProvider(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => AuthProvider(),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => NGOProvider(),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => PostProvider(),
-            )
-          ],
+          providers: _providers(),
           child: Consumer2<AppPreferenceProvider, AuthProvider>(
             builder: (context, appPreference, auth, child) {
               var colorScheme =
@@ -174,7 +192,7 @@ class _MyAppState extends State<MyApp> {
                   backgroundColor: colorScheme.background,
                   primaryColor: colorScheme.primary,
                   errorColor: colorScheme.error,
-                  textTheme: textTheme(),
+                  textTheme: _textTheme(),
                 ),
                 title: 'Sasae',
                 home: FutureBuilder(
@@ -186,7 +204,7 @@ class _MyAppState extends State<MyApp> {
                               ? const HomePage()
                               : const AuthScreen(),
                 ),
-                onGenerateRoute: (settings) => screenRoutes(settings),
+                onGenerateRoute: (settings) => _screenRoutes(settings),
               );
             },
           ),

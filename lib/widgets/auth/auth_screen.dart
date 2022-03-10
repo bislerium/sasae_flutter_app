@@ -101,7 +101,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 final isValid = _loginFormKey.currentState!.validate();
                 FocusScope.of(context).unfocus();
                 if (isValid) {
-                  await authP.login(_userNameTEC.text, _passwordTEC.text);
+                  await authP.login(
+                    username: _userNameTEC.text,
+                    password: _passwordTEC.text,
+                  );
                   if (authP.isAuth) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         HomePage.routeName, (Route<dynamic> route) => false);

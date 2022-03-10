@@ -38,8 +38,8 @@ class _CustomInfoTileState extends State<CustomInfoTile> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
+              const SizedBox(width: 20),
+              Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   reverse: true,

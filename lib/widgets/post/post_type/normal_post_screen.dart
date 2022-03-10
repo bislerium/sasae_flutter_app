@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/normal_image_attachment_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
@@ -9,8 +10,6 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/normal_voting_bar.dart';
-
-import '../../misc/fetch_error.dart';
 
 class NormalPostScreen extends StatefulWidget {
   static const routeName = '/post/normal';
@@ -27,20 +26,20 @@ class NormalPostScreen extends StatefulWidget {
 
 class _NormalPostScreenState extends State<NormalPostScreen> {
   ScrollController scrollController;
-  late PostProvider _provider;
+  late NormalPostProvider _provider;
 
   _NormalPostScreenState() : scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _provider = Provider.of<PostProvider>(context, listen: false);
+    _provider = Provider.of<NormalPostProvider>(context, listen: false);
   }
 
   @override
   void dispose() {
     scrollController.dispose();
-    _provider.nullifyPost(PostType.normal);
+    _provider.nullifyNormalPost;
     super.dispose();
   }
 
@@ -60,7 +59,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                       LinearProgressIndicator(),
                     ],
                   )
-                : Consumer<PostProvider>(
+                : Consumer<NormalPostProvider>(
                     builder: (context, postP, child) => RefreshIndicator(
                       onRefresh: () =>
                           postP.refreshNormalPost(postID: widget.postID),
@@ -121,7 +120,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                     ),
                   ),
       ),
-      bottomNavigationBar: Consumer<PostProvider>(
+      bottomNavigationBar: Consumer<NormalPostProvider>(
         builder: (context, postP, child) => postP.normalPostData == null
             ? const SizedBox.shrink()
             : VotingBar(

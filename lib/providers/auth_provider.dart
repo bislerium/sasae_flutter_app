@@ -1,9 +1,8 @@
 import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -19,7 +18,10 @@ class AuthProvider with ChangeNotifier {
   String? get tokenKey => _tokenKey;
   bool get isAuthenticating => _isAuthenticating;
 
-  Future<void> _authenticate(String username, String password) async {
+  Future<void> _authenticate({
+    required String username,
+    required String password,
+  }) async {
     _isAuthenticating = true;
     try {
       final response = await http.post(
@@ -54,12 +56,16 @@ class AuthProvider with ChangeNotifier {
   //   return _authenticate(email, password);
   // }
 
-  Future<void> login(String username, String password) async =>
-      _authenticate(username, password);
+  Future<void> login(
+          {required String username, required String password}) async =>
+      _authenticate(
+        username: username,
+        password: password,
+      );
 
   Future<void> tryAutoLogin() async {
     String? _ = await _sessionManager.get('tokenKey');
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
     if (_ == null) return;
     _tokenKey = _;
   }

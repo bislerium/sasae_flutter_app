@@ -9,7 +9,6 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_tail_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/request_fab.dart';
-
 import 'post_dependent_widgets/request_card.dart';
 
 class RequestPostScreen extends StatefulWidget {
@@ -23,23 +22,21 @@ class RequestPostScreen extends StatefulWidget {
 }
 
 class _RequestPostScreenState extends State<RequestPostScreen> {
-  late PostProvider _provider;
+  late RequestPostProvider _provider;
+  ScrollController scrollController;
 
   _RequestPostScreenState() : scrollController = ScrollController();
-
-  ScrollController scrollController;
-  double? animationDuration;
 
   @override
   void initState() {
     super.initState();
-    _provider = Provider.of<PostProvider>(context, listen: false);
+    _provider = Provider.of<RequestPostProvider>(context, listen: false);
   }
 
   @override
   void dispose() {
     scrollController.dispose();
-    _provider.nullifyPost(PostType.request);
+    _provider.nullifyRequestPost();
     super.dispose();
   }
 
@@ -59,7 +56,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                   LinearProgressIndicator(),
                 ],
               )
-            : Consumer<PostProvider>(
+            : Consumer<RequestPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
                   onRefresh: () =>
                       postP.refreshRequestPost(postID: widget.postID),
@@ -92,7 +89,6 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                                 numReaction:
                                     postP.requestPostData!.numParticipation,
                                 endsOn: postP.requestPostData!.endsOn,
-                                animationDuration: animationDuration,
                               ),
                               const SizedBox(
                                 height: 10,
@@ -125,7 +121,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
               ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Consumer<PostProvider>(
+      floatingActionButton: Consumer<RequestPostProvider>(
         builder: (context, postP, child) => postP.requestPostData == null
             ? const SizedBox.shrink()
             : RequestFAB(

@@ -133,7 +133,7 @@ class NGOProvider with ChangeNotifier {
         (index) => faker.lorem.word(),
       ),
       estDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
-      address: faker.address.streetAddress(),
+      address: faker.address.city(),
       phone: getRandPhoneNumber(),
       email: faker.internet.email(),
       epayAccount: _isVerified ? getRandPhoneNumber() : null,
