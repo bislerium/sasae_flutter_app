@@ -16,7 +16,7 @@ class NGOCard extends StatelessWidget {
         splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: () {
           Navigator.pushNamed(context, NGOProfileScreen.routeName,
-              arguments: {'postID': ngo_.id});
+              arguments: {'ngoID': ngo_.ngoID});
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),

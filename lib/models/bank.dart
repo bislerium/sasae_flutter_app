@@ -3,9 +3,9 @@ import 'dart:convert';
 class Bank {
   final String bankName;
   final String bankBranch;
-  final int bankBSB;
+  final String bankBSB;
   final String bankAccountName;
-  final int bankAccountNumber;
+  final String bankAccountNumber;
 
   Bank({
     required this.bankName,
@@ -18,9 +18,9 @@ class Bank {
   Bank copyWith({
     String? bankName,
     String? bankBranch,
-    int? bankBSB,
+    String? bankBSB,
     String? bankAccountName,
-    int? bankAccountNumber,
+    String? bankAccountNumber,
   }) {
     return Bank(
       bankName: bankName ?? this.bankName,
@@ -43,11 +43,11 @@ class Bank {
 
   factory Bank.fromMap(Map<String, dynamic> map) {
     return Bank(
-      bankName: map['bankName'] ?? '',
-      bankBranch: map['bankBranch'] ?? '',
-      bankBSB: map['bankBSB']?.toInt() ?? 0,
-      bankAccountName: map['bankAccountName'] ?? '',
-      bankAccountNumber: map['bankAccountNumber']?.toInt() ?? 0,
+      bankName: map['bank_name'] ?? '',
+      bankBranch: map['bank_branch'] ?? '',
+      bankBSB: map['bank_BSB'] ?? '',
+      bankAccountName: map['bank_account_name'] ?? '',
+      bankAccountNumber: map['bank_account_number'] ?? '',
     );
   }
 

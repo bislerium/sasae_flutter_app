@@ -1,14 +1,20 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
+import 'package:http/http.dart' as http;
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class NGOProvider with ChangeNotifier {
-  List<NGO_> _ngos; // Actual Untouched DataList
-  List<NGO_> _ngosToShow; // Filtered/search data
+  late AuthProvider _auth;
+  List<NGO_>? _ngos; // Actual Untouched DataList
+  List<NGO_>? _ngosToShow; // Filtered/search data
   final Set<String> _fieldOfWork;
   bool _isFiltered;
   bool _isSearched;
@@ -16,15 +22,16 @@ class NGOProvider with ChangeNotifier {
   //Can be used to know if fetching was unsucessful or the fetched data is empty
 
   NGOProvider()
-      : _ngos = [],
-        _ngosToShow = [],
-        _fieldOfWork = {},
+      : _fieldOfWork = {},
         _isFiltered = false,
         _isSearched = false,
         _isNGOsLoading = false;
 
-  List<NGO_> get ngoData => _ngosToShow;
+  set setAuth(AuthProvider auth) => _auth = auth;
+
+  List<NGO_>? get ngoData => _ngosToShow;
   Set<String> get fieldOfWork => _fieldOfWork;
+  bool get fetchError => _ngos == null;
   bool get isFiltered => _isFiltered;
   bool get isSearched => _isSearched;
   bool get isNGOsLoading => _isNGOsLoading;
@@ -35,8 +42,7 @@ class NGOProvider with ChangeNotifier {
       length,
       (index) {
         return NGO_(
-          id: index,
-          ngoURL: faker.internet.httpsUrl(),
+          ngoID: index,
           orgName: faker.company.name(),
           orgPhoto: faker.image.image(random: true),
           estDate: faker.date.dateTime(minYear: 2000, maxYear: 2022),
@@ -50,10 +56,30 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGOs({bool isDemo = true}) async {
+  Future<void> fetchNGOs({bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    if (isDemo) _randNGOs();
-    if (_ngosToShow.isNotEmpty) await _extractFoW();
+    if (isDemo) {
+      _randNGOs();
+    } else {
+      try {
+        final response = await http.get(
+          Uri.parse('${getHostName()}$ngosEndpoint'),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Token ${_auth.tokenKey!}'
+          },
+        );
+        final responseData = json.decode(response.body);
+        if (response.statusCode >= 400) {
+          throw HttpException(responseData.toString());
+        }
+        _ngos = _ngosToShow =
+            (responseData as List).map((e) => NGO_.fromMap(e)).toList();
+      } catch (error) {
+        _ngos = _ngosToShow = null;
+      }
+    }
+    if (_ngos != null && _ngos!.isNotEmpty) await _extractFoW();
     _isFiltered = false;
   }
 
@@ -71,7 +97,7 @@ class NGOProvider with ChangeNotifier {
   Future<void> _extractFoW() async {
     await Future(() {
       if (_fieldOfWork.isNotEmpty) _fieldOfWork.clear();
-      for (var ngo in _ngos) {
+      for (var ngo in _ngos!) {
         for (var field in ngo.fieldOfWork) {
           _fieldOfWork.add(field);
         }
@@ -85,7 +111,7 @@ class NGOProvider with ChangeNotifier {
       _isSearched = false;
     } else {
       await Future(
-        () => _ngosToShow = _ngos
+        () => _ngosToShow = _ngos!
             .where(
                 (ngo) => ngo.orgName.toLowerCase().contains(name.toLowerCase()))
             .toList(),
@@ -97,7 +123,7 @@ class NGOProvider with ChangeNotifier {
 
   Future<void> applyFieldOfWorkFilter(List<String> filters) async {
     await Future(
-      () => _ngosToShow = _ngos.where((element) {
+      () => _ngosToShow = _ngos!.where((element) {
         return element.fieldOfWork.any((e) => filters.contains(e));
       }).toList(),
     );
@@ -121,7 +147,7 @@ class NGOProvider with ChangeNotifier {
     var _isVerified = faker.randomGenerator.boolean();
     var ngoName = faker.company.name();
     _ngo = NGO(
-      id: faker.randomGenerator.integer(1000),
+      ngoID: faker.randomGenerator.integer(1000),
       latitude: faker.randomGenerator.decimal(scale: (90 - (-90)), min: -90),
       longitude:
           faker.randomGenerator.decimal(scale: (180 - (-180)), min: -180),
@@ -136,15 +162,19 @@ class NGOProvider with ChangeNotifier {
       address: faker.address.city(),
       phone: getRandPhoneNumber(),
       email: faker.internet.email(),
+      postedPosts: Set<int>.of(List.generate(faker.randomGenerator.integer(250),
+          (index) => faker.randomGenerator.integer(3000))).toList(),
       epayAccount: _isVerified ? getRandPhoneNumber() : null,
       bank: _isVerified
           ? Bank(
               bankName: faker.company.name(),
               bankBranch: faker.address.city(),
-              bankBSB: int.parse(faker.randomGenerator.numberOfLength(6)),
+              bankBSB:
+                  int.parse(faker.randomGenerator.numberOfLength(6)).toString(),
               bankAccountName: ngoName,
-              bankAccountNumber: int.parse(faker.randomGenerator
-                  .numberOfLength(faker.randomGenerator.integer(16, min: 9))),
+              bankAccountNumber: int.parse(faker.randomGenerator.numberOfLength(
+                      faker.randomGenerator.integer(16, min: 9)))
+                  .toString(),
             )
           : null,
       panCertificateURL: _isVerified
@@ -156,9 +186,28 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGO({required int ngoID, bool isDemo = true}) async {
+  Future<void> fetchNGO({required int ngoID, bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    if (isDemo) _randNGO();
+    if (isDemo) {
+      _randNGO();
+    } else {
+      try {
+        final response = await http.get(
+          Uri.parse('${getHostName()}$ngoEndpoint$ngoID/'),
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Token ${_auth.tokenKey!}'
+          },
+        );
+        final responseData = json.decode(response.body);
+        if (response.statusCode >= 400) {
+          throw HttpException(responseData.toString());
+        }
+        _ngo = NGO.fromMap(responseData);
+      } catch (error) {
+        _ngo = null;
+      }
+    }
   }
 
   void nullifyNGO() => _ngo = null;

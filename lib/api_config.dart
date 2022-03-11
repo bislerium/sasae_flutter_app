@@ -35,4 +35,7 @@ const String loginEndpoint = 'api/login/';
 const String logoutEndpoint = 'api/logout/';
 const String passwordResetEndpoint = 'api/password/reset/';
 
+const String ngosEndpoint = 'api/ngos/';
+const String ngoEndpoint = 'api/ngo/';
+
 enum HostingMode { local, ip, internet }

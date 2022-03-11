@@ -1,11 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 import 'bank.dart';
 
 class NGO {
-  final int id;
+  final int ngoID;
   final double latitude;
   final double longitude;
   final String orgName;
@@ -15,13 +16,15 @@ class NGO {
   final String address;
   final String phone;
   final String email;
+  final List<int> postedPosts;
   final bool isVerified;
   final String? epayAccount;
   final Bank? bank;
   final String? swcCertificateURL;
   final String? panCertificateURL;
+
   NGO({
-    required this.id,
+    required this.ngoID,
     required this.latitude,
     required this.longitude,
     required this.orgName,
@@ -31,6 +34,7 @@ class NGO {
     required this.address,
     required this.phone,
     required this.email,
+    required this.postedPosts,
     required this.isVerified,
     this.epayAccount,
     this.bank,
@@ -39,7 +43,7 @@ class NGO {
   });
 
   NGO copyWith({
-    int? id,
+    int? ngoID,
     double? latitude,
     double? longitude,
     String? orgName,
@@ -49,6 +53,7 @@ class NGO {
     String? address,
     String? phone,
     String? email,
+    List<int>? postedPosts,
     bool? isVerified,
     String? epayAccount,
     Bank? bank,
@@ -56,7 +61,7 @@ class NGO {
     String? panCertificateURL,
   }) {
     return NGO(
-      id: id ?? this.id,
+      ngoID: ngoID ?? this.ngoID,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       orgName: orgName ?? this.orgName,
@@ -66,6 +71,7 @@ class NGO {
       address: address ?? this.address,
       phone: phone ?? this.phone,
       email: email ?? this.email,
+      postedPosts: postedPosts ?? this.postedPosts,
       isVerified: isVerified ?? this.isVerified,
       epayAccount: epayAccount ?? this.epayAccount,
       bank: bank ?? this.bank,
@@ -76,7 +82,7 @@ class NGO {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
+      'ngoID': ngoID,
       'latitude': latitude,
       'longitude': longitude,
       'orgName': orgName,
@@ -86,6 +92,7 @@ class NGO {
       'address': address,
       'phone': phone,
       'email': email,
+      'postedPosts': postedPosts,
       'isVerified': isVerified,
       'epayAccount': epayAccount,
       'bank': bank?.toMap(),
@@ -96,21 +103,23 @@ class NGO {
 
   factory NGO.fromMap(Map<String, dynamic> map) {
     return NGO(
-      id: map['id']?.toInt() ?? 0,
-      latitude: map['latitude']?.toDouble() ?? 0.0,
-      longitude: map['longitude']?.toDouble() ?? 0.0,
-      orgName: map['orgName'] ?? '',
-      orgPhoto: map['orgPhoto'] ?? '',
-      estDate: DateTime.fromMillisecondsSinceEpoch(map['estDate']),
-      fieldOfWork: List<String>.from(map['fieldOfWork']),
+      ngoID: map['id']?.toInt() ?? 0,
+      latitude: map['latitude'] == null ? 0.0 : double.parse(map['latitude']),
+      longitude:
+          map['longitude'] == null ? 0.0 : double.parse(map['longitude']),
+      orgName: map['full_name'] ?? '',
+      orgPhoto: map['display_picture'] ?? '',
+      estDate: Jiffy(map['establishment_date'], 'yyyy-MM-dd').dateTime,
+      fieldOfWork: List<String>.from(map['field_of_work']),
       address: map['address'] ?? '',
       phone: map['phone'] ?? '',
       email: map['email'] ?? '',
-      isVerified: map['isVerified'] ?? false,
-      epayAccount: map['epayAccount'],
+      postedPosts: List<int>.from(map['posted_post']),
+      isVerified: map['is_verified'] ?? false,
+      epayAccount: map['epay_account'],
       bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
-      swcCertificateURL: map['swcCertificateURL'],
-      panCertificateURL: map['panCertificateURL'],
+      swcCertificateURL: map['swc_affl_cert'],
+      panCertificateURL: map['pan_cert'],
     );
   }
 
@@ -120,7 +129,7 @@ class NGO {
 
   @override
   String toString() {
-    return 'NGO(id: $id, latitude: $latitude, longitude: $longitude, orgName: $orgName, orgPhoto: $orgPhoto, estDate: $estDate, fieldOfWork: $fieldOfWork, address: $address, phone: $phone, email: $email, isVerified: $isVerified, epayAccount: $epayAccount, bank: $bank, swcCertificateURL: $swcCertificateURL, panCertificateURL: $panCertificateURL)';
+    return 'NGO(ngoID: $ngoID, latitude: $latitude, longitude: $longitude, orgName: $orgName, orgPhoto: $orgPhoto, estDate: $estDate, fieldOfWork: $fieldOfWork, address: $address, phone: $phone, email: $email, postedPosts: $postedPosts, isVerified: $isVerified, epayAccount: $epayAccount, bank: $bank, swcCertificateURL: $swcCertificateURL, panCertificateURL: $panCertificateURL)';
   }
 
   @override
@@ -128,7 +137,7 @@ class NGO {
     if (identical(this, other)) return true;
 
     return other is NGO &&
-        other.id == id &&
+        other.ngoID == ngoID &&
         other.latitude == latitude &&
         other.longitude == longitude &&
         other.orgName == orgName &&
@@ -138,6 +147,7 @@ class NGO {
         other.address == address &&
         other.phone == phone &&
         other.email == email &&
+        listEquals(other.postedPosts, postedPosts) &&
         other.isVerified == isVerified &&
         other.epayAccount == epayAccount &&
         other.bank == bank &&
@@ -147,7 +157,7 @@ class NGO {
 
   @override
   int get hashCode {
-    return id.hashCode ^
+    return ngoID.hashCode ^
         latitude.hashCode ^
         longitude.hashCode ^
         orgName.hashCode ^
@@ -157,6 +167,7 @@ class NGO {
         address.hashCode ^
         phone.hashCode ^
         email.hashCode ^
+        postedPosts.hashCode ^
         isVerified.hashCode ^
         epayAccount.hashCode ^
         bank.hashCode ^

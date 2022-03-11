@@ -30,7 +30,7 @@ class _NGOListState extends State<NGOList> {
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: widget.ngoList.length,
       itemBuilder: (context, index) => NGOCard(
-        key: ValueKey('ngoCard-${widget.ngoList[index].id}'),
+        key: ValueKey('ngoCard${widget.ngoList[index].ngoID}'),
         ngo_: widget.ngoList[index],
       ),
     );

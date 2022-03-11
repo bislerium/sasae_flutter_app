@@ -1,10 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class User {
   final int id;
   final bool isVerified;
   final String displayPicture;
-  final int numOfPosts;
   final String userName;
   final String fullName;
   final String gender;
@@ -12,13 +13,14 @@ class User {
   final String address;
   final String phoneNumber;
   final String email;
+  final List<int> postedPosts;
   final DateTime joinedDate;
   final String? citizenshipPhoto;
+
   User({
     required this.id,
     required this.isVerified,
     required this.displayPicture,
-    required this.numOfPosts,
     required this.userName,
     required this.fullName,
     required this.gender,
@@ -26,6 +28,7 @@ class User {
     required this.address,
     required this.phoneNumber,
     required this.email,
+    required this.postedPosts,
     required this.joinedDate,
     this.citizenshipPhoto,
   });
@@ -34,7 +37,6 @@ class User {
     int? id,
     bool? isVerified,
     String? displayPicture,
-    int? numOfPosts,
     String? userName,
     String? fullName,
     String? gender,
@@ -42,6 +44,7 @@ class User {
     String? address,
     String? phoneNumber,
     String? email,
+    List<int>? postedPosts,
     DateTime? joinedDate,
     String? citizenshipPhoto,
   }) {
@@ -49,7 +52,6 @@ class User {
       id: id ?? this.id,
       isVerified: isVerified ?? this.isVerified,
       displayPicture: displayPicture ?? this.displayPicture,
-      numOfPosts: numOfPosts ?? this.numOfPosts,
       userName: userName ?? this.userName,
       fullName: fullName ?? this.fullName,
       gender: gender ?? this.gender,
@@ -57,6 +59,7 @@ class User {
       address: address ?? this.address,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
+      postedPosts: postedPosts ?? this.postedPosts,
       joinedDate: joinedDate ?? this.joinedDate,
       citizenshipPhoto: citizenshipPhoto ?? this.citizenshipPhoto,
     );
@@ -67,7 +70,6 @@ class User {
       'id': id,
       'isVerified': isVerified,
       'displayPicture': displayPicture,
-      'numOfPosts': numOfPosts,
       'userName': userName,
       'fullName': fullName,
       'gender': gender,
@@ -75,6 +77,7 @@ class User {
       'address': address,
       'phoneNumber': phoneNumber,
       'email': email,
+      'postedPosts': postedPosts,
       'joinedDate': joinedDate.millisecondsSinceEpoch,
       'citizenshipPhoto': citizenshipPhoto,
     };
@@ -85,7 +88,6 @@ class User {
       id: map['id']?.toInt() ?? 0,
       isVerified: map['isVerified'] ?? false,
       displayPicture: map['displayPicture'] ?? '',
-      numOfPosts: map['numOfPosts']?.toInt() ?? 0,
       userName: map['userName'] ?? '',
       fullName: map['fullName'] ?? '',
       gender: map['gender'] ?? '',
@@ -93,6 +95,7 @@ class User {
       address: map['address'] ?? '',
       phoneNumber: map['phoneNumber'] ?? '',
       email: map['email'] ?? '',
+      postedPosts: List<int>.from(map['posted_post']),
       joinedDate: DateTime.fromMillisecondsSinceEpoch(map['joinedDate']),
       citizenshipPhoto: map['citizenshipPhoto'],
     );
@@ -104,7 +107,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, isVerified: $isVerified, displayPicture: $displayPicture, numOfPosts: $numOfPosts, userName: $userName, fullName: $fullName, gender: $gender, birthDate: $birthDate, address: $address, phoneNumber: $phoneNumber, email: $email, joinedDate: $joinedDate, citizenshipPhoto: $citizenshipPhoto)';
+    return 'User(id: $id, isVerified: $isVerified, displayPicture: $displayPicture, userName: $userName, fullName: $fullName, gender: $gender, birthDate: $birthDate, address: $address, phoneNumber: $phoneNumber, email: $email, postedPosts: $postedPosts, joinedDate: $joinedDate, citizenshipPhoto: $citizenshipPhoto)';
   }
 
   @override
@@ -115,7 +118,6 @@ class User {
         other.id == id &&
         other.isVerified == isVerified &&
         other.displayPicture == displayPicture &&
-        other.numOfPosts == numOfPosts &&
         other.userName == userName &&
         other.fullName == fullName &&
         other.gender == gender &&
@@ -123,6 +125,7 @@ class User {
         other.address == address &&
         other.phoneNumber == phoneNumber &&
         other.email == email &&
+        listEquals(other.postedPosts, postedPosts) &&
         other.joinedDate == joinedDate &&
         other.citizenshipPhoto == citizenshipPhoto;
   }
@@ -132,7 +135,6 @@ class User {
     return id.hashCode ^
         isVerified.hashCode ^
         displayPicture.hashCode ^
-        numOfPosts.hashCode ^
         userName.hashCode ^
         fullName.hashCode ^
         gender.hashCode ^
@@ -140,6 +142,7 @@ class User {
         address.hashCode ^
         phoneNumber.hashCode ^
         email.hashCode ^
+        postedPosts.hashCode ^
         joinedDate.hashCode ^
         citizenshipPhoto.hashCode;
   }

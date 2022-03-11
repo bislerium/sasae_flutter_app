@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -24,7 +26,15 @@ import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
+  // FirebaseMessaging.onBackgroundMessage(backroundHandler);
   runApp(const MyApp());
+}
+
+Future<void> backroundHandler(RemoteMessage message) async {
+  print(" This is message from background");
+  print(message.notification!.title);
+  print(message.notification!.body);
 }
 
 class MyApp extends StatefulWidget {
@@ -100,7 +110,7 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
     case (NGOProfileScreen.routeName):
       return PageTransition(
         child: NGOProfileScreen(
-          postID: args['postID'],
+          ngoID: args['ngoID'],
         ),
         type: transitionType,
         settings: settings,
@@ -142,8 +152,9 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
       ),
-      ChangeNotifierProvider(
+      ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),
+        update: (context, authP, ngoP) => NGOProvider()..setAuth = authP,
       ),
       ChangeNotifierProvider(
         create: (context) => PostProvider(),

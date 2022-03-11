@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 // ignore: camel_case_types
 class NGO_ {
-  final int id;
-  final String ngoURL;
+  final int ngoID;
   final String orgName;
   final String orgPhoto;
   final DateTime estDate;
@@ -13,8 +13,7 @@ class NGO_ {
   final String address;
 
   NGO_({
-    required this.id,
-    required this.ngoURL,
+    required this.ngoID,
     required this.orgName,
     required this.orgPhoto,
     required this.estDate,
@@ -23,8 +22,7 @@ class NGO_ {
   });
 
   NGO_ copyWith({
-    int? id,
-    String? ngoURL,
+    int? ngoID,
     String? orgName,
     String? orgPhoto,
     DateTime? estDate,
@@ -32,8 +30,7 @@ class NGO_ {
     String? address,
   }) {
     return NGO_(
-      id: id ?? this.id,
-      ngoURL: ngoURL ?? this.ngoURL,
+      ngoID: ngoID ?? this.ngoID,
       orgName: orgName ?? this.orgName,
       orgPhoto: orgPhoto ?? this.orgPhoto,
       estDate: estDate ?? this.estDate,
@@ -44,8 +41,7 @@ class NGO_ {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
-      'ngoURL': ngoURL,
+      'ngoID': ngoID,
       'orgName': orgName,
       'orgPhoto': orgPhoto,
       'estDate': estDate.millisecondsSinceEpoch,
@@ -56,12 +52,11 @@ class NGO_ {
 
   factory NGO_.fromMap(Map<String, dynamic> map) {
     return NGO_(
-      id: map['id']?.toInt() ?? 0,
-      ngoURL: map['ngoURL'] ?? '',
-      orgName: map['orgName'] ?? '',
-      orgPhoto: map['orgPhoto'] ?? '',
-      estDate: DateTime.fromMillisecondsSinceEpoch(map['estDate']),
-      fieldOfWork: List<String>.from(map['fieldOfWork']),
+      ngoID: map['id']?.toInt() ?? 0,
+      orgName: map['full_name'] ?? '',
+      orgPhoto: map['display_picture'] ?? '',
+      estDate: Jiffy(map['establishment_date'], 'yyyy-MM-dd').dateTime,
+      fieldOfWork: List<String>.from(map['field_of_work']),
       address: map['address'] ?? '',
     );
   }
@@ -72,7 +67,7 @@ class NGO_ {
 
   @override
   String toString() {
-    return 'NGO_(id: $id, ngoURL: $ngoURL, orgName: $orgName, orgPhoto: $orgPhoto, estDate: $estDate, fieldOfWork: $fieldOfWork, address: $address)';
+    return 'NGO_(ngoID: $ngoID, orgName: $orgName, orgPhoto: $orgPhoto, estDate: $estDate, fieldOfWork: $fieldOfWork, address: $address)';
   }
 
   @override
@@ -80,8 +75,7 @@ class NGO_ {
     if (identical(this, other)) return true;
 
     return other is NGO_ &&
-        other.id == id &&
-        other.ngoURL == ngoURL &&
+        other.ngoID == ngoID &&
         other.orgName == orgName &&
         other.orgPhoto == orgPhoto &&
         other.estDate == estDate &&
@@ -91,8 +85,7 @@ class NGO_ {
 
   @override
   int get hashCode {
-    return id.hashCode ^
-        ngoURL.hashCode ^
+    return ngoID.hashCode ^
         orgName.hashCode ^
         orgPhoto.hashCode ^
         estDate.hashCode ^

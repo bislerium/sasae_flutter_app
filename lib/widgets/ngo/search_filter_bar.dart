@@ -29,7 +29,6 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     _selectedChips.clear();
     showModalSheet(
       ctx: context,
-      height: MediaQuery.of(context).size.height * 0.6,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 20),
@@ -42,7 +41,9 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
             ),
           ),
         ),
-        Expanded(
+        Container(
+          constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.6),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -110,8 +111,8 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
       builder: ((context, ngoP, child) {
-        bool isDataEmpty =
-            ngoP.ngoData.isEmpty && !ngoP.isFiltered && !ngoP.isSearched;
+        bool isDataUnavailable = ngoP.fetchError ||
+            (ngoP.ngoData!.isEmpty && !ngoP.isFiltered && !ngoP.isSearched);
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
@@ -137,7 +138,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                             child: TextField(
                               keyboardType: TextInputType.text,
                               controller: _searchTEC,
-                              enabled: isDataEmpty ? false : true,
+                              enabled: isDataUnavailable ? false : true,
                               onTap: () {
                                 if (ngoP.isFiltered) ngoP.clear();
                               },
@@ -180,7 +181,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                         : Theme.of(context).colorScheme.background,
                     child: IconButton(
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
-                      onPressed: isDataEmpty
+                      onPressed: isDataUnavailable
                           ? null
                           : () {
                               if (ngoP.isSearched || ngoP.isFiltered) {

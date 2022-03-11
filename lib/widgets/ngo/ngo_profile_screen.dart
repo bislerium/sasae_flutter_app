@@ -13,9 +13,9 @@ import 'package:sasae_flutter_app/widgets/ngo/ngo_donation_button.dart';
 
 class NGOProfileScreen extends StatefulWidget {
   static const String routeName = '/ngo/profile';
-  final int postID;
+  final int ngoID;
 
-  const NGOProfileScreen({Key? key, required this.postID}) : super(key: key);
+  const NGOProfileScreen({Key? key, required this.ngoID}) : super(key: key);
 
   @override
   _NGOProfileScreenState createState() => _NGOProfileScreenState();
@@ -46,7 +46,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
 
   Future<void> _fetchNGO() async {
     await _provider.fetchNGO(
-      ngoID: widget.postID,
+      ngoID: widget.ngoID,
     );
     setState(() => _isFetched = true);
   }
@@ -67,7 +67,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
             )
           : Consumer<NGOProvider>(
               builder: (context, ngoP, child) => RefreshIndicator(
-                onRefresh: () => ngoP.refreshNGO(widget.postID),
+                onRefresh: () => ngoP.refreshNGO(widget.ngoID),
                 child: ngoP.ngo == null
                     ? const FetchError()
                     : SingleChildScrollView(
@@ -181,6 +181,11 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                                             .account_balance_wallet_rounded,
                                         trailing: ngoP.ngo!.epayAccount!,
                                       ),
+                                    CustomInfoTile(
+                                      leadingIcon: Icons.post_add_rounded,
+                                      trailing: ngoP.ngo!.postedPosts.length
+                                          .toString(),
+                                    ),
                                     if (ngoP.ngo!.isVerified)
                                       CustomMaterialTile(
                                         child: Padding(
@@ -293,8 +298,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                                       ),
                                       CustomInfoTile(
                                         leading: 'BSB',
-                                        trailing:
-                                            ngoP.ngo!.bank!.bankBSB.toString(),
+                                        trailing: ngoP.ngo!.bank!.bankBSB,
                                       ),
                                       CustomInfoTile(
                                         leading: 'Account Name',
@@ -303,9 +307,8 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                                       ),
                                       CustomInfoTile(
                                         leading: 'Account Number',
-                                        trailing: ngoP
-                                            .ngo!.bank!.bankAccountNumber
-                                            .toString(),
+                                        trailing:
+                                            ngoP.ngo!.bank!.bankAccountNumber,
                                       ),
                                     ],
                                   ),

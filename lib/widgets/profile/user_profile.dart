@@ -168,7 +168,7 @@ class _UserProfileState extends State<UserProfile>
                                           child: CustomInfoTile(
                                             leadingIcon: Icons.post_add_rounded,
                                             trailing: profileP
-                                                .userData!.numOfPosts
+                                                .userData!.postedPosts.length
                                                 .toString(),
                                           ),
                                         ),
