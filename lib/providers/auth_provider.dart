@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/models/auth.dart';
 
 class AuthProvider with ChangeNotifier {
-  String? _tokenKey;
+  Auth? _auth;
   bool _isAuthenticating;
   final SessionManager _sessionManager;
 
@@ -14,8 +15,8 @@ class AuthProvider with ChangeNotifier {
       : _sessionManager = SessionManager(),
         _isAuthenticating = false;
 
-  bool get isAuth => _tokenKey != null;
-  String? get tokenKey => _tokenKey;
+  bool get isAuth => _auth != null;
+  Auth? get auth => _auth;
   bool get isAuthenticating => _isAuthenticating;
 
   Future<void> _authenticate({
@@ -33,20 +34,18 @@ class AuthProvider with ChangeNotifier {
         body: json.encode(
           {
             "username": username,
-            "email": "",
             "password": password,
           },
         ),
       );
       final responseData = json.decode(response.body);
-      if (responseData['non_field_errors'] != null) {
-        throw HttpException(responseData['non_field_errors'][0]);
+      if (response.statusCode >= 400) {
+        throw HttpException(responseData.toString());
       }
-      await Future.delayed(const Duration(seconds: 1));
-      _tokenKey = responseData['key'];
-      _sessionManager.set('tokenKey', _tokenKey);
+      _auth = Auth.fromAPIResponse(responseData);
+      _sessionManager.set('auth_data', _auth!);
     } catch (error) {
-      _tokenKey = null;
+      _auth = null;
     }
     _isAuthenticating = false;
     notifyListeners();
@@ -64,10 +63,9 @@ class AuthProvider with ChangeNotifier {
       );
 
   Future<void> tryAutoLogin() async {
-    String? _ = await _sessionManager.get('tokenKey');
-    await Future.delayed(const Duration(seconds: 2));
+    var _ = await _sessionManager.get('auth_data');
     if (_ == null) return;
-    _tokenKey = _;
+    _auth = Auth.fromJson(_);
   }
 
   // return type: bool represents if the method executed successfully.
@@ -76,15 +74,14 @@ class AuthProvider with ChangeNotifier {
       final response = await http.post(
         Uri.parse('${getHostName()}$logoutEndpoint'),
         headers: {
-          'Authorization': 'Token $_tokenKey',
+          'Authorization': 'Token ${_auth!.tokenKey}',
         },
       );
       if (response.statusCode >= 400) {
-        throw HttpException(json.decode(response.body)['detail']);
+        throw HttpException(json.decode(response.body));
       }
-      await Future.delayed(const Duration(seconds: 1));
-      await _sessionManager.remove('tokenKey');
-      _tokenKey = null;
+      await _sessionManager.remove('auth_data');
+      _auth = null;
     } catch (error) {
       return false;
     }

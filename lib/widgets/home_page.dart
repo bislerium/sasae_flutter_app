@@ -105,9 +105,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CustomAppBar(
-      //   title: (screenTitle[_selectedNavIndex]),
-      // ),
       body: SafeArea(
         child: _getPageView(),
       ),

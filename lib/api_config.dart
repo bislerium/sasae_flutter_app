@@ -38,4 +38,6 @@ const String passwordResetEndpoint = 'api/password/reset/';
 const String ngosEndpoint = 'api/ngos/';
 const String ngoEndpoint = 'api/ngo/';
 
+const String peopleEndpoint = 'api/people/';
+
 enum HostingMode { local, ip, internet }

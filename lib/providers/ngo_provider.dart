@@ -12,7 +12,7 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class NGOProvider with ChangeNotifier {
-  late AuthProvider _auth;
+  late AuthProvider _authP;
   List<NGO_>? _ngos; // Actual Untouched DataList
   List<NGO_>? _ngosToShow; // Filtered/search data
   final Set<String> _fieldOfWork;
@@ -27,7 +27,7 @@ class NGOProvider with ChangeNotifier {
         _isSearched = false,
         _isNGOsLoading = false;
 
-  set setAuth(AuthProvider auth) => _auth = auth;
+  set setAuthP(AuthProvider auth) => _authP = auth;
 
   List<NGO_>? get ngoData => _ngosToShow;
   Set<String> get fieldOfWork => _fieldOfWork;
@@ -66,7 +66,7 @@ class NGOProvider with ChangeNotifier {
           Uri.parse('${getHostName()}$ngosEndpoint'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Token ${_auth.tokenKey!}'
+            'Authorization': 'Token ${_authP.auth!.tokenKey}'
           },
         );
         final responseData = json.decode(response.body);
@@ -74,7 +74,7 @@ class NGOProvider with ChangeNotifier {
           throw HttpException(responseData.toString());
         }
         _ngos = _ngosToShow =
-            (responseData as List).map((e) => NGO_.fromMap(e)).toList();
+            (responseData as List).map((e) => NGO_.fromAPIResponse(e)).toList();
       } catch (error) {
         _ngos = _ngosToShow = null;
       }
@@ -196,14 +196,14 @@ class NGOProvider with ChangeNotifier {
           Uri.parse('${getHostName()}$ngoEndpoint$ngoID/'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Token ${_auth.tokenKey!}'
+            'Authorization': 'Token ${_authP.auth!.tokenKey}'
           },
         );
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
         }
-        _ngo = NGO.fromMap(responseData);
+        _ngo = NGO.fromAPIResponse(responseData);
       } catch (error) {
         _ngo = null;
       }

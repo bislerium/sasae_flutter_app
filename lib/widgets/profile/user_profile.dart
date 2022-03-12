@@ -112,7 +112,7 @@ class _UserProfileState extends State<UserProfile>
                                     Row(
                                       children: [
                                         Expanded(
-                                            flex: 3,
+                                            flex: 4,
                                             child: CustomInfoTile(
                                               leadingIcon: Icons.transgender,
                                               trailing:

@@ -101,7 +101,7 @@ class NGO {
     };
   }
 
-  factory NGO.fromMap(Map<String, dynamic> map) {
+  factory NGO.fromAPIResponse(Map<String, dynamic> map) {
     return NGO(
       ngoID: map['id']?.toInt() ?? 0,
       latitude: map['latitude'] == null ? 0.0 : double.parse(map['latitude']),
@@ -120,6 +120,27 @@ class NGO {
       bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
       swcCertificateURL: map['swc_affl_cert'],
       panCertificateURL: map['pan_cert'],
+    );
+  }
+
+  factory NGO.fromMap(Map<String, dynamic> map) {
+    return NGO(
+      ngoID: map['ngoID']?.toInt() ?? 0,
+      latitude: map['latitude']?.toDouble() ?? 0.0,
+      longitude: map['longitude']?.toDouble() ?? 0.0,
+      orgName: map['orgName'] ?? '',
+      orgPhoto: map['orgPhoto'] ?? '',
+      estDate: DateTime.fromMillisecondsSinceEpoch(map['estDate']),
+      fieldOfWork: List<String>.from(map['fieldOfWork']),
+      address: map['address'] ?? '',
+      phone: map['phone'] ?? '',
+      email: map['email'] ?? '',
+      postedPosts: List<int>.from(map['postedPosts']),
+      isVerified: map['isVerified'] ?? false,
+      epayAccount: map['epayAccount'],
+      bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
+      swcCertificateURL: map['swcCertificateURL'],
+      panCertificateURL: map['panCertificateURL'],
     );
   }
 

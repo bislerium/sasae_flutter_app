@@ -154,7 +154,7 @@ List<SingleChildWidget> _providers() => [
       ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),
-        update: (context, authP, ngoP) => NGOProvider()..setAuth = authP,
+        update: (context, authP, ngoP) => NGOProvider()..setAuthP = authP,
       ),
       ChangeNotifierProvider(
         create: (context) => PostProvider(),
@@ -171,7 +171,7 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
         create: (context) => ProfileProvider(),
         update: (context, authP, profileP) =>
-            ProfileProvider()..setAuth = authP,
+            ProfileProvider()..setAuthP = authP,
       ),
     ];
 

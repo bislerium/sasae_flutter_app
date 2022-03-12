@@ -50,13 +50,24 @@ class NGO_ {
     };
   }
 
-  factory NGO_.fromMap(Map<String, dynamic> map) {
+  factory NGO_.fromAPIResponse(Map<String, dynamic> map) {
     return NGO_(
       ngoID: map['id']?.toInt() ?? 0,
       orgName: map['full_name'] ?? '',
       orgPhoto: map['display_picture'] ?? '',
       estDate: Jiffy(map['establishment_date'], 'yyyy-MM-dd').dateTime,
       fieldOfWork: List<String>.from(map['field_of_work']),
+      address: map['address'] ?? '',
+    );
+  }
+
+  factory NGO_.fromMap(Map<String, dynamic> map) {
+    return NGO_(
+      ngoID: map['ngoID']?.toInt() ?? 0,
+      orgName: map['orgName'] ?? '',
+      orgPhoto: map['orgPhoto'] ?? '',
+      estDate: DateTime.fromMillisecondsSinceEpoch(map['estDate']),
+      fieldOfWork: List<String>.from(map['fieldOfWork']),
       address: map['address'] ?? '',
     );
   }
