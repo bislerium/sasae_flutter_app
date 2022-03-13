@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:sasae_flutter_app/models/user.dart';
+import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 
-class UserProfileEditScreen extends StatefulWidget {
+class PeopleProfileEditScreen extends StatefulWidget {
   static const String routeName = '/profile/edit';
-  final GeneralPeople user;
+  final People user;
 
-  const UserProfileEditScreen({
+  const PeopleProfileEditScreen({
     Key? key,
     required this.user,
   }) : super(key: key);
 
   @override
-  _UserProfileEditScreenState createState() => _UserProfileEditScreenState();
+  _PeopleProfileEditScreenState createState() =>
+      _PeopleProfileEditScreenState();
 }
 
-class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
+class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
   ScrollController scrollController;
   GlobalKey<FormBuilderState> formKey;
-  _UserProfileEditScreenState()
+  _PeopleProfileEditScreenState()
       : scrollController = ScrollController(),
         formKey = GlobalKey<FormBuilderState>();
 
@@ -47,7 +48,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         decoration: const InputDecoration(
           labelText: 'Full Name',
         ),
-        initialValue: widget.user.fullName,
+        initialValue: widget.user.fullname,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
@@ -121,7 +122,7 @@ class _UserProfileEditScreenState extends State<UserProfileEditScreen> {
         decoration: const InputDecoration(
           labelText: 'Phone number',
         ),
-        initialValue: widget.user.phoneNumber,
+        initialValue: widget.user.phone,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),

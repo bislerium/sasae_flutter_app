@@ -41,14 +41,14 @@ class _NGOScreenState extends State<NGOScreen>
                               ? const FetchError(
                                   fraction: 0.75,
                                 )
-                              : ngoP.ngoData!.isEmpty
+                              : ngoP.ngosData!.isEmpty
                                   ? const Center(
                                       child: Text('No NGO found!'),
                                     )
                                   : Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),
-                                      child: NGOList(ngoList: ngoP.ngoData!)),
+                                      child: NGOList(ngoList: ngoP.ngosData!)),
                         ),
                       ),
                     ),

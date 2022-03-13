@@ -42,6 +42,7 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw HttpException(responseData.toString());
       }
+      await Future.delayed(const Duration(milliseconds: 1500));
       _auth = Auth.fromAPIResponse(responseData);
       _sessionManager.set('auth_data', _auth!);
     } catch (error) {
@@ -64,6 +65,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> tryAutoLogin() async {
     var _ = await _sessionManager.get('auth_data');
+    await Future.delayed(const Duration(milliseconds: 1500));
     if (_ == null) return;
     _auth = Auth.fromJson(_);
   }

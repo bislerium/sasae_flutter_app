@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 
 class NGOCard extends StatelessWidget {
@@ -22,18 +23,12 @@ class NGOCard extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Row(
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: Image.network(
-                  ngo_.orgPhoto,
-                  fit: BoxFit.cover,
-                  height: 100.0,
-                  width: 100.0,
-                  loadingBuilder: (context, child, loadingProgress) =>
-                      loadingProgress == null
-                          ? child
-                          : const CircularProgressIndicator(),
-                ),
+              CustomImage(
+                imageURL: ngo_.orgPhoto,
+                width: 100.0,
+                radius: 15,
+                onTapViewImage: false,
+                includeHero: false,
               ),
               Expanded(
                 child: Container(

@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
@@ -11,17 +10,19 @@ import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
+import 'package:sasae_flutter_app/widgets/image_view_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_form.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
-import 'package:sasae_flutter_app/widgets/profile/user_profile_edit_screen.dart';
+import 'package:sasae_flutter_app/widgets/profile/people_profile_edit_screen.dart';
 import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
 void main() async {
@@ -99,9 +100,9 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
         type: transitionType,
         settings: settings,
       );
-    case (UserProfileEditScreen.routeName):
+    case (PeopleProfileEditScreen.routeName):
       return PageTransition(
-        child: UserProfileEditScreen(
+        child: PeopleProfileEditScreen(
           user: args['user'],
         ),
         type: transitionType,
@@ -139,6 +140,15 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
         type: transitionType,
         settings: settings,
       );
+    case (ImageViewScreen.routeName):
+      return PageTransition(
+        child: ImageViewScreen(
+          title: args['title'],
+          imageURL: args['imageURL'],
+        ),
+        type: PageTransitionType.fade,
+        settings: settings,
+      );
     default:
       assert(false, 'Need to implement ${settings.name}');
       return null;
@@ -168,10 +178,18 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
         create: (context) => RequestPostProvider(),
       ),
-      ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
-        create: (context) => ProfileProvider(),
+      ChangeNotifierProxyProvider<AuthProvider, PeopleProvider>(
+        create: (context) => PeopleProvider(),
         update: (context, authP, profileP) =>
-            ProfileProvider()..setAuthP = authP,
+            PeopleProvider()..setAuthP = authP,
+      ),
+      ChangeNotifierProxyProvider3<AuthProvider, NGOProvider, PeopleProvider,
+          ProfileProvider>(
+        create: (context) => ProfileProvider(),
+        update: (context, authP, ngoP, peopleP, profileP) => ProfileProvider()
+          ..setAuthP = authP
+          ..setNGOP = ngoP
+          ..setPeopleP = peopleP,
       ),
     ];
 

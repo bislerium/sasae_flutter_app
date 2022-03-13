@@ -59,6 +59,7 @@ dependencies:
   firebase_messaging: ^11.2.10
   flutter_local_notifications: ^9.4.0
   jiffy: ^5.0.0
+  # photo_view: ^0.13.0
   # shared_preferences: ^2.0.13
   # flutter_osm_plugin: ^0.31.0
   # intl_phone_number_input: ^0.7.0+2
@@ -74,6 +75,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+
+dependency_overrides:
+  photo_view:
+    git:
+      url: https://github.com/bluefireteam/photo_view
+      ref: master
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

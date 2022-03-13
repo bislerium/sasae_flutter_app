@@ -43,7 +43,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
         ),
         Container(
           constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.6),
+              maxHeight: MediaQuery.of(context).size.height * 0.4),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -112,7 +112,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     return Consumer<NGOProvider>(
       builder: ((context, ngoP, child) {
         bool isDataUnavailable = ngoP.fetchError ||
-            (ngoP.ngoData!.isEmpty && !ngoP.isFiltered && !ngoP.isSearched);
+            (ngoP.ngosData!.isEmpty && !ngoP.isFiltered && !ngoP.isSearched);
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(

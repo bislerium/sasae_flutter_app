@@ -115,8 +115,8 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                             amount: int.parse(_amountTEC.text) * 100,
                             productIdentity: 'dells-sssssg5-g5510-2021',
                             productName: 'NGO Donation: $donationTo',
-                            mobile: epayAccount,
-                            mobileReadOnly: true,
+                            // mobile: epayAccount,
+                            // mobileReadOnly: true,
                           ),
                           preferences: [
                             // Not providing this will enable all the payment methods.
@@ -162,7 +162,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
       builder: (context, ngoP, child) => Visibility(
-        visible: ngoP.ngo != null && ngoP.ngo!.isVerified,
+        visible: ngoP.ngoData != null && ngoP.ngoData!.isVerified,
         child: CustomFAB(
           text: 'Donate',
           icon: Icons.hail_rounded,
@@ -170,8 +170,8 @@ class _NGODonationButtonState extends State<NGODonationButton> {
           foreground: Theme.of(context).colorScheme.onPrimary,
           func: () {
             showDonationModalSheet(
-              ngoP.ngo!.epayAccount!,
-              ngoP.ngo!.orgName,
+              ngoP.ngoData!.epayAccount!,
+              ngoP.ngoData!.orgName,
             );
           },
           width: 130,

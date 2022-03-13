@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './profile/user_profile.dart';
+import 'profile/user_profile_screen.dart';
 import './post/post_screen.dart';
 import './ngo/ngo_screen.dart';
 import './setting.dart';
