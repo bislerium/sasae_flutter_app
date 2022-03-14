@@ -14,6 +14,11 @@ class FormCardRequestPost extends StatefulWidget {
 
 class _FormCardRequestPostState extends State<FormCardRequestPost> {
   List<String> requestType;
+  final TextEditingController minTEC;
+  final TextEditingController targetTEC;
+  final TextEditingController maxTEC;
+  String? requestTypeTEC;
+  final TextEditingController endsOnTEC;
 
   _FormCardRequestPostState()
       : requestType = ['Join', 'Petition'],
@@ -21,12 +26,6 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
         targetTEC = TextEditingController(),
         maxTEC = TextEditingController(),
         endsOnTEC = TextEditingController();
-
-  final TextEditingController minTEC;
-  final TextEditingController targetTEC;
-  final TextEditingController maxTEC;
-  String? requestTypeTEC;
-  final TextEditingController endsOnTEC;
 
   @override
   void dispose() {

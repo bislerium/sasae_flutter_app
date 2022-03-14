@@ -67,9 +67,7 @@ class RequestFAB extends StatelessWidget {
           : isParticipated
               ? 'Joined'
               : 'Join',
-      icon: requestType == 'Petition'
-          ? Icons.gesture
-          : Icons.emoji_people_rounded,
+      icon: requestType == 'Petition' ? Icons.gesture : Icons.handshake,
       func: () => participate(context),
       scrollController: scrollController,
     );

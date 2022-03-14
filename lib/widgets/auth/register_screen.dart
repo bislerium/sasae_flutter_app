@@ -1,10 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import '../misc/custom_image_picker.dart';
-import '../misc/custom_widgets.dart';
-import '../misc/date_picker.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/auth/register';
@@ -15,38 +14,48 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  int _currentStep = 0;
+  final GlobalKey<FormBuilderState> personalInfoFormKey;
+  final GlobalKey<FormBuilderState> addressFormKey;
+  final GlobalKey<FormBuilderState> contactFormKey;
+  final GlobalKey<FormBuilderState> accountFormKey;
+  final GlobalKey<FormBuilderState> verifyFormKey;
 
-  final personalInfoFormKey = GlobalKey<FormState>();
-  final addressFormKey = GlobalKey<FormState>();
-  final contactFormKey = GlobalKey<FormState>();
-  final accountFormKey = GlobalKey<FormState>();
+  final TextEditingController passwordTEC;
+  int _currentStep;
+  final List<bool> _stepErrors;
 
-  var userNameField = TextEditingController();
-  var passwordField = TextEditingController();
-  var fullNameField = TextEditingController();
-  var countryField = TextEditingController();
-  var provinceField = TextEditingController();
-  var cityLocalityField = TextEditingController();
-  var stAddressHouseNumField = TextEditingController();
-  var phoneField = TextEditingController();
-  var emailField = TextEditingController();
-  String? dropdownValue;
-  DateTime? pickedDate;
-  File? profilePicture;
-  File? citizenshipPhoto;
+  _RegisterScreenState()
+      : personalInfoFormKey = GlobalKey<FormBuilderState>(),
+        addressFormKey = GlobalKey<FormBuilderState>(),
+        contactFormKey = GlobalKey<FormBuilderState>(),
+        accountFormKey = GlobalKey<FormBuilderState>(),
+        verifyFormKey = GlobalKey<FormBuilderState>(),
+        passwordTEC = TextEditingController(),
+        _currentStep = 0,
+        _stepErrors = [
+          false,
+          false,
+          false,
+          false,
+        ];
+
+  String? fullname;
+  String? gender;
+  DateTime? birthdate;
+  String? country;
+  String? province;
+  String? cityLocality;
+  String? stAddressHouseNum;
+  String? phone;
+  String? email;
+  XFile? displayPicture;
+  String? username;
+  String? password;
+  XFile? citizenshipPhoto;
 
   @override
   void dispose() {
-    userNameField.dispose();
-    passwordField.dispose();
-    fullNameField.dispose();
-    countryField.dispose();
-    provinceField.dispose();
-    cityLocalityField.dispose();
-    stAddressHouseNumField.dispose();
-    phoneField.dispose();
-    emailField.dispose();
+    passwordTEC.dispose();
     super.dispose();
   }
 
@@ -63,29 +72,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  List<String> genderList = [
-    'Male',
-    'Female',
-    'LGBTQ+',
-  ];
+  Widget fullnameField() => FormBuilderTextField(
+        name: 'full_name',
+        decoration: const InputDecoration(
+          label: Text('Full name'),
+          icon: Icon(Icons.person),
+        ),
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => fullname = value,
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.name,
+      );
 
-  Widget _dropDownGender() => DropdownButtonFormField<String>(
+  Widget _genderField() => FormBuilderDropdown(
+        name: 'gender',
         decoration: const InputDecoration(
           icon: Icon(Icons.transgender),
           labelText: 'Gender',
         ),
-        onChanged: (newValue) {
-          setState(() {
-            dropdownValue = newValue;
-          });
-        },
-        validator: (value) {
-          return checkValue(
-            value: value,
-            checkEmptyOnly: true,
-          );
-        },
-        items: genderList
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => gender = value.toString(),
+        items: ['Male', 'Female', 'LGBTQ+']
             .map((String value) => DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -93,12 +104,194 @@ class _RegisterScreenState extends State<RegisterScreen> {
             .toList(),
       );
 
-  final _stepErrors = [
-    false,
-    false,
-    false,
-    false,
-  ];
+  Widget _birthDateField() => FormBuilderDateTimePicker(
+        name: 'RequestDuration',
+        inputType: InputType.date,
+        decoration: const InputDecoration(
+          labelText: 'Birthdate',
+          icon: Icon(Icons.calendar_today_rounded),
+        ),
+        firstDate: DateTime.now().subtract(const Duration(days: 365 * 100)),
+        currentDate: DateTime.now(),
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            (value) => value!.isAfter(
+                    DateTime.now().subtract(const Duration(days: 365 * 16)))
+                ? 'Must be 16 years or older'
+                : null
+          ],
+        ),
+        onSaved: (value) => birthdate = value,
+      );
+
+  Widget countryField() => FormBuilderTextField(
+        name: 'country',
+        decoration: const InputDecoration(
+          label: Text('Country'),
+          icon: Icon(Icons.flag_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => country = value,
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.text,
+      );
+
+  Widget provinceField() => FormBuilderTextField(
+        name: 'province',
+        decoration: const InputDecoration(
+          label: Text('Province'),
+          icon: Icon(Icons.local_parking_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => province = value,
+        keyboardType: TextInputType.text,
+        textInputAction: TextInputAction.next,
+      );
+
+  Widget cityLocalityField() => FormBuilderTextField(
+        name: 'city_locality',
+        decoration: const InputDecoration(
+          label: Text('City/Locality'),
+          icon: Icon(Icons.location_city_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => cityLocality = value,
+        textInputAction: TextInputAction.next,
+        keyboardType: TextInputType.text,
+      );
+
+  Widget streetHouseField() => FormBuilderTextField(
+        name: 'street_house',
+        decoration: const InputDecoration(
+          label: Text('Street name/House number'),
+          icon: Icon(Icons.near_me),
+        ),
+        validator: FormBuilderValidators.compose(
+          [FormBuilderValidators.required(context)],
+        ),
+        onSaved: (value) => stAddressHouseNum = value,
+        textInputAction: TextInputAction.done,
+        keyboardType: TextInputType.streetAddress,
+      );
+
+  Widget phoneField() => FormBuilderTextField(
+        name: 'phone',
+        decoration: const InputDecoration(
+          label: Text('Phone'),
+          icon: Icon(Icons.phone_android_rounded),
+          hintText: 'E.g. 9800740959',
+        ),
+        onSaved: (value) => phone = value,
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.match(context, r'(^[9][678][0-9]{8}$)'),
+          ],
+        ),
+        keyboardType: TextInputType.phone,
+        textInputAction: TextInputAction.next,
+      );
+
+  Widget emailField() => FormBuilderTextField(
+        name: 'email',
+        decoration: const InputDecoration(
+          label: Text('Email'),
+          icon: Icon(Icons.email_rounded),
+          hintText: 'Only unique email is accepted',
+        ),
+        onSaved: (value) => email = value,
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.email(context),
+          ],
+        ),
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.done,
+      );
+
+  Widget displayPictureField() => FormBuilderImagePicker(
+        name: 'display_picture',
+        decoration: const InputDecoration(
+          labelText: 'Display picture',
+        ),
+        previewWidth: MediaQuery.of(context).size.width * 0.8,
+        previewHeight: MediaQuery.of(context).size.width * 0.8,
+        onSaved: (value) => displayPicture = value?.first,
+        maxImages: 1,
+      );
+
+  Widget usernameField() => FormBuilderTextField(
+        name: 'userrname',
+        decoration: const InputDecoration(
+          label: Text('Username'),
+          icon: Icon(Icons.account_circle_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            (value) =>
+                value!.contains(' ') ? 'Username must be spaceless!' : null
+          ],
+        ),
+        onSaved: (value) => username = value,
+        keyboardType: TextInputType.name,
+        textInputAction: TextInputAction.next,
+      );
+
+  Widget password1Field() => FormBuilderTextField(
+        name: 'password1',
+        controller: passwordTEC,
+        decoration: const InputDecoration(
+          label: Text('Password'),
+          icon: Icon(Icons.password_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            FormBuilderValidators.minLength(context, 8,
+                errorText: 'Password must be 8 to 20 characters long.'),
+            FormBuilderValidators.maxLength(context, 20),
+          ],
+        ),
+        keyboardType: TextInputType.visiblePassword,
+        textInputAction: TextInputAction.next,
+      );
+
+  Widget password2Field() => FormBuilderTextField(
+        name: 'password2',
+        decoration: const InputDecoration(
+          label: Text('Confirm password'),
+          icon: Icon(Icons.password_rounded),
+        ),
+        validator: FormBuilderValidators.compose(
+          [
+            FormBuilderValidators.required(context),
+            (value) =>
+                (passwordTEC.text != value) ? 'Passwords did not match!' : null
+          ],
+        ),
+        keyboardType: TextInputType.visiblePassword,
+        textInputAction: TextInputAction.next,
+      );
+
+  Widget citizenshipField() => FormBuilderImagePicker(
+        name: 'Citizenship photo',
+        decoration: const InputDecoration(
+          labelText: 'Attach a photo',
+        ),
+        onSaved: (value) => citizenshipPhoto = value?.first,
+        previewWidth: MediaQuery.of(context).size.width * 0.8,
+        previewHeight: MediaQuery.of(context).size.width * 0.8,
+        maxImages: 1,
+      );
 
   List<Step> getSteps() => [
         Step(
@@ -109,35 +302,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   : StepState.indexed,
           isActive: _currentStep >= 0,
           title: const Text('Personal Info'),
-          content: Form(
+          content: FormBuilder(
             key: personalInfoFormKey,
             child: Column(
               children: [
-                TextFormField(
-                  controller: fullNameField,
-                  decoration: const InputDecoration(
-                    label: Text('Full name'),
-                    icon: Icon(Icons.person),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.name,
-                ),
+                fullnameField(),
                 const SizedBox(
                   height: 10,
                 ),
-                _dropDownGender(),
+                _genderField(),
                 const SizedBox(
                   height: 10,
                 ),
-                DatePickerField(
-                  setDateHandler: (value) => pickedDate = value,
-                ),
+                _birthDateField(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -153,79 +330,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   : StepState.indexed,
           isActive: _currentStep >= 1,
           title: const Text('Address'),
-          content: Form(
+          content: FormBuilder(
             key: addressFormKey,
             child: Column(
               children: [
-                TextFormField(
-                  controller: countryField,
-                  decoration: const InputDecoration(
-                    label: Text('Country'),
-                    icon: Icon(Icons.flag_rounded),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                ),
+                countryField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: provinceField,
-                  decoration: const InputDecoration(
-                    label: Text('Province'),
-                    icon: Icon(Icons.local_parking_rounded),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                ),
+                provinceField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: cityLocalityField,
-                  decoration: const InputDecoration(
-                    label: Text('City/Locality'),
-                    icon: Icon(Icons.location_city_rounded),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                ),
+                cityLocalityField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: stAddressHouseNumField,
-                  decoration: const InputDecoration(
-                    label: Text('Street name/House number'),
-                    icon: Icon(Icons.near_me),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  textInputAction: TextInputAction.done,
-                  keyboardType: TextInputType.streetAddress,
-                ),
+                streetHouseField(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -243,48 +364,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
           title: const Text('Contact'),
           subtitle: const Text(
               'Email is not only used to contact\n but also to secure your account.'),
-          content: Form(
+          content: FormBuilder(
             key: contactFormKey,
             child: Column(
               children: [
-                TextFormField(
-                  controller: phoneField,
-                  decoration: const InputDecoration(
-                    label: Text('Phone'),
-                    icon: Icon(Icons.phone_android_rounded),
-                    hintText: 'E.g. 9800740959',
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      pattern: r'(^[9][678][0-9]{8}$)',
-                      patternMessage: 'Invalid phone number!',
-                    );
-                  },
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                ),
+                phoneField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: emailField,
-                  decoration: const InputDecoration(
-                    label: Text('Email'),
-                    icon: Icon(Icons.email_rounded),
-                    hintText: 'Only unique email is accepted',
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      pattern:
-                          r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
-                      patternMessage: 'Invalid email!',
-                    );
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                ),
+                emailField(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -301,74 +389,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isActive: _currentStep >= 3,
           title: const Text('Account'),
           subtitle: const Text('Profile picture is optional.'),
-          content: Form(
+          content: FormBuilder(
             key: accountFormKey,
             child: Column(
               children: [
-                CustomImagePicker(
-                  title: 'Profile picture',
-                  icon: Icons.photo_camera_front_rounded,
-                  setImageFileHandler: (image) => profilePicture = image,
-                ),
+                displayPictureField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: userNameField,
-                  decoration: const InputDecoration(
-                    label: Text('Username'),
-                    icon: Icon(Icons.account_circle_rounded),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required Field!';
-                    } else if (value.contains(' ')) {
-                      return 'Username must be spaceless!';
-                    } else {
-                      return null;
-                    }
-                  },
-                  keyboardType: TextInputType.name,
-                  textInputAction: TextInputAction.next,
-                ),
+                usernameField(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  controller: passwordField,
-                  decoration: const InputDecoration(
-                    label: Text('Password'),
-                    icon: Icon(Icons.password_rounded),
-                  ),
-                  validator: (value) {
-                    return checkValue(
-                      value: value,
-                      checkEmptyOnly: true,
-                    );
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                ),
+                password1Field(),
                 const SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    label: Text('Confirm password'),
-                    icon: Icon(Icons.password_rounded),
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required field!';
-                    } else if (passwordField.text != value) {
-                      return 'Passwords did not match!';
-                    } else {
-                      return null;
-                    }
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.next,
-                ),
+                password2Field(),
                 const SizedBox(
                   height: 20,
                 ),
@@ -384,10 +421,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'This is optional.\n Profile verification might take some time!'),
           content: Column(
             children: [
-              CustomImagePicker(
-                title: 'Citizenship Photo',
-                icon: Icons.folder_shared_rounded,
-                setImageFileHandler: (image) => citizenshipPhoto = image,
+              FormBuilder(
+                key: verifyFormKey,
+                child: citizenshipField(),
               ),
               const SizedBox(
                 height: 20,
@@ -431,6 +467,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               );
             } else {
+              personalInfoFormKey.currentState!.save();
+              contactFormKey.currentState!.save();
+              addressFormKey.currentState!.save();
+              accountFormKey.currentState!.save();
+              verifyFormKey.currentState!.save();
+
+              print(fullname);
+              print(gender);
+              print(birthdate);
+              print('$stAddressHouseNum, $cityLocality, $province, $country');
+              print(phone);
+              print(email);
+              print(username);
+              print(passwordTEC.text);
+              print(displayPicture);
+              print(citizenshipPhoto);
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

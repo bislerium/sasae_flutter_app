@@ -121,7 +121,7 @@ class PostCard extends StatelessWidget {
                           ),
                           Chip(
                             label: Icon(
-                              Icons.person_off,
+                              Icons.person_off_outlined,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onTertiaryContainer,
