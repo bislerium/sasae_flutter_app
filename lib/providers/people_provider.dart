@@ -4,6 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 
@@ -14,9 +15,7 @@ class PeopleProvider with ChangeNotifier {
   People? get peopleData => _people;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  List<String> gender() => ['Male', 'Female', 'LGBTQ+'];
-
-  People randPeople() {
+  static People randPeople() {
     bool isVerified = faker.randomGenerator.boolean();
     return People(
       id: faker.randomGenerator.integer(1000),
@@ -26,7 +25,7 @@ class PeopleProvider with ChangeNotifier {
           (index) => faker.randomGenerator.integer(3000))).toList(),
       username: faker.person.firstName(),
       fullname: faker.person.name(),
-      gender: faker.randomGenerator.element(gender()),
+      gender: faker.randomGenerator.element(['Male', 'Female', 'LGBTQ+']),
       birthDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
       address: faker.address.streetAddress(),
       phone: faker.phoneNumber.us(),
@@ -41,7 +40,7 @@ class PeopleProvider with ChangeNotifier {
   //Used to fetch people data per screen. Will fetch logged in user data if peopleID not given.
   Future<void> initFetchPeople({int? peopleID}) async {
     await Future.delayed(const Duration(milliseconds: 1200));
-    _people = await fetchPeople(peopleID: peopleID);
+    _people = await fetchPeople(peopleID: peopleID, auth: _authP.auth!);
     notifyListeners();
   }
 
@@ -53,17 +52,21 @@ class PeopleProvider with ChangeNotifier {
   void nullifyPeople() => _people = null;
 
   //Can be used for fetching multiple people data in parallel
-  Future<People?> fetchPeople({int? peopleID, bool isDemo = false}) async {
+  static Future<People?> fetchPeople({
+    int? peopleID,
+    required Auth auth,
+    bool isDemo = false,
+  }) async {
     if (isDemo) {
       return randPeople();
     } else {
       try {
         final response = await http.get(
           Uri.parse(
-              '${getHostName()}$peopleEndpoint${peopleID ?? _authP.auth!.profileID}/'),
+              '${getHostName()}$peopleEndpoint${peopleID ?? auth.profileID}/'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${auth.tokenKey}',
           },
         );
         final responseData = json.decode(response.body);

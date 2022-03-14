@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
@@ -143,7 +144,7 @@ class NGOProvider with ChangeNotifier {
 
   NGO? get ngoData => _ngo;
 
-  NGO randNGO() {
+  static NGO randNGO() {
     var _isVerified = faker.randomGenerator.boolean();
     var ngoName = faker.company.name();
     return NGO(
@@ -190,7 +191,7 @@ class NGOProvider with ChangeNotifier {
 
   Future<void> initFetchNGO({int? ngoID}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    _ngo = await fetchNGO(ngoID: ngoID);
+    _ngo = await fetchNGO(ngoID: ngoID, auth: _authP.auth!);
     notifyListeners();
   }
 
@@ -200,17 +201,20 @@ class NGOProvider with ChangeNotifier {
 
   void nullifyNGO() => _ngo = null;
 
-  Future<NGO?> fetchNGO({int? ngoID, bool isDemo = false}) async {
+  static Future<NGO?> fetchNGO({
+    int? ngoID,
+    required Auth auth,
+    bool isDemo = false,
+  }) async {
     if (isDemo) {
       return randNGO();
     } else {
       try {
         final response = await http.get(
-          Uri.parse(
-              '${getHostName()}$ngoEndpoint${ngoID ?? _authP.auth!.profileID}/'),
+          Uri.parse('${getHostName()}$ngoEndpoint${ngoID ?? auth.profileID}/'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Token ${_authP.auth!.tokenKey}'
+            'Authorization': 'Token ${auth.tokenKey}'
           },
         );
         final responseData = json.decode(response.body);

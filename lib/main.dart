@@ -183,13 +183,10 @@ List<SingleChildWidget> _providers() => [
         update: (context, authP, profileP) =>
             PeopleProvider()..setAuthP = authP,
       ),
-      ChangeNotifierProxyProvider3<AuthProvider, NGOProvider, PeopleProvider,
-          ProfileProvider>(
+      ChangeNotifierProxyProvider<AuthProvider, ProfileProvider>(
         create: (context) => ProfileProvider(),
-        update: (context, authP, ngoP, peopleP, profileP) => ProfileProvider()
-          ..setAuthP = authP
-          ..setNGOP = ngoP
-          ..setPeopleP = peopleP,
+        update: (context, authP, profileP) =>
+            ProfileProvider()..setAuthP = authP,
       ),
     ];
 
