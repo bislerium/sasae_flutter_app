@@ -50,11 +50,12 @@ class _AuthScreenState extends State<AuthScreen> {
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
+            FormBuilderValidators.maxLength(context, 15),
             (value) =>
                 value!.contains(' ') ? 'Username must be spaceless!' : null,
           ],
         ),
-        maxLength: 10,
+        maxLength: 15,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
       );

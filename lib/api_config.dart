@@ -39,5 +39,6 @@ const String ngosEndpoint = 'api/ngos/';
 const String ngoEndpoint = 'api/ngo/';
 
 const String peopleEndpoint = 'api/people/';
+const String peopleAddEndpoint = 'api/people/add/';
 
 enum HostingMode { local, ip, internet }

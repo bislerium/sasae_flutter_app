@@ -3,7 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/auth/register';
@@ -192,7 +195,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
-            FormBuilderValidators.match(context, r'(^[9][678][0-9]{8}$)'),
+            FormBuilderValidators.match(context, r'(^[9][678][0-9]{8}$)',
+                errorText: 'Must be valid number.'),
           ],
         ),
         keyboardType: TextInputType.phone,
@@ -237,10 +241,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
+            FormBuilderValidators.maxLength(context, 15),
             (value) =>
                 value!.contains(' ') ? 'Username must be spaceless!' : null
           ],
         ),
+        maxLength: 15,
         onSaved: (value) => username = value,
         keyboardType: TextInputType.name,
         textInputAction: TextInputAction.next,
@@ -418,7 +424,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isActive: _currentStep >= 4,
           title: const Text('Verify'),
           subtitle: const Text(
-              'This is optional.\n Profile verification might take some time!'),
+              'This is optional.\n Please email us for profile verification.'),
           content: Column(
             children: [
               FormBuilder(
@@ -451,7 +457,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         type: StepperType.vertical,
         steps: getSteps(),
         currentStep: _currentStep,
-        onStepContinue: () {
+        onStepContinue: () async {
           if (isLastStep) {
             if (_stepErrors.contains(true)) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -473,29 +479,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
               accountFormKey.currentState!.save();
               verifyFormKey.currentState!.save();
 
-              print(fullname);
-              print(gender);
-              print(birthdate);
-              print('$stAddressHouseNum, $cityLocality, $province, $country');
-              print(phone);
-              print(email);
-              print(username);
-              print(passwordTEC.text);
-              print(displayPicture);
-              print(citizenshipPhoto);
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Successfully Registered!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onInverseSurface,
-                    ),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.inverseSurface,
-                ),
+              bool success =
+                  await Provider.of<PeopleProvider>(context, listen: false)
+                      .registerPeople(
+                username: username!,
+                email: email!,
+                password: passwordTEC.text,
+                fullname: fullname!,
+                gender: gender!,
+                dob: birthdate!,
+                address:
+                    '$stAddressHouseNum, $cityLocality, $province, $country',
+                phone: '977$phone!',
+                displayPicture: displayPicture,
+                citizenshipPhoto: citizenshipPhoto,
               );
+
+              if (success) {
+                showSnackBar(
+                  context: context,
+                  message: 'Successfully registered.',
+                );
+              } else {
+                showSnackBar(
+                  context: context,
+                  message: 'Something went wrong.',
+                );
+              }
             }
           } else {
             var valid = validity()[_currentStep]();

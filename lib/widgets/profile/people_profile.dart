@@ -122,7 +122,8 @@ class PeopleProfile extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (peopleData.citizenshipPhoto != null)
+                if (peopleData.isVerified &&
+                    peopleData.citizenshipPhoto != null)
                   CustomImageTile(
                     title: 'Citizenship photo',
                     imageURL: peopleData.citizenshipPhoto!,
