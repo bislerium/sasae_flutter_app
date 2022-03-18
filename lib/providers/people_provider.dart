@@ -79,7 +79,6 @@ class PeopleProvider with ChangeNotifier {
         'phone': phone,
         'address': address,
       });
-      print(request.fields);
       displayPicture == null
           ? request.fields["display_picture"] = ""
           : request.files.add(await http.MultipartFile.fromPath(

@@ -1,6 +1,10 @@
 import 'dart:math';
 import 'package:faker/faker.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:jiffy/jiffy.dart';
+import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
@@ -55,6 +59,43 @@ class PostProvider with ChangeNotifier {
   Future<bool> report({required int postID}) async {
     return true;
   }
+}
+
+class PostCreateProvider with ChangeNotifier {
+  Future<bool> createNormalPost({required List<String> relatedTo, required String postContent, bool isPostedAnonymous = false, required List<int> pokedToNGO, XFile? postImage, }) {
+final request = http.MultipartRequest(
+          'POST', Uri.parse('${getHostName()}$peopleAddEndpoint'));
+      request.fields.addAll({
+        'password': password,
+        'full_name': fullname,
+        'gender': gender,
+        'phone': phone,
+        'address': address,
+      });
+      displayPicture == null
+          ? request.fields["display_picture"] = ""
+          : request.files.add(await http.MultipartFile.fromPath(
+              "display_picture", displayPicture.path));
+
+      citizenshipPhoto == null
+          ? request.fields["citizenship_photo"] = ""
+          : request.files.add(await http.MultipartFile.fromPath(
+              "citizenship_photo", citizenshipPhoto.path));
+
+      http.StreamedResponse response = await request.send();
+      // final responseBody =
+      //     await json.decode((await http.Response.fromStream(response)).body);
+      if (response.statusCode >= 400) {
+        throw HttpException(response.reasonPhrase!);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+    
+
+  
 }
 
 //------------------------------Normal Post --------------------------------//
