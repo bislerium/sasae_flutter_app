@@ -1,8 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:faker/faker.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
@@ -11,11 +12,14 @@ import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 
 class PostProvider with ChangeNotifier {
+  late AuthProvider _authP;
   List<Post_>? _posts;
 
   List<Post_>? get postData => _posts;
+  set setAuthP(AuthProvider auth) => _authP = auth;
 
   void _randPosts() {
     var random = Random();
@@ -59,43 +63,59 @@ class PostProvider with ChangeNotifier {
   Future<bool> report({required int postID}) async {
     return true;
   }
-}
 
-class PostCreateProvider with ChangeNotifier {
-  Future<bool> createNormalPost({required List<String> relatedTo, required String postContent, bool isPostedAnonymous = false, required List<int> pokedToNGO, XFile? postImage, }) {
-final request = http.MultipartRequest(
-          'POST', Uri.parse('${getHostName()}$peopleAddEndpoint'));
-      request.fields.addAll({
-        'password': password,
-        'full_name': fullname,
-        'gender': gender,
-        'phone': phone,
-        'address': address,
+  Future<List<String>?> getPostRelatedTo() async {
+    try {
+      var response = await Dio().get('$getHostName()$postRelatedTo');
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      return response.data['options'];
+    } catch (Error) {
+      print(Error);
+      return null;
+    }
+  }
+
+  Future<bool> createNormalPost({
+    required List<String> relatedTo,
+    required String postContent,
+    bool isPostedAnonymous = false,
+    required List<int> pokedToNGO,
+    XFile? postImage,
+  }) async {
+    try {
+      var formData = FormData.fromMap({
+        "normal_post": {
+          "post_image": postImage == null
+              ? null
+              : await MultipartFile.fromFile(postImage.path)
+        },
+        "post_head": {
+          "related_to": relatedTo,
+          "post_content": postContent,
+          "is_anonymous": isPostedAnonymous
+        },
+        "poked_to": pokedToNGO
       });
-      displayPicture == null
-          ? request.fields["display_picture"] = ""
-          : request.files.add(await http.MultipartFile.fromPath(
-              "display_picture", displayPicture.path));
-
-      citizenshipPhoto == null
-          ? request.fields["citizenship_photo"] = ""
-          : request.files.add(await http.MultipartFile.fromPath(
-              "citizenship_photo", citizenshipPhoto.path));
-
-      http.StreamedResponse response = await request.send();
-      // final responseBody =
-      //     await json.decode((await http.Response.fromStream(response)).body);
-      if (response.statusCode >= 400) {
-        throw HttpException(response.reasonPhrase!);
+      var response = await Dio().post(
+        '${getHostName()}$postNormalPost',
+        data: formData,
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          // set content-length
+        }),
+      );
+      if (response.statusCode! >= 400) {
+        throw HttpException(response.data);
       }
       return true;
     } catch (error) {
       print(error);
       return false;
     }
-    
-
-  
+  }
 }
 
 //------------------------------Normal Post --------------------------------//

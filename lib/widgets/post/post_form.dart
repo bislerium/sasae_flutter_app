@@ -4,6 +4,11 @@ import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/ngo_.dart';
+import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'post_type/post_dependent_widgets/form_card_poll_post.dart';
@@ -28,7 +33,7 @@ class _PostFormState extends State<PostForm> {
         postTypeIndex = postType.normalPost;
 
   late List<String> relatedToOptionList;
-  late List<String> ngoOptionList;
+  late List<NGO_> ngoOptionList;
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
   late final GlobalKey<FormBuilderState> pollFormKey;
@@ -39,7 +44,7 @@ class _PostFormState extends State<PostForm> {
 
   bool isPostedAnonymous;
   List<String>? relatedto;
-  List<String>? pokedNGO;
+  List<int>? pokedNGO;
   postType postTypeIndex;
 
   @override
@@ -50,7 +55,7 @@ class _PostFormState extends State<PostForm> {
     pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
     relatedToOptionList = getRelatedToOptions();
-    ngoOptionList = getNGOOptions();
+    getNGOOptions();
   }
 
   @override
@@ -65,7 +70,14 @@ class _PostFormState extends State<PostForm> {
       });
 
   List<String> getRelatedToOptions() => faker.lorem.words(40);
-  List<String> getNGOOptions() => faker.lorem.words(40);
+
+  Future<void> getNGOOptions() async {
+    var ngosData = Provider.of<NGOProvider>(context).ngosData;
+    if (ngosData == null) {
+      Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
+    }
+    ngoOptionList = ngosData ?? [];
+  }
 
   Widget pokeNGOField() => ChipsInput(
         key: _chipKey,
@@ -85,27 +97,31 @@ class _PostFormState extends State<PostForm> {
           );
         },
         findSuggestions: (String query) {
-          late List<String> tempList;
+          List<NGO_> tempList = [];
           if (pokedNGO == null || pokedNGO!.isEmpty) {
             tempList = ngoOptionList;
           } else {
-            tempList =
-                List.from(ngoOptionList.toSet().difference(pokedNGO!.toSet()));
+            tempList = ngoOptionList
+                .where((element) => !pokedNGO!.contains(element.ngoID))
+                .toList();
           }
           if (query.isEmpty) return tempList;
           return tempList
               .where((element) =>
-                  element.toLowerCase().contains(query.toLowerCase()))
+                  element.orgName.toLowerCase().contains(query.toLowerCase()))
               .toList();
         },
         suggestionBuilder: (context, state, data) {
+          data = data as NGO_;
           return ListTile(
             key: ObjectKey(data),
-            title: Text(data.toString()),
+            leading: Image.network(data.orgPhoto),
+            title: Text(data.orgName),
+            trailing: Text(DateFormat.y().format(data.estDate)),
             onTap: () => state.selectSuggestion(data),
           );
         },
-        onChanged: (value) => pokedNGO = value.cast<String>(),
+        onChanged: (value) => pokedNGO = value as List<int>,
         inputType: TextInputType.name,
       );
 
@@ -304,7 +320,13 @@ class _PostFormState extends State<PostForm> {
                 isOtherPostFormValid = requestFormKey.currentState!.validate();
                 break;
             }
-            if (isSuperPostFormValid && isOtherPostFormValid) {}
+            if (isSuperPostFormValid && isOtherPostFormValid) {
+              Provider.of<PostProvider>(context, listen: false)
+                  .createNormalPost(
+                      relatedTo: relatedto ?? [],
+                      postContent: descriptionTEC.text,
+                      pokedToNGO: pokedNGO ?? []);
+            }
           },
           icon: const Icon(
             Icons.post_add_rounded,

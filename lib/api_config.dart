@@ -40,5 +40,9 @@ const String ngoEndpoint = 'api/ngo/';
 
 const String peopleEndpoint = 'api/people/';
 const String peopleAddEndpoint = 'api/people/add/';
+const String postRelatedTo = 'api/post/relatedto/';
+const String postNormalPost = 'api/post/normal/';
+const String postPollPost = 'api/post/poll/';
+const String postRequestPost = 'api/post/request/';
 
 enum HostingMode { local, ip, internet }
