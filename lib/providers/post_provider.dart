@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:faker/faker.dart';
@@ -17,6 +18,9 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
   List<Post_>? _posts;
+  Dio dio;
+
+  PostProvider() : dio = Dio();
 
   List<Post_>? get postData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
@@ -66,14 +70,19 @@ class PostProvider with ChangeNotifier {
 
   Future<List<String>?> getPostRelatedTo() async {
     try {
-      var response = await Dio().get('$getHostName()$postRelatedTo');
+      var response = await dio.get(
+        '${getHostName()}$postRelatedTo',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
       int? statusCode = response.statusCode;
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
-      return response.data['options'];
-    } catch (Error) {
-      print(Error);
+      return response.data['options'].cast<String>();
+    } catch (error) {
+      print(error);
       return null;
     }
   }
@@ -107,7 +116,8 @@ class PostProvider with ChangeNotifier {
           // set content-length
         }),
       );
-      if (response.statusCode! >= 400) {
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
       return true;

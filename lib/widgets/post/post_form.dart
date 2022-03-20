@@ -11,6 +11,7 @@ import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'post_type/post_dependent_widgets/form_card_poll_post.dart';
 import 'post_type/post_dependent_widgets/form_card_request_post.dart';
 
@@ -54,8 +55,8 @@ class _PostFormState extends State<PostForm> {
     requestFormKey = GlobalKey<FormBuilderState>();
     pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
-    relatedToOptionList = getRelatedToOptions();
-    getNGOOptions();
+    // getRelatedToOptions();
+    // getNGOOptions();
   }
 
   @override
@@ -69,12 +70,18 @@ class _PostFormState extends State<PostForm> {
         postTypeIndex = type;
       });
 
-  List<String> getRelatedToOptions() => faker.lorem.words(40);
+  Future<void> getRelatedToOptions() async {
+    print('wow');
+    var options = await Provider.of<PostProvider>(context, listen: false)
+        .getPostRelatedTo();
+    print(options);
+    relatedToOptionList = options ?? [];
+  }
 
   Future<void> getNGOOptions() async {
     var ngosData = Provider.of<NGOProvider>(context).ngosData;
     if (ngosData == null) {
-      Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
+      await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
     }
     ngoOptionList = ngosData ?? [];
   }
@@ -342,40 +349,66 @@ class _PostFormState extends State<PostForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Post a Post'),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 15),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              superPostFields(),
-              const SizedBox(
-                height: 10,
+    return FutureBuilder(
+      future: Future.wait(<Future>[
+        Provider.of<PostProvider>(context, listen: false).getPostRelatedTo(),
+        Provider.of<NGOProvider>(context, listen: false).fetchNGOs(),
+      ]),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LinearProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          showSnackBar(
+              context: context,
+              message: 'Something went wrong!',
+              errorSnackBar: true);
+          Navigator.of(context).pop();
+        }
+        print('----------------------------');
+        print(snapshot.data[0]);
+        print('----------------------------');
+        print(snapshot.data[1]);
+        print('----------------------------');
+
+        relatedToOptionList = snapshot.data[0] ?? [];
+        ngoOptionList = snapshot.data[1] ?? [];
+        return Scaffold(
+          appBar: const CustomAppBar(title: 'Post a Post'),
+          body: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 15),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  superPostFields(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  fieldsPerPostType(),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
               ),
-              fieldsPerPostType(),
-              const SizedBox(
-                height: 10,
+            ),
+          ),
+          bottomNavigationBar: Container(
+            margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            color: Theme.of(context).colorScheme.surface,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  buttonsPerPostType(),
+                  const Spacer(),
+                  postButton(),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        color: Theme.of(context).colorScheme.surface,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              buttonsPerPostType(),
-              const Spacer(),
-              postButton(),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
