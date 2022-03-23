@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:sasae_flutter_app/widgets/ngo/custom_filter_chip.dart';
 
 class SearchFilterBar extends StatefulWidget {
   const SearchFilterBar({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class SearchFilterBar extends StatefulWidget {
 
 class _SearchFilterBarState extends State<SearchFilterBar> {
   final TextEditingController _searchTEC;
-  final List<String> _selectedChips;
+  List<String> _selectedChips;
 
   _SearchFilterBarState()
       : _searchTEC = TextEditingController(),
@@ -30,34 +30,32 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     showModalSheet(
       ctx: context,
       children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
             'Filter by Field of Work',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            style: Theme.of(context).textTheme.headline6,
           ),
         ),
         Container(
           constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.4),
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                spacing: 10,
-                children: provider.fieldOfWork
-                    .map((e) => CustomFilterChip(
-                          chipLabel: e,
-                          selectionList: _selectedChips,
-                        ))
-                    .toList()
-                  ..sort((a, b) => a.chipLabel.compareTo(b.chipLabel)),
+            child: FormBuilderFilterChip(
+              name: 'filter_by_field_of_-work',
+              onChanged: (value) => _selectedChips = value!.cast<String>(),
+              options: provider.fieldOfWork
+                  .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+                  .toList()
+                ..sort((a, b) => a.value.compareTo(b.value)),
+              spacing: 10,
+              runSpacing: -5,
+              selectedColor: Theme.of(context).colorScheme.primaryContainer,
+              labelStyle: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
+              alignment: WrapAlignment.center,
             ),
           ),
         ),

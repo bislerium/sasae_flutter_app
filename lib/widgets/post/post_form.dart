@@ -1,4 +1,3 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -33,8 +32,9 @@ class _PostFormState extends State<PostForm> {
         isPostedAnonymous = false,
         postTypeIndex = postType.normalPost;
 
-  late List<String> relatedToOptionList;
-  late List<NGO_> ngoOptionList;
+  late Future<List<String>?> relatedToOptionList;
+  late Future<List<NGO_>?> ngoOptionList;
+
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
   late final GlobalKey<FormBuilderState> pollFormKey;
@@ -55,8 +55,8 @@ class _PostFormState extends State<PostForm> {
     requestFormKey = GlobalKey<FormBuilderState>();
     pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
-    // getRelatedToOptions();
-    // getNGOOptions();
+    relatedToOptionList = _getRelatedToOptions();
+    ngoOptionList = _getNGOOptions();
   }
 
   @override
@@ -66,27 +66,21 @@ class _PostFormState extends State<PostForm> {
     super.dispose();
   }
 
+  Future<List<String>?> _getRelatedToOptions() async {
+    return await Provider.of<PostProvider>(context, listen: false)
+        .getPostRelatedTo();
+  }
+
+  Future<List<NGO_>?> _getNGOOptions() async {
+    await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
+    return Provider.of<NGOProvider>(context).ngosData;
+  }
+
   void setPostTypeIndex(postType type) => setState(() {
         postTypeIndex = type;
       });
 
-  Future<void> getRelatedToOptions() async {
-    print('wow');
-    var options = await Provider.of<PostProvider>(context, listen: false)
-        .getPostRelatedTo();
-    print(options);
-    relatedToOptionList = options ?? [];
-  }
-
-  Future<void> getNGOOptions() async {
-    var ngosData = Provider.of<NGOProvider>(context).ngosData;
-    if (ngosData == null) {
-      await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
-    }
-    ngoOptionList = ngosData ?? [];
-  }
-
-  Widget pokeNGOField() => ChipsInput(
+  Widget pokeNGOField({required List<NGO_> list}) => ChipsInput(
         key: _chipKey,
         decoration: const InputDecoration(labelText: 'Poke NGO'),
         chipBuilder: (context, state, data) {
@@ -106,9 +100,9 @@ class _PostFormState extends State<PostForm> {
         findSuggestions: (String query) {
           List<NGO_> tempList = [];
           if (pokedNGO == null || pokedNGO!.isEmpty) {
-            tempList = ngoOptionList;
+            tempList = list;
           } else {
-            tempList = ngoOptionList
+            tempList = list
                 .where((element) => !pokedNGO!.contains(element.ngoID))
                 .toList();
           }
@@ -132,13 +126,13 @@ class _PostFormState extends State<PostForm> {
         inputType: TextInputType.name,
       );
 
-  Widget relatedToField() => FormBuilderFilterChip(
+  Widget relatedToField({required List<String> list}) => FormBuilderFilterChip(
       name: 'filter_chip',
       maxChips: 5,
       decoration: const InputDecoration(
           labelText: 'Related to', hintText: 'What\'s your post related to?'),
       onSaved: (value) => relatedto = value!.cast<String>(),
-      options: relatedToOptionList
+      options: list
           .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
           .toList(),
       spacing: 10,
@@ -212,14 +206,16 @@ class _PostFormState extends State<PostForm> {
     );
   }
 
-  Widget superPostFields() => CustomCard(
+  Widget superPostFields(
+          {required List<NGO_> ngoList, required List<String> relatedList}) =>
+      CustomCard(
         child: FormBuilder(
           key: superPostKey,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
               children: [
-                relatedToField(),
+                relatedToField(list: relatedList),
                 const SizedBox(
                   height: 10,
                 ),
@@ -227,7 +223,7 @@ class _PostFormState extends State<PostForm> {
                 const SizedBox(
                   height: 10,
                 ),
-                pokeNGOField(),
+                pokeNGOField(list: ngoList),
                 const SizedBox(
                   height: 10,
                 ),
@@ -351,18 +347,20 @@ class _PostFormState extends State<PostForm> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Future.wait(<Future>[
-        Provider.of<PostProvider>(context, listen: false).getPostRelatedTo(),
-        Provider.of<NGOProvider>(context, listen: false).fetchNGOs(),
+        ngoOptionList,
+        relatedToOptionList,
       ]),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LinearProgressIndicator();
         }
+        print("Hello");
         if (snapshot.hasError) {
           showSnackBar(
-              context: context,
-              message: 'Something went wrong!',
-              errorSnackBar: true);
+            context: context,
+            message: 'Something went wrong!',
+            errorSnackBar: true,
+          );
           Navigator.of(context).pop();
         }
         print('----------------------------');
@@ -380,7 +378,10 @@ class _PostFormState extends State<PostForm> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  superPostFields(),
+                  superPostFields(
+                    ngoList: snapshot.data[0],
+                    relatedList: snapshot.data[1],
+                  ),
                   const SizedBox(
                     height: 10,
                   ),
