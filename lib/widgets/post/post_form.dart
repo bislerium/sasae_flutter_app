@@ -26,7 +26,7 @@ class PostForm extends StatefulWidget {
 class _PostFormState extends State<PostForm> {
   _PostFormState()
       : pollItems = [],
-        descriptionTEC = TextEditingController(),
+        // descriptionTEC = TextEditingController(),
         pollDuration = TextEditingController(),
         relatedto = [],
         isPostedAnonymous = false,
@@ -38,8 +38,9 @@ class _PostFormState extends State<PostForm> {
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
   late final GlobalKey<FormBuilderState> pollFormKey;
-  late final GlobalKey<ChipsInputState> _chipKey;
-  final TextEditingController descriptionTEC;
+  static final GlobalKey<ChipsInputState> _chipKey =
+      GlobalKey<ChipsInputState>();
+  static final TextEditingController descriptionTEC = TextEditingController();
   final TextEditingController pollDuration;
   final List<String> pollItems;
 
@@ -54,7 +55,7 @@ class _PostFormState extends State<PostForm> {
     superPostKey = GlobalKey<FormBuilderState>();
     requestFormKey = GlobalKey<FormBuilderState>();
     pollFormKey = GlobalKey<FormBuilderState>();
-    _chipKey = GlobalKey<ChipsInputState>();
+    // _chipKey = GlobalKey<ChipsInputState>();
     relatedToOptionList = _getRelatedToOptions();
     ngoOptionList = _getNGOOptions();
   }
@@ -73,7 +74,7 @@ class _PostFormState extends State<PostForm> {
 
   Future<List<NGO_>?> _getNGOOptions() async {
     await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
-    return Provider.of<NGOProvider>(context).ngosData;
+    return Provider.of<NGOProvider>(context, listen: false).ngosData;
   }
 
   void setPostTypeIndex(postType type) => setState(() {
@@ -354,7 +355,6 @@ class _PostFormState extends State<PostForm> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const LinearProgressIndicator();
         }
-        print("Hello");
         if (snapshot.hasError) {
           showSnackBar(
             context: context,
@@ -369,8 +369,8 @@ class _PostFormState extends State<PostForm> {
         print(snapshot.data[1]);
         print('----------------------------');
 
-        relatedToOptionList = snapshot.data[0] ?? [];
-        ngoOptionList = snapshot.data[1] ?? [];
+        // relatedToOptionList = snapshot.data[0] ?? [];
+        // ngoOptionList = snapshot.data[1] ?? [];
         return Scaffold(
           appBar: const CustomAppBar(title: 'Post a Post'),
           body: Container(

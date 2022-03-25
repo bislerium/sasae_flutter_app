@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:dio/dio.dart';
-import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
@@ -25,15 +23,14 @@ class PostProvider with ChangeNotifier {
   List<Post_>? get postData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  void _randPosts() {
+  List<Post_> _randPosts() {
     var random = Random();
     int length = random.nextInt(100 - 20) + 20;
-    _posts = List.generate(
+    return List.generate(
       length,
       (index) {
         return Post_(
           id: index,
-          postURL: faker.internet.httpsUrl(),
           relatedTo: List.generate(
             random.nextInt(8 - 1) + 1,
             (index) => faker.lorem.word(),
@@ -54,14 +51,38 @@ class PostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchPosts({bool isDemo = true}) async {
+  Future<void> intiFetchPosts({bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    if (isDemo) _randPosts();
-    notifyListeners();
+    if (isDemo) {
+      _posts = _randPosts();
+    } else {
+      _posts = await fetchPosts();
+    }
+  }
+
+  Future<List<Post_>?> fetchPosts() async {
+    try {
+      var response = await dio.get(
+        '${getHostName()}$posts',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      var body = response.data;
+      return (body['results'] as List)
+          .map((element) => Post_.fromAPIResponse(element))
+          .toList();
+    } catch (error) {
+      return null;
+    }
   }
 
   Future<void> refreshPosts() async {
-    await fetchPosts();
+    await intiFetchPosts();
   }
 
   Future<bool> report({required int postID}) async {

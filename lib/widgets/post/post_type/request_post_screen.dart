@@ -101,7 +101,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                               ),
                               if (postP.requestPostData!.isAnonymous) ...[
                                 PostAuthorCard(
-                                  author: postP.requestPostData!.author,
+                                  author: postP.requestPostData!.author!,
                                 ),
                                 const SizedBox(
                                   height: 10,

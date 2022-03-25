@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 // ignore: camel_case_types
 class Post_ {
   final int id;
-  final String postURL;
   final List<String> relatedTo;
   final String postContent;
   final DateTime postedOn;
@@ -15,7 +15,6 @@ class Post_ {
 
   Post_({
     required this.id,
-    required this.postURL,
     required this.relatedTo,
     required this.postContent,
     required this.postedOn,
@@ -26,7 +25,6 @@ class Post_ {
 
   Post_ copyWith({
     int? id,
-    String? postURL,
     List<String>? relatedTo,
     String? postContent,
     DateTime? postedOn,
@@ -36,7 +34,6 @@ class Post_ {
   }) {
     return Post_(
       id: id ?? this.id,
-      postURL: postURL ?? this.postURL,
       relatedTo: relatedTo ?? this.relatedTo,
       postContent: postContent ?? this.postContent,
       postedOn: postedOn ?? this.postedOn,
@@ -49,7 +46,6 @@ class Post_ {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'postURL': postURL,
       'relatedTo': relatedTo,
       'postContent': postContent,
       'postedOn': postedOn.millisecondsSinceEpoch,
@@ -59,10 +55,21 @@ class Post_ {
     };
   }
 
+  factory Post_.fromAPIResponse(Map<String, dynamic> map) {
+    return Post_(
+      id: map['id']?.toInt() ?? 0,
+      relatedTo: List<String>.from(map['related_to']),
+      postContent: map['post_content'] ?? '',
+      postedOn: Jiffy(map['created_on'], 'yyyy-MM-dd').dateTime,
+      postType: map['post_type'] ?? '',
+      isPostedAnonymously: map['is_anonymous'] ?? false,
+      isPokedToNGO: map['is_ngo_poked'] ?? false,
+    );
+  }
+
   factory Post_.fromMap(Map<String, dynamic> map) {
     return Post_(
       id: map['id']?.toInt() ?? 0,
-      postURL: map['postURL'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
       postContent: map['postContent'] ?? '',
       postedOn: DateTime.fromMillisecondsSinceEpoch(map['postedOn']),
@@ -78,7 +85,7 @@ class Post_ {
 
   @override
   String toString() {
-    return 'Post(id: $id, postURL: $postURL, relatedTo: $relatedTo, postContent: $postContent, postedOn: $postedOn, postType: $postType, isPostedAnonymously: $isPostedAnonymously, isPokedToNGO: $isPokedToNGO)';
+    return 'Post_(id: $id, relatedTo: $relatedTo, postContent: $postContent, postedOn: $postedOn, postType: $postType, isPostedAnonymously: $isPostedAnonymously, isPokedToNGO: $isPokedToNGO)';
   }
 
   @override
@@ -87,7 +94,6 @@ class Post_ {
 
     return other is Post_ &&
         other.id == id &&
-        other.postURL == postURL &&
         listEquals(other.relatedTo, relatedTo) &&
         other.postContent == postContent &&
         other.postedOn == postedOn &&
@@ -99,7 +105,6 @@ class Post_ {
   @override
   int get hashCode {
     return id.hashCode ^
-        postURL.hashCode ^
         relatedTo.hashCode ^
         postContent.hashCode ^
         postedOn.hashCode ^

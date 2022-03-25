@@ -2,7 +2,7 @@ import './ngo__.dart';
 
 abstract class AbstractPost {
   late final int id;
-  late final String author;
+  late final String? author;
   late final List<String> relatedTo;
   late final String description;
   late final DateTime createdOn;

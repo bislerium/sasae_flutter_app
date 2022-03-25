@@ -30,7 +30,8 @@ class _PostScreenState extends State<PostScreen>
     super.build(context);
     return Scaffold(
       body: FutureBuilder(
-        future: Provider.of<PostProvider>(context, listen: false).fetchPosts(),
+        future:
+            Provider.of<PostProvider>(context, listen: false).intiFetchPosts(),
         builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Column(

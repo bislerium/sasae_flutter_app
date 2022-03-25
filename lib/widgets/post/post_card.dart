@@ -21,14 +21,14 @@ class PostCard extends StatelessWidget {
         onTap: () {
           late String routeName;
           switch (post.postType) {
-            case 'Normal Post':
+            case 'Normal':
               routeName = NormalPostScreen.routeName;
               break;
-            case 'Poll Post':
+            case 'Poll':
               routeName = PollPostScreen.routeName;
               break;
-            case 'Petition Request Post':
-            case 'Join Request Post':
+            case 'Petition Request':
+            case 'Join Request':
               routeName = RequestPostScreen.routeName;
               break;
           }
@@ -66,15 +66,15 @@ class PostCard extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              Padding(
+              Container(
                 padding: const EdgeInsets.symmetric(vertical: 6),
+                width: MediaQuery.of(context).size.width - 20,
                 child: Text(
                   post.postContent,
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),
                   maxLines: 5,
-                  // textAlign: TextAlign.justify,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

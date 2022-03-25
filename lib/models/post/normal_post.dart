@@ -14,13 +14,13 @@ class NormalPost implements AbstractPost {
   final bool downVoted;
 
   @override
-  String author;
-
-  @override
-  String description;
+  String? author;
 
   @override
   DateTime createdOn;
+
+  @override
+  String description;
 
   @override
   int id;
@@ -42,9 +42,9 @@ class NormalPost implements AbstractPost {
     required this.downVote,
     required this.upVoted,
     required this.downVoted,
-    required this.author,
-    required this.description,
+    this.author,
     required this.createdOn,
+    required this.description,
     required this.id,
     required this.isAnonymous,
     required this.pokedNGO,
@@ -59,8 +59,8 @@ class NormalPost implements AbstractPost {
     bool? upVoted,
     bool? downVoted,
     String? author,
-    String? content,
     DateTime? createdOn,
+    String? description,
     int? id,
     bool? isAnonymous,
     List<NGO__>? pokedNGO,
@@ -74,8 +74,8 @@ class NormalPost implements AbstractPost {
       upVoted: upVoted ?? this.upVoted,
       downVoted: downVoted ?? this.downVoted,
       author: author ?? this.author,
-      description: content ?? this.description,
       createdOn: createdOn ?? this.createdOn,
+      description: description ?? this.description,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
       pokedNGO: pokedNGO ?? this.pokedNGO,
@@ -92,8 +92,8 @@ class NormalPost implements AbstractPost {
       'upVoted': upVoted,
       'downVoted': downVoted,
       'author': author,
-      'content': description,
       'createdOn': createdOn.millisecondsSinceEpoch,
+      'description': description,
       'id': id,
       'isAnonymous': isAnonymous,
       'pokedNGO': pokedNGO.map((x) => x.toMap()).toList(),
@@ -109,9 +109,9 @@ class NormalPost implements AbstractPost {
       downVote: map['downVote']?.toInt() ?? 0,
       upVoted: map['upVoted'] ?? false,
       downVoted: map['downVoted'] ?? false,
-      author: map['author'] ?? '',
-      description: map['content'] ?? '',
+      author: map['author'],
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
+      description: map['description'] ?? '',
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['isAnonymous'] ?? false,
       pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
@@ -127,7 +127,7 @@ class NormalPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'NormalPost(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, content: $description, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'NormalPost(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, createdOn: $createdOn, description: $description, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -141,8 +141,8 @@ class NormalPost implements AbstractPost {
         other.upVoted == upVoted &&
         other.downVoted == downVoted &&
         other.author == author &&
-        other.description == description &&
         other.createdOn == createdOn &&
+        other.description == description &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
         listEquals(other.pokedNGO, pokedNGO) &&
@@ -158,8 +158,8 @@ class NormalPost implements AbstractPost {
         upVoted.hashCode ^
         downVoted.hashCode ^
         author.hashCode ^
-        description.hashCode ^
         createdOn.hashCode ^
+        description.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
         pokedNGO.hashCode ^

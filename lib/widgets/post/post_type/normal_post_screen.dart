@@ -101,7 +101,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                                   ),
                                   if (postP.normalPostData!.isAnonymous) ...[
                                     PostAuthorCard(
-                                      author: postP.normalPostData!.author,
+                                      author: postP.normalPostData!.author!,
                                     ),
                                     const SizedBox(
                                       height: 10,

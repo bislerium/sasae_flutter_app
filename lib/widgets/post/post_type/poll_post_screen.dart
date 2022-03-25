@@ -93,7 +93,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                               ),
                               if (postP.pollPostData!.isAnonymous) ...[
                                 PostAuthorCard(
-                                  author: postP.pollPostData!.author,
+                                  author: postP.pollPostData!.author!,
                                 ),
                                 const SizedBox(
                                   height: 10,
