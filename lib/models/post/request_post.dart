@@ -18,10 +18,10 @@ class RequestPost implements AbstractPost {
   String? author;
 
   @override
-  DateTime createdOn;
+  int? authorID;
 
   @override
-  String description;
+  DateTime createdOn;
 
   @override
   int id;
@@ -30,7 +30,13 @@ class RequestPost implements AbstractPost {
   bool isAnonymous;
 
   @override
+  DateTime? modifiedOn;
+
+  @override
   List<NGO__> pokedNGO;
+
+  @override
+  String postContent;
 
   @override
   String postType;
@@ -46,11 +52,13 @@ class RequestPost implements AbstractPost {
     required this.requestType,
     required this.isParticipated,
     this.author,
+    this.authorID,
     required this.createdOn,
-    required this.description,
     required this.id,
     required this.isAnonymous,
+    this.modifiedOn,
     required this.pokedNGO,
+    required this.postContent,
     required this.postType,
     required this.relatedTo,
   });
@@ -64,11 +72,13 @@ class RequestPost implements AbstractPost {
     String? requestType,
     bool? isParticipated,
     String? author,
+    int? authorID,
     DateTime? createdOn,
-    String? description,
     int? id,
     bool? isAnonymous,
+    DateTime? modifiedOn,
     List<NGO__>? pokedNGO,
+    String? postContent,
     String? postType,
     List<String>? relatedTo,
   }) {
@@ -81,11 +91,13 @@ class RequestPost implements AbstractPost {
       requestType: requestType ?? this.requestType,
       isParticipated: isParticipated ?? this.isParticipated,
       author: author ?? this.author,
+      authorID: authorID ?? this.authorID,
       createdOn: createdOn ?? this.createdOn,
-      description: description ?? this.description,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      modifiedOn: modifiedOn ?? this.modifiedOn,
       pokedNGO: pokedNGO ?? this.pokedNGO,
+      postContent: postContent ?? this.postContent,
       postType: postType ?? this.postType,
       relatedTo: relatedTo ?? this.relatedTo,
     );
@@ -101,11 +113,13 @@ class RequestPost implements AbstractPost {
       'requestType': requestType,
       'isParticipated': isParticipated,
       'author': author,
+      'authorID': authorID,
       'createdOn': createdOn.millisecondsSinceEpoch,
-      'description': description,
       'id': id,
       'isAnonymous': isAnonymous,
+      'modifiedOn': modifiedOn?.millisecondsSinceEpoch,
       'pokedNGO': pokedNGO.map((x) => x.toMap()).toList(),
+      'postContent': postContent,
       'postType': postType,
       'relatedTo': relatedTo,
     };
@@ -121,11 +135,15 @@ class RequestPost implements AbstractPost {
       requestType: map['requestType'] ?? '',
       isParticipated: map['isParticipated'] ?? false,
       author: map['author'],
+      authorID: map['authorID']?.toInt(),
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
-      description: map['description'] ?? '',
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['isAnonymous'] ?? false,
+      modifiedOn: map['modifiedOn'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
+          : null,
       pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
+      postContent: map['postContent'] ?? '',
       postType: map['postType'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
     );
@@ -138,7 +156,7 @@ class RequestPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'RequestPost(min: $min, target: $target, max: $max, numParticipation: $numParticipation, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, createdOn: $createdOn, description: $description, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'RequestPost(min: $min, target: $target, max: $max, numParticipation: $numParticipation, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -154,11 +172,13 @@ class RequestPost implements AbstractPost {
         other.requestType == requestType &&
         other.isParticipated == isParticipated &&
         other.author == author &&
+        other.authorID == authorID &&
         other.createdOn == createdOn &&
-        other.description == description &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
+        other.modifiedOn == modifiedOn &&
         listEquals(other.pokedNGO, pokedNGO) &&
+        other.postContent == postContent &&
         other.postType == postType &&
         listEquals(other.relatedTo, relatedTo);
   }
@@ -173,11 +193,13 @@ class RequestPost implements AbstractPost {
         requestType.hashCode ^
         isParticipated.hashCode ^
         author.hashCode ^
+        authorID.hashCode ^
         createdOn.hashCode ^
-        description.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
+        modifiedOn.hashCode ^
         pokedNGO.hashCode ^
+        postContent.hashCode ^
         postType.hashCode ^
         relatedTo.hashCode;
   }

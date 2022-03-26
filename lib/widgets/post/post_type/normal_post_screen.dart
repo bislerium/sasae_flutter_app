@@ -27,6 +27,7 @@ class NormalPostScreen extends StatefulWidget {
 class _NormalPostScreenState extends State<NormalPostScreen> {
   ScrollController scrollController;
   late NormalPostProvider _provider;
+  late Future<void> fetchNormalPost;
 
   _NormalPostScreenState() : scrollController = ScrollController();
 
@@ -34,12 +35,17 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
   void initState() {
     super.initState();
     _provider = Provider.of<NormalPostProvider>(context, listen: false);
+    fetchNormalPost = initFetch();
+  }
+
+  Future<void> initFetch() async {
+    await _provider.initFetchNormalPost(postID: widget.postID);
   }
 
   @override
   void dispose() {
     scrollController.dispose();
-    _provider.nullifyNormalPost;
+    _provider.nullifyNormalPost();
     super.dispose();
   }
 
@@ -50,7 +56,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
         title: 'View Normal Post',
       ),
       body: FutureBuilder(
-        future: _provider.fetchNormalPost(postID: widget.postID),
+        future: fetchNormalPost,
         builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Column(
@@ -78,7 +84,8 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                                   if (postP
                                       .normalPostData!.pokedNGO.isNotEmpty) ...[
                                     PokedNGOCard(
-                                        list: postP.normalPostData!.pokedNGO),
+                                      list: postP.normalPostData!.pokedNGO,
+                                    ),
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -94,12 +101,12 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                                     ),
                                   ],
                                   PostContentCard(
-                                    content: postP.normalPostData!.description,
+                                    content: postP.normalPostData!.postContent,
                                   ),
                                   const SizedBox(
                                     height: 10,
                                   ),
-                                  if (postP.normalPostData!.isAnonymous) ...[
+                                  if (!postP.normalPostData!.isAnonymous) ...[
                                     PostAuthorCard(
                                       author: postP.normalPostData!.author!,
                                     ),
@@ -126,8 +133,8 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
             : VotingBar(
                 key: ValueKey('normalPostImage${postP.normalPostData!.id}'),
                 postID: postP.normalPostData!.id,
-                upvoteCount: postP.normalPostData!.upVote,
-                downvoteCount: postP.normalPostData!.downVote,
+                upvoteCount: postP.normalPostData!.upVote.length,
+                downvoteCount: postP.normalPostData!.downVote.length,
                 isUpvoted: postP.normalPostData!.upVoted,
                 isDownvoted: postP.normalPostData!.downVoted,
                 scrollController: scrollController,

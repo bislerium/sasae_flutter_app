@@ -48,7 +48,9 @@ class _NGOScreenState extends State<NGOScreen>
                                   : Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 15.0),
-                                      child: NGOList(ngoList: ngoP.ngosData!)),
+                                      child: NGOList(
+                                        ngoList: ngoP.ngosData!,
+                                      )),
                         ),
                       ),
                     ),

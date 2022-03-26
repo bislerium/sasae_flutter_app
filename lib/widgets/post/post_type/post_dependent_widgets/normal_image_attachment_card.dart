@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 
 class NormalImageAttachmentCard extends StatelessWidget {
   final String imageURL;
@@ -24,19 +25,12 @@ class NormalImageAttachmentCard extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: AspectRatio(
-                aspectRatio: 1 / 1,
-                child: Image.network(
-                  imageURL,
-                  fit: BoxFit.cover,
-                  loadingBuilder: (context, child, loadingProgress) =>
-                      loadingProgress == null
-                          ? child
-                          : const LinearProgressIndicator(),
-                ),
-              ),
+            CustomImage(
+              imageURL: imageURL,
+              onTapViewImage: true,
+              aspectRatio: 1 / 1,
+              radius: 10,
+              includeHero: true,
             ),
           ],
         ),

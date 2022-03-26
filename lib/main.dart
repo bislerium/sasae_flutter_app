@@ -170,8 +170,10 @@ List<SingleChildWidget> _providers() => [
         create: (context) => PostProvider(),
         update: (context, authP, profileP) => PostProvider()..setAuthP = authP,
       ),
-      ChangeNotifierProvider(
+      ChangeNotifierProxyProvider<AuthProvider, NormalPostProvider>(
         create: (context) => NormalPostProvider(),
+        update: (context, authP, profileP) =>
+            NormalPostProvider()..setAuthP = authP,
       ),
       ChangeNotifierProvider(
         create: (context) => PollPostProvider(),

@@ -15,10 +15,10 @@ class PollPost implements AbstractPost {
   String? author;
 
   @override
-  DateTime createdOn;
+  int? authorID;
 
   @override
-  String description;
+  DateTime createdOn;
 
   @override
   int id;
@@ -27,7 +27,13 @@ class PollPost implements AbstractPost {
   bool isAnonymous;
 
   @override
+  DateTime? modifiedOn;
+
+  @override
   List<NGO__> pokedNGO;
+
+  @override
+  String postContent;
 
   @override
   String postType;
@@ -39,11 +45,13 @@ class PollPost implements AbstractPost {
     this.endsOn,
     this.choice,
     this.author,
+    this.authorID,
     required this.createdOn,
-    required this.description,
     required this.id,
     required this.isAnonymous,
+    this.modifiedOn,
     required this.pokedNGO,
+    required this.postContent,
     required this.postType,
     required this.relatedTo,
   });
@@ -53,11 +61,13 @@ class PollPost implements AbstractPost {
     DateTime? endsOn,
     String? choice,
     String? author,
+    int? authorID,
     DateTime? createdOn,
-    String? description,
     int? id,
     bool? isAnonymous,
+    DateTime? modifiedOn,
     List<NGO__>? pokedNGO,
+    String? postContent,
     String? postType,
     List<String>? relatedTo,
   }) {
@@ -66,11 +76,13 @@ class PollPost implements AbstractPost {
       endsOn: endsOn ?? this.endsOn,
       choice: choice ?? this.choice,
       author: author ?? this.author,
+      authorID: authorID ?? this.authorID,
       createdOn: createdOn ?? this.createdOn,
-      description: description ?? this.description,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      modifiedOn: modifiedOn ?? this.modifiedOn,
       pokedNGO: pokedNGO ?? this.pokedNGO,
+      postContent: postContent ?? this.postContent,
       postType: postType ?? this.postType,
       relatedTo: relatedTo ?? this.relatedTo,
     );
@@ -82,11 +94,13 @@ class PollPost implements AbstractPost {
       'endsOn': endsOn?.millisecondsSinceEpoch,
       'choice': choice,
       'author': author,
+      'authorID': authorID,
       'createdOn': createdOn.millisecondsSinceEpoch,
-      'description': description,
       'id': id,
       'isAnonymous': isAnonymous,
+      'modifiedOn': modifiedOn?.millisecondsSinceEpoch,
       'pokedNGO': pokedNGO.map((x) => x.toMap()).toList(),
+      'postContent': postContent,
       'postType': postType,
       'relatedTo': relatedTo,
     };
@@ -101,11 +115,15 @@ class PollPost implements AbstractPost {
           : null,
       choice: map['choice'],
       author: map['author'],
+      authorID: map['authorID']?.toInt(),
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
-      description: map['description'] ?? '',
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['isAnonymous'] ?? false,
+      modifiedOn: map['modifiedOn'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
+          : null,
       pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
+      postContent: map['postContent'] ?? '',
       postType: map['postType'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
     );
@@ -118,7 +136,7 @@ class PollPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'PollPost(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, createdOn: $createdOn, description: $description, id: $id, isAnonymous: $isAnonymous, pokedNGO: $pokedNGO, postType: $postType, relatedTo: $relatedTo)';
+    return 'PollPost(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -130,11 +148,13 @@ class PollPost implements AbstractPost {
         other.endsOn == endsOn &&
         other.choice == choice &&
         other.author == author &&
+        other.authorID == authorID &&
         other.createdOn == createdOn &&
-        other.description == description &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
+        other.modifiedOn == modifiedOn &&
         listEquals(other.pokedNGO, pokedNGO) &&
+        other.postContent == postContent &&
         other.postType == postType &&
         listEquals(other.relatedTo, relatedTo);
   }
@@ -145,11 +165,13 @@ class PollPost implements AbstractPost {
         endsOn.hashCode ^
         choice.hashCode ^
         author.hashCode ^
+        authorID.hashCode ^
         createdOn.hashCode ^
-        description.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
+        modifiedOn.hashCode ^
         pokedNGO.hashCode ^
+        postContent.hashCode ^
         postType.hashCode ^
         relatedTo.hashCode;
   }

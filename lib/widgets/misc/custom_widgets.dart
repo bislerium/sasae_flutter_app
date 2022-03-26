@@ -185,33 +185,3 @@ Widget getWrappedChips(
           )
           .toList(),
     );
-
-Widget getWrappedClickableChips(
-        {required BuildContext context, required List<NGO__> list}) =>
-    Wrap(
-      spacing: 8,
-      runSpacing: -5,
-      children: list
-          .map(
-            // ignore: non_constant_identifier_names
-            (ngo__) => ActionChip(
-              key: ValueKey(ngo__.id),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-              avatar: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  ngo__.orgPhoto,
-                ),
-              ),
-              label: Text(
-                ngo__.orgName,
-                style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                      color: Theme.of(context).colorScheme.onTertiaryContainer,
-                    ),
-              ),
-              backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
-              pressElevation: 2,
-              onPressed: () {},
-            ),
-          )
-          .toList(),
-    );

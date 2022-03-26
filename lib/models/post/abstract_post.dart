@@ -1,11 +1,13 @@
-import './ngo__.dart';
+import 'package:sasae_flutter_app/models/post/ngo__.dart';
 
 abstract class AbstractPost {
   late final int id;
   late final String? author;
+  late final int? authorID;
   late final List<String> relatedTo;
-  late final String description;
+  late final String postContent;
   late final DateTime createdOn;
+  late final DateTime? modifiedOn;
   late final bool isAnonymous;
   late final String postType;
   late final List<NGO__> pokedNGO;

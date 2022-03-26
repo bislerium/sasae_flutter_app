@@ -86,7 +86,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                                 height: 10,
                               ),
                               PostContentCard(
-                                content: postP.pollPostData!.description,
+                                content: postP.pollPostData!.postContent,
                               ),
                               const SizedBox(
                                 height: 10,

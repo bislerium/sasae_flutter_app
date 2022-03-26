@@ -152,7 +152,7 @@ class _VotingBarState extends State<VotingBar> {
       );
 
   Widget downvoteButton() => TextButton(
-        onPressed: () {
+        onPressed: () async {
           setState(() {
             downvote();
           });

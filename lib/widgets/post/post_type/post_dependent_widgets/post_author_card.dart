@@ -36,7 +36,7 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(
-                width: 10,
+                width: 20,
               ),
               Tooltip(
                 message:

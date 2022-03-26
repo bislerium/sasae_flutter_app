@@ -58,6 +58,7 @@ class PostProvider with ChangeNotifier {
     } else {
       _posts = await fetchPosts();
     }
+    notifyListeners();
   }
 
   Future<List<Post_>?> fetchPosts() async {
@@ -153,21 +154,28 @@ class PostProvider with ChangeNotifier {
 
 class NormalPostProvider with ChangeNotifier {
   NormalPost? _normalPost;
+  late AuthProvider _authP;
+  Dio dio;
 
+  NormalPostProvider() : dio = Dio();
+
+  set setAuthP(AuthProvider auth) => _authP = auth;
   NormalPost? get normalPostData => _normalPost;
 
-  void _randNormalPost() {
+  NormalPost _randNormalPost() {
     Random rand = Random();
     bool upvoted = faker.randomGenerator.boolean();
-    _normalPost = NormalPost(
+    return NormalPost(
       attachedImage: faker.randomGenerator.boolean()
           ? faker.image.image(random: true)
           : null,
-      upVote: faker.randomGenerator.integer(1500),
-      downVote: faker.randomGenerator.integer(1500),
+      upVote: faker.randomGenerator
+          .numbers(1500, faker.randomGenerator.integer(1500)),
+      downVote: faker.randomGenerator
+          .numbers(1500, faker.randomGenerator.integer(1500)),
       upVoted: upvoted,
       downVoted: upvoted ? false : faker.randomGenerator.boolean(),
-      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -176,7 +184,6 @@ class NormalPostProvider with ChangeNotifier {
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__(
                 id: faker.randomGenerator.integer(1000),
-                ngoURL: faker.internet.httpsUrl(),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),
@@ -189,15 +196,39 @@ class NormalPostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNormalPost(
-      {required int postID, bool isDemo = true}) async {
+  Future<void> initFetchNormalPost(
+      {required int postID, bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 1000));
-    if (isDemo) _randNormalPost();
+    if (isDemo) {
+      _normalPost = _randNormalPost();
+    } else {
+      _normalPost = await fetchNormalPost(postID: postID);
+    }
     notifyListeners();
   }
 
+  Future<NormalPost?> fetchNormalPost({required int postID}) async {
+    try {
+      var response = await dio.get(
+        '${getHostName()}$post$postID/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      var body = response.data;
+      return NormalPost.fromAPIResponse(body);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   Future<void> refreshNormalPost({required int postID}) async {
-    await fetchNormalPost(postID: postID);
+    await initFetchNormalPost(postID: postID);
   }
 
   void nullifyNormalPost() => _normalPost = null;
@@ -224,7 +255,7 @@ class PollPostProvider with ChangeNotifier {
         : (faker.randomGenerator
             .fromPattern(pollOptions.map((e) => e.option).toList()));
     _pollPost = PollPost(
-      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -233,7 +264,6 @@ class PollPostProvider with ChangeNotifier {
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__(
                 id: faker.randomGenerator.integer(1000),
-                ngoURL: faker.internet.httpsUrl(),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),
@@ -282,7 +312,7 @@ class RequestPostProvider with ChangeNotifier {
         : null;
     int numReaction = faker.randomGenerator.integer(max ?? (target * 2));
     _requestPost = RequestPost(
-      description: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
+      postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
@@ -291,7 +321,6 @@ class RequestPostProvider with ChangeNotifier {
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__(
                 id: faker.randomGenerator.integer(1000),
-                ngoURL: faker.internet.httpsUrl(),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),

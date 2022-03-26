@@ -94,7 +94,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                                 height: 10,
                               ),
                               PostContentCard(
-                                content: postP.requestPostData!.description,
+                                content: postP.requestPostData!.postContent,
                               ),
                               const SizedBox(
                                 height: 10,
