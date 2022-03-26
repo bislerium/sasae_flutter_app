@@ -131,7 +131,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
         builder: (context, postP, child) => postP.normalPostData == null
             ? const SizedBox.shrink()
             : VotingBar(
-                key: ValueKey('normalPostImage${postP.normalPostData!.id}'),
+                key: ObjectKey(postP.normalPostData),
                 postID: postP.normalPostData!.id,
                 upvoteCount: postP.normalPostData!.upVote.length,
                 downvoteCount: postP.normalPostData!.downVote.length,

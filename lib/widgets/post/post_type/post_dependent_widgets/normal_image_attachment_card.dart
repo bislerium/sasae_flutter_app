@@ -27,6 +27,7 @@ class NormalImageAttachmentCard extends StatelessWidget {
             ),
             CustomImage(
               imageURL: imageURL,
+              title: 'View Attached Image',
               onTapViewImage: true,
               aspectRatio: 1 / 1,
               radius: 10,

@@ -353,7 +353,12 @@ class _PostFormState extends State<PostForm> {
       ]),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LinearProgressIndicator();
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: const [
+              LinearProgressIndicator(),
+            ],
+          );
         }
         if (snapshot.hasError) {
           showSnackBar(

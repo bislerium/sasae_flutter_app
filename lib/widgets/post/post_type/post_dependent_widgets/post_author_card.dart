@@ -45,7 +45,7 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
                 verticalOffset: 30,
                 showDuration: const Duration(seconds: 2),
                 child: Text(
-                  'Reveal the author?',
+                  'Author?',
                   style: Theme.of(context).textTheme.subtitle1?.copyWith(
                         color: Theme.of(context).colorScheme.onSurface,
                       ),

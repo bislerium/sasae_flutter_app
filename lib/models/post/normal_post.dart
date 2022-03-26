@@ -7,6 +7,8 @@ import 'package:sasae_flutter_app/models/post/ngo__.dart';
 
 import 'abstract_post.dart';
 
+enum NormalPostReactionType { upVote, downVote }
+
 class NormalPost implements AbstractPost {
   final String? attachedImage;
   final List<int> upVote;

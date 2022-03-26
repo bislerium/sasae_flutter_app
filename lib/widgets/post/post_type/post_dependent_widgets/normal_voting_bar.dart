@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/post/normal_post.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class VotingBar extends StatefulWidget {
@@ -134,10 +137,18 @@ class _VotingBarState extends State<VotingBar> {
       );
 
   Widget upvoteButton() => TextButton(
-        onPressed: () {
-          setState(() {
-            upvote();
-          });
+        onPressed: () async {
+          bool success =
+              await Provider.of<NormalPostProvider>(context, listen: false)
+                  .toggleReaction(NormalPostReactionType.upVote);
+          if (success) {
+            setState(() => upvote());
+          } else {
+            showSnackBar(
+                context: context,
+                message: 'Something went wrong!',
+                errorSnackBar: true);
+          }
         },
         child: const Icon(
           Icons.arrow_upward_rounded,
@@ -153,9 +164,17 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget downvoteButton() => TextButton(
         onPressed: () async {
-          setState(() {
-            downvote();
-          });
+          bool success =
+              await Provider.of<NormalPostProvider>(context, listen: false)
+                  .toggleReaction(NormalPostReactionType.downVote);
+          if (success) {
+            setState(() => downvote());
+          } else {
+            showSnackBar(
+                context: context,
+                message: 'Something went wrong!',
+                errorSnackBar: true);
+          }
         },
         child: const Icon(
           Icons.arrow_downward_rounded,

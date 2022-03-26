@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
 import '../../../misc/custom_widgets.dart';
@@ -44,14 +46,29 @@ class PostTailCard extends StatelessWidget {
                 width: 140,
               ),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  showCustomDialog(
-                    context: context,
-                    title: 'Report',
-                    content: 'Are you Sure?',
-                    okFunc: () {},
-                  );
-                },
+                onPressed: () => showCustomDialog(
+                  context: context,
+                  title: 'Report',
+                  content: 'Are you Sure?',
+                  okFunc: () async {
+                    bool success =
+                        await Provider.of<PostProvider>(context, listen: false)
+                            .report(postID: postID);
+                    if (success) {
+                      showSnackBar(
+                        context: context,
+                        message: 'Reported Successfully!',
+                      );
+                    } else {
+                      showSnackBar(
+                        context: context,
+                        message: 'Unsuccessful Report, Something went wrong!',
+                        errorSnackBar: true,
+                      );
+                    }
+                    Navigator.of(context).pop();
+                  },
+                ),
                 icon: const Icon(Icons.report_outlined),
                 style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).colorScheme.error,

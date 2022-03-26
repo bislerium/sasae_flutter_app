@@ -87,7 +87,22 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<bool> report({required int postID}) async {
-    return true;
+    try {
+      var response = await dio.post(
+        '${getHostName()}$post$postID/report/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 
   Future<List<String>?> getPostRelatedTo() async {
@@ -215,11 +230,12 @@ class NormalPostProvider with ChangeNotifier {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
+      var body = response.data;
       int? statusCode = response.statusCode;
       if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
+        throw HttpException(body);
       }
-      var body = response.data;
+      print(body);
       return NormalPost.fromAPIResponse(body);
     } catch (error) {
       print(error);
@@ -229,6 +245,33 @@ class NormalPostProvider with ChangeNotifier {
 
   Future<void> refreshNormalPost({required int postID}) async {
     await initFetchNormalPost(postID: postID);
+  }
+
+  Future<bool> toggleReaction(NormalPostReactionType type) async {
+    try {
+      late String uri;
+      switch (type) {
+        case NormalPostReactionType.upVote:
+          uri = '${getHostName()}$post${_normalPost!.id}/upvote/';
+          break;
+        case NormalPostReactionType.downVote:
+          uri = '${getHostName()}$post${_normalPost!.id}/downvote/';
+      }
+      var response = await dio.post(
+        uri,
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 
   void nullifyNormalPost() => _normalPost = null;
