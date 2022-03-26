@@ -45,7 +45,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
         title: 'View Poll Post',
       ),
       body: FutureBuilder(
-        future: _provider.fetchPollPost(postID: widget.postID),
+        future: _provider.initFetchPollPost(postID: widget.postID),
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Column(
@@ -76,8 +76,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                                 ),
                               ],
                               PollCard(
-                                key: ValueKey(
-                                    'pollPolls${postP.pollPostData!.id}'),
+                                key: ObjectKey(postP.pollPostData),
                                 list: postP.pollPostData!.polls,
                                 choice: postP.pollPostData!.choice,
                                 endsOn: postP.pollPostData!.endsOn,
@@ -91,7 +90,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              if (postP.pollPostData!.isAnonymous) ...[
+                              if (!postP.pollPostData!.isAnonymous) ...[
                                 PostAuthorCard(
                                   author: postP.pollPostData!.author!,
                                 ),

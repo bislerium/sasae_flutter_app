@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 import 'package:sasae_flutter_app/models/post/abstract_post.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
@@ -9,7 +10,7 @@ class RequestPost implements AbstractPost {
   final int min;
   final int target;
   final int? max;
-  int numParticipation;
+  List<int> reaction;
   final DateTime endsOn;
   final String requestType;
   bool isParticipated;
@@ -43,11 +44,12 @@ class RequestPost implements AbstractPost {
 
   @override
   List<String> relatedTo;
+
   RequestPost({
     required this.min,
     required this.target,
     this.max,
-    required this.numParticipation,
+    required this.reaction,
     required this.endsOn,
     required this.requestType,
     required this.isParticipated,
@@ -67,7 +69,7 @@ class RequestPost implements AbstractPost {
     int? min,
     int? target,
     int? max,
-    int? numParticipation,
+    List<int>? reaction,
     DateTime? endsOn,
     String? requestType,
     bool? isParticipated,
@@ -86,7 +88,7 @@ class RequestPost implements AbstractPost {
       min: min ?? this.min,
       target: target ?? this.target,
       max: max ?? this.max,
-      numParticipation: numParticipation ?? this.numParticipation,
+      reaction: reaction ?? this.reaction,
       endsOn: endsOn ?? this.endsOn,
       requestType: requestType ?? this.requestType,
       isParticipated: isParticipated ?? this.isParticipated,
@@ -108,7 +110,7 @@ class RequestPost implements AbstractPost {
       'min': min,
       'target': target,
       'max': max,
-      'numParticipation': numParticipation,
+      'reaction': reaction,
       'endsOn': endsOn.millisecondsSinceEpoch,
       'requestType': requestType,
       'isParticipated': isParticipated,
@@ -125,12 +127,38 @@ class RequestPost implements AbstractPost {
     };
   }
 
+  factory RequestPost.fromAPIResponse(Map<String, dynamic> map) {
+    return RequestPost(
+      min: map['post_request']['min']?.toInt() ?? 0,
+      target: map['post_request']['target']?.toInt() ?? 0,
+      max: map['post_request']['max']?.toInt(),
+      reaction: List<int>.from(map['post_request']['reacted_by']),
+      endsOn: Jiffy(map['post_request']['ends_on'], "yyyy-MM-dd'T'HH:mm:ss")
+          .dateTime,
+      requestType: map['post_request']['request_type'] ?? '',
+      isParticipated: map['post_request']['is_participated'] ?? false,
+      author: map['author'],
+      authorID: map['author_id']?.toInt(),
+      createdOn: Jiffy(map['created_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
+      id: map['id']?.toInt() ?? 0,
+      isAnonymous: map['is_anonymous'] ?? false,
+      modifiedOn: map['modified_on'] != null
+          ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
+          : null,
+      pokedNGO: List<NGO__>.from(
+          map['poked_ngo']?.map((x) => NGO__.fromAPIResponse(x))),
+      postContent: map['post_content'] ?? '',
+      postType: map['post_type'] ?? '',
+      relatedTo: List<String>.from(map['related_to']),
+    );
+  }
+
   factory RequestPost.fromMap(Map<String, dynamic> map) {
     return RequestPost(
       min: map['min']?.toInt() ?? 0,
       target: map['target']?.toInt() ?? 0,
       max: map['max']?.toInt(),
-      numParticipation: map['numParticipation']?.toInt() ?? 0,
+      reaction: List<int>.from(map['reaction']),
       endsOn: DateTime.fromMillisecondsSinceEpoch(map['endsOn']),
       requestType: map['requestType'] ?? '',
       isParticipated: map['isParticipated'] ?? false,
@@ -156,7 +184,7 @@ class RequestPost implements AbstractPost {
 
   @override
   String toString() {
-    return 'RequestPost(min: $min, target: $target, max: $max, numParticipation: $numParticipation, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
+    return 'RequestPost(min: $min, target: $target, max: $max, reaction: $reaction, endsOn: $endsOn, requestType: $requestType, isParticipated: $isParticipated, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
@@ -167,7 +195,7 @@ class RequestPost implements AbstractPost {
         other.min == min &&
         other.target == target &&
         other.max == max &&
-        other.numParticipation == numParticipation &&
+        listEquals(other.reaction, reaction) &&
         other.endsOn == endsOn &&
         other.requestType == requestType &&
         other.isParticipated == isParticipated &&
@@ -188,7 +216,7 @@ class RequestPost implements AbstractPost {
     return min.hashCode ^
         target.hashCode ^
         max.hashCode ^
-        numParticipation.hashCode ^
+        reaction.hashCode ^
         endsOn.hashCode ^
         requestType.hashCode ^
         isParticipated.hashCode ^

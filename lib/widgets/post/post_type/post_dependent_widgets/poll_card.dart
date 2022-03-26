@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_bar_poll_list.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_bar_reveal_list.dart';
 
 class PollCard extends StatefulWidget {
   final List<PollOption> list;
-  final String? choice;
+  final int? choice;
   final DateTime? endsOn;
   const PollCard({Key? key, required this.list, this.choice, this.endsOn})
       : super(key: key);
@@ -17,7 +21,7 @@ class PollCard extends StatefulWidget {
 }
 
 class _PollCardState extends State<PollCard> {
-  String? _choice;
+  int? _choice;
 
   @override
   void initState() {
@@ -25,12 +29,23 @@ class _PollCardState extends State<PollCard> {
     _choice = widget.choice;
   }
 
-  Future<void> setChoice(String choice) async {
-    var search = widget.list.indexWhere((element) => element.option == choice);
-    setState(() {
-      widget.list[search].numReaction++;
-      _choice = choice;
-    });
+  Future<void> setChoice(int choice) async {
+    var option = widget.list.firstWhere((element) => element.id == choice);
+    bool success = await Provider.of<PollPostProvider>(context, listen: false)
+        .pollTheOption(optionID: choice);
+    if (success) {
+      option.reaction.add(
+          Provider.of<AuthProvider>(context, listen: false).auth!.profileID);
+      setState(() {
+        _choice = choice;
+      });
+    } else {
+      showSnackBar(
+        context: context,
+        message: 'Something went wrong!',
+        errorSnackBar: true,
+      );
+    }
   }
 
   @override
@@ -68,9 +83,9 @@ class _PollCardState extends State<PollCard> {
             ),
             if (_choice == null &&
                 (widget.endsOn == null ||
-                    DateTime.now().isAfter(widget.endsOn!)))
+                    DateTime.now().isBefore(widget.endsOn!)))
               PollBarPollList(
-                list: widget.list.map((e) => e.option).toList(),
+                list: widget.list,
                 handler: setChoice,
               )
             else

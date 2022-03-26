@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:jiffy/jiffy.dart';
 
 import 'package:sasae_flutter_app/models/post/abstract_post.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
@@ -9,7 +10,7 @@ import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 class PollPost implements AbstractPost {
   final List<PollOption> polls;
   final DateTime? endsOn;
-  final String? choice;
+  final int? choice;
 
   @override
   String? author;
@@ -40,6 +41,7 @@ class PollPost implements AbstractPost {
 
   @override
   List<String> relatedTo;
+
   PollPost({
     required this.polls,
     this.endsOn,
@@ -59,7 +61,7 @@ class PollPost implements AbstractPost {
   PollPost copyWith({
     List<PollOption>? polls,
     DateTime? endsOn,
-    String? choice,
+    int? choice,
     String? author,
     int? authorID,
     DateTime? createdOn,
@@ -106,6 +108,30 @@ class PollPost implements AbstractPost {
     };
   }
 
+  factory PollPost.fromAPIResponse(Map<String, dynamic> map) {
+    return PollPost(
+      polls: List<PollOption>.from(map['post_poll']['options']
+          ?.map((x) => PollOption.fromAPIResponse(x))),
+      endsOn: map['post_poll']['ends_on'] != null
+          ? Jiffy(map['post_poll']['ends_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
+          : null,
+      choice: map['post_poll']['choice'],
+      author: map['author'],
+      authorID: map['author_id']?.toInt(),
+      createdOn: Jiffy(map['created_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
+      id: map['id']?.toInt() ?? 0,
+      isAnonymous: map['is_anonymous'] ?? false,
+      modifiedOn: map['modified_on'] != null
+          ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
+          : null,
+      pokedNGO: List<NGO__>.from(
+          map['poked_ngo']?.map((x) => NGO__.fromAPIResponse(x))),
+      postContent: map['post_content'] ?? '',
+      postType: map['post_type'] ?? '',
+      relatedTo: List<String>.from(map['related_to']),
+    );
+  }
+
   factory PollPost.fromMap(Map<String, dynamic> map) {
     return PollPost(
       polls: List<PollOption>.from(
@@ -113,7 +139,7 @@ class PollPost implements AbstractPost {
       endsOn: map['endsOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['endsOn'])
           : null,
-      choice: map['choice'],
+      choice: map['choice']?.toInt(),
       author: map['author'],
       authorID: map['authorID']?.toInt(),
       createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),

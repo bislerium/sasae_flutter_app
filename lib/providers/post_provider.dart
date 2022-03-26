@@ -235,10 +235,8 @@ class NormalPostProvider with ChangeNotifier {
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(body);
       }
-      print(body);
       return NormalPost.fromAPIResponse(body);
     } catch (error) {
-      print(error);
       return null;
     }
   }
@@ -281,23 +279,30 @@ class NormalPostProvider with ChangeNotifier {
 
 class PollPostProvider with ChangeNotifier {
   PollPost? _pollPost;
+  late AuthProvider _authP;
+  Dio dio;
+
+  PollPostProvider() : dio = Dio();
+
+  set setAuthP(AuthProvider auth) => _authP = auth;
 
   PollPost? get pollPostData => _pollPost;
 
-  void _randPollPost() {
+  PollPost _randPollPost() {
     Random rand = Random();
     var pollOptions = List.generate(
       faker.randomGenerator.integer(10, min: 2),
       (index) => PollOption(
+        id: faker.randomGenerator.integer(1500),
         option: faker.food.dish(),
-        numReaction: faker.randomGenerator.integer(500),
+        reaction: faker.randomGenerator
+            .numbers(500, faker.randomGenerator.integer(500)),
       ),
     );
-    String? choice = faker.randomGenerator.boolean()
+    int? choice = faker.randomGenerator.boolean()
         ? null
-        : (faker.randomGenerator
-            .fromPattern(pollOptions.map((e) => e.option).toList()));
-    _pollPost = PollPost(
+        : (faker.randomGenerator.element(pollOptions)).id;
+    return PollPost(
       postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
@@ -326,14 +331,58 @@ class PollPostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchPollPost({required int postID, bool isDemo = true}) async {
+  Future<void> initFetchPollPost(
+      {required int postID, bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    if (isDemo) _randPollPost();
+    if (isDemo) {
+      _pollPost = _randPollPost();
+    } else {
+      _pollPost = await fetchPollPost(postID: postID);
+    }
     notifyListeners();
   }
 
+  Future<PollPost?> fetchPollPost({required int postID}) async {
+    try {
+      var response = await dio.get(
+        '${getHostName()}$post$postID/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      var body = response.data;
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(body);
+      }
+      return PollPost.fromAPIResponse(body);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   Future<void> refreshPollPost({required int postID}) async {
-    await fetchPollPost(postID: postID);
+    await initFetchPollPost(postID: postID);
+  }
+
+  Future<bool> pollTheOption({required int optionID}) async {
+    try {
+      var response = await dio.post(
+        '${getHostName()}$post${_pollPost!.id}/poll/$optionID/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 
   void nullifyPollPost() => _pollPost = null;
@@ -343,10 +392,16 @@ class PollPostProvider with ChangeNotifier {
 
 class RequestPostProvider with ChangeNotifier {
   RequestPost? _requestPost;
+  late AuthProvider _authP;
+  Dio dio;
+
+  RequestPostProvider() : dio = Dio();
+
+  set setAuthP(AuthProvider auth) => _authP = auth;
 
   RequestPost? get requestPostData => _requestPost;
 
-  void _randRequestPost() {
+  RequestPost _randRequestPost() {
     Random rand = Random();
     int min = faker.randomGenerator.integer(1500);
     int target = faker.randomGenerator.integer(2000, min: min);
@@ -354,7 +409,7 @@ class RequestPostProvider with ChangeNotifier {
         ? faker.randomGenerator.integer(3000, min: target)
         : null;
     int numReaction = faker.randomGenerator.integer(max ?? (target * 2));
-    _requestPost = RequestPost(
+    return RequestPost(
       postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
@@ -379,25 +434,54 @@ class RequestPostProvider with ChangeNotifier {
       min: min,
       target: target,
       max: max,
-      numParticipation: numReaction,
+      reaction: faker.randomGenerator
+          .numbers(1500, faker.randomGenerator.integer(1500)),
       requestType: faker.randomGenerator.fromPattern(['Join', 'Petition']),
     );
   }
 
-  Future<void> fetchRequestPost(
-      {required int postID, bool isDemo = true}) async {
+  Future<void> intiFetchRequestPost(
+      {required int postID, bool isDemo = false}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    if (isDemo) _randRequestPost();
+    if (isDemo) {
+      _requestPost = _randRequestPost();
+    } else {
+      _requestPost = await fetchRequestPost(postID: postID);
+    }
     notifyListeners();
   }
 
+  Future<RequestPost?> fetchRequestPost({required int postID}) async {
+    try {
+      var response = await dio.get(
+        '${getHostName()}$post$postID/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      var body = response.data;
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(body);
+      }
+      print(body);
+      print('-----------------------------------');
+      print(RequestPost.fromAPIResponse(body));
+      print('-----------------------------------');
+      return RequestPost.fromAPIResponse(body);
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   Future<void> refreshRequestPost({required int postID}) async {
-    await fetchRequestPost(postID: postID);
+    await intiFetchRequestPost(postID: postID);
   }
 
   //Sign for petition and join for Joinform
   Future<bool> participateRequest() async {
-    _requestPost!.numParticipation++;
+    _requestPost!.reaction.add(_authP.auth!.profileID);
     _requestPost!.isParticipated = true;
     notifyListeners();
     return true;

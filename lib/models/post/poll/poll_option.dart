@@ -1,35 +1,51 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 class PollOption {
+  final int id;
   final String option;
-  int numReaction;
+  List<int> reaction;
 
   PollOption({
+    required this.id,
     required this.option,
-    required this.numReaction,
+    required this.reaction,
   });
 
   PollOption copyWith({
+    int? id,
     String? option,
-    int? numReaction,
+    List<int>? reaction,
   }) {
     return PollOption(
+      id: id ?? this.id,
       option: option ?? this.option,
-      numReaction: numReaction ?? this.numReaction,
+      reaction: reaction ?? this.reaction,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'option': option,
-      'numReaction': numReaction,
+      'reaction': reaction,
     };
+  }
+
+  factory PollOption.fromAPIResponse(Map<String, dynamic> map) {
+    return PollOption(
+      id: map['id']?.toInt() ?? 0,
+      option: map['option'] ?? '',
+      reaction: List<int>.from(map['reacted_by']),
+    );
   }
 
   factory PollOption.fromMap(Map<String, dynamic> map) {
     return PollOption(
+      id: map['id']?.toInt() ?? 0,
       option: map['option'] ?? '',
-      numReaction: map['numReaction']?.toInt() ?? 0,
+      reaction: List<int>.from(map['reaction']),
     );
   }
 
@@ -39,17 +55,19 @@ class PollOption {
       PollOption.fromMap(json.decode(source));
 
   @override
-  String toString() => 'PollOption(option: $option, numReaction: $numReaction)';
+  String toString() =>
+      'PollOption(id: $id, option: $option, reaction: $reaction)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is PollOption &&
+        other.id == id &&
         other.option == option &&
-        other.numReaction == numReaction;
+        listEquals(other.reaction, reaction);
   }
 
   @override
-  int get hashCode => option.hashCode ^ numReaction.hashCode;
+  int get hashCode => id.hashCode ^ option.hashCode ^ reaction.hashCode;
 }

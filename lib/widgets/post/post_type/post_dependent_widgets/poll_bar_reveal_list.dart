@@ -5,16 +5,17 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 
 class PollBarRevealList extends StatelessWidget {
   final List<PollOption> list;
-  final String? choice;
+  final int? choice;
 
   const PollBarRevealList({Key? key, required this.list, this.choice})
       : super(key: key);
 
   int totalReaction() => list.fold(
-      0, (previousValue, element) => previousValue + element.numReaction);
+      0, (previousValue, element) => previousValue + element.reaction.length);
 
-  double percent(int count, int toalReaction) =>
-      turnicate((count / toalReaction) * 100).toDouble();
+  double percent(int count, int toalReaction) => count == 0
+      ? count.toDouble()
+      : turnicate((count / toalReaction) * 100).toDouble();
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,9 @@ class PollBarRevealList extends StatelessWidget {
             (e) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: PollBar(
-                percent: percent(e.numReaction, reactions),
+                percent: percent(e.reaction.length, reactions),
                 title: e.option,
-                isChoice: choice == e.option,
+                isChoice: choice == e.id,
               ),
             ),
           )

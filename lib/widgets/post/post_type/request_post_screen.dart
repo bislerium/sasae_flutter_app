@@ -47,7 +47,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         title: 'View Request Post',
       ),
       body: FutureBuilder(
-        future: _provider.fetchRequestPost(postID: widget.postID),
+        future: _provider.intiFetchRequestPost(postID: widget.postID),
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Column(
@@ -87,7 +87,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                                 max: postP.requestPostData!.max,
                                 requestType: postP.requestPostData!.requestType,
                                 numReaction:
-                                    postP.requestPostData!.numParticipation,
+                                    postP.requestPostData!.reaction.length,
                                 endsOn: postP.requestPostData!.endsOn,
                               ),
                               const SizedBox(
@@ -99,7 +99,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              if (postP.requestPostData!.isAnonymous) ...[
+                              if (!postP.requestPostData!.isAnonymous) ...[
                                 PostAuthorCard(
                                   author: postP.requestPostData!.author!,
                                 ),

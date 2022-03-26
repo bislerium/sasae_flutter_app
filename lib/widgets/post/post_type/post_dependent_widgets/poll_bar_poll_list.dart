@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 
 class PollBarPollList extends StatelessWidget {
-  final List<String> list;
+  final List<PollOption> list;
 
-  final Future<void> Function(String choice) handler;
+  final Future<void> Function(int choice) handler;
 
   const PollBarPollList({Key? key, required this.list, required this.handler})
       : super(key: key);
@@ -18,7 +19,7 @@ class PollBarPollList extends StatelessWidget {
             (e) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: GestureDetector(
-                  onTap: () => handler(e),
+                  onTap: () async => handler(e.id),
                   child: RoundedProgressBar(
                     percent: 0,
                     style: RoundedProgressBarStyle(
@@ -29,7 +30,7 @@ class PollBarPollList extends StatelessWidget {
                           Theme.of(context).colorScheme.surfaceVariant,
                     ),
                     childCenter: Text(
-                      e,
+                      e.option,
                     ),
                     borderRadius: BorderRadius.circular(25),
                   ),

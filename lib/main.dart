@@ -172,14 +172,18 @@ List<SingleChildWidget> _providers() => [
       ),
       ChangeNotifierProxyProvider<AuthProvider, NormalPostProvider>(
         create: (context) => NormalPostProvider(),
-        update: (context, authP, profileP) =>
+        update: (context, authP, normalPostP) =>
             NormalPostProvider()..setAuthP = authP,
       ),
-      ChangeNotifierProvider(
+      ChangeNotifierProxyProvider<AuthProvider, PollPostProvider>(
         create: (context) => PollPostProvider(),
+        update: (context, authP, pollPostP) =>
+            PollPostProvider()..setAuthP = authP,
       ),
-      ChangeNotifierProvider(
+      ChangeNotifierProxyProvider<AuthProvider, RequestPostProvider>(
         create: (context) => RequestPostProvider(),
+        update: (context, authP, requestP) =>
+            RequestPostProvider()..setAuthP = authP,
       ),
       ChangeNotifierProxyProvider<AuthProvider, PeopleProvider>(
         create: (context) => PeopleProvider(),
