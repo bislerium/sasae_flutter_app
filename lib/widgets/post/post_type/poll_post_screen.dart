@@ -25,17 +25,23 @@ class PollPostScreen extends StatefulWidget {
 
 class _PollPostScreenState extends State<PollPostScreen> {
   late PollPostProvider _provider;
+  late final Future<void> _fetchPollPostFUTURE;
 
   @override
   void initState() {
     super.initState();
     _provider = Provider.of<PollPostProvider>(context, listen: false);
+    _fetchPollPostFUTURE = _fetchPollPost();
   }
 
   @override
   void dispose() {
     _provider.nullifyPollPost();
     super.dispose();
+  }
+
+  Future<void> _fetchPollPost() async {
+    await _provider.initFetchPollPost(postID: widget.postID);
   }
 
   @override
@@ -45,7 +51,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
         title: 'View Poll Post',
       ),
       body: FutureBuilder(
-        future: _provider.initFetchPollPost(postID: widget.postID),
+        future: _fetchPollPostFUTURE,
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Column(

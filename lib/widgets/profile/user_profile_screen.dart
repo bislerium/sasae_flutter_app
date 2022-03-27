@@ -18,17 +18,27 @@ class UserProfile extends StatefulWidget {
 
 class _UserProfileState extends State<UserProfile>
     with AutomaticKeepAliveClientMixin {
-  ScrollController scrollController;
+  final ScrollController _scrollController;
+  late final Future<void> _fetchUserFUTURE;
 
-  _UserProfileState() : scrollController = ScrollController();
+  _UserProfileState() : _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserFUTURE = _fetchUser();
+  }
+
+  Future<void> _fetchUser() async {
+    await Provider.of<ProfileProvider>(context, listen: false).initFetchUser();
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
       body: FutureBuilder(
-        future: Provider.of<ProfileProvider>(context, listen: false)
-            .initFetchUser(),
+        future: _fetchUserFUTURE,
         builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Column(
@@ -44,11 +54,11 @@ class _UserProfileState extends State<UserProfile>
                           ? const FetchError()
                           : profileP.userData is People
                               ? PeopleProfile(
-                                  scrollController: scrollController,
+                                  scrollController: _scrollController,
                                   peopleData: profileP.userData! as People,
                                 )
                               : NGOProfile(
-                                  scrollController: scrollController,
+                                  scrollController: _scrollController,
                                   ngoData: profileP.userData! as NGO,
                                 ),
                     ),
@@ -70,7 +80,7 @@ class _UserProfileState extends State<UserProfile>
                           arguments: {'user': profileP.userData as People});
                     },
                     foreground: Theme.of(context).colorScheme.onPrimary,
-                    scrollController: scrollController,
+                    scrollController: _scrollController,
                   ),
       ),
     );

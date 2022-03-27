@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/widgets/post/post_form.dart';
+import 'package:sasae_flutter_app/widgets/post/post_form_screen.dart';
 import './post_list.dart';
 
 class PostScreen extends StatefulWidget {
@@ -15,14 +15,25 @@ class PostScreen extends StatefulWidget {
 
 class _PostScreenState extends State<PostScreen>
     with AutomaticKeepAliveClientMixin {
-  ScrollController scrollController;
+  final ScrollController _scrollController;
+  late final Future<void> _fetchPostFUTURE;
 
-  _PostScreenState() : scrollController = ScrollController();
+  _PostScreenState() : _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPostFUTURE = _fetchPost();
+  }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchPost() async {
+    await Provider.of<PostProvider>(context, listen: false).intiFetchPosts();
   }
 
   @override
@@ -30,8 +41,7 @@ class _PostScreenState extends State<PostScreen>
     super.build(context);
     return Scaffold(
       body: FutureBuilder(
-        future:
-            Provider.of<PostProvider>(context, listen: false).intiFetchPosts(),
+        future: _fetchPostFUTURE,
         builder: (context, snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? Column(
@@ -51,7 +61,7 @@ class _PostScreenState extends State<PostScreen>
                                 )
                               : PostList(
                                   posts: postP.postData!,
-                                  scrollController: scrollController,
+                                  scrollController: _scrollController,
                                 ),
                     ),
                   ),
@@ -64,9 +74,10 @@ class _PostScreenState extends State<PostScreen>
                 text: 'Post',
                 background: Theme.of(context).colorScheme.primary,
                 icon: Icons.post_add,
-                func: () => Navigator.pushNamed(context, PostForm.routeName),
+                func: () =>
+                    Navigator.pushNamed(context, PostFormScreen.routeName),
                 foreground: Theme.of(context).colorScheme.onPrimary,
-                scrollController: scrollController,
+                scrollController: _scrollController,
               ),
       ),
     );

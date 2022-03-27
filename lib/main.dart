@@ -18,7 +18,7 @@ import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/widgets/image_view_screen.dart';
-import 'package:sasae_flutter_app/widgets/post/post_form.dart';
+import 'package:sasae_flutter_app/widgets/post/post_form_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
@@ -94,9 +94,9 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
         type: transitionType,
         settings: settings,
       );
-    case (PostForm.routeName):
+    case (PostFormScreen.routeName):
       return PageTransition(
-        child: const PostForm(),
+        child: const PostFormScreen(),
         type: transitionType,
         settings: settings,
       );

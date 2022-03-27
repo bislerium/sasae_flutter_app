@@ -25,26 +25,26 @@ class NormalPostScreen extends StatefulWidget {
 }
 
 class _NormalPostScreenState extends State<NormalPostScreen> {
-  ScrollController scrollController;
+  final ScrollController _scrollController;
   late NormalPostProvider _provider;
-  late Future<void> fetchNormalPost;
+  late Future<void> _fetchNormalPostFUTURE;
 
-  _NormalPostScreenState() : scrollController = ScrollController();
+  _NormalPostScreenState() : _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _provider = Provider.of<NormalPostProvider>(context, listen: false);
-    fetchNormalPost = initFetch();
+    _fetchNormalPostFUTURE = _fetchNormalPost();
   }
 
-  Future<void> initFetch() async {
+  Future<void> _fetchNormalPost() async {
     await _provider.initFetchNormalPost(postID: widget.postID);
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _scrollController.dispose();
     _provider.nullifyNormalPost();
     super.dispose();
   }
@@ -56,7 +56,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
         title: 'View Normal Post',
       ),
       body: FutureBuilder(
-        future: fetchNormalPost,
+        future: _fetchNormalPostFUTURE,
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Column(
@@ -73,7 +73,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                       ? const FetchError()
                       : ListView(
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                          controller: scrollController,
+                          controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           children: [
                             PostRelatedCard(
@@ -135,7 +135,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                 downvoteCount: postP.normalPostData!.downVote.length,
                 isUpvoted: postP.normalPostData!.upVoted,
                 isDownvoted: postP.normalPostData!.downVoted,
-                scrollController: scrollController,
+                scrollController: _scrollController,
               ),
       ),
     );

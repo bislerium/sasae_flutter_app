@@ -22,20 +22,26 @@ class RequestPostScreen extends StatefulWidget {
 }
 
 class _RequestPostScreenState extends State<RequestPostScreen> {
-  late RequestPostProvider _provider;
-  ScrollController scrollController;
+  late final RequestPostProvider _provider;
+  final ScrollController _scrollController;
+  late final Future<void> _fetchRequestPostFUTURE;
 
-  _RequestPostScreenState() : scrollController = ScrollController();
+  _RequestPostScreenState() : _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _provider = Provider.of<RequestPostProvider>(context, listen: false);
+    _fetchRequestPostFUTURE = _fetchRequestPost();
+  }
+
+  Future<void> _fetchRequestPost() async {
+    await _provider.intiFetchRequestPost(postID: widget.postID);
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _scrollController.dispose();
     _provider.nullifyRequestPost();
     super.dispose();
   }
@@ -47,7 +53,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         title: 'View Request Post',
       ),
       body: FutureBuilder(
-        future: _provider.intiFetchRequestPost(postID: widget.postID),
+        future: _fetchRequestPostFUTURE,
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
             ? Column(
@@ -65,7 +71,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                           child: ListView(
-                            controller: scrollController,
+                            controller: _scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
                             children: [
                               PostRelatedCard(
@@ -131,7 +137,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                 isParticipated: postP.requestPostData!.isParticipated,
                 requestType: postP.requestPostData!.requestType,
                 endsOn: postP.requestPostData!.endsOn,
-                scrollController: scrollController,
+                scrollController: _scrollController,
               ),
       ),
     );

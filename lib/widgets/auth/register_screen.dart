@@ -17,23 +17,23 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final GlobalKey<FormBuilderState> personalInfoFormKey;
-  final GlobalKey<FormBuilderState> addressFormKey;
-  final GlobalKey<FormBuilderState> contactFormKey;
-  final GlobalKey<FormBuilderState> accountFormKey;
-  final GlobalKey<FormBuilderState> verifyFormKey;
+  final GlobalKey<FormBuilderState> _personalInfoFormKey;
+  final GlobalKey<FormBuilderState> _addressFormKey;
+  final GlobalKey<FormBuilderState> _contactFormKey;
+  final GlobalKey<FormBuilderState> _accountFormKey;
+  final GlobalKey<FormBuilderState> _verifyFormKey;
 
-  final TextEditingController passwordTEC;
+  final TextEditingController _passwordTEC;
   int _currentStep;
   final List<bool> _stepErrors;
 
   _RegisterScreenState()
-      : personalInfoFormKey = GlobalKey<FormBuilderState>(),
-        addressFormKey = GlobalKey<FormBuilderState>(),
-        contactFormKey = GlobalKey<FormBuilderState>(),
-        accountFormKey = GlobalKey<FormBuilderState>(),
-        verifyFormKey = GlobalKey<FormBuilderState>(),
-        passwordTEC = TextEditingController(),
+      : _personalInfoFormKey = GlobalKey<FormBuilderState>(),
+        _addressFormKey = GlobalKey<FormBuilderState>(),
+        _contactFormKey = GlobalKey<FormBuilderState>(),
+        _accountFormKey = GlobalKey<FormBuilderState>(),
+        _verifyFormKey = GlobalKey<FormBuilderState>(),
+        _passwordTEC = TextEditingController(),
         _currentStep = 0,
         _stepErrors = [
           false,
@@ -42,23 +42,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
           false,
         ];
 
-  String? fullname;
-  String? gender;
-  DateTime? birthdate;
-  String? country;
-  String? province;
-  String? cityLocality;
-  String? stAddressHouseNum;
-  String? phone;
-  String? email;
-  XFile? displayPicture;
-  String? username;
-  String? password;
-  XFile? citizenshipPhoto;
+  String? _fullname;
+  String? _gender;
+  DateTime? _birthdate;
+  String? _country;
+  String? _province;
+  String? _cityLocality;
+  String? _stAddressHouseNum;
+  String? _phone;
+  String? _email;
+  XFile? _displayPicture;
+  String? _username;
+  XFile? _citizenshipPhoto;
 
   @override
   void dispose() {
-    passwordTEC.dispose();
+    _passwordTEC.dispose();
     super.dispose();
   }
 
@@ -84,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => fullname = value,
+        onSaved: (value) => _fullname = value,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.name,
       );
@@ -98,7 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => gender = value.toString(),
+        onSaved: (value) => _gender = value.toString(),
         items: ['Male', 'Female', 'LGBTQ+']
             .map((String value) => DropdownMenuItem<String>(
                   value: value,
@@ -125,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 : null
           ],
         ),
-        onSaved: (value) => birthdate = value,
+        onSaved: (value) => _birthdate = value,
       );
 
   Widget countryField() => FormBuilderTextField(
@@ -137,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => country = value,
+        onSaved: (value) => _country = value,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
       );
@@ -151,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => province = value,
+        onSaved: (value) => _province = value,
         keyboardType: TextInputType.text,
         textInputAction: TextInputAction.next,
       );
@@ -165,7 +164,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => cityLocality = value,
+        onSaved: (value) => _cityLocality = value,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.text,
       );
@@ -179,7 +178,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required(context)],
         ),
-        onSaved: (value) => stAddressHouseNum = value,
+        onSaved: (value) => _stAddressHouseNum = value,
         textInputAction: TextInputAction.done,
         keyboardType: TextInputType.streetAddress,
       );
@@ -191,7 +190,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.phone_android_rounded),
           hintText: 'E.g. 9800740959',
         ),
-        onSaved: (value) => phone = value,
+        onSaved: (value) => _phone = value,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
@@ -210,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.email_rounded),
           hintText: 'Only unique email is accepted',
         ),
-        onSaved: (value) => email = value,
+        onSaved: (value) => _email = value,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
@@ -228,7 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         previewWidth: MediaQuery.of(context).size.width * 0.8,
         previewHeight: MediaQuery.of(context).size.width * 0.8,
-        onSaved: (value) => displayPicture = value?.first,
+        onSaved: (value) => _displayPicture = value?.first,
         maxImages: 1,
       );
 
@@ -247,14 +246,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
         maxLength: 15,
-        onSaved: (value) => username = value,
+        onSaved: (value) => _username = value,
         keyboardType: TextInputType.name,
         textInputAction: TextInputAction.next,
       );
 
   Widget password1Field() => FormBuilderTextField(
         name: 'password1',
-        controller: passwordTEC,
+        controller: _passwordTEC,
         decoration: const InputDecoration(
           label: Text('Password'),
           icon: Icon(Icons.password_rounded),
@@ -281,7 +280,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           [
             FormBuilderValidators.required(context),
             (value) =>
-                (passwordTEC.text != value) ? 'Passwords did not match!' : null
+                (_passwordTEC.text != value) ? 'Passwords did not match!' : null
           ],
         ),
         keyboardType: TextInputType.visiblePassword,
@@ -293,7 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: const InputDecoration(
           labelText: 'Attach a photo',
         ),
-        onSaved: (value) => citizenshipPhoto = value?.first,
+        onSaved: (value) => _citizenshipPhoto = value?.first,
         previewWidth: MediaQuery.of(context).size.width * 0.8,
         previewHeight: MediaQuery.of(context).size.width * 0.8,
         maxImages: 1,
@@ -309,7 +308,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isActive: _currentStep >= 0,
           title: const Text('Personal Info'),
           content: FormBuilder(
-            key: personalInfoFormKey,
+            key: _personalInfoFormKey,
             child: Column(
               children: [
                 fullnameField(),
@@ -337,7 +336,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isActive: _currentStep >= 1,
           title: const Text('Address'),
           content: FormBuilder(
-            key: addressFormKey,
+            key: _addressFormKey,
             child: Column(
               children: [
                 countryField(),
@@ -371,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           subtitle: const Text(
               'Email is not only used to contact\n but also to secure your account.'),
           content: FormBuilder(
-            key: contactFormKey,
+            key: _contactFormKey,
             child: Column(
               children: [
                 phoneField(),
@@ -396,7 +395,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           title: const Text('Account'),
           subtitle: const Text('Profile picture is optional.'),
           content: FormBuilder(
-            key: accountFormKey,
+            key: _accountFormKey,
             child: Column(
               children: [
                 displayPictureField(),
@@ -428,7 +427,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           content: Column(
             children: [
               FormBuilder(
-                key: verifyFormKey,
+                key: _verifyFormKey,
                 child: citizenshipField(),
               ),
               const SizedBox(
@@ -440,10 +439,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ];
 
   List<bool Function()> validity() => [
-        () => personalInfoFormKey.currentState!.validate(),
-        () => addressFormKey.currentState!.validate(),
-        () => contactFormKey.currentState!.validate(),
-        () => accountFormKey.currentState!.validate(),
+        () => _personalInfoFormKey.currentState!.validate(),
+        () => _addressFormKey.currentState!.validate(),
+        () => _contactFormKey.currentState!.validate(),
+        () => _accountFormKey.currentState!.validate(),
       ];
 
   @override
@@ -473,26 +472,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               );
             } else {
-              personalInfoFormKey.currentState!.save();
-              contactFormKey.currentState!.save();
-              addressFormKey.currentState!.save();
-              accountFormKey.currentState!.save();
-              verifyFormKey.currentState!.save();
+              _personalInfoFormKey.currentState!.save();
+              _contactFormKey.currentState!.save();
+              _addressFormKey.currentState!.save();
+              _accountFormKey.currentState!.save();
+              _verifyFormKey.currentState!.save();
 
               bool success =
                   await Provider.of<PeopleProvider>(context, listen: false)
                       .registerPeople(
-                username: username!,
-                email: email!,
-                password: passwordTEC.text,
-                fullname: fullname!,
-                gender: gender!,
-                dob: birthdate!,
+                username: _username!,
+                email: _email!,
+                password: _passwordTEC.text,
+                fullname: _fullname!,
+                gender: _gender!,
+                dob: _birthdate!,
                 address:
-                    '$stAddressHouseNum, $cityLocality, $province, $country',
-                phone: '977$phone!',
-                displayPicture: displayPicture,
-                citizenshipPhoto: citizenshipPhoto,
+                    '$_stAddressHouseNum, $_cityLocality, $_province, $_country',
+                phone: '977$_phone!',
+                displayPicture: _displayPicture,
+                citizenshipPhoto: _citizenshipPhoto,
               );
 
               if (success) {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'profile/user_profile_screen.dart';
-import './post/post_screen.dart';
-import './ngo/ngo_screen.dart';
-import './setting.dart';
+import 'package:sasae_flutter_app/widgets/ngo/ngo_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
+import 'package:sasae_flutter_app/widgets/profile/user_profile_screen.dart';
+import 'package:sasae_flutter_app/widgets/setting_screen.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -14,20 +14,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final PageController _pc;
+  final PageController _pageController;
   int _selectedNavIndex;
-  bool showFAB;
 
   _HomePageState()
       : _selectedNavIndex = 2,
-        _pc = PageController(
+        _pageController = PageController(
           initialPage: 2,
-        ),
-        showFAB = true;
+        );
 
   @override
   void dispose() {
-    _pc.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
@@ -77,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           onDestinationSelected: (index) => {
             setState(() {
               _selectedNavIndex = index;
-              _pc.animateToPage(
+              _pageController.animateToPage(
                 _selectedNavIndex,
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.ease,
@@ -95,10 +93,10 @@ class _HomePageState extends State<HomePage> {
           Center(
             child: Icon(Icons.notifications),
           ),
-          Setting(),
+          SettingScreen(),
         ],
         onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
-        controller: _pc,
+        controller: _pageController,
         physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
       );
 

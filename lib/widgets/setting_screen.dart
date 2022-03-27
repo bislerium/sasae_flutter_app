@@ -6,28 +6,29 @@ import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
-class Setting extends StatefulWidget {
-  const Setting({Key? key}) : super(key: key);
+class SettingScreen extends StatefulWidget {
+  const SettingScreen({Key? key}) : super(key: key);
 
   @override
-  State<Setting> createState() => _SettingState();
+  State<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
-  _SettingState()
-      : applicationName = 'Sasae',
-        applicationVersion = 'v0.0.1',
-        applicationIcon = const Icon(Icons.flutter_dash),
-        scrollController = ScrollController();
+class _SettingScreenState extends State<SettingScreen>
+    with AutomaticKeepAliveClientMixin {
+  _SettingScreenState()
+      : _applicationName = 'Sasae',
+        _applicationVersion = 'v0.0.1',
+        _applicationIcon = const Icon(Icons.flutter_dash),
+        _scrollController = ScrollController();
 
-  final String applicationName;
-  final String applicationVersion;
-  final Icon applicationIcon;
-  ScrollController scrollController;
+  final String _applicationName;
+  final String _applicationVersion;
+  final Icon _applicationIcon;
+  final ScrollController _scrollController;
 
   @override
   void dispose() {
-    scrollController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -74,15 +75,15 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
                     children: <Widget>[
                       IconTheme(
                           data: Theme.of(context).iconTheme,
-                          child: applicationIcon),
+                          child: _applicationIcon),
                       Expanded(
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 24.0),
                           child: ListBody(
                             children: <Widget>[
-                              Text(applicationName,
+                              Text(_applicationName,
                                   style: Theme.of(context).textTheme.headline5),
-                              Text(applicationVersion,
+                              Text(_applicationVersion,
                                   style: Theme.of(context).textTheme.bodyText2),
                               const SizedBox(height: 18),
                               Text(applicationLegalese,
@@ -119,9 +120,9 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
         onTap: () {
           showLicensePage(
             context: context,
-            applicationName: applicationName,
-            applicationVersion: applicationVersion,
-            applicationIcon: applicationIcon,
+            applicationName: _applicationName,
+            applicationVersion: _applicationVersion,
+            applicationIcon: _applicationIcon,
             applicationLegalese: applicationLegalese,
           );
         },

@@ -14,11 +14,23 @@ class NGOScreen extends StatefulWidget {
 
 class _NGOScreenState extends State<NGOScreen>
     with AutomaticKeepAliveClientMixin {
+  late final Future<void> _fetchNGOFUTURE;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchNGOFUTURE = _fetchNGO();
+  }
+
+  Future<void> _fetchNGO() async {
+    await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder(
-      future: Provider.of<NGOProvider>(context, listen: false).fetchNGOs(),
+      future: _fetchNGOFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
               ? Column(

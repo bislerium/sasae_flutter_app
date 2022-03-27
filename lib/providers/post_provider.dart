@@ -105,6 +105,27 @@ class PostProvider with ChangeNotifier {
     }
   }
 
+  List<String>? postRelatedTo;
+  List<NGO__>? ngoOptions;
+
+  Future<void> initPostRelatedTo() async {
+    postRelatedTo = await getPostRelatedTo();
+  }
+
+  Future<void> initNGOOptions() async {
+    ngoOptions = await getNGOOptions();
+  }
+
+  Future<void> refreshPostRelatedTo() async {
+    await initPostRelatedTo();
+    notifyListeners();
+  }
+
+  Future<void> refreshNGOOptions() async {
+    await initNGOOptions();
+    notifyListeners();
+  }
+
   Future<List<String>?> getPostRelatedTo() async {
     try {
       var response = await dio.get(
@@ -117,7 +138,30 @@ class PostProvider with ChangeNotifier {
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
+      await Future.delayed(Duration(seconds: 3));
+      // return null;
       return response.data['options'].cast<String>();
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+  Future<List<NGO__>?> getNGOOptions() async {
+    try {
+      var response = await dio.get(
+        '${getHostName()}$postNGOs',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      return (response.data as List)
+          .map((e) => NGO__.fromAPIResponse(e))
+          .toList();
     } catch (error) {
       print(error);
       return null;
