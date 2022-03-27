@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:randexp/randexp.dart';
 
-import '../../models/post/ngo__.dart';
-
 void showSnackBar({
   required BuildContext context,
   required String message,

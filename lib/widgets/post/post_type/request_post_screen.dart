@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
@@ -56,12 +57,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         future: _fetchRequestPostFUTURE,
         builder: (context, snapshot) => snapshot.connectionState ==
                 ConnectionState.waiting
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: const [
-                  LinearProgressIndicator(),
-                ],
-              )
+            ? const CustomLoading()
             : Consumer<RequestPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
                   onRefresh: () =>

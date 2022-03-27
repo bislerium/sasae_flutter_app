@@ -6,7 +6,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_request_post.dart';
@@ -32,11 +31,7 @@ class _PostFormState extends State<PostForm> {
         descriptionTEC = TextEditingController(),
         pollDuration = TextEditingController(),
         relatedto = [],
-        isPostedAnonymous = false,
-        postTypeIndex = postType.normalPost;
-
-  late Future<List<String>?> relatedToOptionList;
-  late Future<List<NGO__>?> ngoOptionList;
+        isPostedAnonymous = false;
 
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
@@ -49,7 +44,6 @@ class _PostFormState extends State<PostForm> {
   bool isPostedAnonymous;
   List<String>? relatedto;
   List<int>? pokedNGO;
-  postType postTypeIndex;
 
   @override
   void initState() {
@@ -58,8 +52,13 @@ class _PostFormState extends State<PostForm> {
     requestFormKey = GlobalKey<FormBuilderState>();
     pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
-    relatedToOptionList = _getRelatedToOptions();
-    ngoOptionList = _getNGOOptions();
+    WidgetsBinding.instance!
+        .addPostFrameCallback((_) => setPostButtonOnPressed());
+  }
+
+  void setPostButtonOnPressed() {
+    Provider.of<PostProvider>(context, listen: false)
+        .setPostHandler(postHandler);
   }
 
   @override
@@ -68,20 +67,6 @@ class _PostFormState extends State<PostForm> {
     pollDuration.dispose();
     super.dispose();
   }
-
-  Future<List<String>?> _getRelatedToOptions() async {
-    return await Provider.of<PostProvider>(context, listen: false)
-        .getPostRelatedTo();
-  }
-
-  Future<List<NGO__>?> _getNGOOptions() async {
-    return await Provider.of<PostProvider>(context, listen: false)
-        .getNGOOptions();
-  }
-
-  void setPostTypeIndex(postType type) => setState(() {
-        postTypeIndex = type;
-      });
 
   Widget pokeNGOField() => ChipsInput(
         key: _chipKey,
@@ -234,67 +219,20 @@ class _PostFormState extends State<PostForm> {
         ),
       );
 
-  Widget buttonsPerPostType() {
-    Color activeColor = Theme.of(context).colorScheme.primary;
-    Color inActiveColor = Theme.of(context).colorScheme.onSurfaceVariant;
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => setState(() {
-            setPostTypeIndex(postType.normalPost);
-          }),
-          icon: const Icon(
-            Icons.file_present_rounded,
-          ),
-          color: postTypeIndex == postType.normalPost
-              ? activeColor
-              : inActiveColor,
-          iconSize: 30,
-          tooltip: 'Normal Post',
-        ),
-        IconButton(
-          onPressed: () => setState(() {
-            setPostTypeIndex(postType.pollPost);
-          }),
-          icon: const Icon(
-            Icons.poll_rounded,
-          ),
-          color:
-              postTypeIndex == postType.pollPost ? activeColor : inActiveColor,
-          iconSize: 30,
-          tooltip: 'Poll Post',
-        ),
-        IconButton(
-          onPressed: () => setState(() {
-            setPostTypeIndex(postType.requestPost);
-          }),
-          icon: const Icon(
-            Icons.help_center,
-          ),
-          color: postTypeIndex == postType.requestPost
-              ? activeColor
-              : inActiveColor,
-          iconSize: 30,
-          tooltip: 'Request Post',
-        ),
-      ],
-    );
-  }
-
   Widget fieldsPerPostType() {
     late Widget widget;
-    switch (postTypeIndex) {
-      case postType.normalPost:
+    switch (Provider.of<PostProvider>(context).getCreatePostType) {
+      case PostType.normalPost:
         widget = imageField();
         break;
-      case postType.pollPost:
+      case PostType.pollPost:
         widget = FormCardPollPost(
           formKey: pollFormKey,
           pollItems: pollItems,
           pollDuration: pollDuration,
         );
         break;
-      case postType.requestPost:
+      case PostType.requestPost:
         widget = FormCardRequestPost(
           formKey: requestFormKey,
         );
@@ -303,84 +241,43 @@ class _PostFormState extends State<PostForm> {
     return widget;
   }
 
-  Widget postButton() => ConstrainedBox(
-        constraints: const BoxConstraints.tightFor(
-          height: 60,
-          width: 120,
-        ),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            bool isSuperPostFormValid = superPostKey.currentState!.validate();
-            bool isOtherPostFormValid = false;
-            switch (postTypeIndex) {
-              case postType.normalPost:
-                isOtherPostFormValid = true;
-                break;
-              case postType.pollPost:
-                isOtherPostFormValid = pollFormKey.currentState!.validate();
-                break;
-              case postType.requestPost:
-                isOtherPostFormValid = requestFormKey.currentState!.validate();
-                break;
-            }
-            if (isSuperPostFormValid && isOtherPostFormValid) {
-              Provider.of<PostProvider>(context, listen: false)
-                  .createNormalPost(
-                      relatedTo: relatedto ?? [],
-                      postContent: descriptionTEC.text,
-                      pokedToNGO: pokedNGO ?? []);
-            }
-          },
-          icon: const Icon(
-            Icons.post_add_rounded,
-          ),
-          label: const Text(
-            'Post',
-          ),
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-          ),
-        ),
-      );
+  Future<void> postHandler() async {
+    bool isSuperPostFormValid = superPostKey.currentState!.validate();
+    bool isOtherPostFormValid = false;
+    switch (
+        Provider.of<PostProvider>(context, listen: false).getCreatePostType) {
+      case PostType.normalPost:
+        isOtherPostFormValid = true;
+        break;
+      case PostType.pollPost:
+        isOtherPostFormValid = pollFormKey.currentState!.validate();
+        break;
+      case PostType.requestPost:
+        isOtherPostFormValid = requestFormKey.currentState!.validate();
+        break;
+    }
+    if (isSuperPostFormValid && isOtherPostFormValid) {
+      Provider.of<PostProvider>(context, listen: false).createNormalPost(
+          relatedTo: relatedto ?? [],
+          postContent: descriptionTEC.text,
+          pokedToNGO: pokedNGO ?? []);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Post a Post'),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        children: [
-          superPostFields(),
-          const SizedBox(
-            height: 10,
-          ),
-          fieldsPerPostType(),
-          const SizedBox(
-            height: 10,
-          ),
-        ],
-      ),
-      bottomNavigationBar: Container(
-        margin:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        color: Theme.of(context).colorScheme.surface,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              buttonsPerPostType(),
-              const Spacer(),
-              postButton(),
-            ],
-          ),
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      children: [
+        superPostFields(),
+        const SizedBox(
+          height: 10,
         ),
-      ),
+        fieldsPerPostType(),
+        const SizedBox(
+          height: 10,
+        ),
+      ],
     );
   }
-}
-
-enum postType {
-  normalPost,
-  pollPost,
-  requestPost,
 }

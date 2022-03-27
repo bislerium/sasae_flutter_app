@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/profile/ngo_profile.dart';
 import 'package:provider/provider.dart';
@@ -64,12 +65,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
                       ),
               ),
             )
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: const [
-                LinearProgressIndicator(),
-              ],
-            ),
+          : const CustomLoading(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: NGODonationButton(
         scrollController: scrollController,

@@ -16,9 +16,11 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
   List<Post_>? _posts;
-  Dio dio;
+  final Dio _dio;
 
-  PostProvider() : dio = Dio();
+  PostProvider()
+      : _dio = Dio(),
+        _createPostType = PostType.normalPost;
 
   List<Post_>? get postData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
@@ -63,7 +65,7 @@ class PostProvider with ChangeNotifier {
 
   Future<List<Post_>?> fetchPosts() async {
     try {
-      var response = await dio.get(
+      var response = await _dio.get(
         '${getHostName()}$posts',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
@@ -88,7 +90,7 @@ class PostProvider with ChangeNotifier {
 
   Future<bool> report({required int postID}) async {
     try {
-      var response = await dio.post(
+      var response = await _dio.post(
         '${getHostName()}$post$postID/report/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
@@ -105,30 +107,33 @@ class PostProvider with ChangeNotifier {
     }
   }
 
-  List<String>? postRelatedTo;
-  List<NGO__>? ngoOptions;
+  List<String>? _postRelatedTo;
+  List<NGO__>? _ngoOptions;
+
+  List<String>? get getPostRelatedToData => _postRelatedTo;
+  List<NGO__>? get getNGOOptionsData => _ngoOptions;
 
   Future<void> initPostRelatedTo() async {
-    postRelatedTo = await getPostRelatedTo();
+    _postRelatedTo = await getPostRelatedTo();
+    notifyListeners();
   }
 
   Future<void> initNGOOptions() async {
-    ngoOptions = await getNGOOptions();
+    _ngoOptions = await getNGOOptions();
+    notifyListeners();
   }
 
   Future<void> refreshPostRelatedTo() async {
     await initPostRelatedTo();
-    notifyListeners();
   }
 
   Future<void> refreshNGOOptions() async {
     await initNGOOptions();
-    notifyListeners();
   }
 
   Future<List<String>?> getPostRelatedTo() async {
     try {
-      var response = await dio.get(
+      var response = await _dio.get(
         '${getHostName()}$postRelatedTo',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
@@ -138,7 +143,7 @@ class PostProvider with ChangeNotifier {
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(Duration(seconds: 1));
       // return null;
       return response.data['options'].cast<String>();
     } catch (error) {
@@ -149,7 +154,7 @@ class PostProvider with ChangeNotifier {
 
   Future<List<NGO__>?> getNGOOptions() async {
     try {
-      var response = await dio.get(
+      var response = await _dio.get(
         '${getHostName()}$postNGOs',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
@@ -165,6 +170,28 @@ class PostProvider with ChangeNotifier {
     } catch (error) {
       print(error);
       return null;
+    }
+  }
+
+  PostType _createPostType;
+
+  get getCreatePostType => _createPostType;
+
+  set setCreatePostType(PostType type) {
+    if (_createPostType != type) {
+      _createPostType = type;
+      notifyListeners();
+    }
+  }
+
+  Future<void> Function()? _postHandler;
+
+  Future<void> Function()? get getPostHandler => _postHandler;
+
+  void setPostHandler(Future<void> Function()? handler) {
+    if (_postHandler != handler) {
+      _postHandler = handler;
+      notifyListeners();
     }
   }
 
@@ -547,4 +574,10 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   void nullifyRequestPost() => _requestPost = null;
+}
+
+enum PostType {
+  normalPost,
+  pollPost,
+  requestPost,
 }
