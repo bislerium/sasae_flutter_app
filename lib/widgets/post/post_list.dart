@@ -18,10 +18,10 @@ class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) => ListView.builder(
         controller: widget.scrollController,
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         physics: const AlwaysScrollableScrollPhysics(),
         itemCount: widget.posts.length,
-        shrinkWrap: true,
         itemBuilder: ((context, index) {
           var post = widget.posts[index];
           return PostCard(

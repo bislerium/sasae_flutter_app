@@ -26,6 +26,7 @@ class _NGOListState extends State<NGOList> {
   Widget build(BuildContext context) {
     return ListView.builder(
       controller: listScroll,
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: widget.ngoList.length,

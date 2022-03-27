@@ -481,10 +481,25 @@ class RequestPostProvider with ChangeNotifier {
 
   //Sign for petition and join for Joinform
   Future<bool> participateRequest() async {
-    _requestPost!.reaction.add(_authP.auth!.profileID);
-    _requestPost!.isParticipated = true;
-    notifyListeners();
-    return true;
+    try {
+      var response = await dio.post(
+        '${getHostName()}$post${_requestPost!.id}/participate/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+      int? statusCode = response.statusCode;
+      if (statusCode == null || statusCode >= 400) {
+        throw HttpException(response.data);
+      }
+      _requestPost!.reaction.add(_authP.auth!.profileID);
+      _requestPost!.isParticipated = true;
+      notifyListeners();
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
   }
 
   void nullifyRequestPost() => _requestPost = null;

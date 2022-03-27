@@ -39,6 +39,7 @@ class NGOProfile extends StatelessWidget {
             ),
             Text(
               ngoData.orgName,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

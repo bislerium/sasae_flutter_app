@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -8,7 +10,6 @@ class RequestFAB extends StatelessWidget {
   final String requestType;
   final DateTime endsOn;
   final bool isParticipated;
-  final Future<bool> Function() handler;
 
   const RequestFAB({
     Key? key,
@@ -17,7 +18,6 @@ class RequestFAB extends StatelessWidget {
     required this.isParticipated,
     required this.requestType,
     required this.endsOn,
-    required this.handler,
   }) : super(key: key);
 
   Future<void> participate(BuildContext context) async {
@@ -29,7 +29,6 @@ class RequestFAB extends StatelessWidget {
           errorSnackBar: true);
       return;
     }
-
     if (DateTime.now().isAfter(endsOn)) {
       showSnackBar(
         context: context,
@@ -45,16 +44,27 @@ class RequestFAB extends StatelessWidget {
     if (requestType == 'Join') {
       message = 'joined';
     }
-    await handler()
-        ? showSnackBar(
-            context: context,
-            message: 'Successfully $message!',
-          )
-        : showSnackBar(
-            context: context,
-            message: 'Something went wrong.',
-            errorSnackBar: true,
-          );
+    showCustomDialog(
+      context: context,
+      content: 'Once participated, You cannot undo!',
+      okFunc: () async {
+        var success =
+            await Provider.of<RequestPostProvider>(context, listen: false)
+                .participateRequest();
+        success
+            ? showSnackBar(
+                context: context,
+                message: 'Successfully $message!',
+              )
+            : showSnackBar(
+                context: context,
+                message: 'Something went wrong.',
+                errorSnackBar: true,
+              );
+        Navigator.of(context).pop();
+      },
+      title: 'Confirm $requestType',
+    );
   }
 
   @override
@@ -68,7 +78,7 @@ class RequestFAB extends StatelessWidget {
               ? 'Joined'
               : 'Join',
       icon: requestType == 'Petition' ? Icons.gesture : Icons.handshake,
-      func: () => participate(context),
+      func: () async => participate(context),
       scrollController: scrollController,
     );
   }

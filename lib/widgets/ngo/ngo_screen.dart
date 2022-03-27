@@ -45,12 +45,9 @@ class _NGOScreenState extends State<NGOScreen>
                                   ? const Center(
                                       child: Text('No NGO found!'),
                                     )
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15.0),
-                                      child: NGOList(
-                                        ngoList: ngoP.ngosData!,
-                                      )),
+                                  : NGOList(
+                                      ngoList: ngoP.ngosData!,
+                                    ),
                         ),
                       ),
                     ),

@@ -500,6 +500,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context: context,
                   message: 'Successfully registered.',
                 );
+                Navigator.of(context).pop();
               } else {
                 showSnackBar(
                   context: context,

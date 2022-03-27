@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
@@ -62,6 +62,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                       : Padding(
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                           child: ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             children: [
                               PostRelatedCard(
                                   list: postP.pollPostData!.relatedTo),

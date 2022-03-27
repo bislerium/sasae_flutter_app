@@ -19,7 +19,7 @@ class PollBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var progress = isChoice
         ? Theme.of(context).colorScheme.inversePrimary
-        : Theme.of(context).colorScheme.secondaryContainer;
+        : Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.8);
     var textstyle = TextStyle(
       color: isChoice
           ? Theme.of(context).colorScheme.onPrimaryContainer
@@ -31,10 +31,10 @@ class PollBar extends StatelessWidget {
       percent: percent.toDouble(),
       style: RoundedProgressBarStyle(
         colorBorder: Theme.of(context).colorScheme.surface,
-        borderWidth: 0,
+        borderWidth: 3,
         widthShadow: 0,
         colorProgress: progress,
-        backgroundProgress: Theme.of(context).colorScheme.surface,
+        backgroundProgress: Theme.of(context).colorScheme.secondaryContainer,
       ),
       childLeft: Text(
         title,

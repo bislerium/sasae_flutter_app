@@ -45,13 +45,14 @@ class _PostScreenState extends State<PostScreen>
                       onRefresh: postP.refreshPosts,
                       child: postP.postData == null
                           ? const FetchError()
-                          : Padding(
-                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                              child: PostList(
-                                posts: postP.postData!,
-                                scrollController: scrollController,
-                              ),
-                            ),
+                          : postP.postData!.isEmpty
+                              ? const FetchError(
+                                  errorMessage: 'No post yet... 😅',
+                                )
+                              : PostList(
+                                  posts: postP.postData!,
+                                  scrollController: scrollController,
+                                ),
                     ),
                   ),
       ),

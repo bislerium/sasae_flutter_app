@@ -4,7 +4,7 @@ import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/normal_image_attachment_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poked_ngo_card.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_poked_ngo_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_author_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_description_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_related_card.dart';
@@ -57,75 +57,73 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
       ),
       body: FutureBuilder(
         future: fetchNormalPost,
-        builder: (context, snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      LinearProgressIndicator(),
-                    ],
-                  )
-                : Consumer<NormalPostProvider>(
-                    builder: (context, postP, child) => RefreshIndicator(
-                      onRefresh: () =>
-                          postP.refreshNormalPost(postID: widget.postID),
-                      child: postP.normalPostData == null
-                          ? const FetchError()
-                          : Padding(
-                              padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                              child: ListView(
-                                controller: scrollController,
-                                children: [
-                                  PostRelatedCard(
-                                      list: postP.normalPostData!.relatedTo),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  if (postP
-                                      .normalPostData!.pokedNGO.isNotEmpty) ...[
-                                    PokedNGOCard(
-                                      list: postP.normalPostData!.pokedNGO,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                  if (postP.normalPostData!.attachedImage !=
-                                      null) ...[
-                                    NormalImageAttachmentCard(
-                                      imageURL:
-                                          postP.normalPostData!.attachedImage!,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                  PostContentCard(
-                                    content: postP.normalPostData!.postContent,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  if (!postP.normalPostData!.isAnonymous) ...[
-                                    PostAuthorCard(
-                                      author: postP.normalPostData!.author!,
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                  ],
-                                  PostTailCard(
-                                    postID: postP.normalPostData!.id,
-                                    createdOn: postP.normalPostData!.createdOn,
-                                  ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              ),
+        builder: (context, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: const [
+                  LinearProgressIndicator(),
+                ],
+              )
+            : Consumer<NormalPostProvider>(
+                builder: (context, postP, child) => RefreshIndicator(
+                  onRefresh: () =>
+                      postP.refreshNormalPost(postID: widget.postID),
+                  child: postP.normalPostData == null
+                      ? const FetchError()
+                      : ListView(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                          controller: scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          children: [
+                            PostRelatedCard(
+                              list: postP.normalPostData!.relatedTo,
                             ),
-                    ),
-                  ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (postP.normalPostData!.pokedNGO.isNotEmpty) ...[
+                              PokedNGOCard(
+                                list: postP.normalPostData!.pokedNGO,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                            if (postP.normalPostData!.attachedImage !=
+                                null) ...[
+                              NormalImageAttachmentCard(
+                                imageURL: postP.normalPostData!.attachedImage!,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                            PostContentCard(
+                              content: postP.normalPostData!.postContent,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            if (!postP.normalPostData!.isAnonymous) ...[
+                              PostAuthorCard(
+                                author: postP.normalPostData!.author!,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                            PostTailCard(
+                              postID: postP.normalPostData!.id,
+                              createdOn: postP.normalPostData!.createdOn,
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                ),
+              ),
       ),
       bottomNavigationBar: Consumer<NormalPostProvider>(
         builder: (context, postP, child) => postP.normalPostData == null
