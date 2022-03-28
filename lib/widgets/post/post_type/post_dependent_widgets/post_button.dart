@@ -7,14 +7,14 @@ class PostButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PostProvider>(
-      builder: (context, postP, child) => ConstrainedBox(
+    return Consumer<PostCreateProvider>(
+      builder: (context, postCreateP, child) => ConstrainedBox(
         constraints: const BoxConstraints.tightFor(
           height: 60,
           width: 120,
         ),
         child: ElevatedButton.icon(
-          onPressed: postP.getPostHandler,
+          onPressed: postCreateP.getPostHandler,
           icon: const Icon(
             Icons.post_add_rounded,
           ),

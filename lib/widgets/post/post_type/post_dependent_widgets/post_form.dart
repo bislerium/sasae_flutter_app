@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
+import 'package:sasae_flutter_app/models/post/post_create.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_request_post.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_form_per_type.dart';
 
 class PostForm extends StatefulWidget {
   static const routeName = '/post/form';
@@ -33,6 +32,10 @@ class _PostFormState extends State<PostForm> {
         relatedto = [],
         isPostedAnonymous = false;
 
+  late final NormalPostCreate normalPostCreate;
+  late final PollPostCreate pollPostCreate;
+  late final RequestPostCreate requestPostCreate;
+
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
   late final GlobalKey<FormBuilderState> pollFormKey;
@@ -56,9 +59,16 @@ class _PostFormState extends State<PostForm> {
         .addPostFrameCallback((_) => setPostButtonOnPressed());
   }
 
+  initFormClass() {
+    var postCreateP = Provider.of<PostCreateProvider>(context);
+    normalPostCreate = postCreateP.getNormalPostCreate;
+    pollPostCreate = postCreateP.getPollPostCreate;
+    requestPostCreate = postCreateP.getRequestPostCreate;
+  }
+
   void setPostButtonOnPressed() {
-    Provider.of<PostProvider>(context, listen: false)
-        .setPostHandler(postHandler);
+    Provider.of<PostCreateProvider>(context, listen: false).setPostHandler =
+        postHandler;
   }
 
   @override
@@ -161,38 +171,6 @@ class _PostFormState extends State<PostForm> {
         title: const Text('Post anonymously'),
       );
 
-  Widget imageField() {
-    double width = MediaQuery.of(context).size.width - 60;
-    return CustomCard(
-      child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Normal post',
-                style: Theme.of(context).textTheme.headline6?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              FormBuilderImagePicker(
-                name: 'photos',
-                decoration: const InputDecoration(
-                  labelText: 'Attach a photo',
-                  border: InputBorder.none,
-                ),
-                previewWidth: width,
-                previewHeight: width,
-                maxImages: 1,
-              ),
-            ],
-          )),
-    );
-  }
-
   Widget superPostFields() => CustomCard(
         child: FormBuilder(
           key: superPostKey,
@@ -219,33 +197,11 @@ class _PostFormState extends State<PostForm> {
         ),
       );
 
-  Widget fieldsPerPostType() {
-    late Widget widget;
-    switch (Provider.of<PostProvider>(context).getCreatePostType) {
-      case PostType.normalPost:
-        widget = imageField();
-        break;
-      case PostType.pollPost:
-        widget = FormCardPollPost(
-          formKey: pollFormKey,
-          pollItems: pollItems,
-          pollDuration: pollDuration,
-        );
-        break;
-      case PostType.requestPost:
-        widget = FormCardRequestPost(
-          formKey: requestFormKey,
-        );
-        break;
-    }
-    return widget;
-  }
-
   Future<void> postHandler() async {
     bool isSuperPostFormValid = superPostKey.currentState!.validate();
     bool isOtherPostFormValid = false;
-    switch (
-        Provider.of<PostProvider>(context, listen: false).getCreatePostType) {
+    switch (Provider.of<PostCreateProvider>(context, listen: false)
+        .getCreatePostType) {
       case PostType.normalPost:
         isOtherPostFormValid = true;
         break;
@@ -257,7 +213,7 @@ class _PostFormState extends State<PostForm> {
         break;
     }
     if (isSuperPostFormValid && isOtherPostFormValid) {
-      Provider.of<PostProvider>(context, listen: false).createNormalPost(
+      Provider.of<PostCreateProvider>(context, listen: false).createNormalPost(
           relatedTo: relatedto ?? [],
           postContent: descriptionTEC.text,
           pokedToNGO: pokedNGO ?? []);
@@ -273,7 +229,10 @@ class _PostFormState extends State<PostForm> {
         const SizedBox(
           height: 10,
         ),
-        fieldsPerPostType(),
+        PostFormPerPostType(
+          pollFormKey: pollFormKey,
+          requestFormKey: requestFormKey,
+        ),
         const SizedBox(
           height: 10,
         ),

@@ -10,6 +10,7 @@ import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
+import 'package:sasae_flutter_app/models/post/post_create.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 
@@ -18,9 +19,7 @@ class PostProvider with ChangeNotifier {
   List<Post_>? _posts;
   final Dio _dio;
 
-  PostProvider()
-      : _dio = Dio(),
-        _createPostType = PostType.normalPost;
+  PostProvider() : _dio = Dio();
 
   List<Post_>? get postData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
@@ -106,6 +105,20 @@ class PostProvider with ChangeNotifier {
       return false;
     }
   }
+}
+
+class PostCreateProvider with ChangeNotifier {
+  late AuthProvider _authP;
+  final Dio _dio;
+
+  PostCreateProvider()
+      : _dio = Dio(),
+        _createPostType = PostType.normalPost,
+        _normalPostCreate = NormalPostCreate(),
+        _pollPostCreate = PollPostCreate(),
+        _requestPostCreate = RequestPostCreate();
+
+  set setAuthP(AuthProvider auth) => _authP = auth;
 
   List<String>? _postRelatedTo;
   List<NGO__>? _ngoOptions;
@@ -143,8 +156,7 @@ class PostProvider with ChangeNotifier {
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
-      await Future.delayed(Duration(seconds: 1));
-      // return null;
+      await Future.delayed(const Duration(seconds: 2));
       return response.data['options'].cast<String>();
     } catch (error) {
       print(error);
@@ -188,12 +200,20 @@ class PostProvider with ChangeNotifier {
 
   Future<void> Function()? get getPostHandler => _postHandler;
 
-  void setPostHandler(Future<void> Function()? handler) {
+  set setPostHandler(Future<void> Function()? handler) {
     if (_postHandler != handler) {
       _postHandler = handler;
       notifyListeners();
     }
   }
+
+  final NormalPostCreate _normalPostCreate;
+  final PollPostCreate _pollPostCreate;
+  final RequestPostCreate _requestPostCreate;
+
+  NormalPostCreate get getNormalPostCreate => _normalPostCreate;
+  PollPostCreate get getPollPostCreate => _pollPostCreate;
+  RequestPostCreate get getRequestPostCreate => _requestPostCreate;
 
   Future<bool> createNormalPost({
     required List<String> relatedTo,

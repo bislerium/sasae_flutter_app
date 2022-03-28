@@ -9,37 +9,39 @@ class PostTypeRow extends StatelessWidget {
   Widget build(BuildContext context) {
     Color activeColor = Theme.of(context).colorScheme.primary;
     Color inActiveColor = Theme.of(context).colorScheme.onSurfaceVariant;
-    return Consumer<PostProvider>(
-      builder: (context, postP, child) => Row(
+    return Consumer<PostCreateProvider>(
+      builder: (context, postCreateP, child) => Row(
         children: [
           IconButton(
-            onPressed: () => postP.setCreatePostType = PostType.normalPost,
+            onPressed: () =>
+                postCreateP.setCreatePostType = PostType.normalPost,
             icon: const Icon(
               Icons.file_present_rounded,
             ),
-            color: postP.getCreatePostType == PostType.normalPost
+            color: postCreateP.getCreatePostType == PostType.normalPost
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,
             tooltip: 'Normal Post',
           ),
           IconButton(
-            onPressed: () => postP.setCreatePostType = PostType.pollPost,
+            onPressed: () => postCreateP.setCreatePostType = PostType.pollPost,
             icon: const Icon(
               Icons.poll_rounded,
             ),
-            color: postP.getCreatePostType == PostType.pollPost
+            color: postCreateP.getCreatePostType == PostType.pollPost
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,
             tooltip: 'Poll Post',
           ),
           IconButton(
-            onPressed: () => postP.setCreatePostType = PostType.requestPost,
+            onPressed: () =>
+                postCreateP.setCreatePostType = PostType.requestPost,
             icon: const Icon(
               Icons.help_center,
             ),
-            color: postP.getCreatePostType == PostType.requestPost
+            color: postCreateP.getCreatePostType == PostType.requestPost
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,

@@ -1,50 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/dismissable_tile.dart';
 
 class FormCardPollPost extends StatefulWidget {
-  final List<String> pollItems;
-  final TextEditingController pollDuration;
   final GlobalKey<FormBuilderState> formKey;
 
-  const FormCardPollPost(
-      {Key? key,
-      required this.formKey,
-      required this.pollItems,
-      required this.pollDuration})
-      : super(key: key);
+  const FormCardPollPost({Key? key, required this.formKey}) : super(key: key);
 
   @override
   _FormCardPollPostState createState() => _FormCardPollPostState();
 }
 
 class _FormCardPollPostState extends State<FormCardPollPost> {
-  _FormCardPollPostState()
-      : itemTEC = TextEditingController(),
-        _formKey = GlobalKey<FormBuilderState>();
-
   final TextEditingController itemTEC;
-  final GlobalKey<FormBuilderState> _formKey;
+  late final PollPostCreate pollPostCreate;
+
+  _FormCardPollPostState() : itemTEC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    pollPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
+        .getPollPostCreate;
+    pollPostCreate.setPollOptions = [];
+  }
 
   @override
   void dispose() {
     itemTEC.dispose();
-    widget.pollItems.clear();
+    pollPostCreate.nullifyFields();
     super.dispose();
   }
 
   void addItem(String item) => setState(() {
-        widget.pollItems.add(item.trim());
+        pollPostCreate.getPollOptions!.add(item.trim());
       });
 
   void removeItem(String item) => setState(() {
-        widget.pollItems.remove(item);
+        pollPostCreate.getPollOptions!.remove(item);
       });
 
   Widget pollTextField() => FormBuilder(
-        key: _formKey,
+        key: widget.formKey,
         child: Expanded(
           child: FormBuilderTextField(
             name: 'pollOption',
@@ -57,7 +59,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(context),
-                (value) => widget.pollItems.any((element) =>
+                (value) => pollPostCreate.getPollOptions!.any((element) =>
                         element.toLowerCase() == value!.trim().toLowerCase())
                     ? 'The poll option is already added.'
                     : null,
@@ -76,7 +78,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             shape: const StadiumBorder(),
           ),
           onPressed: () {
-            if (_formKey.currentState!.validate()) {
+            if (widget.formKey.currentState!.validate()) {
               addItem(itemTEC.text);
               itemTEC.clear();
             }
@@ -88,7 +90,8 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
   Widget polls() => FormBuilderField(
         name: 'pollField',
         validator: FormBuilderValidators.compose([
-          (value) => (widget.pollItems.isEmpty || widget.pollItems.length < 2)
+          (value) => (pollPostCreate.getPollOptions!.isEmpty ||
+                  pollPostCreate.getPollOptions!.length < 2)
               ? 'Add at least two poll options'
               : null
         ]),
@@ -100,7 +103,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
               errorText: field.errorText,
             ),
             child: Column(
-              children: widget.pollItems
+              children: pollPostCreate.getPollOptions!
                   .map(
                     (e) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -118,7 +121,6 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
 
   Widget datetimeField() => FormBuilderDateTimePicker(
         name: 'pollDuration',
-        controller: widget.pollDuration,
         inputType: InputType.both,
         decoration: const InputDecoration(
           labelText: 'Poll duration',
@@ -130,6 +132,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
               : null
         ]),
         firstDate: DateTime.now(),
+        onSaved: (value) => pollPostCreate.setPollDuration = value,
       );
 
   @override
@@ -160,7 +163,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
                   addPollButton(),
                 ],
               ),
-              if (widget.pollItems.isNotEmpty)
+              if (pollPostCreate.getPollOptions!.isNotEmpty)
                 const SizedBox(
                   height: 10,
                 ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
@@ -30,11 +29,13 @@ class _PostFormScreenState extends State<PostFormScreen> {
   }
 
   Future<void> _fetchRelatedToOptions() async {
-    await Provider.of<PostProvider>(context, listen: false).initPostRelatedTo();
+    await Provider.of<PostCreateProvider>(context, listen: false)
+        .initPostRelatedTo();
   }
 
   Future<void> _fetchNGOOptions() async {
-    await Provider.of<PostProvider>(context, listen: false).initNGOOptions();
+    await Provider.of<PostCreateProvider>(context, listen: false)
+        .initNGOOptions();
   }
 
   @override
@@ -49,23 +50,24 @@ class _PostFormScreenState extends State<PostFormScreen> {
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
             snapshot.connectionState == ConnectionState.waiting
                 ? const CustomLoading()
-                : Consumer<PostProvider>(
-                    builder: (context, postP, child) =>
-                        postP.getNGOOptionsData == null ||
-                                postP.getPostRelatedToData == null
+                : Consumer<PostCreateProvider>(
+                    builder: (context, postCreateP, child) =>
+                        postCreateP.getNGOOptionsData == null ||
+                                postCreateP.getPostRelatedToData == null
                             ? const FetchError()
                             : PostForm(
-                                snapshotNGOList: postP.getNGOOptionsData!,
+                                snapshotNGOList: postCreateP.getNGOOptionsData!,
                                 snapshotRelatedList:
-                                    postP.getPostRelatedToData!,
+                                    postCreateP.getPostRelatedToData!,
                               ),
                   ),
       ),
-      bottomNavigationBar: Consumer<PostProvider>(
-        builder: (context, postP, child) => postP.getNGOOptionsData == null ||
-                postP.getPostRelatedToData == null
-            ? const SizedBox.shrink()
-            : const PostBar(),
+      bottomNavigationBar: Consumer<PostCreateProvider>(
+        builder: (context, postCreateP, child) =>
+            postCreateP.getNGOOptionsData == null ||
+                    postCreateP.getPostRelatedToData == null
+                ? const SizedBox.shrink()
+                : const PostBar(),
       ),
     );
   }
