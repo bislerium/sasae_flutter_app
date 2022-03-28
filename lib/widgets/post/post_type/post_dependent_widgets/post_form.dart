@@ -39,6 +39,7 @@ class _PostFormState extends State<PostForm> {
   late final GlobalKey<FormBuilderState> superPostKey;
   late final GlobalKey<FormBuilderState> requestFormKey;
   late final GlobalKey<FormBuilderState> pollFormKey;
+  late final GlobalKey<FormBuilderState> normalFormKey;
   late final GlobalKey<ChipsInputState> _chipKey;
   final TextEditingController descriptionTEC;
   final TextEditingController pollDuration;
@@ -52,18 +53,29 @@ class _PostFormState extends State<PostForm> {
   void initState() {
     super.initState();
     superPostKey = GlobalKey<FormBuilderState>();
+    normalFormKey = GlobalKey<FormBuilderState>();
     requestFormKey = GlobalKey<FormBuilderState>();
     pollFormKey = GlobalKey<FormBuilderState>();
     _chipKey = GlobalKey<ChipsInputState>();
     WidgetsBinding.instance!
         .addPostFrameCallback((_) => setPostButtonOnPressed());
+    initFormClass();
   }
 
   initFormClass() {
-    var postCreateP = Provider.of<PostCreateProvider>(context);
-    normalPostCreate = postCreateP.getNormalPostCreate;
-    pollPostCreate = postCreateP.getPollPostCreate;
-    requestPostCreate = postCreateP.getRequestPostCreate;
+    var postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
+    normalPostCreate = postCreateP.getNormalPostCreate
+      ..setRelatedTo = []
+      ..setPokedNGO = []
+      ..setIsAnonymous = false;
+    pollPostCreate = postCreateP.getPollPostCreate
+      ..setRelatedTo = []
+      ..setRelatedTo = []
+      ..setIsAnonymous = false;
+    requestPostCreate = postCreateP.getRequestPostCreate
+      ..setRelatedTo = []
+      ..setPokedNGO = []
+      ..setIsAnonymous = false;
   }
 
   void setPostButtonOnPressed() {
@@ -85,7 +97,8 @@ class _PostFormState extends State<PostForm> {
           return InputChip(
             key: ObjectKey(data),
             label: Text(
-              data.toString(),
+              (data as NGO__).orgName,
+              overflow: TextOverflow.fade,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
@@ -114,36 +127,53 @@ class _PostFormState extends State<PostForm> {
           data = data as NGO__;
           return ListTile(
             key: ObjectKey(data),
-            leading: Image.network(data.orgPhoto),
+            leading: ClipOval(
+              child: Image.network(
+                data.orgPhoto,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+              ),
+            ),
             title: Text(data.orgName),
             onTap: () => state.selectSuggestion(data),
           );
         },
-        onChanged: (value) => pokedNGO = value as List<int>,
+        onChanged: (value) {
+          var _ = (value as List<NGO__>).map((e) => e.id).toList();
+          normalPostCreate.setPokedNGO = _;
+          pollPostCreate.setPokedNGO = _;
+          requestPostCreate.setPokedNGO = _;
+        },
         inputType: TextInputType.name,
       );
 
   Widget relatedToField() => FormBuilderFilterChip(
-      name: 'filter_chip',
-      maxChips: 5,
-      decoration: const InputDecoration(
-          labelText: 'Related to', hintText: 'What\'s your post related to?'),
-      onSaved: (value) => relatedto = value!.cast<String>(),
-      options: widget.snapshotRelatedList
-          .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
-          .toList(),
-      spacing: 10,
-      runSpacing: -5,
-      selectedColor: Theme.of(context).colorScheme.primaryContainer,
-      labelStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-      ),
-      validator: (value) =>
-          value!.isEmpty ? 'Select what\'s your post related to.' : null);
+        name: 'filterChip',
+        maxChips: 5,
+        decoration: const InputDecoration(
+            labelText: 'Related to', hintText: 'What\'s your post related to?'),
+        options: widget.snapshotRelatedList
+            .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+            .toList(),
+        spacing: 10,
+        runSpacing: -5,
+        selectedColor: Theme.of(context).colorScheme.primaryContainer,
+        labelStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+        validator: (value) =>
+            value!.isEmpty ? 'Select what\'s your post related to.' : null,
+        onSaved: (value) {
+          var _ = value!.cast<String>();
+          normalPostCreate.setRelatedTo = _;
+          pollPostCreate.setRelatedTo = _;
+          requestPostCreate.setRelatedTo = _;
+        },
+      );
 
-  Widget descriptionField() => FormBuilderTextField(
-        name: 'min',
-        controller: descriptionTEC,
+  Widget postContentField() => FormBuilderTextField(
+        name: 'postContent',
         decoration: const InputDecoration(
           label: Text('Description'),
           hintText: "What's your post about?",
@@ -157,6 +187,11 @@ class _PostFormState extends State<PostForm> {
         maxLength: 500,
         maxLines: 6,
         keyboardType: TextInputType.multiline,
+        onSaved: (value) {
+          normalPostCreate.setPostContent = value;
+          pollPostCreate.setPostContent = value;
+          requestPostCreate.setPostContent = value;
+        },
         textInputAction: TextInputAction.next,
       );
 
@@ -169,6 +204,12 @@ class _PostFormState extends State<PostForm> {
         ),
         activeColor: Theme.of(context).colorScheme.primary,
         title: const Text('Post anonymously'),
+        onChanged: (value) {
+          var _ = value;
+          normalPostCreate.setIsAnonymous = value;
+          pollPostCreate.setIsAnonymous = value;
+          requestPostCreate.setIsAnonymous = value;
+        },
       );
 
   Widget superPostFields() => CustomCard(
@@ -182,7 +223,7 @@ class _PostFormState extends State<PostForm> {
                 const SizedBox(
                   height: 10,
                 ),
-                descriptionField(),
+                postContentField(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -198,25 +239,36 @@ class _PostFormState extends State<PostForm> {
       );
 
   Future<void> postHandler() async {
-    bool isSuperPostFormValid = superPostKey.currentState!.validate();
     bool isOtherPostFormValid = false;
-    switch (Provider.of<PostCreateProvider>(context, listen: false)
-        .getCreatePostType) {
+    bool success = false;
+    var postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
+    var postType = postCreateP.getCreatePostType;
+    bool isSuperPostFormValid = superPostKey.currentState!.validate();
+    switch (postType) {
       case PostType.normalPost:
-        isOtherPostFormValid = true;
+        isOtherPostFormValid = normalFormKey.currentState!.validate();
+        if (isOtherPostFormValid) normalFormKey.currentState!.save();
         break;
       case PostType.pollPost:
         isOtherPostFormValid = pollFormKey.currentState!.validate();
+        if (isOtherPostFormValid) pollFormKey.currentState!.save();
         break;
       case PostType.requestPost:
         isOtherPostFormValid = requestFormKey.currentState!.validate();
+        if (isOtherPostFormValid) requestFormKey.currentState!.save();
         break;
     }
     if (isSuperPostFormValid && isOtherPostFormValid) {
-      Provider.of<PostCreateProvider>(context, listen: false).createNormalPost(
-          relatedTo: relatedto ?? [],
-          postContent: descriptionTEC.text,
-          pokedToNGO: pokedNGO ?? []);
+      superPostKey.currentState!.save();
+      switch (postType) {
+        case PostType.normalPost:
+          success = await postCreateP.createNormalPost();
+          break;
+        case PostType.pollPost:
+          break;
+        case PostType.requestPost:
+          break;
+      }
     }
   }
 
@@ -230,6 +282,7 @@ class _PostFormState extends State<PostForm> {
           height: 10,
         ),
         PostFormPerPostType(
+          normalFormKey: normalFormKey,
           pollFormKey: pollFormKey,
           requestFormKey: requestFormKey,
         ),

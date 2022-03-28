@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NormalPostCreate {
@@ -22,12 +23,42 @@ class NormalPostCreate {
 
   set setPostImage(XFile? postImage) => _postImage = postImage;
 
+  void nullifyNormal() {
+    _postImage = null;
+  }
+
   void nullifyFields() {
     _relatedTo = null;
     _postContent = null;
     _isAnonymous = null;
     _pokedNGO = null;
-    _postImage = null;
+    nullifyNormal();
+  }
+
+  @override
+  String toString() {
+    return 'NormalPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _postImage: $_postImage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is NormalPostCreate &&
+        listEquals(other._relatedTo, _relatedTo) &&
+        other._postContent == _postContent &&
+        other._isAnonymous == _isAnonymous &&
+        listEquals(other._pokedNGO, _pokedNGO) &&
+        other._postImage == _postImage;
+  }
+
+  @override
+  int get hashCode {
+    return _relatedTo.hashCode ^
+        _postContent.hashCode ^
+        _isAnonymous.hashCode ^
+        _pokedNGO.hashCode ^
+        _postImage.hashCode;
   }
 }
 
@@ -56,13 +87,45 @@ class PollPostCreate {
   set setPollOptions(List<String>? pollOptions) => _pollOptions = pollOptions;
   set setPollDuration(DateTime? pollDuration) => _pollDuration = pollDuration;
 
+  void nullifyPoll() {
+    _pollOptions = null;
+    _pollDuration = null;
+  }
+
   void nullifyFields() {
     _relatedTo = null;
     _postContent = null;
     _isAnonymous = null;
     _pokedNGO = null;
-    _pollOptions = null;
-    _pollDuration = null;
+    nullifyPoll();
+  }
+
+  @override
+  String toString() {
+    return 'PollPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _pollOptions: $_pollOptions, _pollDuration: $_pollDuration)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is PollPostCreate &&
+        listEquals(other._relatedTo, _relatedTo) &&
+        other._postContent == _postContent &&
+        other._isAnonymous == _isAnonymous &&
+        listEquals(other._pokedNGO, _pokedNGO) &&
+        listEquals(other._pollOptions, _pollOptions) &&
+        other._pollDuration == _pollDuration;
+  }
+
+  @override
+  int get hashCode {
+    return _relatedTo.hashCode ^
+        _postContent.hashCode ^
+        _isAnonymous.hashCode ^
+        _pokedNGO.hashCode ^
+        _pollOptions.hashCode ^
+        _pollDuration.hashCode;
   }
 }
 
@@ -101,15 +164,43 @@ class RequestPostCreate {
   set setRequestDuration(DateTime? requestDuration) =>
       _requestDuration = requestDuration;
 
-  void nullifyFields() {
-    _relatedTo = null;
-    _postContent = null;
-    _isAnonymous = null;
-    _pokedNGO = null;
+  void nullifyRequest() {
     _min = null;
     _target = null;
     _max = null;
     _requestType = null;
     _requestDuration = null;
+  }
+
+  void nullifyFields() {
+    _relatedTo = null;
+    _postContent = null;
+    _isAnonymous = null;
+    _pokedNGO = null;
+    nullifyRequest();
+  }
+
+  @override
+  String toString() {
+    return 'RequestPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is RequestPostCreate &&
+        listEquals(other._relatedTo, _relatedTo) &&
+        other._postContent == _postContent &&
+        other._isAnonymous == _isAnonymous &&
+        listEquals(other._pokedNGO, _pokedNGO);
+  }
+
+  @override
+  int get hashCode {
+    return _relatedTo.hashCode ^
+        _postContent.hashCode ^
+        _isAnonymous.hashCode ^
+        _pokedNGO.hashCode;
   }
 }

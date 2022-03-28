@@ -7,24 +7,25 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_photo_upload.dart';
 
 class PostFormPerPostType extends StatelessWidget {
+  final GlobalKey<FormBuilderState> normalFormKey;
   final GlobalKey<FormBuilderState> pollFormKey;
   final GlobalKey<FormBuilderState> requestFormKey;
   const PostFormPerPostType(
-      {Key? key, required this.pollFormKey, required this.requestFormKey})
+      {Key? key,
+      required this.normalFormKey,
+      required this.pollFormKey,
+      required this.requestFormKey})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     switch (Provider.of<PostCreateProvider>(context).getCreatePostType) {
       case PostType.normalPost:
-        return const PostPhotoUpload();
+        return PostPhotoUpload(formKey: normalFormKey);
       case PostType.pollPost:
         return FormCardPollPost(formKey: pollFormKey);
       case PostType.requestPost:
-        return FormCardRequestPost(
-          formKey: requestFormKey,
-        );
+        return FormCardRequestPost(formKey: requestFormKey);
     }
-    return const SizedBox.shrink();
   }
 }

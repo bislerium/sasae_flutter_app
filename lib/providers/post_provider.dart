@@ -187,7 +187,7 @@ class PostCreateProvider with ChangeNotifier {
 
   PostType _createPostType;
 
-  get getCreatePostType => _createPostType;
+  PostType get getCreatePostType => _createPostType;
 
   set setCreatePostType(PostType type) {
     if (_createPostType != type) {
@@ -215,35 +215,31 @@ class PostCreateProvider with ChangeNotifier {
   PollPostCreate get getPollPostCreate => _pollPostCreate;
   RequestPostCreate get getRequestPostCreate => _requestPostCreate;
 
-  Future<bool> createNormalPost({
-    required List<String> relatedTo,
-    required String postContent,
-    bool isPostedAnonymous = false,
-    required List<int> pokedToNGO,
-    XFile? postImage,
-  }) async {
+  Future<bool> createNormalPost() async {
     try {
       var formData = FormData.fromMap({
         "normal_post": {
-          "post_image": postImage == null
+          "post_image": _normalPostCreate.getPostImage == null
               ? null
-              : await MultipartFile.fromFile(postImage.path)
+              : await MultipartFile.fromFile(
+                  _normalPostCreate.getPostImage!.path)
         },
         "post_head": {
-          "related_to": relatedTo,
-          "post_content": postContent,
-          "is_anonymous": isPostedAnonymous
+          "related_to": _normalPostCreate.getRelatedTo,
+          "post_content": _normalPostCreate.getPostContent,
+          "is_anonymous": _normalPostCreate.getIsAnonymous
         },
-        "poked_to": pokedToNGO
+        "poked_to": _normalPostCreate.getPokedNGO
       });
       var response = await Dio().post(
         '${getHostName()}$postNormalPost',
         data: formData,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
-          // set content-length
         }),
       );
+      print('---------------');
+      print(response);
       int? statusCode = response.statusCode;
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);

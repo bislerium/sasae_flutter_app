@@ -33,7 +33,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
   @override
   void dispose() {
     itemTEC.dispose();
-    pollPostCreate.nullifyFields();
+    pollPostCreate.nullifyPoll();
     super.dispose();
   }
 
