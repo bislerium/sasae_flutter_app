@@ -20,11 +20,11 @@ class PostFormPerPostType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (Provider.of<PostCreateProvider>(context).getCreatePostType) {
-      case PostType.normalPost:
+      case PostType.normal:
         return PostPhotoUpload(formKey: normalFormKey);
-      case PostType.pollPost:
+      case PostType.poll:
         return FormCardPollPost(formKey: pollFormKey);
-      case PostType.requestPost:
+      case PostType.request:
         return FormCardRequestPost(formKey: requestFormKey);
     }
   }

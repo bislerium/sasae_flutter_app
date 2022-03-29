@@ -13,35 +13,33 @@ class PostTypeRow extends StatelessWidget {
       builder: (context, postCreateP, child) => Row(
         children: [
           IconButton(
-            onPressed: () =>
-                postCreateP.setCreatePostType = PostType.normalPost,
+            onPressed: () => postCreateP.setCreatePostType = PostType.normal,
             icon: const Icon(
               Icons.file_present_rounded,
             ),
-            color: postCreateP.getCreatePostType == PostType.normalPost
+            color: postCreateP.getCreatePostType == PostType.normal
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,
             tooltip: 'Normal Post',
           ),
           IconButton(
-            onPressed: () => postCreateP.setCreatePostType = PostType.pollPost,
+            onPressed: () => postCreateP.setCreatePostType = PostType.poll,
             icon: const Icon(
               Icons.poll_rounded,
             ),
-            color: postCreateP.getCreatePostType == PostType.pollPost
+            color: postCreateP.getCreatePostType == PostType.poll
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,
             tooltip: 'Poll Post',
           ),
           IconButton(
-            onPressed: () =>
-                postCreateP.setCreatePostType = PostType.requestPost,
+            onPressed: () => postCreateP.setCreatePostType = PostType.request,
             icon: const Icon(
               Icons.help_center,
             ),
-            color: postCreateP.getCreatePostType == PostType.requestPost
+            color: postCreateP.getCreatePostType == PostType.request
                 ? activeColor
                 : inActiveColor,
             iconSize: 30,

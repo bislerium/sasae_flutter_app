@@ -17,40 +17,43 @@ class FormCardPollPost extends StatefulWidget {
 }
 
 class _FormCardPollPostState extends State<FormCardPollPost> {
-  final TextEditingController itemTEC;
-  late final PollPostCreate pollPostCreate;
+  final TextEditingController _itemTEC;
+  final GlobalKey<FormBuilderState> _optionsAddFormKey;
+  late final PollPostCreate _pollPostCreate;
 
-  _FormCardPollPostState() : itemTEC = TextEditingController();
+  _FormCardPollPostState()
+      : _itemTEC = TextEditingController(),
+        _optionsAddFormKey = GlobalKey<FormBuilderState>();
 
   @override
   void initState() {
     super.initState();
-    pollPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
+    _pollPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
         .getPollPostCreate;
-    pollPostCreate.setPollOptions = [];
+    _pollPostCreate.setPollOptions = [];
   }
 
   @override
   void dispose() {
-    itemTEC.dispose();
-    pollPostCreate.nullifyPoll();
+    _itemTEC.dispose();
+    _pollPostCreate.nullifyPoll();
     super.dispose();
   }
 
   void addItem(String item) => setState(() {
-        pollPostCreate.getPollOptions!.add(item.trim());
+        _pollPostCreate.getPollOptions!.add(item.trim());
       });
 
   void removeItem(String item) => setState(() {
-        pollPostCreate.getPollOptions!.remove(item);
+        _pollPostCreate.getPollOptions!.remove(item);
       });
 
   Widget pollTextField() => FormBuilder(
-        key: widget.formKey,
+        key: _optionsAddFormKey,
         child: Expanded(
           child: FormBuilderTextField(
             name: 'pollOption',
-            controller: itemTEC,
+            controller: _itemTEC,
             decoration: const InputDecoration(
               labelText: 'Option',
               hintText: 'Add a poll option',
@@ -59,7 +62,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(context),
-                (value) => pollPostCreate.getPollOptions!.any((element) =>
+                (value) => _pollPostCreate.getPollOptions!.any((element) =>
                         element.toLowerCase() == value!.trim().toLowerCase())
                     ? 'The poll option is already added.'
                     : null,
@@ -78,9 +81,9 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             shape: const StadiumBorder(),
           ),
           onPressed: () {
-            if (widget.formKey.currentState!.validate()) {
-              addItem(itemTEC.text);
-              itemTEC.clear();
+            if (_optionsAddFormKey.currentState!.validate()) {
+              addItem(_itemTEC.text);
+              _itemTEC.clear();
             }
           },
           child: const Text('Add'),
@@ -90,8 +93,8 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
   Widget polls() => FormBuilderField(
         name: 'pollField',
         validator: FormBuilderValidators.compose([
-          (value) => (pollPostCreate.getPollOptions!.isEmpty ||
-                  pollPostCreate.getPollOptions!.length < 2)
+          (value) => (_pollPostCreate.getPollOptions!.isEmpty ||
+                  _pollPostCreate.getPollOptions!.length < 2)
               ? 'Add at least two poll options'
               : null
         ]),
@@ -103,7 +106,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
               errorText: field.errorText,
             ),
             child: Column(
-              children: pollPostCreate.getPollOptions!
+              children: _pollPostCreate.getPollOptions!
                   .map(
                     (e) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -120,20 +123,22 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
       );
 
   Widget datetimeField() => FormBuilderDateTimePicker(
-        name: 'pollDuration',
-        inputType: InputType.both,
-        decoration: const InputDecoration(
-          labelText: 'Poll duration',
-        ),
-        validator: FormBuilderValidators.compose([
-          (value) => value != null &&
-                  value.isBefore(DateTime.now().add(const Duration(hours: 1)))
-              ? 'Must have minimum one hour duration'
-              : null
-        ]),
-        firstDate: DateTime.now(),
-        onSaved: (value) => pollPostCreate.setPollDuration = value,
-      );
+      name: 'pollDuration',
+      inputType: InputType.both,
+      decoration: const InputDecoration(
+        labelText: 'Poll duration',
+      ),
+      validator: FormBuilderValidators.compose([
+        (value) => value != null &&
+                value.isBefore(DateTime.now().add(const Duration(hours: 1)))
+            ? 'Must have minimum one hour duration'
+            : null
+      ]),
+      firstDate: DateTime.now(),
+      onSaved: (value) {
+        print(value);
+        _pollPostCreate.setPollDuration = value;
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +168,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
                   addPollButton(),
                 ],
               ),
-              if (pollPostCreate.getPollOptions!.isNotEmpty)
+              if (_pollPostCreate.getPollOptions!.isNotEmpty)
                 const SizedBox(
                   height: 10,
                 ),

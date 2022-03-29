@@ -1,9 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
@@ -19,7 +21,14 @@ class PostProvider with ChangeNotifier {
   List<Post_>? _posts;
   final Dio _dio;
 
-  PostProvider() : _dio = Dio();
+  PostProvider()
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 5 * 1000,
+          ),
+        );
 
   List<Post_>? get postData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
@@ -65,10 +74,13 @@ class PostProvider with ChangeNotifier {
   Future<List<Post_>?> fetchPosts() async {
     try {
       var response = await _dio.get(
-        '${getHostName()}$posts',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
+        posts,
+        options: Options(
+          headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Keep-Alive': 'timeout=5, max=10',
+          },
+        ),
       );
       int? statusCode = response.statusCode;
       if (statusCode == null || statusCode >= 400) {
@@ -90,7 +102,7 @@ class PostProvider with ChangeNotifier {
   Future<bool> report({required int postID}) async {
     try {
       var response = await _dio.post(
-        '${getHostName()}$post$postID/report/',
+        '$post$postID/report/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -112,8 +124,14 @@ class PostCreateProvider with ChangeNotifier {
   final Dio _dio;
 
   PostCreateProvider()
-      : _dio = Dio(),
-        _createPostType = PostType.normalPost,
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 5 * 1000,
+          ),
+        ),
+        _createPostType = PostType.normal,
         _normalPostCreate = NormalPostCreate(),
         _pollPostCreate = PollPostCreate(),
         _requestPostCreate = RequestPostCreate();
@@ -147,7 +165,7 @@ class PostCreateProvider with ChangeNotifier {
   Future<List<String>?> getPostRelatedTo() async {
     try {
       var response = await _dio.get(
-        '${getHostName()}$postRelatedTo',
+        postRelatedTo,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -156,7 +174,7 @@ class PostCreateProvider with ChangeNotifier {
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
       }
-      await Future.delayed(const Duration(seconds: 2));
+      // await Future.delayed(const Duration(seconds: 2));
       return response.data['options'].cast<String>();
     } catch (error) {
       print(error);
@@ -167,7 +185,7 @@ class PostCreateProvider with ChangeNotifier {
   Future<List<NGO__>?> getNGOOptions() async {
     try {
       var response = await _dio.get(
-        '${getHostName()}$postNGOs',
+        postNGOs,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -217,32 +235,113 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<bool> createNormalPost() async {
     try {
-      var formData = FormData.fromMap({
-        "normal_post": {
-          "post_image": _normalPostCreate.getPostImage == null
+      var formData = FormData.fromMap(
+        {
+          "json": json.encode({
+            "post_head": {
+              "related_to": _normalPostCreate.getRelatedTo,
+              "post_content": _normalPostCreate.getPostContent,
+              "is_anonymous": _normalPostCreate.getIsAnonymous
+            },
+            "poked_to": _normalPostCreate.getPokedNGO
+          }),
+          'post_image': _normalPostCreate.getPostImage == null
               ? null
               : await MultipartFile.fromFile(
-                  _normalPostCreate.getPostImage!.path)
+                  _normalPostCreate.getPostImage!.path,
+                ),
         },
-        "post_head": {
-          "related_to": _normalPostCreate.getRelatedTo,
-          "post_content": _normalPostCreate.getPostContent,
-          "is_anonymous": _normalPostCreate.getIsAnonymous
-        },
-        "poked_to": _normalPostCreate.getPokedNGO
-      });
-      var response = await Dio().post(
+      );
+      var response = await _dio.post(
         '${getHostName()}$postNormalPost',
         data: formData,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      print('---------------');
-      print(response);
       int? statusCode = response.statusCode;
       if (statusCode == null || statusCode >= 400) {
         throw HttpException(response.data);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> createPollPost() async {
+    try {
+      var headers = {
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Content-Type': 'application/json',
+      };
+      var request = http.Request(
+        'POST',
+        Uri.parse('${getHostName()}$postPollPost'),
+      );
+      request.body = json.encode({
+        "poll_post": {
+          "option": _pollPostCreate.getPollOptions,
+          "ends_on": _pollPostCreate.getPollDuration == null
+              ? null
+              : Jiffy(_pollPostCreate.getPollDuration)
+                  .format("yyyy-MM-dd'T'HH:mm:ss"),
+        },
+        "post_head": {
+          "related_to": _pollPostCreate.getRelatedTo,
+          "post_content": _pollPostCreate.getPostContent,
+          "is_anonymous": _pollPostCreate.getIsAnonymous
+        },
+        "poked_to": _pollPostCreate.getPokedNGO
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> createRequestPost() async {
+    try {
+      var headers = {
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Content-Type': 'application/json',
+      };
+      var request = http.Request(
+        'POST',
+        Uri.parse('${getHostName()}$postRequestPost'),
+      );
+      request.body = json.encode({
+        "request_post": {
+          "min": _requestPostCreate.getMin,
+          "max": _requestPostCreate.getMax,
+          "target": _requestPostCreate.getTarget,
+          "ends_on": _requestPostCreate.getRequestDuration == null
+              ? null
+              : Jiffy(_requestPostCreate.getRequestDuration)
+                  .format("yyyy-MM-dd'T'HH:mm:ss"),
+          "request_type": _requestPostCreate.getRequestType
+        },
+        "post_head": {
+          "related_to": _requestPostCreate.getRelatedTo,
+          "post_content": _requestPostCreate.getPostContent,
+          "is_anonymous": _requestPostCreate.getIsAnonymous
+        },
+        "poked_to": _requestPostCreate.getPokedNGO
+      });
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
       }
       return true;
     } catch (error) {
@@ -257,9 +356,16 @@ class PostCreateProvider with ChangeNotifier {
 class NormalPostProvider with ChangeNotifier {
   NormalPost? _normalPost;
   late AuthProvider _authP;
-  Dio dio;
+  final Dio _dio;
 
-  NormalPostProvider() : dio = Dio();
+  NormalPostProvider()
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 5 * 1000,
+          ),
+        );
 
   set setAuthP(AuthProvider auth) => _authP = auth;
   NormalPost? get normalPostData => _normalPost;
@@ -311,8 +417,8 @@ class NormalPostProvider with ChangeNotifier {
 
   Future<NormalPost?> fetchNormalPost({required int postID}) async {
     try {
-      var response = await dio.get(
-        '${getHostName()}$post$postID/',
+      var response = await _dio.get(
+        '$post$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -337,12 +443,12 @@ class NormalPostProvider with ChangeNotifier {
       late String uri;
       switch (type) {
         case NormalPostReactionType.upVote:
-          uri = '${getHostName()}$post${_normalPost!.id}/upvote/';
+          uri = '$post${_normalPost!.id}/upvote/';
           break;
         case NormalPostReactionType.downVote:
-          uri = '${getHostName()}$post${_normalPost!.id}/downvote/';
+          uri = '$post${_normalPost!.id}/downvote/';
       }
-      var response = await dio.post(
+      var response = await _dio.post(
         uri,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
@@ -367,9 +473,16 @@ class NormalPostProvider with ChangeNotifier {
 class PollPostProvider with ChangeNotifier {
   PollPost? _pollPost;
   late AuthProvider _authP;
-  Dio dio;
+  final Dio _dio;
 
-  PollPostProvider() : dio = Dio();
+  PollPostProvider()
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 5 * 1000,
+          ),
+        );
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
@@ -431,8 +544,8 @@ class PollPostProvider with ChangeNotifier {
 
   Future<PollPost?> fetchPollPost({required int postID}) async {
     try {
-      var response = await dio.get(
-        '${getHostName()}$post$postID/',
+      var response = await _dio.get(
+        '$post$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -455,8 +568,8 @@ class PollPostProvider with ChangeNotifier {
 
   Future<bool> pollTheOption({required int optionID}) async {
     try {
-      var response = await dio.post(
-        '${getHostName()}$post${_pollPost!.id}/poll/$optionID/',
+      var response = await _dio.post(
+        '$post${_pollPost!.id}/poll/$optionID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -480,9 +593,16 @@ class PollPostProvider with ChangeNotifier {
 class RequestPostProvider with ChangeNotifier {
   RequestPost? _requestPost;
   late AuthProvider _authP;
-  Dio dio;
+  final Dio _dio;
 
-  RequestPostProvider() : dio = Dio();
+  RequestPostProvider()
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 5 * 1000,
+          ),
+        );
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
@@ -540,8 +660,8 @@ class RequestPostProvider with ChangeNotifier {
 
   Future<RequestPost?> fetchRequestPost({required int postID}) async {
     try {
-      var response = await dio.get(
-        '${getHostName()}$post$postID/',
+      var response = await _dio.get(
+        '$post$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -569,8 +689,8 @@ class RequestPostProvider with ChangeNotifier {
   //Sign for petition and join for Joinform
   Future<bool> participateRequest() async {
     try {
-      var response = await dio.post(
-        '${getHostName()}$post${_requestPost!.id}/participate/',
+      var response = await _dio.post(
+        '$post${_requestPost!.id}/participate/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
@@ -593,7 +713,7 @@ class RequestPostProvider with ChangeNotifier {
 }
 
 enum PostType {
-  normalPost,
-  pollPost,
-  requestPost,
+  normal,
+  poll,
+  request,
 }
