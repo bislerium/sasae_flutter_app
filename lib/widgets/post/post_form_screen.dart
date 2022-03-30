@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
@@ -51,15 +52,20 @@ class _PostFormScreenState extends State<PostFormScreen> {
             snapshot.connectionState == ConnectionState.waiting
                 ? const CustomLoading()
                 : Consumer<PostCreateProvider>(
-                    builder: (context, postCreateP, child) =>
-                        postCreateP.getNGOOptionsData == null ||
-                                postCreateP.getPostRelatedToData == null
-                            ? const FetchError()
-                            : PostForm(
-                                snapshotNGOList: postCreateP.getNGOOptionsData!,
-                                snapshotRelatedList:
-                                    postCreateP.getPostRelatedToData!,
-                              ),
+                    builder: (context, postCreateP, child) => RefreshIndicator(
+                      onRefresh: () async {
+                        await postCreateP.refreshNGOOptions();
+                        await postCreateP.refreshPostRelatedTo();
+                      },
+                      child: postCreateP.getNGOOptionsData == null ||
+                              postCreateP.getPostRelatedToData == null
+                          ? const FetchError()
+                          : PostForm(
+                              snapshotNGOList: postCreateP.getNGOOptionsData!,
+                              snapshotRelatedList:
+                                  postCreateP.getPostRelatedToData!,
+                            ),
+                    ),
                   ),
       ),
       bottomNavigationBar: Consumer<PostCreateProvider>(

@@ -2,13 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/post/post_create.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
-class PostPhotoUpload extends StatelessWidget {
+class PostPhotoUpload extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
 
   const PostPhotoUpload({Key? key, required this.formKey}) : super(key: key);
+
+  @override
+  State<PostPhotoUpload> createState() => _PostPhotoUploadState();
+}
+
+class _PostPhotoUploadState extends State<PostPhotoUpload> {
+  late final NormalPostCreate _normalPostCreate;
+
+  @override
+  void initState() {
+    super.initState();
+    _normalPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
+        .getNormalPostCreate;
+  }
+
+  @override
+  void dispose() {
+    _normalPostCreate.nullifyNormal();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +50,7 @@ class PostPhotoUpload extends StatelessWidget {
               height: 15,
             ),
             FormBuilder(
-              key: formKey,
+              key: widget.formKey,
               child: FormBuilderImagePicker(
                   name: 'photos',
                   decoration: const InputDecoration(
@@ -40,9 +61,7 @@ class PostPhotoUpload extends StatelessWidget {
                   previewHeight: width,
                   maxImages: 1,
                   onSaved: (list) =>
-                      Provider.of<PostCreateProvider>(context, listen: false)
-                          .getNormalPostCreate
-                          .setPostImage = list?.first),
+                      _normalPostCreate.setPostImage = list?.first),
             ),
           ],
         ),

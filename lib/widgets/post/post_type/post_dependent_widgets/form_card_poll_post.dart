@@ -40,13 +40,11 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
     super.dispose();
   }
 
-  void addItem(String item) => setState(() {
-        _pollPostCreate.getPollOptions!.add(item.trim());
-      });
+  void addItem(String item) =>
+      setState(() => _pollPostCreate.getPollOptions!.add(item.trim()));
 
-  void removeItem(String item) => setState(() {
-        _pollPostCreate.getPollOptions!.remove(item);
-      });
+  void removeItem(String item) =>
+      setState(() => _pollPostCreate.getPollOptions!.remove(item));
 
   Widget pollTextField() => FormBuilder(
         key: _optionsAddFormKey,
@@ -57,6 +55,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             decoration: const InputDecoration(
               labelText: 'Option',
               hintText: 'Add a poll option',
+              border: InputBorder.none,
             ),
             maxLength: 30,
             validator: FormBuilderValidators.compose(
@@ -101,7 +100,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         builder: (FormFieldState<dynamic> field) {
           return InputDecorator(
             decoration: InputDecoration(
-              labelText: "Poll Options",
+              isDense: true,
               contentPadding: const EdgeInsets.only(top: 10.0, bottom: 0.0),
               errorText: field.errorText,
             ),
@@ -135,10 +134,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
             : null
       ]),
       firstDate: DateTime.now(),
-      onSaved: (value) {
-        print(value);
-        _pollPostCreate.setPollDuration = value;
-      });
+      onSaved: (value) => _pollPostCreate.setPollDuration = value);
 
   @override
   Widget build(BuildContext context) {
@@ -168,10 +164,6 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
                   addPollButton(),
                 ],
               ),
-              if (_pollPostCreate.getPollOptions!.isNotEmpty)
-                const SizedBox(
-                  height: 10,
-                ),
               polls(),
               const SizedBox(
                 height: 10,

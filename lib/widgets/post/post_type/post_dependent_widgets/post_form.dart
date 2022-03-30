@@ -26,22 +26,22 @@ class PostForm extends StatefulWidget {
 }
 
 class _PostFormState extends State<PostForm> {
-  late final NormalPostCreate normalPostCreate;
-  late final PollPostCreate pollPostCreate;
-  late final RequestPostCreate requestPostCreate;
+  late final NormalPostCreate _normalPostCreate;
+  late final PollPostCreate _pollPostCreate;
+  late final RequestPostCreate _requestPostCreate;
 
-  final GlobalKey<FormBuilderState> superPostKey;
-  final GlobalKey<FormBuilderState> requestFormKey;
-  final GlobalKey<FormBuilderState> pollFormKey;
-  final GlobalKey<FormBuilderState> normalFormKey;
+  final GlobalKey<FormBuilderState> _superPostKey;
+  final GlobalKey<FormBuilderState> _requestFormKey;
+  final GlobalKey<FormBuilderState> _pollFormKey;
+  final GlobalKey<FormBuilderState> _normalFormKey;
   final GlobalKey<ChipsInputState> _chipKey;
   List<int>? pokedNGO;
 
   _PostFormState()
-      : superPostKey = GlobalKey<FormBuilderState>(),
-        normalFormKey = GlobalKey<FormBuilderState>(),
-        requestFormKey = GlobalKey<FormBuilderState>(),
-        pollFormKey = GlobalKey<FormBuilderState>(),
+      : _superPostKey = GlobalKey<FormBuilderState>(),
+        _normalFormKey = GlobalKey<FormBuilderState>(),
+        _requestFormKey = GlobalKey<FormBuilderState>(),
+        _pollFormKey = GlobalKey<FormBuilderState>(),
         _chipKey = GlobalKey<ChipsInputState>();
 
   @override
@@ -54,15 +54,15 @@ class _PostFormState extends State<PostForm> {
 
   initFormClass() {
     var postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
-    normalPostCreate = postCreateP.getNormalPostCreate
+    _normalPostCreate = postCreateP.getNormalPostCreate
       ..setRelatedTo = []
       ..setPokedNGO = []
       ..setIsAnonymous = false;
-    pollPostCreate = postCreateP.getPollPostCreate
+    _pollPostCreate = postCreateP.getPollPostCreate
       ..setRelatedTo = []
       ..setPokedNGO = []
       ..setIsAnonymous = false;
-    requestPostCreate = postCreateP.getRequestPostCreate
+    _requestPostCreate = postCreateP.getRequestPostCreate
       ..setRelatedTo = []
       ..setPokedNGO = []
       ..setIsAnonymous = false;
@@ -75,6 +75,9 @@ class _PostFormState extends State<PostForm> {
 
   @override
   void dispose() {
+    _normalPostCreate.nullifyAll();
+    _pollPostCreate.nullifyAll();
+    _requestPostCreate.nullifyAll();
     super.dispose();
   }
 
@@ -129,9 +132,9 @@ class _PostFormState extends State<PostForm> {
         },
         onChanged: (value) {
           var _ = (value as List<NGO__>).map((e) => e.id).toList();
-          normalPostCreate.setPokedNGO = _;
-          pollPostCreate.setPokedNGO = _;
-          requestPostCreate.setPokedNGO = _;
+          _normalPostCreate.setPokedNGO = _;
+          _pollPostCreate.setPokedNGO = _;
+          _requestPostCreate.setPokedNGO = _;
         },
         inputType: TextInputType.name,
       );
@@ -154,9 +157,9 @@ class _PostFormState extends State<PostForm> {
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
         onSaved: (value) {
           var _ = value!.cast<String>();
-          normalPostCreate.setRelatedTo = _;
-          pollPostCreate.setRelatedTo = _;
-          requestPostCreate.setRelatedTo = _;
+          _normalPostCreate.setRelatedTo = _;
+          _pollPostCreate.setRelatedTo = _;
+          _requestPostCreate.setRelatedTo = _;
         },
       );
 
@@ -176,9 +179,9 @@ class _PostFormState extends State<PostForm> {
         maxLines: 6,
         keyboardType: TextInputType.multiline,
         onSaved: (value) {
-          normalPostCreate.setPostContent = value;
-          pollPostCreate.setPostContent = value;
-          requestPostCreate.setPostContent = value;
+          _normalPostCreate.setPostContent = value;
+          _pollPostCreate.setPostContent = value;
+          _requestPostCreate.setPostContent = value;
         },
         textInputAction: TextInputAction.next,
       );
@@ -193,15 +196,15 @@ class _PostFormState extends State<PostForm> {
         title: const Text('Post anonymously'),
         onSaved: (value) {
           var _ = value;
-          normalPostCreate.setIsAnonymous = value;
-          pollPostCreate.setIsAnonymous = value;
-          requestPostCreate.setIsAnonymous = value;
+          _normalPostCreate.setIsAnonymous = value;
+          _pollPostCreate.setIsAnonymous = value;
+          _requestPostCreate.setIsAnonymous = value;
         },
       );
 
   Widget superPostFields() => CustomCard(
         child: FormBuilder(
-          key: superPostKey,
+          key: _superPostKey,
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Column(
@@ -230,23 +233,23 @@ class _PostFormState extends State<PostForm> {
     bool success = false;
     var postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
     var postType = postCreateP.getCreatePostType;
-    bool isSuperPostFormValid = superPostKey.currentState!.validate();
+    bool isSuperPostFormValid = _superPostKey.currentState!.validate();
     switch (postType) {
       case PostType.normal:
-        isOtherPostFormValid = normalFormKey.currentState!.validate();
-        if (isOtherPostFormValid) normalFormKey.currentState!.save();
+        isOtherPostFormValid = _normalFormKey.currentState!.validate();
+        if (isOtherPostFormValid) _normalFormKey.currentState!.save();
         break;
       case PostType.poll:
-        isOtherPostFormValid = pollFormKey.currentState!.validate();
-        if (isOtherPostFormValid) pollFormKey.currentState!.save();
+        isOtherPostFormValid = _pollFormKey.currentState!.validate();
+        if (isOtherPostFormValid) _pollFormKey.currentState!.save();
         break;
       case PostType.request:
-        isOtherPostFormValid = requestFormKey.currentState!.validate();
-        if (isOtherPostFormValid) requestFormKey.currentState!.save();
+        isOtherPostFormValid = _requestFormKey.currentState!.validate();
+        if (isOtherPostFormValid) _requestFormKey.currentState!.save();
         break;
     }
     if (isSuperPostFormValid && isOtherPostFormValid) {
-      superPostKey.currentState!.save();
+      _superPostKey.currentState!.save();
       switch (postType) {
         case PostType.normal:
           success = await postCreateP.createNormalPost();
@@ -258,15 +261,15 @@ class _PostFormState extends State<PostForm> {
           success = await postCreateP.createRequestPost();
           break;
       }
-    }
-    if (success) {
-      showSnackBar(context: context, message: 'Successfully posted.');
-      Navigator.of(context).pop();
-    } else {
-      showSnackBar(
-          context: context,
-          message: 'Something went wrong.',
-          errorSnackBar: true);
+      if (success) {
+        showSnackBar(context: context, message: 'Successfully posted.');
+        Navigator.of(context).pop();
+      } else {
+        showSnackBar(
+            context: context,
+            message: 'Something went wrong.',
+            errorSnackBar: true);
+      }
     }
   }
 
@@ -280,9 +283,9 @@ class _PostFormState extends State<PostForm> {
           height: 10,
         ),
         PostFormPerPostType(
-          normalFormKey: normalFormKey,
-          pollFormKey: pollFormKey,
-          requestFormKey: requestFormKey,
+          normalFormKey: _normalFormKey,
+          pollFormKey: _pollFormKey,
+          requestFormKey: _requestFormKey,
         ),
         const SizedBox(
           height: 10,

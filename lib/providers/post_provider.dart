@@ -235,33 +235,36 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<bool> createNormalPost() async {
     try {
-      var formData = FormData.fromMap(
-        {
-          "json": json.encode({
-            "post_head": {
-              "related_to": _normalPostCreate.getRelatedTo,
-              "post_content": _normalPostCreate.getPostContent,
-              "is_anonymous": _normalPostCreate.getIsAnonymous
-            },
-            "poked_to": _normalPostCreate.getPokedNGO
-          }),
-          'post_image': _normalPostCreate.getPostImage == null
-              ? null
-              : await MultipartFile.fromFile(
-                  _normalPostCreate.getPostImage!.path,
-                ),
-        },
+      var headers = {
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+          '${getHostName()}$postNormalPost',
+        ),
       );
-      var response = await _dio.post(
-        '${getHostName()}$postNormalPost',
-        data: formData,
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
+      request.fields.addAll({
+        'post_head': json.encode(
+          {
+            "related_to": _normalPostCreate.getRelatedTo,
+            "post_content": _normalPostCreate.getPostContent,
+            "is_anonymous": _normalPostCreate.getIsAnonymous
+          },
+        ),
+        'poked_to': json.encode(_normalPostCreate.getPokedNGO),
+      });
+
+      if (_normalPostCreate.getPostImage != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            'post_image', _normalPostCreate.getPostImage!.path));
+      }
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
       }
       return true;
     } catch (error) {

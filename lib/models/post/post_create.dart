@@ -27,7 +27,7 @@ class NormalPostCreate {
     _postImage = null;
   }
 
-  void nullifyFields() {
+  void nullifyAll() {
     _relatedTo = null;
     _postContent = null;
     _isAnonymous = null;
@@ -92,7 +92,7 @@ class PollPostCreate {
     _pollDuration = null;
   }
 
-  void nullifyFields() {
+  void nullifyAll() {
     _relatedTo = null;
     _postContent = null;
     _isAnonymous = null;
@@ -172,7 +172,7 @@ class RequestPostCreate {
     _requestDuration = null;
   }
 
-  void nullifyFields() {
+  void nullifyAll() {
     _relatedTo = null;
     _postContent = null;
     _isAnonymous = null;
