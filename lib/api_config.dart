@@ -31,6 +31,7 @@ String getHostName({HostingMode hostingMode = HostingMode.local}) {
   return 'http://${config['host']}:${config['port']}/';
 }
 
+const String verifyUser = 'api/user/verify/';
 const String loginEndpoint = 'api/login/';
 const String logoutEndpoint = 'api/logout/';
 const String passwordResetEndpoint = 'api/password/reset/';

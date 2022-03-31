@@ -68,6 +68,24 @@ class AuthProvider with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 1500));
     if (_ == null) return;
     _auth = Auth.fromJson(_);
+    try {
+      var headers = {
+        'Authorization': 'Token ${_auth!.tokenKey}',
+      };
+      var request =
+          http.Request('GET', Uri.parse('${getHostName()}$verifyUser'));
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+    } catch (error) {
+      await _sessionManager.remove('auth_data');
+      _auth = null;
+    }
   }
 
   // return type: bool represents if the method executed successfully.

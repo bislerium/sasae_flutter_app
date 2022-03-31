@@ -30,10 +30,10 @@ class _PostFormState extends State<PostForm> {
   late final PollPostCreate _pollPostCreate;
   late final RequestPostCreate _requestPostCreate;
 
-  final GlobalKey<FormBuilderState> _superPostKey;
-  final GlobalKey<FormBuilderState> _requestFormKey;
-  final GlobalKey<FormBuilderState> _pollFormKey;
-  final GlobalKey<FormBuilderState> _normalFormKey;
+  final GlobalKey<FormBuilderState> _superPostKey,
+      _requestFormKey,
+      _pollFormKey,
+      _normalFormKey;
   final GlobalKey<ChipsInputState> _chipKey;
   List<int>? pokedNGO;
 
