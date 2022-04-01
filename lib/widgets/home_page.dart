@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_profile_screen.dart';
@@ -105,6 +107,11 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: SafeArea(
         child: _getPageView(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Consumer<FABProvider>(
+        builder: (context, fabP, child) =>
+            fabP.getFABActionHandler ?? const SizedBox.shrink(),
       ),
       bottomNavigationBar: bottomNavBar(),
     );

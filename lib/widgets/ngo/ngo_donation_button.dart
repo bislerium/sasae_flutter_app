@@ -174,7 +174,6 @@ class _NGODonationButtonState extends State<NGODonationButton> {
               ngoP.ngoData!.orgName,
             );
           },
-          width: 130,
           scrollController: widget.scrollController,
         ),
       ),

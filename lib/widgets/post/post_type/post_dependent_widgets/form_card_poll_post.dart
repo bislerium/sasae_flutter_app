@@ -77,8 +77,8 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
         constraints: const BoxConstraints.tightFor(width: 80, height: 50),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-          ),
+              shape: const StadiumBorder(),
+              primary: Theme.of(context).colorScheme.secondary),
           onPressed: () {
             if (_optionsAddFormKey.currentState!.validate()) {
               addItem(_itemTEC.text);

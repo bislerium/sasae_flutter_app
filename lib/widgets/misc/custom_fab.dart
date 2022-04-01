@@ -7,8 +7,6 @@ class CustomFAB extends StatefulWidget {
   final VoidCallback func;
   final Color? background;
   final Color? foreground;
-  final double height;
-  final double width;
   final ScrollController? scrollController;
 
   const CustomFAB({
@@ -18,8 +16,6 @@ class CustomFAB extends StatefulWidget {
     required this.func,
     this.background,
     this.foreground,
-    this.height = 60,
-    this.width = 120,
     this.scrollController,
   }) : super(key: key);
 
@@ -63,8 +59,7 @@ class _CustomFABState extends State<CustomFAB> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: widget.height,
-      width: widget.width,
+      height: 60,
       child: AnimatedSlide(
         duration: const Duration(milliseconds: 200),
         offset: showFAB ? Offset.zero : const Offset(0, 2),
@@ -76,6 +71,7 @@ class _CustomFABState extends State<CustomFAB> {
             widget.text,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          extendedPadding: const EdgeInsetsDirectional.all(25),
           icon: Icon(widget.icon),
           backgroundColor:
               widget.background ?? Theme.of(context).colorScheme.primary,

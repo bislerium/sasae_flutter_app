@@ -9,6 +9,7 @@ import 'package:provider/single_child_widget.dart';
 import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
@@ -161,6 +162,9 @@ List<SingleChildWidget> _providers() => [
       ),
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FABProvider(),
       ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),
