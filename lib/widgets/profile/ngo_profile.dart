@@ -25,7 +25,7 @@ class NGOProfile extends StatelessWidget {
       controller: scrollController,
       children: [
         SizedBox(
-          height: size.height * 0.1,
+          height: size.height * 0.15,
         ),
         Column(
           children: [
@@ -198,9 +198,6 @@ class NGOProfile extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(
-          height: 10,
-        ),
       ],
     );
   }

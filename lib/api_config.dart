@@ -31,7 +31,7 @@ String getHostName({HostingMode hostingMode = HostingMode.local}) {
   return 'http://${config['host']}:${config['port']}/';
 }
 
-const String verifyUser = 'api/user/verify/';
+const String verifyUserEndpoint = 'api/user/verify/';
 const String loginEndpoint = 'api/login/';
 const String logoutEndpoint = 'api/logout/';
 const String passwordResetEndpoint = 'api/password/reset/';
@@ -42,12 +42,12 @@ const String ngoEndpoint = 'api/ngo/';
 const String peopleEndpoint = 'api/people/';
 const String peopleAddEndpoint = 'api/people/add/';
 
-const String posts = 'api/posts/';
-const String post = 'api/post/';
-const String postNormalPost = 'api/post/normal/';
-const String postPollPost = 'api/post/poll/';
-const String postRequestPost = 'api/post/request/';
-const String postRelatedTo = 'api/post/relatedto/';
-const String postNGOs = 'api/post/ngos/';
+const String postsEndpoint = 'api/posts/';
+const String postEndpoint = 'api/post/';
+const String postNormalPostEndpoint = 'api/post/normal/';
+const String postPollPostEndpoint = 'api/post/poll/';
+const String postRequestPostEndpoint = 'api/post/request/';
+const String postRelatedToEndpoint = 'api/post/relatedto/';
+const String postNGOsEndpoint = 'api/post/ngos/';
 
 enum HostingMode { local, ip, internet }

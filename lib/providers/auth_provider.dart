@@ -73,7 +73,7 @@ class AuthProvider with ChangeNotifier {
         'Authorization': 'Token ${_auth!.tokenKey}',
       };
       var request =
-          http.Request('GET', Uri.parse('${getHostName()}$verifyUser'));
+          http.Request('GET', Uri.parse('${getHostName()}$verifyUserEndpoint'));
 
       request.headers.addAll(headers);
 

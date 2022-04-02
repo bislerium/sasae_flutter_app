@@ -4,10 +4,14 @@ import 'package:sasae_flutter_app/widgets/post/post_card.dart';
 
 class PostList extends StatefulWidget {
   final List<Post_> posts;
-  final ScrollController scrollController;
+  final ScrollController? scrollController;
+  final bool isActionable;
 
   const PostList(
-      {Key? key, required this.posts, required this.scrollController})
+      {Key? key,
+      required this.posts,
+      this.scrollController,
+      this.isActionable = false})
       : super(key: key);
 
   @override
@@ -27,6 +31,7 @@ class _PostListState extends State<PostList> {
           return PostCard(
             key: ValueKey(post.id),
             post: post,
+            isActionable: widget.isActionable,
           );
         }),
       );

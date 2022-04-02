@@ -4,7 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 
 class PeopleProfileEditScreen extends StatefulWidget {
   static const String routeName = '/profile/edit';
@@ -147,7 +147,7 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
     );
   }
 
-  Widget fab() => CustomFAB(
+  Widget fab() => CustomScrollAnimatedFAB(
         text: 'Done',
         background: Theme.of(context).colorScheme.primary,
         icon: Icons.done_rounded,

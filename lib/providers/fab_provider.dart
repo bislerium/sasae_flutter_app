@@ -1,15 +1,78 @@
 import 'package:flutter/cupertino.dart';
 
-class FABProvider with ChangeNotifier {
-  Widget? _fabActionHandler;
+class ProfileSettingFABProvider with ChangeNotifier {
+  bool _showFAB;
 
-  Widget? get getFABActionHandler => _fabActionHandler;
+  ProfileSettingFABProvider() : _showFAB = false;
 
-  set setFABActionHandler(Widget? handler) {
-    print(handler);
-    if (_fabActionHandler != handler) {
-      _fabActionHandler = handler;
-      print(handler);
+  bool get getShowFAB => _showFAB;
+
+  set setShowFAB(bool show) {
+    if (_showFAB != show) {
+      _showFAB = show;
+      notifyListeners();
+    }
+  }
+
+  VoidCallback? _onPressedHandler;
+
+  VoidCallback? get getOnPressedHandler => _onPressedHandler;
+
+  set setOnPressedHandler(VoidCallback? handler) {
+    if (_onPressedHandler != handler) {
+      _onPressedHandler = handler;
+      notifyListeners();
+    }
+  }
+}
+
+class PostFABProvider with ChangeNotifier {
+  bool _showFAB;
+
+  PostFABProvider() : _showFAB = false;
+
+  bool get getShowFAB => _showFAB;
+
+  set setShowFAB(bool show) {
+    if (_showFAB != show) {
+      _showFAB = show;
+      notifyListeners();
+    }
+  }
+
+  VoidCallback? _onPressedHandler;
+
+  VoidCallback? get getOnPressedHandler => _onPressedHandler;
+
+  set setOnPressedHandler(VoidCallback? handler) {
+    if (_onPressedHandler != handler) {
+      _onPressedHandler = handler;
+      notifyListeners();
+    }
+  }
+}
+
+class LogoutFABProvider with ChangeNotifier {
+  bool _showFAB;
+
+  LogoutFABProvider() : _showFAB = false;
+
+  bool get getShowFAB => _showFAB;
+
+  set setShowFAB(bool show) {
+    if (_showFAB != show) {
+      _showFAB = show;
+      notifyListeners();
+    }
+  }
+
+  VoidCallback? _onPressedHandler;
+
+  VoidCallback? get getOnPressedHandler => _onPressedHandler;
+
+  set setOnPressedHandler(VoidCallback? handler) {
+    if (_onPressedHandler != handler) {
+      _onPressedHandler = handler;
       notifyListeners();
     }
   }

@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
 
 class PostCard extends StatelessWidget {
   final Post_ post;
+  final bool isActionable;
 
-  const PostCard({Key? key, required this.post}) : super(key: key);
+  const PostCard({Key? key, required this.post, this.isActionable = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,55 @@ class PostCard extends StatelessWidget {
           Navigator.pushNamed(context, routeName,
               arguments: {'postID': post.id});
         },
+        onLongPress: isActionable
+            ? () {
+                showModalSheet(
+                  ctx: context,
+                  children: [
+                    ListTile(
+                      leading: const Icon(Icons.edit),
+                      title: const Text('Edit'),
+                      onTap: () {},
+                      shape: const StadiumBorder(),
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.delete_forever_rounded),
+                      title: const Text('Delete'),
+                      onTap: () {
+                        showCustomDialog(
+                          context: context,
+                          title: 'Post Deletion',
+                          content: 'Are you sure?\nCannot undo, once deleted.',
+                          okFunc: () async {
+                            bool success = await Provider.of<ProfileProvider>(
+                                    context,
+                                    listen: false)
+                                .delete(postID: post.id);
+                            if (success) {
+                              showSnackBar(
+                                context: context,
+                                message: 'Deleted successfully.',
+                              );
+                            } else {
+                              showSnackBar(
+                                context: context,
+                                message:
+                                    'Unsuccessful deletion, Something went wrong!',
+                                errorSnackBar: true,
+                              );
+                            }
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop();
+                          },
+                        );
+                      },
+                      shape: const StadiumBorder(),
+                    ),
+                  ],
+                );
+              }
+            : null,
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(

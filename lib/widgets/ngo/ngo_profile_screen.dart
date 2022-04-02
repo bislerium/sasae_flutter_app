@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/widgets/profile/ngo_profile.dart';
-import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/widgets/ngo/ngo_info_tab.dart';
+import 'package:sasae_flutter_app/widgets/profile/info_post_tab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_donation_button.dart';
+import 'package:sasae_flutter_app/widgets/profile/user_post_tab.dart';
 
 class NGOProfileScreen extends StatefulWidget {
   static const String routeName = '/ngo/profile';
@@ -18,33 +17,18 @@ class NGOProfileScreen extends StatefulWidget {
 }
 
 class _NGOProfileScreenState extends State<NGOProfileScreen> {
-  ScrollController scrollController;
-  bool _isFetched;
-  late NGOProvider _provider;
+  final ScrollController _infoScrollController;
+  final ScrollController _postScrollController;
 
   _NGOProfileScreenState()
-      : scrollController = ScrollController(),
-        _isFetched = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _provider = Provider.of<NGOProvider>(context, listen: false);
-    _fetchNGO();
-  }
+      : _infoScrollController = ScrollController(),
+        _postScrollController = ScrollController();
 
   @override
   void dispose() {
-    scrollController.dispose();
-    _provider.nullifyNGO();
+    _infoScrollController.dispose();
+    _postScrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _fetchNGO() async {
-    await _provider.initFetchNGO(
-      ngoID: widget.ngoID,
-    );
-    setState(() => _isFetched = true);
   }
 
   @override
@@ -53,22 +37,23 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
       appBar: const CustomAppBar(
         title: 'View NGO',
       ),
-      body: _isFetched
-          ? Consumer<NGOProvider>(
-              builder: (context, ngoP, child) => RefreshIndicator(
-                onRefresh: () => ngoP.refreshNGO(ngoID: widget.ngoID),
-                child: ngoP.ngoData == null
-                    ? const FetchError()
-                    : NGOProfile(
-                        scrollController: scrollController,
-                        ngoData: ngoP.ngoData!,
-                      ),
-              ),
-            )
-          : const CustomLoading(),
+      body: InfoPostTab(
+        infoTab: NGOInfoTab(
+          ngoID: widget.ngoID,
+          scrollController: _infoScrollController,
+        ),
+        postTab: UserPostTab(
+          userID: widget.ngoID,
+          userType: UserType.ngo,
+          scrollController: _postScrollController,
+        ),
+        infoScrollController: _infoScrollController,
+        postScrollController: _postScrollController,
+        tabBarMargin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: NGODonationButton(
-        scrollController: scrollController,
+        scrollController: _infoScrollController,
       ),
     );
   }

@@ -30,7 +30,7 @@ class PostProvider with ChangeNotifier {
           ),
         );
 
-  List<Post_>? get postData => _posts;
+  List<Post_>? get getPostData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
   List<Post_> _randPosts() {
@@ -74,23 +74,18 @@ class PostProvider with ChangeNotifier {
   Future<List<Post_>?> fetchPosts() async {
     try {
       var response = await _dio.get(
-        posts,
+        postsEndpoint,
         options: Options(
           headers: {
             'Authorization': 'Token ${_authP.auth!.tokenKey}',
-            'Keep-Alive': 'timeout=5, max=10',
           },
         ),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
-      var body = response.data;
-      return (body['results'] as List)
+      return (response.data['results'] as List)
           .map((element) => Post_.fromAPIResponse(element))
           .toList();
-    } catch (error) {
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -101,19 +96,15 @@ class PostProvider with ChangeNotifier {
 
   Future<bool> report({required int postID}) async {
     try {
-      var response = await _dio.post(
-        '$post$postID/report/',
+      await _dio.post(
+        '$postEndpoint$postID/report/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
       return true;
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return false;
     }
   }
@@ -165,19 +156,14 @@ class PostCreateProvider with ChangeNotifier {
   Future<List<String>?> getPostRelatedTo() async {
     try {
       var response = await _dio.get(
-        postRelatedTo,
+        postRelatedToEndpoint,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
-      // await Future.delayed(const Duration(seconds: 2));
       return response.data['options'].cast<String>();
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -185,20 +171,16 @@ class PostCreateProvider with ChangeNotifier {
   Future<List<NGO__>?> getNGOOptions() async {
     try {
       var response = await _dio.get(
-        postNGOs,
+        postNGOsEndpoint,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
       return (response.data as List)
           .map((e) => NGO__.fromAPIResponse(e))
           .toList();
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -241,7 +223,7 @@ class PostCreateProvider with ChangeNotifier {
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(
-          '${getHostName()}$postNormalPost',
+          '${getHostName()}$postNormalPostEndpoint',
         ),
       );
       request.fields.addAll({
@@ -281,7 +263,7 @@ class PostCreateProvider with ChangeNotifier {
       };
       var request = http.Request(
         'POST',
-        Uri.parse('${getHostName()}$postPollPost'),
+        Uri.parse('${getHostName()}$postPollPostEndpoint'),
       );
       request.body = json.encode({
         "poll_post": {
@@ -320,7 +302,7 @@ class PostCreateProvider with ChangeNotifier {
       };
       var request = http.Request(
         'POST',
-        Uri.parse('${getHostName()}$postRequestPost'),
+        Uri.parse('${getHostName()}$postRequestPostEndpoint'),
       );
       request.body = json.encode({
         "request_post": {
@@ -421,18 +403,14 @@ class NormalPostProvider with ChangeNotifier {
   Future<NormalPost?> fetchNormalPost({required int postID}) async {
     try {
       var response = await _dio.get(
-        '$post$postID/',
+        '$postEndpoint$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      var body = response.data;
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(body);
-      }
-      return NormalPost.fromAPIResponse(body);
-    } catch (error) {
+      return NormalPost.fromAPIResponse(response.data);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -446,24 +424,20 @@ class NormalPostProvider with ChangeNotifier {
       late String uri;
       switch (type) {
         case NormalPostReactionType.upVote:
-          uri = '$post${_normalPost!.id}/upvote/';
+          uri = '$postEndpoint${_normalPost!.id}/upvote/';
           break;
         case NormalPostReactionType.downVote:
-          uri = '$post${_normalPost!.id}/downvote/';
+          uri = '$postEndpoint${_normalPost!.id}/downvote/';
       }
-      var response = await _dio.post(
+      await _dio.post(
         uri,
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
       return true;
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return false;
     }
   }
@@ -548,19 +522,14 @@ class PollPostProvider with ChangeNotifier {
   Future<PollPost?> fetchPollPost({required int postID}) async {
     try {
       var response = await _dio.get(
-        '$post$postID/',
+        '$postEndpoint$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      var body = response.data;
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(body);
-      }
-      return PollPost.fromAPIResponse(body);
-    } catch (error) {
-      print(error);
+      return PollPost.fromAPIResponse(response.data);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -571,19 +540,15 @@ class PollPostProvider with ChangeNotifier {
 
   Future<bool> pollTheOption({required int optionID}) async {
     try {
-      var response = await _dio.post(
-        '$post${_pollPost!.id}/poll/$optionID/',
+      await _dio.post(
+        '$postEndpoint${_pollPost!.id}/poll/$optionID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
       return true;
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return false;
     }
   }
@@ -664,23 +629,14 @@ class RequestPostProvider with ChangeNotifier {
   Future<RequestPost?> fetchRequestPost({required int postID}) async {
     try {
       var response = await _dio.get(
-        '$post$postID/',
+        '$postEndpoint$postID/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      var body = response.data;
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(body);
-      }
-      print(body);
-      print('-----------------------------------');
-      print(RequestPost.fromAPIResponse(body));
-      print('-----------------------------------');
-      return RequestPost.fromAPIResponse(body);
-    } catch (error) {
-      print(error);
+      return RequestPost.fromAPIResponse(response.data);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return null;
     }
   }
@@ -692,22 +648,18 @@ class RequestPostProvider with ChangeNotifier {
   //Sign for petition and join for Joinform
   Future<bool> participateRequest() async {
     try {
-      var response = await _dio.post(
-        '$post${_requestPost!.id}/participate/',
+      await _dio.post(
+        '$postEndpoint${_requestPost!.id}/participate/',
         options: Options(headers: {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      int? statusCode = response.statusCode;
-      if (statusCode == null || statusCode >= 400) {
-        throw HttpException(response.data);
-      }
       _requestPost!.reaction.add(_authP.auth!.profileID);
       _requestPost!.isParticipated = true;
       notifyListeners();
       return true;
-    } catch (error) {
-      print(error);
+    } on DioError catch (e) {
+      print(e.response?.data);
       return false;
     }
   }

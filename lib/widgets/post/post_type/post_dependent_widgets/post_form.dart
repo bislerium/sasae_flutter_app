@@ -81,6 +81,30 @@ class _PostFormState extends State<PostForm> {
     super.dispose();
   }
 
+  Widget relatedToField() => FormBuilderFilterChip(
+        name: 'filterChip',
+        maxChips: 10,
+        decoration: const InputDecoration(
+            labelText: 'Related to', hintText: 'What\'s your post related to?'),
+        options: widget.snapshotRelatedList
+            .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+            .toList(),
+        spacing: 10,
+        runSpacing: -5,
+        selectedColor: Theme.of(context).colorScheme.primaryContainer,
+        labelStyle: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
+        ),
+        validator: (value) =>
+            value!.isEmpty ? 'Select what\'s your post related to.' : null,
+        onSaved: (value) {
+          var _ = value!.cast<String>();
+          _normalPostCreate.setRelatedTo = _;
+          _pollPostCreate.setRelatedTo = _;
+          _requestPostCreate.setRelatedTo = _;
+        },
+      );
+
   Widget pokeNGOField() => ChipsInput(
         key: _chipKey,
         decoration: const InputDecoration(labelText: 'Poke NGO'),
@@ -137,30 +161,6 @@ class _PostFormState extends State<PostForm> {
           _requestPostCreate.setPokedNGO = _;
         },
         inputType: TextInputType.name,
-      );
-
-  Widget relatedToField() => FormBuilderFilterChip(
-        name: 'filterChip',
-        maxChips: 5,
-        decoration: const InputDecoration(
-            labelText: 'Related to', hintText: 'What\'s your post related to?'),
-        options: widget.snapshotRelatedList
-            .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
-            .toList(),
-        spacing: 10,
-        runSpacing: -5,
-        selectedColor: Theme.of(context).colorScheme.primaryContainer,
-        labelStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-        ),
-        validator: (value) =>
-            value!.isEmpty ? 'Select what\'s your post related to.' : null,
-        onSaved: (value) {
-          var _ = value!.cast<String>();
-          _normalPostCreate.setRelatedTo = _;
-          _pollPostCreate.setRelatedTo = _;
-          _requestPostCreate.setRelatedTo = _;
-        },
       );
 
   Widget postContentField() => FormBuilderTextField(

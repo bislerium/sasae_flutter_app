@@ -22,7 +22,7 @@ class PeopleProfile extends StatelessWidget {
       controller: scrollController,
       children: [
         SizedBox(
-          height: size.height * 0.04,
+          height: size.height * 0.15,
         ),
         Column(
           children: [

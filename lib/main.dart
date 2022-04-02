@@ -164,7 +164,13 @@ List<SingleChildWidget> _providers() => [
         create: (_) => AuthProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => FABProvider(),
+        create: (_) => ProfileSettingFABProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => PostFABProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => LogoutFABProvider(),
       ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),

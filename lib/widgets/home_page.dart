@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_profile_screen.dart';
@@ -31,7 +32,53 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Widget bottomNavBar() => NavigationBarTheme(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: PageView(
+          children: const [
+            UserProfile(),
+            NGOScreen(),
+            PostScreen(),
+            Center(
+              child: Icon(Icons.notifications),
+            ),
+            SettingScreen(),
+          ],
+          onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
+          controller: _pageController,
+          physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _selectedNavIndex == 0 &&
+              Provider.of<ProfileSettingFABProvider>(context).getShowFAB
+          ? CustomFAB(
+              text: 'Profile Setting',
+              icon: Icons.settings,
+              func: Provider.of<ProfileSettingFABProvider>(context)
+                  .getOnPressedHandler,
+            )
+          : _selectedNavIndex == 2 &&
+                  Provider.of<PostFABProvider>(context).getShowFAB
+              ? CustomFAB(
+                  text: 'Post',
+                  icon: Icons.post_add,
+                  func:
+                      Provider.of<PostFABProvider>(context).getOnPressedHandler,
+                )
+              : _selectedNavIndex == 4
+                  ? CustomFAB(
+                      text: 'Logout',
+                      icon: Icons.logout,
+                      func: Provider.of<LogoutFABProvider>(context)
+                          .getOnPressedHandler,
+                      foreground: Theme.of(context).colorScheme.onError,
+                      background: Theme.of(context).colorScheme.error,
+                    )
+                  : null,
+      bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
           indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
           iconTheme: MaterialStateProperty.all(
@@ -85,35 +132,7 @@ class _HomePageState extends State<HomePage> {
             })
           },
         ),
-      );
-
-  Widget _getPageView() => PageView(
-        children: const [
-          UserProfile(),
-          NGOScreen(),
-          PostScreen(),
-          Center(
-            child: Icon(Icons.notifications),
-          ),
-          SettingScreen(),
-        ],
-        onPageChanged: (index) => {setState(() => _selectedNavIndex = index)},
-        controller: _pageController,
-        physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
-      );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: _getPageView(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Consumer<FABProvider>(
-        builder: (context, fabP, child) =>
-            fabP.getFABActionHandler ?? const SizedBox.shrink(),
-      ),
-      bottomNavigationBar: bottomNavBar(),
     );
   }
 }

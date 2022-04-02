@@ -57,12 +57,12 @@ class PostTailCard extends StatelessWidget {
                     if (success) {
                       showSnackBar(
                         context: context,
-                        message: 'Reported Successfully!',
+                        message: 'Reported successfully.',
                       );
                     } else {
                       showSnackBar(
                         context: context,
-                        message: 'Unsuccessful Report, Something went wrong!',
+                        message: 'Unsuccessful report, Something went wrong!',
                         errorSnackBar: true,
                       );
                     }

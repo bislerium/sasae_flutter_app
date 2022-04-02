@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -18,46 +18,42 @@ class _SettingScreenState extends State<SettingScreen>
   _SettingScreenState()
       : _applicationName = 'Sasae',
         _applicationVersion = 'v0.0.1',
-        _applicationIcon = const Icon(Icons.flutter_dash),
-        _scrollController = ScrollController();
+        _applicationLegalese =
+            'A Social Service Application to help NGO and the enthuhsiast people who wants to help others.',
+        _applicationIcon = const Icon(Icons.flutter_dash);
 
-  final String _applicationName;
-  final String _applicationVersion;
+  final String _applicationName, _applicationVersion, _applicationLegalese;
   final Icon _applicationIcon;
-  final ScrollController _scrollController;
 
   @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      Provider.of<LogoutFABProvider>(context, listen: false)
+          .setOnPressedHandler = onPressLogout;
+    });
   }
 
-  final String applicationLegalese =
-      'A Social Service Application to help NGO and the enthuhsiast people who wants to help others.';
-
-  Widget fab() => CustomFAB(
-        text: 'Logout',
-        icon: Icons.logout,
-        func: () => showCustomDialog(
-            context: context,
-            title: 'Logout',
-            content: 'Do it with passion or not at all',
-            okFunc: () async {
-              var _ = Provider.of<AuthProvider>(context, listen: false);
-              bool success = await _.logout();
-              if (success) {
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    AuthScreen.routeName, (Route<dynamic> route) => false);
-              } else {
-                showSnackBar(
-                    context: context,
-                    message: 'Unable to logout!',
-                    errorSnackBar: true);
-              }
-            }),
-        foreground: Theme.of(context).colorScheme.onError,
-        background: Theme.of(context).colorScheme.error,
-      );
+  void onPressLogout() {
+    showCustomDialog(
+      context: context,
+      title: 'Logout',
+      content: 'Do it with passion or not at all',
+      okFunc: () async {
+        var _ = Provider.of<AuthProvider>(context, listen: false);
+        bool success = await _.logout();
+        if (success) {
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              AuthScreen.routeName, (Route<dynamic> route) => false);
+        } else {
+          showSnackBar(
+              context: context,
+              message: 'Unable to logout!',
+              errorSnackBar: true);
+        }
+      },
+    );
+  }
 
   Widget about() => ListTile(
         leading: const Icon(Icons.info),
@@ -86,7 +82,7 @@ class _SettingScreenState extends State<SettingScreen>
                               Text(_applicationVersion,
                                   style: Theme.of(context).textTheme.bodyText2),
                               const SizedBox(height: 18),
-                              Text(applicationLegalese,
+                              Text(_applicationLegalese,
                                   style: Theme.of(context).textTheme.caption),
                             ],
                           ),
@@ -123,7 +119,7 @@ class _SettingScreenState extends State<SettingScreen>
             applicationName: _applicationName,
             applicationVersion: _applicationVersion,
             applicationIcon: _applicationIcon,
-            applicationLegalese: applicationLegalese,
+            applicationLegalese: _applicationLegalese,
           );
         },
       );
@@ -147,18 +143,14 @@ class _SettingScreenState extends State<SettingScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          about(),
-          licenses(),
-          darkMode(),
-        ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: fab(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        about(),
+        licenses(),
+        darkMode(),
+      ],
     );
   }
 

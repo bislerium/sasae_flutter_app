@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class RequestFAB extends StatelessWidget {
@@ -69,7 +69,7 @@ class RequestFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomFAB(
+    return CustomScrollAnimatedFAB(
       text: requestType == 'Petition'
           ? isParticipated
               ? 'Signed'

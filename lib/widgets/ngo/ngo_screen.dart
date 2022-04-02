@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_list.dart';
 import 'package:sasae_flutter_app/widgets/ngo/search_filter_bar.dart';
@@ -33,12 +34,7 @@ class _NGOScreenState extends State<NGOScreen>
       future: _fetchNGOFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
-                    LinearProgressIndicator(),
-                  ],
-                )
+              ? const CustomLoading()
               : Column(
                   children: [
                     const Padding(

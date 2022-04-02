@@ -4,7 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class NGODonationButton extends StatefulWidget {
@@ -161,22 +161,21 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
-      builder: (context, ngoP, child) => Visibility(
-        visible: ngoP.ngoData != null && ngoP.ngoData!.isVerified,
-        child: CustomFAB(
-          text: 'Donate',
-          icon: Icons.hail_rounded,
-          background: Theme.of(context).colorScheme.primary,
-          foreground: Theme.of(context).colorScheme.onPrimary,
-          func: () {
-            showDonationModalSheet(
-              ngoP.ngoData!.epayAccount!,
-              ngoP.ngoData!.orgName,
-            );
-          },
-          scrollController: widget.scrollController,
-        ),
-      ),
-    );
+        builder: (context, ngoP, child) =>
+            ngoP.ngoData != null && ngoP.ngoData!.isVerified
+                ? CustomScrollAnimatedFAB(
+                    text: 'Donate',
+                    icon: Icons.hail_rounded,
+                    background: Theme.of(context).colorScheme.primary,
+                    foreground: Theme.of(context).colorScheme.onPrimary,
+                    func: () {
+                      showDonationModalSheet(
+                        ngoP.ngoData!.epayAccount!,
+                        ngoP.ngoData!.orgName,
+                      );
+                    },
+                    scrollController: widget.scrollController,
+                  )
+                : const SizedBox.shrink());
   }
 }
