@@ -18,7 +18,7 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
-  List<Post_>? _posts;
+  static List<Post_>? _posts;
   final Dio _dio;
 
   PostProvider()
@@ -215,6 +215,13 @@ class PostCreateProvider with ChangeNotifier {
   PollPostCreate get getPollPostCreate => _pollPostCreate;
   RequestPostCreate get getRequestPostCreate => _requestPostCreate;
 
+  void pushCreatedPost(Map<String, dynamic> responseData) {
+    Post_ post = Post_.fromAPIResponse(responseData);
+    PostProvider._posts?.insert(0, post);
+    print(post);
+    notifyListeners();
+  }
+
   Future<bool> createNormalPost() async {
     try {
       var headers = {
@@ -245,9 +252,12 @@ class PostCreateProvider with ChangeNotifier {
 
       http.StreamedResponse response = await request.send();
 
+      var jsonResponse = jsonDecode(await response.stream.bytesToString());
+
       if (response.statusCode >= 400) {
-        throw HttpException(await response.stream.bytesToString());
+        throw HttpException(jsonResponse);
       }
+      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);
@@ -284,9 +294,12 @@ class PostCreateProvider with ChangeNotifier {
 
       http.StreamedResponse response = await request.send();
 
+      var jsonResponse = jsonDecode(await response.stream.bytesToString());
+
       if (response.statusCode >= 400) {
-        throw HttpException(await response.stream.bytesToString());
+        throw HttpException(jsonResponse);
       }
+      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);
@@ -323,11 +336,15 @@ class PostCreateProvider with ChangeNotifier {
         "poked_to": _requestPostCreate.getPokedNGO
       });
       request.headers.addAll(headers);
+
       http.StreamedResponse response = await request.send();
 
+      var jsonResponse = jsonDecode(await response.stream.bytesToString());
+
       if (response.statusCode >= 400) {
-        throw HttpException(await response.stream.bytesToString());
+        throw HttpException(jsonResponse);
       }
+      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);

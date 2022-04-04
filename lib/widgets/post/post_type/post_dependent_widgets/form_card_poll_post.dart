@@ -16,7 +16,8 @@ class FormCardPollPost extends StatefulWidget {
   _FormCardPollPostState createState() => _FormCardPollPostState();
 }
 
-class _FormCardPollPostState extends State<FormCardPollPost> {
+class _FormCardPollPostState extends State<FormCardPollPost>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController _itemTEC;
   final GlobalKey<FormBuilderState> _optionsAddFormKey;
   late final PollPostCreate _pollPostCreate;
@@ -175,4 +176,7 @@ class _FormCardPollPostState extends State<FormCardPollPost> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

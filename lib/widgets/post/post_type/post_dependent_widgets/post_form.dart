@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/post_create.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_form_per_type.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_request_post.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_photo_upload.dart';
 
 class PostForm extends StatefulWidget {
   static const routeName = '/post/form';
@@ -282,10 +284,27 @@ class _PostFormState extends State<PostForm> {
         const SizedBox(
           height: 10,
         ),
-        PostFormPerPostType(
-          normalFormKey: _normalFormKey,
-          pollFormKey: _pollFormKey,
-          requestFormKey: _requestFormKey,
+        Consumer<PostCreateProvider>(
+          builder: (context, postCreateP, child) => IndexedStack(
+            children: [
+              Visibility(
+                child: PostPhotoUpload(formKey: _normalFormKey),
+                maintainState: true,
+                visible: postCreateP.getCreatePostType == PostType.normal,
+              ),
+              Visibility(
+                child: FormCardPollPost(formKey: _pollFormKey),
+                maintainState: true,
+                visible: postCreateP.getCreatePostType == PostType.poll,
+              ),
+              Visibility(
+                child: FormCardRequestPost(formKey: _requestFormKey),
+                maintainState: true,
+                visible: postCreateP.getCreatePostType == PostType.request,
+              ),
+            ],
+            index: postCreateP.getCreatePostType.index,
+          ),
         ),
         const SizedBox(
           height: 10,

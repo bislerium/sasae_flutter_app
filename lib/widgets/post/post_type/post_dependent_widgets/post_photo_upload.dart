@@ -15,7 +15,8 @@ class PostPhotoUpload extends StatefulWidget {
   State<PostPhotoUpload> createState() => _PostPhotoUploadState();
 }
 
-class _PostPhotoUploadState extends State<PostPhotoUpload> {
+class _PostPhotoUploadState extends State<PostPhotoUpload>
+    with AutomaticKeepAliveClientMixin {
   late final NormalPostCreate _normalPostCreate;
 
   @override
@@ -68,4 +69,7 @@ class _PostPhotoUploadState extends State<PostPhotoUpload> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

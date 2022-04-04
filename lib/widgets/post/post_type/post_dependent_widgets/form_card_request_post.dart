@@ -15,11 +15,10 @@ class FormCardRequestPost extends StatefulWidget {
   _FormCardRequestPostState createState() => _FormCardRequestPostState();
 }
 
-class _FormCardRequestPostState extends State<FormCardRequestPost> {
+class _FormCardRequestPostState extends State<FormCardRequestPost>
+    with AutomaticKeepAliveClientMixin {
   late final RequestPostCreate _requestPostCreate;
-  final TextEditingController _minTEC;
-  final TextEditingController _targetTEC;
-  final TextEditingController _maxTEC;
+  final TextEditingController _minTEC, _targetTEC, _maxTEC;
 
   _FormCardRequestPostState()
       : _minTEC = TextEditingController(),
@@ -213,4 +212,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
@@ -17,7 +16,8 @@ class PostFormScreen extends StatefulWidget {
   State<PostFormScreen> createState() => _PostFormScreenState();
 }
 
-class _PostFormScreenState extends State<PostFormScreen> {
+class _PostFormScreenState extends State<PostFormScreen>
+    with SingleTickerProviderStateMixin {
   late Future<void> _fetchrRelatedToOptionsFUTURE;
   late Future<void> _fetchNGOOptionsFUTURE;
   Future<void> Function()? postHandler;

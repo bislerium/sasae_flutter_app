@@ -7,45 +7,53 @@ class PostTypeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color activeColor = Theme.of(context).colorScheme.primary;
-    Color inActiveColor = Theme.of(context).colorScheme.onSurfaceVariant;
     return Consumer<PostCreateProvider>(
-      builder: (context, postCreateP, child) => Row(
-        children: [
-          IconButton(
-            onPressed: () => postCreateP.setCreatePostType = PostType.normal,
-            icon: const Icon(
-              Icons.file_present_rounded,
-            ),
-            color: postCreateP.getCreatePostType == PostType.normal
-                ? activeColor
-                : inActiveColor,
-            iconSize: 30,
-            tooltip: 'Normal Post',
+      builder: (context, postCreateP, child) => DefaultTabController(
+        initialIndex: postCreateP.getCreatePostType.index,
+        length: 3,
+        child: TabBar(
+          isScrollable: true,
+          labelColor: Theme.of(context).colorScheme.onSecondaryContainer,
+          unselectedLabelColor: Theme.of(context).colorScheme.secondary,
+          indicator: BoxDecoration(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            borderRadius: BorderRadius.circular(30),
           ),
-          IconButton(
-            onPressed: () => postCreateP.setCreatePostType = PostType.poll,
-            icon: const Icon(
-              Icons.poll_rounded,
+          enableFeedback: true,
+          onTap: (index) {
+            switch (index) {
+              case 0:
+                postCreateP.setCreatePostType = PostType.normal;
+                break;
+              case 1:
+                postCreateP.setCreatePostType = PostType.poll;
+                break;
+              case 2:
+                postCreateP.setCreatePostType = PostType.request;
+                break;
+            }
+          },
+          tabs: const [
+            Tab(
+              icon: Icon(
+                Icons.add_circle_rounded,
+                size: 30,
+              ),
             ),
-            color: postCreateP.getCreatePostType == PostType.poll
-                ? activeColor
-                : inActiveColor,
-            iconSize: 30,
-            tooltip: 'Poll Post',
-          ),
-          IconButton(
-            onPressed: () => postCreateP.setCreatePostType = PostType.request,
-            icon: const Icon(
-              Icons.help_center,
+            Tab(
+              icon: Icon(
+                Icons.poll_rounded,
+                size: 30,
+              ),
             ),
-            color: postCreateP.getCreatePostType == PostType.request
-                ? activeColor
-                : inActiveColor,
-            iconSize: 30,
-            tooltip: 'Request Post',
-          ),
-        ],
+            Tab(
+              icon: Icon(
+                Icons.front_hand_rounded,
+                size: 30,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

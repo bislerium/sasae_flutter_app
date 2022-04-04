@@ -79,21 +79,84 @@ class PeopleProvider with ChangeNotifier {
         'phone': phone,
         'address': address,
       });
-      displayPicture == null
-          ? request.fields["display_picture"] = ""
-          : request.files.add(await http.MultipartFile.fromPath(
-              "display_picture", displayPicture.path));
+      if (displayPicture != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "display_picture", displayPicture.path));
+      }
 
-      citizenshipPhoto == null
-          ? request.fields["citizenship_photo"] = ""
-          : request.files.add(await http.MultipartFile.fromPath(
-              "citizenship_photo", citizenshipPhoto.path));
+      if (citizenshipPhoto != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "citizenship_photo", citizenshipPhoto.path));
+      }
 
       http.StreamedResponse response = await request.send();
-      // final responseBody =
-      //     await json.decode((await http.Response.fromStream(response)).body);
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> updatePeople({
+    required String email,
+    required String fullname,
+    required DateTime dob,
+    required String gender,
+    required String phone,
+    required String address,
+    XFile? displayPicture,
+    XFile? citizenshipPhoto,
+  }) async {
+    try {
+      final request = http.MultipartRequest(
+          'POST', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
+
+      request.fields.addAll({
+        'email': email,
+        'full_name': fullname,
+        'date_of_birth': Jiffy(dob).format('yyyy-MM-dd'),
+        'gender': gender,
+        'phone': phone,
+        'address': address,
+      });
+      if (displayPicture != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "display_picture", displayPicture.path));
+      }
+
+      if (citizenshipPhoto != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "citizenship_photo", citizenshipPhoto.path));
+      }
+
+      http.StreamedResponse response = await request.send();
       if (response.statusCode >= 400) {
         throw HttpException(response.reasonPhrase!);
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> deletePeople() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+      var request = http.Request(
+          'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
       }
       return true;
     } catch (error) {

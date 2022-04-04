@@ -40,7 +40,10 @@ const String ngosEndpoint = 'api/ngos/';
 const String ngoEndpoint = 'api/ngo/';
 
 const String peopleEndpoint = 'api/people/';
+const String peopleDetailEndpoint = 'api/people/detail/';
 const String peopleAddEndpoint = 'api/people/add/';
+const String peopleUpdateEndpoint = 'api/people/update/';
+const String peopleDeleteEndpoint = 'api/people/delete/';
 
 const String postsEndpoint = 'api/posts/';
 const String postEndpoint = 'api/post/';
