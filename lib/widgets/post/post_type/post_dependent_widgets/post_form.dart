@@ -10,7 +10,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_request_post.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_photo_upload.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/form_card_normal_post.dart';
 
 class PostForm extends StatefulWidget {
   static const routeName = '/post/form';
@@ -288,7 +288,7 @@ class _PostFormState extends State<PostForm> {
           builder: (context, postCreateP, child) => IndexedStack(
             children: [
               Visibility(
-                child: PostPhotoUpload(formKey: _normalFormKey),
+                child: FormCardNormalPost(formKey: _normalFormKey),
                 maintainState: true,
                 visible: postCreateP.getCreatePostType == PostType.normal,
               ),

@@ -141,16 +141,27 @@ class PostCard extends StatelessWidget {
                     Row(
                       children: [
                         Chip(
-                          label: Text(
-                            post.postType.split(' ').map((l) => l[0]).join(' '),
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle2
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onPrimary),
-                          ),
+                          label: post.postType.toLowerCase() ==
+                                  PostType.normal.name
+                              ? Icon(
+                                  Icons.add_circle,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
+                                )
+                              : post.postType.toLowerCase() ==
+                                      PostType.poll.name
+                                  ? Icon(
+                                      Icons.poll_rounded,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    )
+                                  : Icon(
+                                      Icons.front_hand_rounded,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
+                                    ),
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
                         ),

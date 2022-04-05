@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/api_config.dart';
@@ -100,37 +102,87 @@ class PeopleProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> updatePeople({
-    required String email,
-    required String fullname,
-    required DateTime dob,
-    required String gender,
-    required String phone,
-    required String address,
-    XFile? displayPicture,
-    XFile? citizenshipPhoto,
-  }) async {
+  PeopleUpdate? _peopleUpdate;
+
+  PeopleUpdate? get getPeopleUpdate => _peopleUpdate;
+
+  void nullifyPeopleUpdate() => _peopleUpdate = null;
+
+  Future<void> retrieveUpdatePeople() async {
     try {
       final request = http.MultipartRequest(
-          'POST', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
+          'GET', Uri.parse('${getHostName()}$peopleDetailEndpoint'));
+
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      String responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(responseBody);
+      }
+
+      _peopleUpdate = PeopleUpdate.fromAPIResponse(json.decode(responseBody));
+
+      String? citizenshipPhotoLink = _peopleUpdate!.getCitizenshipPhotoLink;
+      String? displayPictureLink = _peopleUpdate!.getDisplayPictureLink;
+
+      if (displayPictureLink != null) {
+        _peopleUpdate!.setDisplayPicture =
+            await imageURLToXFile(displayPictureLink);
+      }
+
+      if (citizenshipPhotoLink != null) {
+        _peopleUpdate!.setCitizenshipPhoto =
+            await imageURLToXFile(citizenshipPhotoLink);
+      }
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      _peopleUpdate = null;
+    }
+  }
+
+  Future<void> refreshPeopleUpdate() async {
+    await retrieveUpdatePeople();
+  }
+
+  Future<bool> updatePeople() async {
+    try {
+      final request = http.MultipartRequest(
+          'PUT', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
+
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
 
       request.fields.addAll({
-        'email': email,
-        'full_name': fullname,
-        'date_of_birth': Jiffy(dob).format('yyyy-MM-dd'),
-        'gender': gender,
-        'phone': phone,
-        'address': address,
+        'email': _peopleUpdate!.getEmail!,
+        'full_name': _peopleUpdate!.getFullname!,
+        'date_of_birth':
+            Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
+        'gender': _peopleUpdate!.getGender!,
+        'phone': _peopleUpdate!.getPhone!,
+        'address': _peopleUpdate!.getAddress!,
       });
-      if (displayPicture != null) {
+      if (_peopleUpdate!.getDisplayPicture != null) {
         request.files.add(await http.MultipartFile.fromPath(
-            "display_picture", displayPicture.path));
+            "display_picture", _peopleUpdate!.getDisplayPicture!.path));
       }
 
-      if (citizenshipPhoto != null) {
+      if (_peopleUpdate!.getCitizenshipPhoto != null) {
         request.files.add(await http.MultipartFile.fromPath(
-            "citizenship_photo", citizenshipPhoto.path));
+            "citizenship_photo", _peopleUpdate!.getCitizenshipPhoto!.path));
       }
+
+      request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
       if (response.statusCode >= 400) {
@@ -141,6 +193,16 @@ class PeopleProvider with ChangeNotifier {
       print(error);
       return false;
     }
+  }
+
+  Future<XFile> imageURLToXFile(String imageURL) async {
+    Directory tempDir = await getTemporaryDirectory();
+    File file = File(tempDir.path + Guid(random).guid() + extension(imageURL));
+    http.Response response = await http.get(Uri.parse(imageURL));
+    await file.writeAsBytes(response.bodyBytes);
+    return XFile(
+      file.path,
+    );
   }
 
   Future<bool> deletePeople() async {

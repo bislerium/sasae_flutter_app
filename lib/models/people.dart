@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
+
 import 'package:sasae_flutter_app/models/user.dart';
 
 class People extends User {
@@ -166,5 +168,74 @@ class People extends User {
         postedPosts.hashCode ^
         joinedDate.hashCode ^
         citizenshipPhoto.hashCode;
+  }
+}
+
+class PeopleUpdate {
+  String? _fullname;
+  String? _gender;
+  DateTime? _birthDate;
+  String? _address;
+  String? _phone;
+  String? _email;
+  bool? _isVerified;
+  XFile? _citizenshipPhoto;
+  XFile? _displayPicture;
+  String? _citizenshipPhotoLink;
+  String? _displayPictureLink;
+
+  String? get getFullname => _fullname;
+  String? get getGender => _gender;
+  DateTime? get getBirthDate => _birthDate;
+  String? get getAddress => _address;
+  String? get getPhone => _phone;
+  String? get getEmail => _email;
+  bool? get getIsverified => _isVerified;
+  XFile? get getCitizenshipPhoto => _citizenshipPhoto;
+  XFile? get getDisplayPicture => _displayPicture;
+  String? get getCitizenshipPhotoLink => _citizenshipPhotoLink;
+  String? get getDisplayPictureLink => _displayPictureLink;
+
+  PeopleUpdate();
+
+  set setFullname(String? fullName) => _fullname = fullName;
+  set setGender(String? gender) => _gender = gender;
+  set setBirthDate(DateTime? birthDate) => _birthDate = birthDate;
+  set setAddress(String? address) => _address = address;
+  set setPhone(String? phone) => _phone = phone;
+  set setEmail(String? email) => _email = email;
+  set setCitizenshipPhoto(XFile? citizenshipPhoto) =>
+      _citizenshipPhoto = citizenshipPhoto;
+  set setDisplayPicture(XFile? displayPicture) =>
+      _displayPicture = displayPicture;
+
+  void nullifyAll() {
+    _fullname = null;
+    _gender = null;
+    _birthDate = null;
+    _address = null;
+    _phone = null;
+    _email = null;
+    _citizenshipPhoto = null;
+    _displayPicture = null;
+    _isVerified = null;
+  }
+
+  factory PeopleUpdate.fromAPIResponse(Map<String, dynamic> map) {
+    return PeopleUpdate()
+      .._fullname = map['full_name'] ?? ''
+      .._gender = map['gender'] ?? ''
+      .._birthDate = Jiffy(map['date_of_birth'], 'yyyy-MM-dd').dateTime
+      .._address = map['address'] ?? ''
+      .._phone = map['phone'] ?? ''
+      .._email = map['email'] ?? ''
+      .._isVerified = map['is_verified'] ?? false
+      .._displayPictureLink = map['display_picture']
+      .._citizenshipPhotoLink = map['citizenship_photo'];
+  }
+
+  @override
+  String toString() {
+    return 'PeopleUpdate(_fullname: $_fullname, _gender: $_gender, _birthDate: $_birthDate, _address: $_address, _phone: $_phone, _email: $_email, _citizenshipPhoto: $_citizenshipPhoto, _displayPicture: $_displayPicture, _citizenshipPhotoLink: $_citizenshipPhotoLink, _displayPictureLink: $_displayPictureLink)';
   }
 }

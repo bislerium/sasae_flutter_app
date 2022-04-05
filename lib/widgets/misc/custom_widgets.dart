@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -128,34 +129,40 @@ void showCustomDialog(
         required}) =>
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 3,
-        title: Text(title),
-        content: Text(content),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'Cancel'),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+      builder: (BuildContext context) => BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: 8,
+          sigmaY: 8,
+        ),
+        child: AlertDialog(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          elevation: 3,
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              onPressed: okFunc,
+              child: Text(
+                'OK',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
-          ),
-          TextButton(
-            onPressed: okFunc,
-            child: Text(
-              'OK',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
-          ),
-        ],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20),
+          ],
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
           ),
         ),
       ),

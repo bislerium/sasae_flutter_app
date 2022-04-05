@@ -9,57 +9,50 @@ import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NGOProfile extends StatelessWidget {
-  final ScrollController scrollController;
   final NGO ngoData;
 
   const NGOProfile({
     Key? key,
-    required this.scrollController,
     required this.ngoData,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return ListView(
-      controller: scrollController,
+    return Column(
       children: [
         SizedBox(
           height: size.height * 0.15,
         ),
-        Column(
-          children: [
-            CustomImage(
-              width: size.width * 0.4,
-              imageURL: ngoData.displayPicture,
-              title: 'Display Picture',
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              ngoData.orgName,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            VerifiedChip(
-              isVerified: ngoData.isVerified,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: getWrappedChips(
-                context: context,
-                list: ngoData.fieldOfWork,
-              ),
-            ),
-          ],
+        CustomImage(
+          width: size.width * 0.4,
+          imageURL: ngoData.displayPicture,
+          title: 'Display Picture',
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(
+          ngoData.orgName,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        VerifiedChip(
+          isVerified: ngoData.isVerified,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: getWrappedChips(
+            context: context,
+            list: ngoData.fieldOfWork,
+          ),
         ),
         SizedBox(
           height: size.height * 0.05,
@@ -105,7 +98,7 @@ class NGOProfile extends StatelessWidget {
                             path: ngoData.email,
                           ).toString(),
                         )),
-                if (ngoData.isVerified)
+                if (ngoData.isVerified && ngoData.epayAccount != null)
                   CustomInfoTile(
                     leadingIcon: Icons.account_balance_wallet_rounded,
                     trailing: ngoData.epayAccount!,
@@ -114,7 +107,9 @@ class NGOProfile extends StatelessWidget {
                   leadingIcon: Icons.post_add_rounded,
                   trailing: ngoData.postedPosts.length.toString(),
                 ),
-                if (ngoData.isVerified) ...[
+                if (ngoData.isVerified &&
+                    ngoData.swcCertificateURL != null &&
+                    ngoData.panCertificateURL != null) ...[
                   CustomImageTile(
                     title: 'Social Welfare Council Affilation',
                     imageURL: ngoData.swcCertificateURL!,
@@ -131,7 +126,7 @@ class NGOProfile extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        if (ngoData.isVerified)
+        if (ngoData.isVerified && ngoData.bank != null)
           Card(
             color: Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(

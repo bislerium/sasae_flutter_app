@@ -55,8 +55,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: _selectedNavIndex == 0 &&
               Provider.of<ProfileSettingFABProvider>(context).getShowFAB
           ? CustomFAB(
-              text: 'Profile Setting',
-              icon: Icons.settings,
+              text: 'Update Profile',
+              icon: Icons.edit_rounded,
               func: Provider.of<ProfileSettingFABProvider>(context)
                   .getOnPressedHandler,
             )

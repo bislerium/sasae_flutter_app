@@ -139,6 +139,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(15),

@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatefulWidget with PreferredSizeWidget {
   final String title;
-  const CustomAppBar({Key? key, required this.title}) : super(key: key);
+  final List<Widget>? action;
+  const CustomAppBar({Key? key, required this.title, this.action})
+      : super(key: key);
 
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 
   @override
-  // ignore: todo
-  // TODO: implement preferredSize
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
@@ -23,6 +23,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
               color: Theme.of(context).colorScheme.onSurface,
             ),
       ),
+      actions: widget.action,
       backgroundColor: Colors.transparent,
       foregroundColor: Theme.of(context).colorScheme.onSurface,
       elevation: 0,

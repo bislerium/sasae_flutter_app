@@ -164,6 +164,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return CustomCard(
       child: Padding(
         padding: const EdgeInsets.all(15),

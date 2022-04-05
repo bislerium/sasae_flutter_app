@@ -103,9 +103,7 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
       );
     case (PeopleProfileEditScreen.routeName):
       return PageTransition(
-        child: PeopleProfileEditScreen(
-          user: args['user'],
-        ),
+        child: PeopleProfileEditScreen(),
         type: transitionType,
         settings: settings,
       );

@@ -54,9 +54,13 @@ class _NGOInfoTabState extends State<NGOInfoTab>
                     onRefresh: () => ngoP.refreshNGO(ngoID: widget.ngoID),
                     child: ngoP.ngoData == null
                         ? const FetchError()
-                        : NGOProfile(
-                            scrollController: widget.scrollController,
-                            ngoData: ngoP.ngoData!,
+                        : ListView(
+                            controller: widget.scrollController,
+                            children: [
+                              NGOProfile(
+                                ngoData: ngoP.ngoData!,
+                              ),
+                            ],
                           ),
                   ),
                 ),

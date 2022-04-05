@@ -1,58 +1,76 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_image_picker/form_builder_image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_image_picker.dart';
 
 class FormCardNormalPost extends StatefulWidget {
-  const FormCardNormalPost({Key? key}) : super(key: key);
+  final GlobalKey<FormBuilderState> formKey;
 
-  static _FormCardNormalPostState? of(BuildContext context) =>
-      context.findAncestorStateOfType<_FormCardNormalPostState>();
+  const FormCardNormalPost({Key? key, required this.formKey}) : super(key: key);
 
   @override
-  _FormCardNormalPostState createState() => _FormCardNormalPostState();
+  State<FormCardNormalPost> createState() => _FormCardNormalPostState();
 }
 
-class _FormCardNormalPostState extends State<FormCardNormalPost> {
-  File? _image;
+class _FormCardNormalPostState extends State<FormCardNormalPost>
+    with AutomaticKeepAliveClientMixin {
+  late final NormalPostCreate _normalPostCreate;
 
-  void getImage() => _image;
+  @override
+  void initState() {
+    super.initState();
+    _normalPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
+        .getNormalPostCreate;
+  }
 
   @override
   void dispose() {
+    _normalPostCreate.nullifyNormal();
     super.dispose();
   }
 
-  void setFile(File? file) => setState(() {
-        _image = file;
-      });
-
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+    double width = MediaQuery.of(context).size.width - 60;
     return CustomCard(
       child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              CustomImagePicker(
-                title: 'Attach an Image',
-                icon: Icons.image_rounded,
-                setImageFileHandler: (file) => setFile(file),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              if (_image != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.file(
-                    _image!,
-                    width: double.infinity,
+        padding: const EdgeInsets.all(15.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Normal post',
+              style: Theme.of(context).textTheme.headline6?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            FormBuilder(
+              key: widget.formKey,
+              child: FormBuilderImagePicker(
+                name: 'photos',
+                decoration: const InputDecoration(
+                  labelText: 'Attach a photo',
+                  border: InputBorder.none,
                 ),
-            ],
-          )),
+                previewWidth: width,
+                previewHeight: width,
+                maxImages: 1,
+                onSaved: (list) => _normalPostCreate.setPostImage = list?.first,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

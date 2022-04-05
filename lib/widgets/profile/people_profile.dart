@@ -8,55 +8,47 @@ import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PeopleProfile extends StatelessWidget {
-  final ScrollController scrollController;
   final People peopleData;
 
-  const PeopleProfile(
-      {Key? key, required this.peopleData, required this.scrollController})
-      : super(key: key);
+  const PeopleProfile({Key? key, required this.peopleData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return ListView(
-      controller: scrollController,
+    return Column(
       children: [
         SizedBox(
           height: size.height * 0.15,
         ),
-        Column(
-          children: [
-            CustomImage(
-              width: size.width * 0.4,
-              imageURL: peopleData.displayPicture,
-              title: 'Display Picture',
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Text(
-              peopleData.username,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            VerifiedChip(
-              isVerified: peopleData.isVerified,
-            ),
-          ],
+        CustomImage(
+          width: size.width * 0.4,
+          imageURL: peopleData.displayPicture,
+          title: 'Display Picture',
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        Text(
+          peopleData.username,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        VerifiedChip(
+          isVerified: peopleData.isVerified,
         ),
         SizedBox(
           height: size.height * 0.04,
         ),
         Card(
           color: Theme.of(context).colorScheme.surface,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
