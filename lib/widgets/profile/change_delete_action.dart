@@ -165,9 +165,12 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   }
 
   Future<void> showDeleteDialog() async {
-    int min = 0;
-    int max = 20;
-    int _ = faker.randomGenerator.integer(max, min: min + 1);
+    double min = 0;
+    double scale = 2;
+    double _ = faker.randomGenerator.decimal(scale: scale, min: min);
+    _ = double.parse((_).toStringAsFixed(2));
+    print(_);
+
     await showDialog(
       context: context,
       builder: (context) => BackdropFilter(
@@ -191,13 +194,14 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 child: FormBuilderSlider(
                   name: 'check',
                   initialValue: min.toDouble(),
-                  min: min.toDouble(),
-                  max: max.toDouble(),
-                  divisions: max,
+                  min: min,
+                  max: scale,
                   validator: FormBuilderValidators.compose(
                     [
                       FormBuilderValidators.required(context),
-                      (value) => value != _ ? 'Incorrect!' : null
+                      (value) => double.parse((value)!.toStringAsFixed(2)) != _
+                          ? 'Incorrect!'
+                          : null
                     ],
                   ),
                   decoration: const InputDecoration(border: InputBorder.none),
