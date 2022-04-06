@@ -6,9 +6,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/people_provider.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+
+import '../misc/custom_obscure_text_field.dart';
 
 class ChangeDeleteAction extends StatefulWidget {
   final bool deletable;
@@ -19,9 +21,148 @@ class ChangeDeleteAction extends StatefulWidget {
 }
 
 class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
-  final GlobalKey<FormBuilderState> _formKey;
+  final GlobalKey<FormBuilderState> _deleteformKey, _changeformKey;
+  final TextEditingController _oldPasswordTEC,
+      _newPassword1TEC,
+      _newPassword2TEC;
 
-  _ChangeDeleteActionState() : _formKey = GlobalKey<FormBuilderState>();
+  _ChangeDeleteActionState()
+      : _deleteformKey = GlobalKey<FormBuilderState>(),
+        _changeformKey = GlobalKey<FormBuilderState>(),
+        _oldPasswordTEC = TextEditingController(),
+        _newPassword1TEC = TextEditingController(),
+        _newPassword2TEC = TextEditingController(),
+        _error = false;
+
+  bool _error;
+
+  @override
+  void dispose() {
+    _oldPasswordTEC.dispose();
+    _newPassword1TEC.dispose();
+    _newPassword2TEC.dispose();
+    super.dispose();
+  }
+
+  Future<void> showPasswordChangeModal() async {
+    showModalSheet(
+      ctx: context,
+      topPadding: 30,
+      bottomPadding: 20,
+      leftPadding: 30,
+      rightPadding: 30,
+      children: [
+        Text(
+          'Change Password',
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSurface,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Text(
+          'Enter your old and new password to proceed password change.',
+          style: TextStyle(
+            fontSize: 14,
+            color: Theme.of(context).colorScheme.onSurface,
+            // fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        FormBuilder(
+          key: _changeformKey,
+          child: Column(
+            children: [
+              CustomObscureTextField(
+                labeltext: 'Old Password',
+                textEditingController: _oldPasswordTEC,
+                validators: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(context),
+                  ],
+                ),
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+              ),
+              CustomObscureTextField(
+                labeltext: 'New Password',
+                textEditingController: _newPassword1TEC,
+                validators: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(context),
+                  ],
+                ),
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+              ),
+              CustomObscureTextField(
+                labeltext: 'Confirm New Password',
+                textEditingController: _newPassword2TEC,
+                validators: FormBuilderValidators.compose(
+                  [
+                    FormBuilderValidators.required(context),
+                    (value) => value != _newPassword1TEC.text
+                        ? 'Passwords did\'nt match!'
+                        : null
+                  ],
+                ),
+                keyboardType: TextInputType.visiblePassword,
+                textInputAction: TextInputAction.next,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        ConstrainedBox(
+          constraints:
+              const BoxConstraints.tightFor(height: 60, width: double.infinity),
+          child: ElevatedButton(
+            child: const Text(
+              'Change',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+            onPressed: () async {
+              final isValid = _changeformKey.currentState!.validate();
+              if (isValid) {
+                bool success =
+                    await Provider.of<AuthProvider>(context, listen: false)
+                        .changePassword(
+                  oldPassword: _oldPasswordTEC.text,
+                  newPassword1: _newPassword1TEC.text,
+                  newPassword2: _newPassword2TEC.text,
+                );
+                if (success) {
+                  showSnackBar(
+                    context: context,
+                    message: 'Password changed successfully.',
+                  );
+                } else {
+                  showSnackBar(
+                    context: context,
+                    message: 'Unable to change password!',
+                    errorSnackBar: true,
+                  );
+                }
+                Navigator.of(context).pop();
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 
   Future<void> showDeleteDialog() async {
     int min = 0;
@@ -46,7 +187,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               const SizedBox(height: 10),
               Text('"Slide the slider to $_ to confirm!"'),
               FormBuilder(
-                key: _formKey,
+                key: _deleteformKey,
                 child: FormBuilderSlider(
                   name: 'check',
                   initialValue: min.toDouble(),
@@ -67,11 +208,11 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           actions: [
             ElevatedButton(
               onPressed: () async {
-                bool isValid = _formKey.currentState!.validate();
+                bool isValid = _deleteformKey.currentState!.validate();
                 if (isValid) {
                   bool success =
-                      await Provider.of<PeopleProvider>(context, listen: false)
-                          .deletePeople();
+                      await Provider.of<AuthProvider>(context, listen: false)
+                          .deleteUser();
                   if (success) {
                     await SessionManager().remove('auth_data');
                     showSnackBar(
@@ -108,44 +249,45 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(20),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(
-            child: SizedBox(
-              height: 60,
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.password_rounded),
-                label: const Text('Change'),
-                style: ElevatedButton.styleFrom(
-                  primary: Theme.of(context).colorScheme.surfaceVariant,
-                  onPrimary: Theme.of(context).colorScheme.onSurfaceVariant,
-                  shape: const StadiumBorder(),
-                ),
-              ),
-            ),
-          ),
-          if (widget.deletable) ...[
-            const SizedBox(
-              width: 15,
-            ),
-            Expanded(
-              child: SizedBox(
-                height: 60,
-                child: ElevatedButton.icon(
-                  onPressed: () async => showDeleteDialog(),
-                  icon: const Icon(Icons.person_remove_rounded),
-                  label: const Text('Delete'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.error,
-                    onPrimary: Theme.of(context).colorScheme.onError,
-                    shape: const StadiumBorder(),
+          if (widget.deletable)
+            Ink(
+              decoration: ShapeDecoration(
+                color: Theme.of(context).colorScheme.errorContainer,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
                   ),
                 ),
               ),
+              child: IconButton(
+                onPressed: () async => showDeleteDialog(),
+                icon: const Icon(Icons.person_remove_rounded),
+                color: Theme.of(context).colorScheme.onErrorContainer,
+              ),
             ),
-          ],
+          Ink(
+            decoration: ShapeDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              shape: widget.deletable
+                  ? const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10),
+                      ),
+                    )
+                  : const CircleBorder(),
+            ),
+            child: IconButton(
+              onPressed: () async => showPasswordChangeModal(),
+              icon: const Icon(Icons.password_rounded),
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          ),
         ],
       ),
     );

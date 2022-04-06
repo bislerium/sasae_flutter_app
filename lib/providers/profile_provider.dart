@@ -93,7 +93,6 @@ class ProfileProvider with ChangeNotifier {
   }
 
   Future<bool> delete({required int postID}) async {
-    print(postID);
     try {
       await _dio.delete(
         '$postEndpoint$postID/delete/',

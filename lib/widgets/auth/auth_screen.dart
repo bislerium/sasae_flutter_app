@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -16,11 +17,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final GlobalKey<FormBuilderState> _loginFormKey;
-  final GlobalKey<FormBuilderState> _passwordResetFormKey;
-  final TextEditingController _userNameTEC;
-  final TextEditingController _passwordTEC;
-  final TextEditingController _resetEmailTEC;
+  final GlobalKey<FormBuilderState> _loginFormKey, _passwordResetFormKey;
+  final TextEditingController _userNameTEC, _passwordTEC, _resetEmailTEC;
 
   _AuthScreenState()
       : _loginFormKey = GlobalKey<FormBuilderState>(),
@@ -60,24 +58,18 @@ class _AuthScreenState extends State<AuthScreen> {
         keyboardType: TextInputType.text,
       );
 
-  Widget _passwordField() => FormBuilderTextField(
-        name: 'password',
-        controller: _passwordTEC,
-        decoration: InputDecoration(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          prefixIcon: const Icon(
-            Icons.password_rounded,
-          ),
-          labelText: 'Password',
-        ),
-        validator: FormBuilderValidators.compose(
+  Widget _passwordField() => CustomObscureTextField(
+        labeltext: 'Password',
+        textEditingController: _passwordTEC,
+        validators: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
           ],
         ),
-        textInputAction: TextInputAction.done,
+        prefixIcon: const Icon(
+          Icons.password_rounded,
+        ),
         keyboardType: TextInputType.visiblePassword,
-        obscureText: true,
       );
 
   Widget _loginButton() => Consumer<AuthProvider>(
@@ -131,7 +123,7 @@ class _AuthScreenState extends State<AuthScreen> {
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           ),
-          onPressed: () => showResetPasswordModal(context),
+          onPressed: () async => showResetPasswordModal(),
         );
       });
 
@@ -200,8 +192,8 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       );
 
-  void showResetPasswordModal(BuildContext ctx) => showModalSheet(
-        ctx: ctx,
+  Future<void> showResetPasswordModal() async => showModalSheet(
+        ctx: context,
         topPadding: 30,
         bottomPadding: 20,
         leftPadding: 30,
@@ -268,14 +260,14 @@ class _AuthScreenState extends State<AuthScreen> {
                           .resetPassword(_resetEmailTEC.text);
                   if (success) {
                     showSnackBar(
-                      context: ctx,
+                      context: context,
                       message: 'Password reset email sent, Check your inbox!',
                     );
                     _resetEmailTEC.clear();
-                    Navigator.of(ctx).pop();
+                    Navigator.of(context).pop();
                   } else {
                     showSnackBar(
-                      context: ctx,
+                      context: context,
                       message: 'Something went wrong!',
                       errorSnackBar: true,
                     );

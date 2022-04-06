@@ -28,7 +28,7 @@ void showSnackBar({
           : Theme.of(context).colorScheme.inverseSurface,
     ));
 
-void showModalSheet({
+Future<void> showModalSheet({
   required BuildContext ctx,
   required List<Widget> children,
   double topPadding = 15,
@@ -36,8 +36,8 @@ void showModalSheet({
   double leftPadding = 15,
   double rightPadding = 15,
   double? height,
-}) {
-  showModalBottomSheet(
+}) async {
+  await showModalBottomSheet(
     context: ctx,
     isScrollControlled: true,
     backgroundColor: Theme.of(ctx).colorScheme.surface,

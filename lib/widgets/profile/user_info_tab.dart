@@ -95,21 +95,21 @@ class _UserInfoTabState extends State<UserInfoTab>
                             ? ListView(
                                 controller: widget.scrollController,
                                 children: [
+                                  const ChangeDeleteAction(),
                                   PeopleProfile(
                                     peopleData: profileP.userData! as People,
                                   ),
-                                  const ChangeDeleteAction()
                                 ],
                               )
                             : ListView(
                                 controller: widget.scrollController,
                                 children: [
+                                  const ChangeDeleteAction(
+                                    deletable: false,
+                                  ),
                                   NGOProfile(
                                     ngoData: profileP.userData! as NGO,
                                   ),
-                                  const ChangeDeleteAction(
-                                    deletable: false,
-                                  )
                                 ],
                               ),
                   ),

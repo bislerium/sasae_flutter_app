@@ -18,7 +18,7 @@ class PeopleProfile extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: size.height * 0.15,
+          height: size.height * 0.1,
         ),
         CustomImage(
           width: size.width * 0.4,

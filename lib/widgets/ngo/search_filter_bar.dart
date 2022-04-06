@@ -25,9 +25,9 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     super.dispose();
   }
 
-  void showFilterModal(NGOProvider provider) {
+  Future<void> showFilterModal(NGOProvider provider) async {
     _selectedChips.clear();
-    showModalSheet(
+    await showModalSheet(
       ctx: context,
       children: [
         Padding(
@@ -181,12 +181,12 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                       onPressed: isDataUnavailable
                           ? null
-                          : () {
+                          : () async {
                               if (ngoP.isSearched || ngoP.isFiltered) {
                                 ngoP.clear();
                               }
                               _searchTEC.clear();
-                              showFilterModal(ngoP);
+                              await showFilterModal(ngoP);
                             },
                       icon: const Icon(
                         Icons.filter_list,

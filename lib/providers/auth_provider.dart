@@ -125,4 +125,57 @@ class AuthProvider with ChangeNotifier {
     }
     return true;
   }
+
+  Future<bool> deleteUser() async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_auth!.tokenKey}',
+      };
+      var request = http.Request(
+          'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+
+  Future<bool> changePassword(
+      {required String oldPassword,
+      required String newPassword1,
+      required String newPassword2}) async {
+    try {
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_auth!.tokenKey}',
+      };
+
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('${getHostName()}$passwordChangeEndpoint'));
+      request.fields.addAll({
+        'old_password': oldPassword,
+        'new_password1': newPassword1,
+        'new_password2': newPassword2,
+      });
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
 }

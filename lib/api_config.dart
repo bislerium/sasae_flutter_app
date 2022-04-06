@@ -35,6 +35,7 @@ const String verifyUserEndpoint = 'api/user/verify/';
 const String loginEndpoint = 'api/login/';
 const String logoutEndpoint = 'api/logout/';
 const String passwordResetEndpoint = 'api/password/reset/';
+const String passwordChangeEndpoint = 'api/password/change/';
 
 const String ngosEndpoint = 'api/ngos/';
 const String ngoEndpoint = 'api/ngo/';

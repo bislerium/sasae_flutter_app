@@ -128,6 +128,8 @@ class PeopleProvider with ChangeNotifier {
         throw HttpException(responseBody);
       }
 
+      await Future.delayed(const Duration(seconds: 2));
+
       _peopleUpdate = PeopleUpdate.fromAPIResponse(json.decode(responseBody));
 
       String? citizenshipPhotoLink = _peopleUpdate!.getCitizenshipPhotoLink;
@@ -203,28 +205,6 @@ class PeopleProvider with ChangeNotifier {
     return XFile(
       file.path,
     );
-  }
-
-  Future<bool> deletePeople() async {
-    try {
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
-      };
-      var request = http.Request(
-          'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
-
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-      if (response.statusCode >= 400) {
-        throw HttpException(await response.stream.bytesToString());
-      }
-      return true;
-    } catch (error) {
-      print(error);
-      return false;
-    }
   }
 
   //Can be used for fetching multiple people data in parallel
