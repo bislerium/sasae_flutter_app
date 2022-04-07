@@ -11,8 +11,13 @@ class UserPostTab extends StatefulWidget {
   final ScrollController? scrollController;
   final int? userID;
   final UserType? userType;
+  final bool actionablePost;
   const UserPostTab(
-      {Key? key, this.scrollController, this.userID, this.userType})
+      {Key? key,
+      this.scrollController,
+      this.userID,
+      this.userType,
+      this.actionablePost = false})
       : super(key: key);
 
   @override
@@ -79,7 +84,7 @@ class _UserPostTabState extends State<UserPostTab>
                             : PostList(
                                 posts: profilePostP.getUserPostData!,
                                 scrollController: widget.scrollController,
-                                isActionable: true,
+                                isActionable: widget.actionablePost,
                               ),
                   ),
                 ),

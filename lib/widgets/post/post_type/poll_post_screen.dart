@@ -61,56 +61,53 @@ class _PollPostScreenState extends State<PollPostScreen> {
                   onRefresh: () => postP.refreshPollPost(postID: widget.postID),
                   child: postP.pollPostData == null
                       ? const FetchError()
-                      : Padding(
+                      : ListView(
+                          physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
-                          child: ListView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            children: [
-                              PostRelatedCard(
-                                  list: postP.pollPostData!.relatedTo),
+                          children: [
+                            PostRelatedCard(
+                                list: postP.pollPostData!.relatedTo),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            if (postP.pollPostData!.pokedNGO.isNotEmpty) ...[
+                              PokedNGOCard(list: postP.pollPostData!.pokedNGO),
                               const SizedBox(
-                                height: 10,
-                              ),
-                              if (postP.pollPostData!.pokedNGO.isNotEmpty) ...[
-                                PokedNGOCard(
-                                    list: postP.pollPostData!.pokedNGO),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                              PollCard(
-                                key: ObjectKey(postP.pollPostData),
-                                list: postP.pollPostData!.polls,
-                                choice: postP.pollPostData!.choice,
-                                endsOn: postP.pollPostData!.endsOn,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              PostContentCard(
-                                content: postP.pollPostData!.postContent,
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              if (!postP.pollPostData!.isAnonymous) ...[
-                                PostAuthorCard(
-                                  author: postP.pollPostData!.author!,
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                              PostTailCard(
-                                postID: postP.pollPostData!.id,
-                                createdOn: postP.pollPostData!.createdOn,
-                                modifiedOn: postP.pollPostData!.modifiedOn,
-                              ),
-                              const SizedBox(
-                                height: 20,
+                                height: 15,
                               ),
                             ],
-                          ),
+                            PollCard(
+                              key: ObjectKey(postP.pollPostData),
+                              list: postP.pollPostData!.polls,
+                              choice: postP.pollPostData!.choice,
+                              endsOn: postP.pollPostData!.endsOn,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            PostContentCard(
+                              content: postP.pollPostData!.postContent,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            if (!postP.pollPostData!.isAnonymous) ...[
+                              PostAuthorCard(
+                                author: postP.pollPostData!.author!,
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                            ],
+                            PostTailCard(
+                              postID: postP.pollPostData!.id,
+                              createdOn: postP.pollPostData!.createdOn,
+                              modifiedOn: postP.pollPostData!.modifiedOn,
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ],
                         ),
                 ),
               ),

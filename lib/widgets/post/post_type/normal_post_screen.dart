@@ -68,22 +68,22 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                   child: postP.normalPostData == null
                       ? const FetchError()
                       : ListView(
-                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                           children: [
                             PostRelatedCard(
                               list: postP.normalPostData!.relatedTo,
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             if (postP.normalPostData!.pokedNGO.isNotEmpty) ...[
                               PokedNGOCard(
                                 list: postP.normalPostData!.pokedNGO,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
                             ],
                             if (postP.normalPostData!.attachedImage !=
@@ -92,21 +92,21 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                                 imageURL: postP.normalPostData!.attachedImage!,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
                             ],
                             PostContentCard(
                               content: postP.normalPostData!.postContent,
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 15,
                             ),
                             if (!postP.normalPostData!.isAnonymous) ...[
                               PostAuthorCard(
                                 author: postP.normalPostData!.author!,
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 15,
                               ),
                             ],
                             PostTailCard(
@@ -115,7 +115,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                               modifiedOn: postP.normalPostData!.modifiedOn,
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 15,
                             ),
                           ],
                         ),

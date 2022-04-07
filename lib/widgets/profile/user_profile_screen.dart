@@ -35,6 +35,7 @@ class _UserProfileState extends State<UserProfile>
       ),
       postTab: UserPostTab(
         scrollController: _postScrollController,
+        actionablePost: true,
       ),
       infoScrollController: _infoScrollController,
       postScrollController: _postScrollController,

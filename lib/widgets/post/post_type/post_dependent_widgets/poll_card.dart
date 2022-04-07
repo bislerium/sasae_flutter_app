@@ -51,6 +51,7 @@ class _PollCardState extends State<PollCard> {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(15.0),
         child: Column(
