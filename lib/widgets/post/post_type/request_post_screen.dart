@@ -113,6 +113,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                               PostTailCard(
                                 postID: postP.requestPostData!.id,
                                 createdOn: postP.requestPostData!.createdOn,
+                                modifiedOn: postP.requestPostData!.modifiedOn,
                               ),
                               const SizedBox(
                                 height: 20,

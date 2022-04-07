@@ -17,37 +17,45 @@ class PollBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var progress = isChoice
-        ? Theme.of(context).colorScheme.inversePrimary
-        : Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.8);
     var textstyle = TextStyle(
-      color: isChoice
-          ? Theme.of(context).colorScheme.onPrimaryContainer
-          : Theme.of(context).colorScheme.onSecondaryContainer,
-      fontWeight: isChoice ? FontWeight.bold : null,
+      color: Theme.of(context).colorScheme.onPrimaryContainer,
     );
     return RoundedProgressBar(
       milliseconds: milliseconds,
       percent: percent.toDouble(),
       style: RoundedProgressBarStyle(
         colorBorder: Theme.of(context).colorScheme.surface,
-        borderWidth: 3,
+        borderWidth: 2,
         widthShadow: 0,
-        colorProgress: progress,
-        backgroundProgress: Theme.of(context).colorScheme.secondaryContainer,
+        colorProgress: Theme.of(context).colorScheme.primaryContainer,
+        backgroundProgress: Theme.of(context).colorScheme.surfaceVariant,
       ),
       childLeft: Text(
         title,
         style: textstyle,
       ),
-      childRight: Text(
-        '$percent%',
-        style: textstyle,
+      childRight: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (isChoice)
+            Icon(
+              Icons.check_circle_rounded,
+              size: 20,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+            ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            '$percent%',
+            style: textstyle,
+          ),
+        ],
       ),
       borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(6),
+          topLeft: Radius.circular(10),
           topRight: Radius.circular(25),
-          bottomLeft: Radius.circular(6),
+          bottomLeft: Radius.circular(10),
           bottomRight: Radius.circular(25)),
     );
   }

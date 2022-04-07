@@ -104,6 +104,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                               PostTailCard(
                                 postID: postP.pollPostData!.id,
                                 createdOn: postP.pollPostData!.createdOn,
+                                modifiedOn: postP.pollPostData!.modifiedOn,
                               ),
                               const SizedBox(
                                 height: 20,

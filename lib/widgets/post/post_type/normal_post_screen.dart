@@ -112,6 +112,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                             PostTailCard(
                               postID: postP.normalPostData!.id,
                               createdOn: postP.normalPostData!.createdOn,
+                              modifiedOn: postP.normalPostData!.modifiedOn,
                             ),
                             const SizedBox(
                               height: 20,

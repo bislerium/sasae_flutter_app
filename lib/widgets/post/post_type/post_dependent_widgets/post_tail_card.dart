@@ -9,8 +9,13 @@ import '../../../misc/custom_widgets.dart';
 class PostTailCard extends StatelessWidget {
   final int postID;
   final DateTime createdOn;
+  final DateTime? modifiedOn;
 
-  const PostTailCard({Key? key, required this.postID, required this.createdOn})
+  const PostTailCard(
+      {Key? key,
+      required this.postID,
+      required this.createdOn,
+      this.modifiedOn})
       : super(key: key);
 
   @override
@@ -18,10 +23,19 @@ class PostTailCard extends StatelessWidget {
     return CustomCard(
       margin: EdgeInsets.zero,
       borderRadius: 30,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+      cardColor: modifiedOn == null
+          ? null
+          : Theme.of(context).colorScheme.surfaceVariant,
+      child: Tooltip(
+        verticalOffset: 40,
+        message: modifiedOn == null
+            ? ''
+            : 'Modified on: ${DateFormat.yMMMEd().format(modifiedOn!)}',
         child: Row(
           children: [
+            const SizedBox(
+              width: 20,
+            ),
             Icon(
               Icons.post_add,
               color: Theme.of(context).colorScheme.primary,
