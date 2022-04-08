@@ -6,9 +6,11 @@ import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/widgets/post/post_create_form_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_update_form_screen.dart';
 
 class PostCard extends StatelessWidget {
   final Post_ post;
@@ -49,7 +51,14 @@ class PostCard extends StatelessWidget {
                     ListTile(
                       leading: const Icon(Icons.edit),
                       title: const Text('Edit'),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushNamed(
+                            context, PostUpdateFormScreen.routeName,
+                            arguments: {
+                              'postID': post.id,
+                            });
+                      },
                       shape: const StadiumBorder(),
                     ),
                     ListTile(

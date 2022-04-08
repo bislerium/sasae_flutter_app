@@ -38,7 +38,7 @@ class NormalPostCU {
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
       .._isAnonymous = map['is_anonymous']
-      .._pokedNGO = List<int>.from(map['poked_to'])
+      .._pokedNGO = List<int>.from(map['poked_ngo'])
       .._postImageLink = map['post_image'];
   }
 
@@ -117,9 +117,9 @@ class PollPostCU {
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
       .._isAnonymous = map['is_anonymous']
-      .._pokedNGO = List<int>.from(map['poked_to'])
-      .._pollOptions = List<String>.from(map['_pollOptions'])
-      .._pollDuration = map['_pollDuration'] != null
+      .._pokedNGO = List<int>.from(map['poked_ngo'])
+      .._pollOptions = List<String>.from(map['option'])
+      .._pollDuration = map['ends_on'] != null
           ? Jiffy(map['ends_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null;
   }
@@ -212,7 +212,7 @@ class RequestPostCU {
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
       .._isAnonymous = map['is_anonymous']
-      .._pokedNGO = List<int>.from(map['poked_to'])
+      .._pokedNGO = List<int>.from(map['poked_ngo'])
       .._min = map['min']?.toInt() ?? 0
       .._target = map['target']?.toInt() ?? 0
       .._max = map['max']?.toInt()

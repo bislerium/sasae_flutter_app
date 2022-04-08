@@ -7,16 +7,16 @@ import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_bar.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_form.dart';
 
-class PostFormScreen extends StatefulWidget {
-  static const routeName = '/post/form';
+class PostCreateFormScreen extends StatefulWidget {
+  static const routeName = '/post/create/';
 
-  const PostFormScreen({Key? key}) : super(key: key);
+  const PostCreateFormScreen({Key? key}) : super(key: key);
 
   @override
-  State<PostFormScreen> createState() => _PostFormScreenState();
+  State<PostCreateFormScreen> createState() => _PostCreateFormScreenState();
 }
 
-class _PostFormScreenState extends State<PostFormScreen>
+class _PostCreateFormScreenState extends State<PostCreateFormScreen>
     with SingleTickerProviderStateMixin {
   late Future<void> _fetchrRelatedToOptionsFUTURE;
   late Future<void> _fetchNGOOptionsFUTURE;

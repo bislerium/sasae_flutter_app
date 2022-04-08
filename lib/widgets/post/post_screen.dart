@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/widgets/post/post_form_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_create_form_screen.dart';
 import './post_list.dart';
 
 class PostScreen extends StatefulWidget {
@@ -54,8 +54,9 @@ class _PostScreenState extends State<PostScreen>
         pfProvider.setOnPressedHandler = null;
         pfProvider.setShowFAB = false;
       } else {
-        pfProvider.setOnPressedHandler =
-            () => Navigator.pushNamed(context, PostFormScreen.routeName);
+        pfProvider.setOnPressedHandler = () => Navigator.pushNamed(
+            context, PostCreateFormScreen.routeName,
+            arguments: {'isUpdateMode': false});
         pfProvider.setShowFAB = true;
       }
     });

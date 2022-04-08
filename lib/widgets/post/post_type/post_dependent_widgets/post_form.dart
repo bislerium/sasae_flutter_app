@@ -16,11 +16,15 @@ class PostForm extends StatefulWidget {
   static const routeName = '/post/form';
   final List<NGO__> snapshotNGOList;
   final List<String> snapshotRelatedList;
+  final bool isUpdateMode;
+  final ScrollController? scrollController;
 
   const PostForm(
       {Key? key,
       required this.snapshotNGOList,
-      required this.snapshotRelatedList})
+      required this.snapshotRelatedList,
+      this.isUpdateMode = false,
+      this.scrollController})
       : super(key: key);
 
   @override
@@ -31,6 +35,8 @@ class _PostFormState extends State<PostForm> {
   late final NormalPostCU _normalPostCreate;
   late final PollPostCU _pollPostCreate;
   late final RequestPostCU _requestPostCreate;
+
+  late dynamic _normalPostCU;
 
   final GlobalKey<FormBuilderState> _superPostKey,
       _requestFormKey,
@@ -49,9 +55,24 @@ class _PostFormState extends State<PostForm> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!
-        .addPostFrameCallback((_) => setPostButtonOnPressed());
     initFormClass();
+    if (widget.isUpdateMode) {
+      var _ = Provider.of<PostUpdateProvider>(context, listen: false);
+      switch (_.getPostType!) {
+        case PostType.normal:
+          _normalPostCU = _.getNormalPostCU!;
+          break;
+        case PostType.poll:
+          _normalPostCU = _.getPollPostCU!;
+          break;
+        case PostType.request:
+          _normalPostCU = _.getRequestPostCU!;
+          break;
+      }
+    } else {
+      WidgetsBinding.instance!
+          .addPostFrameCallback((_) => setPostButtonOnPressed());
+    }
   }
 
   initFormClass() {
@@ -97,6 +118,7 @@ class _PostFormState extends State<PostForm> {
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
+        initialValue: widget.isUpdateMode ? _normalPostCU.getRelatedTo! : [],
         validator: (value) =>
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
         onSaved: (value) {
@@ -125,6 +147,12 @@ class _PostFormState extends State<PostForm> {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           );
         },
+        initialValue: widget.isUpdateMode
+            ? _normalPostCU.getPokedNGO!
+                .map<NGO__>((e) => widget.snapshotNGOList
+                    .firstWhere((element) => element.id == e))
+                .toList()
+            : [],
         findSuggestions: (String query) {
           List<NGO__> tempList = [];
           if (pokedNGO == null || pokedNGO!.isEmpty) {
@@ -177,6 +205,7 @@ class _PostFormState extends State<PostForm> {
             FormBuilderValidators.required(context),
           ],
         ),
+        initialValue: widget.isUpdateMode ? _normalPostCU.getPostContent : null,
         maxLength: 500,
         maxLines: 6,
         keyboardType: TextInputType.multiline,
@@ -190,7 +219,8 @@ class _PostFormState extends State<PostForm> {
 
   Widget anonymousField() => FormBuilderSwitch(
         name: 'anonymous',
-        initialValue: false,
+        initialValue:
+            widget.isUpdateMode ? _normalPostCU.getIsAnonymous! : false,
         decoration: const InputDecoration(
           border: InputBorder.none,
         ),
@@ -278,6 +308,7 @@ class _PostFormState extends State<PostForm> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      controller: widget.scrollController,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       children: [
         superPostFields(),

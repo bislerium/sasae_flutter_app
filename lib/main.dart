@@ -19,10 +19,11 @@ import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/widgets/image_view_screen.dart';
-import 'package:sasae_flutter_app/widgets/post/post_form_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_create_form_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/widgets/profile/people_profile_edit_screen.dart';
 import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
@@ -95,9 +96,19 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
         type: transitionType,
         settings: settings,
       );
-    case (PostFormScreen.routeName):
+
+    //-1 as placeholder for post_id in create mode (post-id not required)
+    case (PostUpdateFormScreen.routeName):
       return PageTransition(
-        child: const PostFormScreen(),
+        child: PostUpdateFormScreen(
+          postID: args['postID'],
+        ),
+        type: transitionType,
+        settings: settings,
+      );
+    case (PostCreateFormScreen.routeName):
+      return PageTransition(
+        child: const PostCreateFormScreen(),
         type: transitionType,
         settings: settings,
       );
@@ -182,6 +193,11 @@ List<SingleChildWidget> _providers() => [
         create: (context) => PostCreateProvider(),
         update: (context, authP, profileP) =>
             PostCreateProvider()..setAuthP = authP,
+      ),
+      ChangeNotifierProxyProvider<AuthProvider, PostUpdateProvider>(
+        create: (context) => PostUpdateProvider(),
+        update: (context, authP, profileP) =>
+            PostUpdateProvider()..setAuthP = authP,
       ),
       ChangeNotifierProxyProvider<AuthProvider, NormalPostProvider>(
         create: (context) => NormalPostProvider(),

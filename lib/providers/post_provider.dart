@@ -362,14 +362,36 @@ class PostUpdateProvider with ChangeNotifier {
   NormalPostCU? _normalPostCU;
   PollPostCU? _pollPostCU;
   RequestPostCU? _requestPostCU;
+  PostType? _postType;
 
   NormalPostCU? get getNormalPostCU => _normalPostCU;
   PollPostCU? get getPollPostCU => _pollPostCU;
   RequestPostCU? get getRequestPostCU => _requestPostCU;
+  PostType? get getPostType => _postType;
 
   void nullifyNormalPostCU() => _normalPostCU = null;
   void nullifyPollPostCU() => _pollPostCU = null;
   void nullifyRequestPostCU() => _requestPostCU = null;
+  void nullifyPostType() => _postType = null;
+
+  void nullfyPerPostType() {
+    switch (_postType) {
+      case PostType.normal:
+        nullifyNormalPostCU();
+        break;
+      case PostType.poll:
+        nullifyPollPostCU();
+        break;
+      case PostType.request:
+        nullifyRequestPostCU();
+        break;
+      default:
+        nullifyNormalPostCU();
+        nullifyPollPostCU();
+        nullifyRequestPostCU();
+    }
+    nullifyPostType();
+  }
 
   Future<void> retrieveUpdatePost({required int postID}) async {
     try {
@@ -402,14 +424,15 @@ class PostUpdateProvider with ChangeNotifier {
             _normalPostCU!.setPostImage =
                 await imageURLToXFile(_normalPostCU!.getPostImageLink!);
           }
+          _postType = PostType.normal;
           break;
         case 'Poll':
           _pollPostCU = PollPostCU.fromAPIResponse(jsonBody);
-
+          _postType = PostType.poll;
           break;
         case 'Request':
           _requestPostCU = RequestPostCU.fromAPIResponse(jsonBody);
-
+          _postType = PostType.request;
           break;
       }
       notifyListeners();
@@ -418,6 +441,7 @@ class PostUpdateProvider with ChangeNotifier {
       _normalPostCU = null;
       _pollPostCU = null;
       _requestPostCU = null;
+      _postType = null;
     }
   }
 
@@ -425,37 +449,89 @@ class PostUpdateProvider with ChangeNotifier {
     await retrieveUpdatePost(postID: postID);
   }
 
-  Future<bool> updateNormalPost({required int postID}) async {
+  Future<bool> updatePost({
+    required int postID,
+    required PostType postType,
+  }) async {
     try {
-      final request = http.MultipartRequest(
-          'PUT', Uri.parse('${getHostName()}$postEndpoint$postID/detail/'));
-
       var headers = {
         'Accept': 'application/json',
         'Authorization': 'Token ${_authP.auth!.tokenKey}',
       };
+      var uri = Uri.parse(
+        '${getHostName()}$postEndpoint$postID/detail/',
+      );
 
-      request.fields.addAll({
-        'post_head': json.encode(
-          {
-            "related_to": _normalPostCU!.getRelatedTo,
-            "post_content": _normalPostCU!.getPostContent,
-            "is_anonymous": _normalPostCU!.getIsAnonymous
-          },
-        ),
-        'poked_to': json.encode(_normalPostCU!.getPokedNGO),
-      });
+      dynamic request;
 
-      if (_normalPostCU!.getPostImage != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-            'post_image', _normalPostCU!.getPostImage!.path));
+      if (postType == PostType.normal) {
+        request = http.MultipartRequest('PUT', uri);
+      } else {
+        request = http.Request('PUT', uri);
       }
-
+      switch (postType) {
+        case PostType.normal:
+          request.fields.addAll({
+            'post_head': json.encode(
+              {
+                "related_to": _normalPostCU!.getRelatedTo,
+                "post_content": _normalPostCU!.getPostContent,
+                "is_anonymous": _normalPostCU!.getIsAnonymous
+              },
+            ),
+            'poked_to': json.encode(_normalPostCU!.getPokedNGO),
+          });
+          if (_normalPostCU!.getPostImage != null) {
+            request.files.add(await http.MultipartFile.fromPath(
+                'post_image', _normalPostCU!.getPostImage!.path));
+          }
+          break;
+        case PostType.poll:
+          request.body = json.encode({
+            "poll_post": {
+              "option": _pollPostCU!.getPollOptions,
+              "ends_on": _pollPostCU!.getPollDuration == null
+                  ? null
+                  : Jiffy(_pollPostCU!.getPollDuration)
+                      .format("yyyy-MM-dd'T'HH:mm:ss"),
+            },
+            "post_head": {
+              "related_to": _pollPostCU!.getRelatedTo,
+              "post_content": _pollPostCU!.getPostContent,
+              "is_anonymous": _pollPostCU!.getIsAnonymous
+            },
+            "poked_to": _pollPostCU!.getPokedNGO
+          });
+          break;
+        case PostType.request:
+          request.body = json.encode({
+            "request_post": {
+              "min": _requestPostCU!.getMin,
+              "max": _requestPostCU!.getMax,
+              "target": _requestPostCU!.getTarget,
+              "ends_on": _requestPostCU!.getRequestDuration == null
+                  ? null
+                  : Jiffy(_requestPostCU!.getRequestDuration)
+                      .format("yyyy-MM-dd'T'HH:mm:ss"),
+              "request_type": _requestPostCU!.getRequestType
+            },
+            "post_head": {
+              "related_to": _requestPostCU!.getRelatedTo,
+              "post_content": _requestPostCU!.getPostContent,
+              "is_anonymous": _requestPostCU!.getIsAnonymous
+            },
+            "poked_to": _requestPostCU!.getPokedNGO
+          });
+          break;
+      }
       request.headers.addAll(headers);
 
       http.StreamedResponse response = await request.send();
+
+      String responseBody = await response.stream.bytesToString();
+
       if (response.statusCode >= 400) {
-        throw HttpException(response.reasonPhrase!);
+        throw HttpException(responseBody);
       }
       return true;
     } catch (error) {
