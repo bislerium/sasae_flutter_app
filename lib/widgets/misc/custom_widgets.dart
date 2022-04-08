@@ -1,10 +1,16 @@
+import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:randexp/randexp.dart';
+import 'package:http/http.dart' as http;
 
 void showSnackBar({
   required BuildContext context,
@@ -190,3 +196,13 @@ Widget getWrappedChips(
           )
           .toList(),
     );
+
+Future<XFile> imageURLToXFile(String imageURL) async {
+  Directory tempDir = await getTemporaryDirectory();
+  File file = File(tempDir.path + Guid(random).guid() + extension(imageURL));
+  http.Response response = await http.get(Uri.parse(imageURL));
+  await file.writeAsBytes(response.bodyBytes);
+  return XFile(
+    file.path,
+  );
+}

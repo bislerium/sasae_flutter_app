@@ -1,27 +1,46 @@
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:jiffy/jiffy.dart';
 
-class NormalPostCreate {
+class NormalPostCU {
+  int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
   bool? _isAnonymous;
   List<int>? _pokedNGO;
 
+  String? _postImageLink;
   XFile? _postImage;
 
+  NormalPostCU();
+  int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
   String? get getPostContent => _postContent;
   bool? get getIsAnonymous => _isAnonymous;
   List<int>? get getPokedNGO => _pokedNGO;
 
+  String? get getPostImageLink => _postImageLink;
   XFile? get getPostImage => _postImage;
 
+  set setPostID(int? postID) => _postID = postID;
   set setRelatedTo(List<String>? relatedTo) => _relatedTo = relatedTo;
   set setPostContent(String? postContent) => _postContent = postContent;
   set setIsAnonymous(bool? isAnonymous) => _isAnonymous = isAnonymous;
   set setPokedNGO(List<int>? pokedNGO) => _pokedNGO = pokedNGO;
 
+  set setPostImageLiink(String? postImageLink) =>
+      _postImageLink = postImageLink;
   set setPostImage(XFile? postImage) => _postImage = postImage;
+
+  factory NormalPostCU.fromAPIResponse(Map<String, dynamic> map) {
+    return NormalPostCU()
+      .._postID = map['id']?.toInt() ?? 0
+      .._relatedTo = List<String>.from(map['related_to'])
+      .._postContent = map['post_content']
+      .._isAnonymous = map['is_anonymous']
+      .._pokedNGO = List<int>.from(map['poked_to'])
+      .._postImageLink = map['post_image'];
+  }
 
   void nullifyNormal() {
     _postImage = null;
@@ -37,14 +56,14 @@ class NormalPostCreate {
 
   @override
   String toString() {
-    return 'NormalPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _postImage: $_postImage)';
+    return 'NormalPostCU(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _postImage: $_postImage)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NormalPostCreate &&
+    return other is NormalPostCU &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&
@@ -62,7 +81,8 @@ class NormalPostCreate {
   }
 }
 
-class PollPostCreate {
+class PollPostCU {
+  int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
   bool? _isAnonymous;
@@ -71,6 +91,9 @@ class PollPostCreate {
   List<String>? _pollOptions;
   DateTime? _pollDuration;
 
+  PollPostCU();
+
+  int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
   String? get getPostContent => _postContent;
   bool? get getIsAnonymous => _isAnonymous;
@@ -79,6 +102,7 @@ class PollPostCreate {
   List<String>? get getPollOptions => _pollOptions;
   DateTime? get getPollDuration => _pollDuration;
 
+  set setPostID(int? postID) => _postID = postID;
   set setRelatedTo(List<String>? relatedTo) => _relatedTo = relatedTo;
   set setPostContent(String? postContent) => _postContent = postContent;
   set setIsAnonymous(bool? isAnonymous) => _isAnonymous = isAnonymous;
@@ -86,6 +110,19 @@ class PollPostCreate {
 
   set setPollOptions(List<String>? pollOptions) => _pollOptions = pollOptions;
   set setPollDuration(DateTime? pollDuration) => _pollDuration = pollDuration;
+
+  factory PollPostCU.fromAPIResponse(Map<String, dynamic> map) {
+    return PollPostCU()
+      .._postID = map['id']?.toInt() ?? 0
+      .._relatedTo = List<String>.from(map['related_to'])
+      .._postContent = map['post_content']
+      .._isAnonymous = map['is_anonymous']
+      .._pokedNGO = List<int>.from(map['poked_to'])
+      .._pollOptions = List<String>.from(map['_pollOptions'])
+      .._pollDuration = map['_pollDuration'] != null
+          ? Jiffy(map['ends_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
+          : null;
+  }
 
   void nullifyPoll() {
     _pollOptions = null;
@@ -102,14 +139,14 @@ class PollPostCreate {
 
   @override
   String toString() {
-    return 'PollPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _pollOptions: $_pollOptions, _pollDuration: $_pollDuration)';
+    return 'PollPostCU(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO, _pollOptions: $_pollOptions, _pollDuration: $_pollDuration)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PollPostCreate &&
+    return other is PollPostCU &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&
@@ -129,7 +166,8 @@ class PollPostCreate {
   }
 }
 
-class RequestPostCreate {
+class RequestPostCU {
+  int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
   bool? _isAnonymous;
@@ -141,6 +179,9 @@ class RequestPostCreate {
   String? _requestType;
   DateTime? _requestDuration;
 
+  RequestPostCU();
+
+  int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
   String? get getPostContent => _postContent;
   bool? get getIsAnonymous => _isAnonymous;
@@ -152,6 +193,7 @@ class RequestPostCreate {
   String? get getRequestType => _requestType;
   DateTime? get getRequestDuration => _requestDuration;
 
+  set setPostID(int? postID) => _postID = postID;
   set setRelatedTo(List<String>? relatedTo) => _relatedTo = relatedTo;
   set setPostContent(String? postContent) => _postContent = postContent;
   set setIsAnonymous(bool? isAnonymous) => _isAnonymous = isAnonymous;
@@ -163,6 +205,21 @@ class RequestPostCreate {
   set setRequestType(String? requestType) => _requestType = requestType;
   set setRequestDuration(DateTime? requestDuration) =>
       _requestDuration = requestDuration;
+
+  factory RequestPostCU.fromAPIResponse(Map<String, dynamic> map) {
+    return RequestPostCU()
+      .._postID = map['id']?.toInt() ?? 0
+      .._relatedTo = List<String>.from(map['related_to'])
+      .._postContent = map['post_content']
+      .._isAnonymous = map['is_anonymous']
+      .._pokedNGO = List<int>.from(map['poked_to'])
+      .._min = map['min']?.toInt() ?? 0
+      .._target = map['target']?.toInt() ?? 0
+      .._max = map['max']?.toInt()
+      .._requestDuration =
+          Jiffy(map['ends_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
+      .._requestType = map['request_type'] ?? '';
+  }
 
   void nullifyRequest() {
     _min = null;
@@ -182,14 +239,14 @@ class RequestPostCreate {
 
   @override
   String toString() {
-    return 'RequestPostCreate(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO)';
+    return 'RequestPostCU(_relatedTo: $_relatedTo, _postContent: $_postContent, _isAnonymous: $_isAnonymous, _pokedNGO: $_pokedNGO)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is RequestPostCreate &&
+    return other is RequestPostCU &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&

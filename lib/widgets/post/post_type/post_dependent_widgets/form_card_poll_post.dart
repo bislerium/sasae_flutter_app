@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/dismissable_tile.dart';
@@ -20,7 +20,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
     with AutomaticKeepAliveClientMixin {
   final TextEditingController _itemTEC;
   final GlobalKey<FormBuilderState> _optionsAddFormKey;
-  late final PollPostCreate _pollPostCreate;
+  late final PollPostCU _pollPostCreate;
 
   _FormCardPollPostState()
       : _itemTEC = TextEditingController(),

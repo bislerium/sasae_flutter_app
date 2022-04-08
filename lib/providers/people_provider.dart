@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class PeopleProvider with ChangeNotifier {
   late AuthProvider _authP;
@@ -195,16 +194,6 @@ class PeopleProvider with ChangeNotifier {
       print(error);
       return false;
     }
-  }
-
-  Future<XFile> imageURLToXFile(String imageURL) async {
-    Directory tempDir = await getTemporaryDirectory();
-    File file = File(tempDir.path + Guid(random).guid() + extension(imageURL));
-    http.Response response = await http.get(Uri.parse(imageURL));
-    await file.writeAsBytes(response.bodyBytes);
-    return XFile(
-      file.path,
-    );
   }
 
   //Can be used for fetching multiple people data in parallel

@@ -4,7 +4,7 @@ import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
-import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -28,9 +28,9 @@ class PostForm extends StatefulWidget {
 }
 
 class _PostFormState extends State<PostForm> {
-  late final NormalPostCreate _normalPostCreate;
-  late final PollPostCreate _pollPostCreate;
-  late final RequestPostCreate _requestPostCreate;
+  late final NormalPostCU _normalPostCreate;
+  late final PollPostCU _pollPostCreate;
+  late final RequestPostCU _requestPostCreate;
 
   final GlobalKey<FormBuilderState> _superPostKey,
       _requestFormKey,

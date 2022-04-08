@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
@@ -17,7 +17,7 @@ class FormCardNormalPost extends StatefulWidget {
 
 class _FormCardNormalPostState extends State<FormCardNormalPost>
     with AutomaticKeepAliveClientMixin {
-  late final NormalPostCreate _normalPostCreate;
+  late final NormalPostCU _normalPostCreate;
 
   @override
   void initState() {

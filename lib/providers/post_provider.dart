@@ -12,9 +12,10 @@ import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_post.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
-import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
@@ -123,9 +124,9 @@ class PostCreateProvider with ChangeNotifier {
           ),
         ),
         _createPostType = PostType.normal,
-        _normalPostCreate = NormalPostCreate(),
-        _pollPostCreate = PollPostCreate(),
-        _requestPostCreate = RequestPostCreate();
+        _normalPostCreate = NormalPostCU(),
+        _pollPostCreate = PollPostCU(),
+        _requestPostCreate = RequestPostCU();
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
@@ -207,13 +208,13 @@ class PostCreateProvider with ChangeNotifier {
     }
   }
 
-  final NormalPostCreate _normalPostCreate;
-  final PollPostCreate _pollPostCreate;
-  final RequestPostCreate _requestPostCreate;
+  final NormalPostCU _normalPostCreate;
+  final PollPostCU _pollPostCreate;
+  final RequestPostCU _requestPostCreate;
 
-  NormalPostCreate get getNormalPostCreate => _normalPostCreate;
-  PollPostCreate get getPollPostCreate => _pollPostCreate;
-  RequestPostCreate get getRequestPostCreate => _requestPostCreate;
+  NormalPostCU get getNormalPostCreate => _normalPostCreate;
+  PollPostCU get getPollPostCreate => _pollPostCreate;
+  RequestPostCU get getRequestPostCreate => _requestPostCreate;
 
   void pushCreatedPost(Map<String, dynamic> responseData) {
     Post_ post = Post_.fromAPIResponse(responseData);
@@ -345,6 +346,117 @@ class PostCreateProvider with ChangeNotifier {
         throw HttpException(jsonResponse);
       }
       pushCreatedPost(jsonResponse['post_data']);
+      return true;
+    } catch (error) {
+      print(error);
+      return false;
+    }
+  }
+}
+
+class PostUpdateProvider with ChangeNotifier {
+  late AuthProvider _authP;
+
+  set setAuthP(AuthProvider auth) => _authP = auth;
+
+  NormalPostCU? _normalPostCU;
+  PollPostCU? _pollPostCU;
+  RequestPostCU? _requestPostCU;
+
+  NormalPostCU? get getNormalPostCU => _normalPostCU;
+  PollPostCU? get getPollPostCU => _pollPostCU;
+  RequestPostCU? get getRequestPostCU => _requestPostCU;
+
+  void nullifyNormalPostCU() => _normalPostCU = null;
+  void nullifyPollPostCU() => _pollPostCU = null;
+  void nullifyRequestPostCU() => _requestPostCU = null;
+
+  Future<void> retrieveUpdatePost({required int postID}) async {
+    try {
+      final request = http.MultipartRequest(
+          'GET', Uri.parse('${getHostName()}$postEndpoint$postID/detail/'));
+
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+
+      String responseBody = await response.stream.bytesToString();
+
+      if (response.statusCode >= 400) {
+        throw HttpException(responseBody);
+      }
+
+      await Future.delayed(const Duration(seconds: 2));
+
+      var jsonBody = json.decode(responseBody);
+
+      switch (jsonBody['post_type']) {
+        case 'Normal':
+          _normalPostCU = NormalPostCU.fromAPIResponse(jsonBody);
+          if (_normalPostCU?.getPostImageLink != null) {
+            _normalPostCU!.setPostImage =
+                await imageURLToXFile(_normalPostCU!.getPostImageLink!);
+          }
+          break;
+        case 'Poll':
+          _pollPostCU = PollPostCU.fromAPIResponse(jsonBody);
+
+          break;
+        case 'Request':
+          _requestPostCU = RequestPostCU.fromAPIResponse(jsonBody);
+
+          break;
+      }
+      notifyListeners();
+    } catch (error) {
+      print(error);
+      _normalPostCU = null;
+      _pollPostCU = null;
+      _requestPostCU = null;
+    }
+  }
+
+  Future<void> refreshRetrieveUpdatePost({required int postID}) async {
+    await retrieveUpdatePost(postID: postID);
+  }
+
+  Future<bool> updateNormalPost({required int postID}) async {
+    try {
+      final request = http.MultipartRequest(
+          'PUT', Uri.parse('${getHostName()}$postEndpoint$postID/detail/'));
+
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+
+      request.fields.addAll({
+        'post_head': json.encode(
+          {
+            "related_to": _normalPostCU!.getRelatedTo,
+            "post_content": _normalPostCU!.getPostContent,
+            "is_anonymous": _normalPostCU!.getIsAnonymous
+          },
+        ),
+        'poked_to': json.encode(_normalPostCU!.getPokedNGO),
+      });
+
+      if (_normalPostCU!.getPostImage != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            'post_image', _normalPostCU!.getPostImage!.path));
+      }
+
+      request.headers.addAll(headers);
+
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode >= 400) {
+        throw HttpException(response.reasonPhrase!);
+      }
       return true;
     } catch (error) {
       print(error);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/models/post/post_create.dart';
+import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -17,7 +17,7 @@ class FormCardRequestPost extends StatefulWidget {
 
 class _FormCardRequestPostState extends State<FormCardRequestPost>
     with AutomaticKeepAliveClientMixin {
-  late final RequestPostCreate _requestPostCreate;
+  late final RequestPostCU _requestPostCreate;
   final TextEditingController _minTEC, _targetTEC, _maxTEC;
 
   _FormCardRequestPostState()
