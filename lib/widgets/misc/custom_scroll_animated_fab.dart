@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 class CustomScrollAnimatedFAB extends StatefulWidget {
   final String text;
   final IconData icon;
-  final VoidCallback func;
+  final VoidCallback? func;
   final Color? background;
   final Color? foreground;
   final ScrollController? scrollController;

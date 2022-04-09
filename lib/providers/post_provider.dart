@@ -197,13 +197,13 @@ class PostCreateProvider with ChangeNotifier {
     }
   }
 
-  Future<void> Function()? _postHandler;
+  Future<void> Function()? _postCreateHandler;
 
-  Future<void> Function()? get getPostHandler => _postHandler;
+  Future<void> Function()? get getPostCreateHandler => _postCreateHandler;
 
   set setPostHandler(Future<void> Function()? handler) {
-    if (_postHandler != handler) {
-      _postHandler = handler;
+    if (_postCreateHandler != handler) {
+      _postCreateHandler = handler;
       notifyListeners();
     }
   }
@@ -362,20 +362,20 @@ class PostUpdateProvider with ChangeNotifier {
   NormalPostCU? _normalPostCU;
   PollPostCU? _pollPostCU;
   RequestPostCU? _requestPostCU;
-  PostType? _postType;
+  PostType? _updatePostType;
 
   NormalPostCU? get getNormalPostCU => _normalPostCU;
   PollPostCU? get getPollPostCU => _pollPostCU;
   RequestPostCU? get getRequestPostCU => _requestPostCU;
-  PostType? get getPostType => _postType;
+  PostType? get getUpdatePostType => _updatePostType;
 
   void nullifyNormalPostCU() => _normalPostCU = null;
   void nullifyPollPostCU() => _pollPostCU = null;
   void nullifyRequestPostCU() => _requestPostCU = null;
-  void nullifyPostType() => _postType = null;
+  void nullifyPostType() => _updatePostType = null;
 
   void nullfyPerPostType() {
-    switch (_postType) {
+    switch (_updatePostType) {
       case PostType.normal:
         nullifyNormalPostCU();
         break;
@@ -391,6 +391,17 @@ class PostUpdateProvider with ChangeNotifier {
         nullifyRequestPostCU();
     }
     nullifyPostType();
+  }
+
+  Future<void> Function()? _postUpdateHandler;
+
+  Future<void> Function()? get getPostUpdateHandler => _postUpdateHandler;
+
+  set setPostHandler(Future<void> Function()? handler) {
+    if (_postUpdateHandler != handler) {
+      _postUpdateHandler = handler;
+      notifyListeners();
+    }
   }
 
   Future<void> retrieveUpdatePost({required int postID}) async {
@@ -413,7 +424,7 @@ class PostUpdateProvider with ChangeNotifier {
         throw HttpException(responseBody);
       }
 
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       var jsonBody = json.decode(responseBody);
 
@@ -424,15 +435,15 @@ class PostUpdateProvider with ChangeNotifier {
             _normalPostCU!.setPostImage =
                 await imageURLToXFile(_normalPostCU!.getPostImageLink!);
           }
-          _postType = PostType.normal;
+          _updatePostType = PostType.normal;
           break;
         case 'Poll':
           _pollPostCU = PollPostCU.fromAPIResponse(jsonBody);
-          _postType = PostType.poll;
+          _updatePostType = PostType.poll;
           break;
         case 'Request':
           _requestPostCU = RequestPostCU.fromAPIResponse(jsonBody);
-          _postType = PostType.request;
+          _updatePostType = PostType.request;
           break;
       }
       notifyListeners();
@@ -441,7 +452,7 @@ class PostUpdateProvider with ChangeNotifier {
       _normalPostCU = null;
       _pollPostCU = null;
       _requestPostCU = null;
-      _postType = null;
+      _updatePostType = null;
     }
   }
 
@@ -455,6 +466,7 @@ class PostUpdateProvider with ChangeNotifier {
   }) async {
     try {
       var headers = {
+        'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Token ${_authP.auth!.tokenKey}',
       };
@@ -471,6 +483,7 @@ class PostUpdateProvider with ChangeNotifier {
       }
       switch (postType) {
         case PostType.normal:
+          headers.remove('Content-Type');
           request.fields.addAll({
             'post_head': json.encode(
               {

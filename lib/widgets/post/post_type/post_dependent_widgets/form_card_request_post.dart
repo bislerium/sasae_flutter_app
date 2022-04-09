@@ -8,7 +8,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 
 class FormCardRequestPost extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
-  const FormCardRequestPost({Key? key, required this.formKey})
+  final bool isUpdateMode;
+  const FormCardRequestPost(
+      {Key? key, required this.formKey, this.isUpdateMode = false})
       : super(key: key);
 
   @override
@@ -17,7 +19,7 @@ class FormCardRequestPost extends StatefulWidget {
 
 class _FormCardRequestPostState extends State<FormCardRequestPost>
     with AutomaticKeepAliveClientMixin {
-  late final RequestPostCU _requestPostCreate;
+  late final RequestPostCU _requestPostCU;
   final TextEditingController _minTEC, _targetTEC, _maxTEC;
 
   _FormCardRequestPostState()
@@ -28,8 +30,22 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
   @override
   void initState() {
     super.initState();
-    _requestPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
-        .getRequestPostCreate;
+    if (widget.isUpdateMode) {
+      _requestPostCU = Provider.of<PostUpdateProvider>(context, listen: false)
+          .getRequestPostCU!;
+      if (widget.isUpdateMode && _requestPostCU.getMin != null) {
+        _minTEC.text = _requestPostCU.getMin!.toString();
+      }
+      if (widget.isUpdateMode && _requestPostCU.getTarget != null) {
+        _targetTEC.text = _requestPostCU.getTarget!.toString();
+      }
+      if (widget.isUpdateMode && _requestPostCU.getMax != null) {
+        _maxTEC.text = _requestPostCU.getMax!.toString();
+      }
+    } else {
+      _requestPostCU = Provider.of<PostCreateProvider>(context, listen: false)
+          .getRequestPostCreate;
+    }
   }
 
   @override
@@ -37,7 +53,9 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
     _minTEC.dispose();
     _targetTEC.dispose();
     _maxTEC.dispose();
-    _requestPostCreate.nullifyRequest();
+    if (!widget.isUpdateMode) {
+      _requestPostCU.nullifyRequest();
+    }
     super.dispose();
   }
 
@@ -58,7 +76,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
           ),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          onSaved: (value) => _requestPostCreate.setMin = int.tryParse(value!),
+          onSaved: (value) => _requestPostCU.setMin = int.tryParse(value!),
         ),
       );
 
@@ -81,8 +99,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
           ),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          onSaved: (value) =>
-              _requestPostCreate.setTarget = int.tryParse(value!),
+          onSaved: (value) => _requestPostCU.setTarget = int.tryParse(value!),
         ),
       );
 
@@ -104,7 +121,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
           ]),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          onSaved: (value) => _requestPostCreate.setMax = int.tryParse(value!),
+          onSaved: (value) => _requestPostCU.setMax = int.tryParse(value!),
         ),
       );
 
@@ -132,8 +149,9 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
                     child: Text(e),
                   ))
               .toList(),
-          onSaved: (value) =>
-              _requestPostCreate.setRequestType = value as String?,
+          initialValue:
+              widget.isUpdateMode ? _requestPostCU.getRequestType : null,
+          onSaved: (value) => _requestPostCU.setRequestType = value as String?,
           onChanged: (value) {
             if (value == 'Petition') {
               _maxTEC.clear();
@@ -148,8 +166,12 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
         decoration: const InputDecoration(
           labelText: 'End Time',
         ),
-        firstDate: DateTime.now(),
-        currentDate: DateTime.now(),
+        firstDate: widget.isUpdateMode
+            ? _requestPostCU.getRequestDuration
+            : DateTime.now(),
+        lastDate: DateTime.now().add(const Duration(days: 365 * 6)),
+        initialValue:
+            widget.isUpdateMode ? _requestPostCU.getRequestDuration : null,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(context),
@@ -159,7 +181,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
                     : null
           ],
         ),
-        onSaved: (value) => _requestPostCreate.setRequestDuration = value,
+        onSaved: (value) => _requestPostCU.setRequestDuration = value,
       );
 
   @override

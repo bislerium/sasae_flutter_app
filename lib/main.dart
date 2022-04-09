@@ -176,6 +176,9 @@ List<SingleChildWidget> _providers() => [
         create: (_) => ProfileSettingFABProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => DonationFABProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => PostFABProvider(),
       ),
       ChangeNotifierProvider(

@@ -161,21 +161,19 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   @override
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
-        builder: (context, ngoP, child) =>
-            ngoP.ngoData != null && ngoP.ngoData!.isVerified
-                ? CustomScrollAnimatedFAB(
-                    text: 'Donate',
-                    icon: Icons.hail_rounded,
-                    background: Theme.of(context).colorScheme.primary,
-                    foreground: Theme.of(context).colorScheme.onPrimary,
-                    func: () {
-                      showDonationModalSheet(
-                        ngoP.ngoData!.epayAccount!,
-                        ngoP.ngoData!.orgName,
-                      );
-                    },
-                    scrollController: widget.scrollController,
-                  )
-                : const SizedBox.shrink());
+      builder: (context, ngoP, child) => CustomScrollAnimatedFAB(
+        text: 'Donate',
+        icon: Icons.hail_rounded,
+        background: Theme.of(context).colorScheme.primary,
+        foreground: Theme.of(context).colorScheme.onPrimary,
+        func: () {
+          showDonationModalSheet(
+            ngoP.getNGO!.epayAccount!,
+            ngoP.getNGO!.orgName,
+          );
+        },
+        scrollController: widget.scrollController,
+      ),
+    );
   }
 }

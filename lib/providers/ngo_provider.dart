@@ -142,7 +142,7 @@ class NGOProvider with ChangeNotifier {
   //----------------------------- NGO -----------------------------------------
   NGO? _ngo;
 
-  NGO? get ngoData => _ngo;
+  NGO? get getNGO => _ngo;
 
   static NGO randNGO() {
     var _isVerified = faker.randomGenerator.boolean();
@@ -190,13 +190,13 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> initFetchNGO({int? ngoID}) async {
-    await Future.delayed(const Duration(milliseconds: 800));
+    await Future.delayed(const Duration(seconds: 1));
     _ngo = await fetchNGO(ngoID: ngoID, auth: _authP.auth!);
-    notifyListeners();
   }
 
   Future<void> refreshNGO({int? ngoID}) async {
     await initFetchNGO(ngoID: ngoID);
+    notifyListeners();
   }
 
   void nullifyNGO() => _ngo = null;

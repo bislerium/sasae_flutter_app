@@ -39,9 +39,7 @@ class _UserPostTabState extends State<UserPostTab>
 
   @override
   void dispose() {
-    if (widget.scrollController != null) {
-      widget.scrollController!.removeListener(profleCreatefabListenScroll);
-    }
+    widget.scrollController?.removeListener(profleCreatefabListenScroll);
     super.dispose();
   }
 

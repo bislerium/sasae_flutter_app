@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_info_tab.dart';
 import 'package:sasae_flutter_app/widgets/profile/info_post_tab.dart';
@@ -23,7 +25,6 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
   _NGOProfileScreenState()
       : _infoScrollController = ScrollController(),
         _postScrollController = ScrollController();
-
   @override
   void dispose() {
     _infoScrollController.dispose();
@@ -50,11 +51,14 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
         infoScrollController: _infoScrollController,
         postScrollController: _postScrollController,
         tabBarMargin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+        fabType: FABType.donation,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: NGODonationButton(
-        scrollController: _infoScrollController,
-      ),
+      floatingActionButton: Provider.of<DonationFABProvider>(context).getShowFAB
+          ? NGODonationButton(
+              scrollController: _infoScrollController,
+            )
+          : null,
     );
   }
 }

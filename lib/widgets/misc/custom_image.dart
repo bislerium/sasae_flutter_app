@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sasae_flutter_app/widgets/image_view_screen.dart';
 
 class CustomImage extends StatelessWidget {
@@ -27,7 +28,13 @@ class CustomImage extends StatelessWidget {
         imageURL,
         fit: BoxFit.cover,
         loadingBuilder: (context, child, loadingProgress) =>
-            loadingProgress == null ? child : const LinearProgressIndicator(),
+            loadingProgress == null
+                ? child
+                : Center(
+                    child: LoadingAnimationWidget.bouncingBall(
+                        color: Theme.of(context).colorScheme.primary,
+                        size: width != null ? width! * 0.5 : 40),
+                  ),
       );
 
   @override

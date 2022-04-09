@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_form.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_update_button.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_update_form.dart';
 
 class PostUpdateFormScreen extends StatefulWidget {
   static const routeName = '/post/update/';
@@ -54,9 +54,6 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
 
   Future<void> _fetchRetrieveUpdatePeople() async {
     await _postUpdateP.retrieveUpdatePost(postID: widget.postID);
-    if (_postUpdateP.getPostType != null) {
-      _postCreateP.setCreatePostType = _postUpdateP.getPostType!;
-    }
   }
 
   @override
@@ -74,25 +71,16 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
                 ? const CustomLoading()
                 : Consumer2<PostUpdateProvider, PostCreateProvider>(
                     builder: (context, postUpdateP, postCreateP, child) =>
-                        RefreshIndicator(
-                      onRefresh: () async {
-                        await postCreateP.refreshNGOOptions();
-                        await postCreateP.refreshPostRelatedTo();
-                        await postUpdateP.refreshRetrieveUpdatePost(
-                            postID: widget.postID);
-                      },
-                      child: postCreateP.getNGOOptionsData == null ||
-                              postCreateP.getPostRelatedToData == null ||
-                              postUpdateP.getPostType == null
-                          ? const FetchError()
-                          : PostForm(
-                              snapshotNGOList: postCreateP.getNGOOptionsData!,
-                              snapshotRelatedList:
-                                  postCreateP.getPostRelatedToData!,
-                              isUpdateMode: true,
-                              scrollController: _scrollController,
-                            ),
-                    ),
+                        postCreateP.getNGOOptionsData == null ||
+                                postCreateP.getPostRelatedToData == null ||
+                                postUpdateP.getUpdatePostType == null
+                            ? const FetchError()
+                            : PostUpdateForm(
+                                snapshotNGOList: postCreateP.getNGOOptionsData!,
+                                snapshotRelatedList:
+                                    postCreateP.getPostRelatedToData!,
+                                scrollController: _scrollController,
+                              ),
                   ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -100,13 +88,10 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
         builder: (context, postUpdateP, postCreateP, child) =>
             postCreateP.getNGOOptionsData == null ||
                     postCreateP.getPostRelatedToData == null ||
-                    postUpdateP.getPostType == null
+                    postUpdateP.getUpdatePostType == null
                 ? const SizedBox.shrink()
-                : CustomScrollAnimatedFAB(
-                    text: 'Done',
-                    icon: Icons.done_rounded,
+                : PostUpdateButton(
                     scrollController: _scrollController,
-                    func: () {},
                   ),
       ),
     );

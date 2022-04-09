@@ -34,13 +34,13 @@ class _UserInfoTabState extends State<UserInfoTab>
     profileSettingFABP =
         Provider.of<ProfileSettingFABProvider>(context, listen: false);
     profileP = Provider.of<ProfileProvider>(context, listen: false);
-    widget.scrollController.addListener(profleCreatefabListenScroll);
+    widget.scrollController.addListener(profleEditfabListenScroll);
     _fetchUserFUTURE = _fetchUser();
   }
 
   @override
   void dispose() {
-    widget.scrollController.removeListener(profleCreatefabListenScroll);
+    widget.scrollController.removeListener(profleEditfabListenScroll);
     super.dispose();
   }
 
@@ -50,20 +50,27 @@ class _UserInfoTabState extends State<UserInfoTab>
     if (data == null) {
       profileSettingFABP.setOnPressedHandler = null;
       profileSettingFABP.setShowFAB = false;
-    } else if (data is NGO) {
+      return;
+    }
+    if (data is NGO) {
+      profileSettingFABP.setOnPressedHandler = null;
+      profileSettingFABP.setUserType = UserType.ngo;
       profileSettingFABP.setShowFAB = false;
-    } else {
+      return;
+    }
+    if (data is People) {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         profileSettingFABP.setOnPressedHandler = () => Navigator.pushNamed(
               context,
               PeopleProfileEditScreen.routeName,
             );
       });
+      profileSettingFABP.setUserType = UserType.people;
       profileSettingFABP.setShowFAB = true;
     }
   }
 
-  void profleCreatefabListenScroll() {
+  void profleEditfabListenScroll() {
     var _ = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController.position.userScrollDirection;
     if (profileP.userData is People) {
@@ -83,12 +90,7 @@ class _UserInfoTabState extends State<UserInfoTab>
               ? const CustomLoading()
               : Consumer<ProfileProvider>(
                   builder: (context, profileP, child) => RefreshIndicator(
-                    onRefresh: () async {
-                      await profileP.refreshUser();
-                      if (profileP.userData == null) {
-                        profileSettingFABP.setShowFAB = false;
-                      }
-                    },
+                    onRefresh: _fetchUser,
                     child: profileP.userData == null
                         ? const FetchError()
                         : profileP.userData is People

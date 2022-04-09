@@ -7,9 +7,12 @@ import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
 class FormCardNormalPost extends StatefulWidget {
+  final bool isUpdateMode;
   final GlobalKey<FormBuilderState> formKey;
 
-  const FormCardNormalPost({Key? key, required this.formKey}) : super(key: key);
+  const FormCardNormalPost(
+      {Key? key, required this.formKey, this.isUpdateMode = false})
+      : super(key: key);
 
   @override
   State<FormCardNormalPost> createState() => _FormCardNormalPostState();
@@ -17,18 +20,25 @@ class FormCardNormalPost extends StatefulWidget {
 
 class _FormCardNormalPostState extends State<FormCardNormalPost>
     with AutomaticKeepAliveClientMixin {
-  late final NormalPostCU _normalPostCreate;
+  late final NormalPostCU _normalPostCU;
 
   @override
   void initState() {
     super.initState();
-    _normalPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
-        .getNormalPostCreate;
+    if (widget.isUpdateMode) {
+      _normalPostCU = Provider.of<PostUpdateProvider>(context, listen: false)
+          .getNormalPostCU!;
+    } else {
+      _normalPostCU = Provider.of<PostCreateProvider>(context, listen: false)
+          .getNormalPostCreate;
+    }
   }
 
   @override
   void dispose() {
-    _normalPostCreate.nullifyNormal();
+    if (!widget.isUpdateMode) {
+      _normalPostCU.nullifyNormal();
+    }
     super.dispose();
   }
 
@@ -59,10 +69,14 @@ class _FormCardNormalPostState extends State<FormCardNormalPost>
                   labelText: 'Attach a photo',
                   border: InputBorder.none,
                 ),
+                initialValue:
+                    widget.isUpdateMode ? [_normalPostCU.getPostImage] : null,
                 previewWidth: width,
                 previewHeight: width,
                 maxImages: 1,
-                onSaved: (list) => _normalPostCreate.setPostImage = list?.first,
+                onSaved: (list) => list == null || list.isEmpty
+                    ? _normalPostCU.setPostImage = null
+                    : _normalPostCU.setPostImage = list.first,
               ),
             ),
           ],

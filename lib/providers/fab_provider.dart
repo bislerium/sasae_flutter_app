@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/providers/profile_provider.dart';
 
 class ProfileSettingFABProvider with ChangeNotifier {
   bool _showFAB;
+  int _tabIndex;
+  UserType? _userType;
 
-  ProfileSettingFABProvider() : _showFAB = false;
+  ProfileSettingFABProvider()
+      : _showFAB = false,
+        _tabIndex = 0;
 
   bool get getShowFAB => _showFAB;
+  set setTabIndex(int tabIndex) => _tabIndex = tabIndex;
+  set setUserType(UserType userType) => _userType = userType;
 
   set setShowFAB(bool show) {
     if (_showFAB != show) {
-      _showFAB = show;
+      if (_userType == null || _tabIndex == 1 || _userType == UserType.ngo) {
+        _showFAB = false;
+      } else {
+        _showFAB = show;
+      }
       notifyListeners();
     }
   }
@@ -23,6 +34,38 @@ class ProfileSettingFABProvider with ChangeNotifier {
       _onPressedHandler = handler;
       notifyListeners();
     }
+  }
+}
+
+class DonationFABProvider with ChangeNotifier {
+  bool _showFAB;
+  int _tabIndex;
+  bool _ngoVerified;
+
+  DonationFABProvider()
+      : _showFAB = false,
+        _tabIndex = 0,
+        _ngoVerified = false;
+
+  bool get getShowFAB => _showFAB;
+  set setTabIndex(int tabIndex) => _tabIndex = tabIndex;
+  set setNGOVerified(bool ngoVerified) => _ngoVerified = ngoVerified;
+
+  set setShowFAB(bool show) {
+    if (_showFAB != show) {
+      if (_tabIndex == 1 || _ngoVerified == false) {
+        _showFAB = false;
+      } else {
+        _showFAB = show;
+      }
+      notifyListeners();
+    }
+  }
+
+  void resetFAB() {
+    _showFAB = false;
+    _tabIndex = 0;
+    _ngoVerified = false;
   }
 }
 
@@ -77,3 +120,5 @@ class LogoutFABProvider with ChangeNotifier {
     }
   }
 }
+
+enum FABType { editProfile, donation }

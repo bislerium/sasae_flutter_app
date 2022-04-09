@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 
-class PostButton extends StatelessWidget {
-  const PostButton({Key? key}) : super(key: key);
+class PostCreateButton extends StatelessWidget {
+  const PostCreateButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class PostButton extends StatelessWidget {
           width: 120,
         ),
         child: ElevatedButton.icon(
-          onPressed: postCreateP.getPostHandler,
+          onPressed: postCreateP.getPostCreateHandler,
           icon: const Icon(
             Icons.post_add_rounded,
           ),

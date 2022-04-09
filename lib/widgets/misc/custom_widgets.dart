@@ -132,6 +132,7 @@ void showCustomDialog(
         required String title,
         required String content,
         required void Function() okFunc,
+        void Function()? cancelFunc,
         required}) =>
     showDialog<String>(
       context: context,
@@ -156,7 +157,7 @@ void showCustomDialog(
               ),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancel'),
+              onPressed: cancelFunc ?? () => Navigator.pop(context, 'Cancel'),
               child: Text(
                 'Cancel',
                 style: TextStyle(

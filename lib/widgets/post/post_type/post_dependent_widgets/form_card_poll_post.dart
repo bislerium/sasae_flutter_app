@@ -9,8 +9,13 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 
 class FormCardPollPost extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
+  final bool isUpdateMode;
 
-  const FormCardPollPost({Key? key, required this.formKey}) : super(key: key);
+  const FormCardPollPost({
+    Key? key,
+    required this.formKey,
+    this.isUpdateMode = false,
+  }) : super(key: key);
 
   @override
   _FormCardPollPostState createState() => _FormCardPollPostState();
@@ -20,7 +25,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
     with AutomaticKeepAliveClientMixin {
   final TextEditingController _itemTEC;
   final GlobalKey<FormBuilderState> _optionsAddFormKey;
-  late final PollPostCU _pollPostCreate;
+  late final PollPostCU _pollPostCU;
 
   _FormCardPollPostState()
       : _itemTEC = TextEditingController(),
@@ -29,23 +34,30 @@ class _FormCardPollPostState extends State<FormCardPollPost>
   @override
   void initState() {
     super.initState();
-    _pollPostCreate = Provider.of<PostCreateProvider>(context, listen: false)
-        .getPollPostCreate;
-    _pollPostCreate.setPollOptions = [];
+    if (widget.isUpdateMode) {
+      _pollPostCU = Provider.of<PostUpdateProvider>(context, listen: false)
+          .getPollPostCU!;
+    } else {
+      _pollPostCU = Provider.of<PostCreateProvider>(context, listen: false)
+          .getPollPostCreate;
+      _pollPostCU.setPollOptions = [];
+    }
   }
 
   @override
   void dispose() {
     _itemTEC.dispose();
-    _pollPostCreate.nullifyPoll();
+    if (!widget.isUpdateMode) {
+      _pollPostCU.nullifyPoll();
+    }
     super.dispose();
   }
 
   void addItem(String item) =>
-      setState(() => _pollPostCreate.getPollOptions!.add(item.trim()));
+      setState(() => _pollPostCU.getPollOptions!.add(item.trim()));
 
   void removeItem(String item) =>
-      setState(() => _pollPostCreate.getPollOptions!.remove(item));
+      setState(() => _pollPostCU.getPollOptions!.remove(item));
 
   Widget pollTextField() => FormBuilder(
         key: _optionsAddFormKey,
@@ -62,7 +74,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
             validator: FormBuilderValidators.compose(
               [
                 FormBuilderValidators.required(context),
-                (value) => _pollPostCreate.getPollOptions!.any((element) =>
+                (value) => _pollPostCU.getPollOptions!.any((element) =>
                         element.toLowerCase() == value!.trim().toLowerCase())
                     ? 'The poll option is already added.'
                     : null,
@@ -93,8 +105,8 @@ class _FormCardPollPostState extends State<FormCardPollPost>
   Widget polls() => FormBuilderField(
         name: 'pollField',
         validator: FormBuilderValidators.compose([
-          (value) => (_pollPostCreate.getPollOptions!.isEmpty ||
-                  _pollPostCreate.getPollOptions!.length < 2)
+          (value) => (_pollPostCU.getPollOptions!.isEmpty ||
+                  _pollPostCU.getPollOptions!.length < 2)
               ? 'Add at least two poll options'
               : null
         ]),
@@ -106,7 +118,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
               errorText: field.errorText,
             ),
             child: Column(
-              children: _pollPostCreate.getPollOptions!
+              children: _pollPostCU.getPollOptions!
                   .map(
                     (e) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5.0),
@@ -128,14 +140,17 @@ class _FormCardPollPostState extends State<FormCardPollPost>
       decoration: const InputDecoration(
         labelText: 'Poll duration',
       ),
+      firstDate:
+          widget.isUpdateMode ? _pollPostCU.getPollDuration : DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 6)),
+      initialValue: widget.isUpdateMode ? _pollPostCU.getPollDuration : null,
       validator: FormBuilderValidators.compose([
         (value) => value != null &&
                 value.isBefore(DateTime.now().add(const Duration(hours: 1)))
             ? 'Must have minimum one hour duration'
             : null
       ]),
-      firstDate: DateTime.now(),
-      onSaved: (value) => _pollPostCreate.setPollDuration = value);
+      onSaved: (value) => _pollPostCU.setPollDuration = value);
 
   @override
   Widget build(BuildContext context) {

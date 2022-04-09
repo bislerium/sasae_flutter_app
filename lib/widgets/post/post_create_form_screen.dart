@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_bar.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_form.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_create_form.dart';
 
 class PostCreateFormScreen extends StatefulWidget {
   static const routeName = '/post/create/';
@@ -60,7 +60,7 @@ class _PostCreateFormScreenState extends State<PostCreateFormScreen>
                       child: postCreateP.getNGOOptionsData == null ||
                               postCreateP.getPostRelatedToData == null
                           ? const FetchError()
-                          : PostForm(
+                          : PostCreateForm(
                               snapshotNGOList: postCreateP.getNGOOptionsData!,
                               snapshotRelatedList:
                                   postCreateP.getPostRelatedToData!,

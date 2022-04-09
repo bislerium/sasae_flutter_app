@@ -127,7 +127,7 @@ class PeopleProvider with ChangeNotifier {
         throw HttpException(responseBody);
       }
 
-      await Future.delayed(const Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 1));
 
       _peopleUpdate = PeopleUpdate.fromAPIResponse(json.decode(responseBody));
 

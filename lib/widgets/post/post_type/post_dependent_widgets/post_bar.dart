@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_button.dart';
+import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_create_button.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/post_type_row.dart';
 
 class PostBar extends StatefulWidget {
@@ -21,7 +21,7 @@ class _PostBarState extends State<PostBar> {
           children: const [
             PostTypeRow(),
             Spacer(),
-            PostButton(),
+            PostCreateButton(),
           ],
         ),
       ),

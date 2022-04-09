@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/widgets/profile/info_post_tab.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_info_tab.dart';
 import 'package:sasae_flutter_app/widgets/profile/user_post_tab.dart';
@@ -39,6 +40,7 @@ class _UserProfileState extends State<UserProfile>
       ),
       infoScrollController: _infoScrollController,
       postScrollController: _postScrollController,
+      fabType: FABType.editProfile,
     );
   }
 

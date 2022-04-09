@@ -25,7 +25,7 @@ class PostCard extends StatelessWidget {
       key: ValueKey(post.id),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        splashColor: Theme.of(context).colorScheme.inversePrimary,
+        splashColor: Theme.of(context).colorScheme.primaryContainer,
         onTap: () {
           late String routeName;
           switch (post.postType) {
@@ -69,6 +69,9 @@ class PostCard extends StatelessWidget {
                           context: context,
                           title: 'Post Deletion',
                           content: 'Are you sure?\nCannot undo, once deleted.',
+                          cancelFunc: () => Navigator.of(context)
+                            ..pop()
+                            ..pop(),
                           okFunc: () async {
                             bool success = await Provider.of<ProfileProvider>(
                                     context,
