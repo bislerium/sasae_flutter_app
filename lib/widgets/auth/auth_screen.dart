@@ -47,8 +47,8 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.maxLength(context, 15),
+            FormBuilderValidators.required(),
+            FormBuilderValidators.maxLength(15),
             (value) =>
                 value!.contains(' ') ? 'Username must be spaceless!' : null,
           ],
@@ -63,7 +63,7 @@ class _AuthScreenState extends State<AuthScreen> {
         textEditingController: _passwordTEC,
         validators: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         prefixIcon: const Icon(
@@ -233,8 +233,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 hintText: 'xyz@email.com',
               ),
               validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(context),
-                FormBuilderValidators.email(context),
+                FormBuilderValidators.required(),
+                FormBuilderValidators.email(),
               ]),
               keyboardType: TextInputType.emailAddress,
             ),

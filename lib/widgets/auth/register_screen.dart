@@ -81,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.person),
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _fullname = value,
         textInputAction: TextInputAction.next,
@@ -95,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           labelText: 'Gender',
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _gender = value.toString(),
         items: ['Male', 'Female', 'LGBTQ+']
@@ -117,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         currentDate: DateTime.now(),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
             (value) => value!.isAfter(
                     DateTime.now().subtract(const Duration(days: 365 * 16)))
                 ? 'Must be 16 years or older'
@@ -134,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.flag_rounded),
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _country = value,
         textInputAction: TextInputAction.next,
@@ -148,7 +148,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.local_parking_rounded),
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _province = value,
         keyboardType: TextInputType.text,
@@ -162,7 +162,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.location_city_rounded),
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _cityLocality = value,
         textInputAction: TextInputAction.next,
@@ -176,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           icon: Icon(Icons.near_me),
         ),
         validator: FormBuilderValidators.compose(
-          [FormBuilderValidators.required(context)],
+          [FormBuilderValidators.required()],
         ),
         onSaved: (value) => _stAddressHouseNum = value,
         textInputAction: TextInputAction.done,
@@ -193,8 +193,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         onSaved: (value) => _phone = value,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.match(context, r'(^[9][678][0-9]{8}$)',
+            FormBuilderValidators.required(),
+            FormBuilderValidators.match(r'(^[9][678][0-9]{8}$)',
                 errorText: 'Must be valid number.'),
           ],
         ),
@@ -212,8 +212,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         onSaved: (value) => _email = value,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.email(context),
+            FormBuilderValidators.required(),
+            FormBuilderValidators.email(),
           ],
         ),
         keyboardType: TextInputType.emailAddress,
@@ -239,8 +239,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.maxLength(context, 15),
+            FormBuilderValidators.required(),
+            FormBuilderValidators.maxLength(15),
             (value) =>
                 value!.contains(' ') ? 'Username must be spaceless!' : null
           ],
@@ -260,10 +260,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.minLength(context, 8,
+            FormBuilderValidators.required(),
+            FormBuilderValidators.minLength(8,
                 errorText: 'Password must be 8 to 20 characters long.'),
-            FormBuilderValidators.maxLength(context, 20),
+            FormBuilderValidators.maxLength(20),
           ],
         ),
         keyboardType: TextInputType.visiblePassword,
@@ -278,7 +278,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
             (value) =>
                 (_passwordTEC.text != value) ? 'Passwords did not match!' : null
           ],

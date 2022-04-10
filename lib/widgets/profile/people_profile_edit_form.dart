@@ -34,7 +34,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         initialValue: widget.peopleUpdate.getFullname,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         keyboardType: TextInputType.name,
@@ -54,7 +54,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         items: ['Male', 'Female', 'LGBTQ+']
@@ -75,7 +75,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         initialValue: widget.peopleUpdate.getAddress,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         keyboardType: TextInputType.text,
@@ -94,7 +94,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         lastDate: DateTime.now().subtract(const Duration(days: 365 * 16)),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         onSaved: (value) => widget.peopleUpdate.setBirthDate = value,
@@ -109,8 +109,8 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         initialValue: widget.peopleUpdate.getEmail,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
-            FormBuilderValidators.email(context),
+            FormBuilderValidators.required(),
+            FormBuilderValidators.email(),
           ],
         ),
         keyboardType: TextInputType.emailAddress,
@@ -127,7 +127,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         initialValue: widget.peopleUpdate.getPhone,
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         keyboardType: TextInputType.phone,

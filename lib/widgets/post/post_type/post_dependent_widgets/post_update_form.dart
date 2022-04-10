@@ -198,7 +198,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         initialValue: _postHead.getPostContent,

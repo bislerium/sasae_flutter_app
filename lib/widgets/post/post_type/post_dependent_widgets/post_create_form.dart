@@ -174,7 +174,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
         ),
         validator: FormBuilderValidators.compose(
           [
-            FormBuilderValidators.required(context),
+            FormBuilderValidators.required(),
           ],
         ),
         maxLength: 500,

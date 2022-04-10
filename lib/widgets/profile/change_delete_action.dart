@@ -83,7 +83,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 textEditingController: _oldPasswordTEC,
                 validators: FormBuilderValidators.compose(
                   [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
                 keyboardType: TextInputType.visiblePassword,
@@ -94,7 +94,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 textEditingController: _newPassword1TEC,
                 validators: FormBuilderValidators.compose(
                   [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                   ],
                 ),
                 keyboardType: TextInputType.visiblePassword,
@@ -105,7 +105,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 textEditingController: _newPassword2TEC,
                 validators: FormBuilderValidators.compose(
                   [
-                    FormBuilderValidators.required(context),
+                    FormBuilderValidators.required(),
                     (value) => value != _newPassword1TEC.text
                         ? 'Passwords did\'nt match!'
                         : null
@@ -198,7 +198,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   max: scale,
                   validator: FormBuilderValidators.compose(
                     [
-                      FormBuilderValidators.required(context),
+                      FormBuilderValidators.required(),
                       (value) => double.parse((value)!.toStringAsFixed(2)) != _
                           ? 'Incorrect!'
                           : null

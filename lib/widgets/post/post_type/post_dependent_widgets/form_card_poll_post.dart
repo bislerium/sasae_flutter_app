@@ -73,7 +73,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
             maxLength: 30,
             validator: FormBuilderValidators.compose(
               [
-                FormBuilderValidators.required(context),
+                FormBuilderValidators.required(),
                 (value) => _pollPostCU.getPollOptions!.any((element) =>
                         element.toLowerCase() == value!.trim().toLowerCase())
                     ? 'The poll option is already added.'
