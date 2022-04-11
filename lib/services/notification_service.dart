@@ -77,10 +77,10 @@ class NotificationService {
 }
 
 enum NotificationChannel {
-  normalPost,
-  pollPost,
-  petitionRequestPost,
-  joinRequestPost,
+  reaction,
+  poll,
+  join,
+  petition,
   poke,
-  removedPost,
+  remove,
 }

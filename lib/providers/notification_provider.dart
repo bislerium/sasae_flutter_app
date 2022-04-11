@@ -1,6 +1,10 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
+
+import '../services/notification_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
   final JsonStore jsonStore;
@@ -12,13 +16,32 @@ class NotificationProvider extends ChangeNotifier {
 
   List<NotificationModel> get getNotifications => _notifications;
 
+  List<NotificationModel> _randNotifications() {
+    return List.generate(faker.randomGenerator.integer(20), (index) {
+      var channel = faker.randomGenerator.element(
+        NotificationChannel.values,
+      );
+      return NotificationModel(
+        id: index,
+        title: faker.lorem.words(faker.randomGenerator.integer(5)).join(' '),
+        body: faker.lorem.sentences(faker.randomGenerator.integer(5)).join(' '),
+        channel: channel,
+        postType: channel == NotificationChannel.remove
+            ? null
+            : faker.randomGenerator.element(PostType.values),
+        postID: channel == NotificationChannel.remove
+            ? null
+            : faker.randomGenerator.integer(50),
+        isRead: faker.randomGenerator.boolean(),
+      );
+    });
+  }
+
   Future<void> addNotification(NotificationModel notification) async {
     _notifications.add(notification);
-    print('------------------------');
-    print(_notifications);
-    print('------------------------');
-    await jsonStore.setItem(
-        'notification-${notification.id}', notification.toMap());
+    print('added');
+    // await jsonStore.setItem(
+    //     'notification-${notification.id}', notification.toMap());
     notifyListeners();
   }
 
@@ -55,14 +78,15 @@ class NotificationProvider extends ChangeNotifier {
     jsonStore.commitBatch(batch);
   }
 
-  Future<void> fetchNotifications() async {
-    List<Map<String, dynamic>>? json =
-        await jsonStore.getListLike('messages-%');
-    _notifications = json != null
-        ? json.map((element) => NotificationModel.fromMap(element)).toList()
-        : [];
-    print('================');
-    print(json);
-    print('================');
+  Future<void> fetchNotifications({bool demo = false}) async {
+    if (demo) {
+      _notifications = _randNotifications();
+    } else {
+      List<Map<String, dynamic>>? json =
+          await jsonStore.getListLike('messages-%');
+      _notifications = json != null
+          ? json.map((element) => NotificationModel.fromMap(element)).toList()
+          : [];
+    }
   }
 }

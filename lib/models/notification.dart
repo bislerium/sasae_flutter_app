@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
 
 class NotificationModel {
@@ -7,13 +8,16 @@ class NotificationModel {
   String title;
   String body;
   NotificationChannel channel;
+  PostType? postType;
   int? postID;
   bool isRead;
+
   NotificationModel({
     required this.id,
     required this.title,
     required this.body,
     required this.channel,
+    this.postType,
     this.postID,
     this.isRead = false,
   });
@@ -23,6 +27,7 @@ class NotificationModel {
     String? title,
     String? body,
     NotificationChannel? channel,
+    PostType? postType,
     int? postID,
     bool? isRead,
   }) {
@@ -31,6 +36,7 @@ class NotificationModel {
       title: title ?? this.title,
       body: body ?? this.body,
       channel: channel ?? this.channel,
+      postType: postType ?? this.postType,
       postID: postID ?? this.postID,
       isRead: isRead ?? this.isRead,
     );
@@ -42,6 +48,7 @@ class NotificationModel {
       'title': title,
       'body': body,
       'channel': channel.name,
+      'postType': postType?.name,
       'postID': postID,
       'isRead': isRead,
     };
@@ -51,12 +58,16 @@ class NotificationModel {
       NotificationChannel.values
           .firstWhere((element) => element.name == channel);
 
+  static PostType getPostType(String channel) =>
+      PostType.values.firstWhere((element) => element.name == channel);
+
   factory NotificationModel.fromMap(Map<String, dynamic> map) {
     return NotificationModel(
       id: map['id']?.toInt() ?? 0,
       title: map['title'] ?? '',
       body: map['body'] ?? '',
       channel: getNotificationChannel(map['channel']),
+      postType: map['postType'] != null ? getPostType(map['postType']) : null,
       postID: map['postID']?.toInt(),
       isRead: map['isRead'] ?? false,
     );
@@ -69,7 +80,7 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel(id: $id, title: $title, body: $body, channel: $channel, postID: $postID, isRead: $isRead)';
+    return 'NotificationModel(id: $id, title: $title, body: $body, channel: $channel, postType: $postType, postID: $postID, isRead: $isRead)';
   }
 
   @override
@@ -81,6 +92,7 @@ class NotificationModel {
         other.title == title &&
         other.body == body &&
         other.channel == channel &&
+        other.postType == postType &&
         other.postID == postID &&
         other.isRead == isRead;
   }
@@ -91,6 +103,7 @@ class NotificationModel {
         title.hashCode ^
         body.hashCode ^
         channel.hashCode ^
+        postType.hashCode ^
         postID.hashCode ^
         isRead.hashCode;
   }
