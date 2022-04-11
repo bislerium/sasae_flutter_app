@@ -1,9 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:awesome_notifications/android_foreground_service.dart';
-import 'package:form_builder_validators/localization/intl/messages_ar.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
@@ -15,9 +11,11 @@ import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/widgets/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/auth/register_screen.dart';
 import 'package:sasae_flutter_app/widgets/home_page.dart';
@@ -31,98 +29,11 @@ import 'package:sasae_flutter_app/widgets/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/widgets/profile/people_profile_edit_screen.dart';
 import 'package:sasae_flutter_app/widgets/splash_screen.dart';
 
-// const AndroidNotificationChannel channel = AndroidNotificationChannel(
-//     '1', 'default_notification',
-//     importance: Importance.high);
-
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-
-// Declared as global, outside of any class
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-
-  print("Handling a background message: ${message.messageId}");
-
-  // Use this method to automatically convert the push data, in case you gonna use our data standard
-  AwesomeNotifications().createNotificationFromJsonData(message.data);
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // await flutterLocalNotificationsPlugin
-  //     .resolvePlatformSpecificImplementation<
-  //         AndroidFlutterLocalNotificationsPlugin>()
-  //     ?.createNotificationChannel(channel);
-
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
-  // print('User granted permission: ${settings.authorizationStatus}');
-
-  AwesomeNotifications().initialize(
-    // set the icon to null if you want to use the default app icon
-    'assets/icons/logo.png',
-    [
-      NotificationChannel(
-        channelGroupKey: 'basic_channel_group',
-        channelKey: 'basic_channel',
-        channelName: 'Basic notifications',
-        channelDescription: 'Notification channel for basic tests',
-        defaultColor: Color(0xFF9D50DD),
-        ledColor: Colors.white,
-      )
-    ],
-    // Channel groups are only visual and are not required
-    channelGroups: [
-      NotificationChannelGroup(
-          channelGroupkey: 'basic_channel_group',
-          channelGroupName: 'Basic group')
-    ],
-    debug: true,
-  );
-  // Create the initialization for your desired push service here
-  FirebaseApp firebaseApp = await Firebase.initializeApp();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('<--------------------------------->');
-  });
-
-  // AndroidForegroundService.startForeground(
-  //     content: NotificationContent(
-  //         id: 2341234,
-  //         body: 'Service is running!',
-  //         title: 'Android Foreground Service',
-  //         channelKey: 'basic_channel',
-  //         bigPicture: 'asset://assets/images/android-bg-worker.jpg',
-  //         notificationLayout: NotificationLayout.BigPicture,
-  //         category: NotificationCategory.Service),
-  //     actionButtons: [
-  //       NotificationActionButton(
-  //           key: 'SHOW_SERVICE_DETAILS', label: 'Show details')
-  //     ]);
-
-  // FirebaseMessaging.onBackgroundMessage(backroundHandler);
+  await Firebase.initializeApp();
+  NotificationService.getInstance().initialize();
   runApp(const MyApp());
-}
-
-Future<void> backroundHandler(RemoteMessage message) async {
-  print(" This is message from background");
-  print(message.notification!.title);
-  print(message.notification!.body);
 }
 
 class MyApp extends StatefulWidget {
@@ -258,6 +169,9 @@ List<SingleChildWidget> _providers() => [
         create: (_) => AuthProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => NotificationProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => ProfileSettingFABProvider(),
       ),
       ChangeNotifierProvider(
@@ -315,82 +229,6 @@ List<SingleChildWidget> _providers() => [
     ];
 
 class _MyAppState extends State<MyApp> {
-  // final FirebaseMessaging _fcm = FirebaseMessaging.instance;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    //   print('Incoming message!');
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    //       if (!isAllowed) {
-    //         // This is just a basic example. For real apps, you must show some
-    //         // friendly dialog box before call the request method.
-    //         // This is very important to not harm the user experience
-    //         print('permission required');
-    //         AwesomeNotifications().requestPermissionToSendNotifications();
-    //       } else {
-    //         print('notification showed!');
-    //         AwesomeNotifications().createNotificationFromJsonData(message.data);
-    //         // AwesomeNotifications().createNotification(
-    //         //   content: NotificationContent(
-    //         //     id: 10,
-    //         //     channelKey: 'basic_channel',
-    //         //     title: notification.title,
-    //         //     body: notification.body,
-    //         //   ),
-    //         // );
-    //       }
-    //     });
-    //     // flutterLocalNotificationsPlugin.show(
-    //     //   notification.hashCode,
-    //     //   notification.title,
-    //     //   notification.body,
-    //     //   NotificationDetails(
-    //     //     android: AndroidNotificationDetails(
-    //     //       channel.id,
-    //     //       channel.name,
-    //     //       color: Colors.blue,
-    //     //       playSound: true,
-    //     //       icon: '@mipmap/ic_launcher',
-    //     //     ),
-    //     //   ),
-    //     // );
-    //   }
-    //   print('Got a message whilst in the foreground!');
-    //   print('Message data: ${message.data}');
-
-    //   if (message.notification != null) {
-    //     print('Message also contained a notification: ${message.notification}');
-    //   }
-    // });
-
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print('A new onMessageOpenedApp event was published!');
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (_) {
-    //           return AlertDialog(
-    //             title: Text(notification.title!),
-    //             content: SingleChildScrollView(
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 children: [Text(notification.body!)],
-    //               ),
-    //             ),
-    //           );
-    //         });
-    //   }
-    // });
-  }
-
   @override
   Widget build(BuildContext context) {
     return KhaltiScope(

@@ -1,6 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/notification_provider.dart';
+import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_screen.dart';
 import 'package:sasae_flutter_app/widgets/post/post_screen.dart';
@@ -25,6 +30,32 @@ class _HomePageState extends State<HomePage> {
         _pageController = PageController(
           initialPage: 2,
         );
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      RemoteNotification? notification = event.notification;
+      AndroidNotification? android = event.notification?.android;
+      if (notification != null && android != null && !kIsWeb) {
+        var additionalData = event.data;
+        NotificationModel _ = NotificationModel(
+            id: notification.hashCode,
+            title: notification.title!,
+            body: notification.body!,
+            channel: NotificationModel.getNotificationChannel(
+                additionalData['channel']),
+            postID: int.tryParse(additionalData['post_id']));
+        Provider.of<NotificationProvider>(context, listen: false)
+            .addNotification(_);
+        Provider.of<NotificationProvider>(context, listen: false)
+            .fetchNotifications();
+        print(Provider.of<NotificationProvider>(context, listen: false)
+            .getNotifications);
+        NotificationService.getInstance().notify(notification);
+      }
+    });
+  }
 
   @override
   void dispose() {

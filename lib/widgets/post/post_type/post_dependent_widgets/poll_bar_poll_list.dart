@@ -4,7 +4,7 @@ import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 
 class PollBarPollList extends StatelessWidget {
-  final List<PollOption> list;
+  final List<PollOptionModel> list;
 
   final Future<void> Function(int choice) handler;
 

@@ -4,7 +4,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_bar.dart';
 
 class PollBarRevealList extends StatelessWidget {
-  final List<PollOption> list;
+  final List<PollOptionModel> list;
   final int? choice;
 
   const PollBarRevealList({Key? key, required this.list, this.choice})

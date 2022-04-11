@@ -19,7 +19,7 @@ class FormCardRequestPost extends StatefulWidget {
 
 class _FormCardRequestPostState extends State<FormCardRequestPost>
     with AutomaticKeepAliveClientMixin {
-  late final RequestPostCU _requestPostCU;
+  late final RequestPostCUModel _requestPostCU;
   final TextEditingController _minTEC, _targetTEC, _maxTEC;
 
   _FormCardRequestPostState()

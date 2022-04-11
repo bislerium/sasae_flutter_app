@@ -1,23 +1,23 @@
 import 'dart:convert';
 
 // ignore: camel_case_types
-class NGO__ {
+class NGO__Model {
   final int id;
   final String orgName;
   final String orgPhoto;
 
-  NGO__({
+  NGO__Model({
     required this.id,
     required this.orgName,
     required this.orgPhoto,
   });
 
-  NGO__ copyWith({
+  NGO__Model copyWith({
     int? id,
     String? orgName,
     String? orgPhoto,
   }) {
-    return NGO__(
+    return NGO__Model(
       id: id ?? this.id,
       orgName: orgName ?? this.orgName,
       orgPhoto: orgPhoto ?? this.orgPhoto,
@@ -32,16 +32,16 @@ class NGO__ {
     };
   }
 
-  factory NGO__.fromAPIResponse(Map<String, dynamic> map) {
-    return NGO__(
+  factory NGO__Model.fromAPIResponse(Map<String, dynamic> map) {
+    return NGO__Model(
       id: map['id']?.toInt() ?? 0,
       orgName: map['full_name'] ?? '',
       orgPhoto: map['display_picture'] ?? '',
     );
   }
 
-  factory NGO__.fromMap(Map<String, dynamic> map) {
-    return NGO__(
+  factory NGO__Model.fromMap(Map<String, dynamic> map) {
+    return NGO__Model(
       id: map['id']?.toInt() ?? 0,
       orgName: map['orgName'] ?? '',
       orgPhoto: map['orgPhoto'] ?? '',
@@ -50,7 +50,8 @@ class NGO__ {
 
   String toJson() => json.encode(toMap());
 
-  factory NGO__.fromJson(String source) => NGO__.fromMap(json.decode(source));
+  factory NGO__Model.fromJson(String source) =>
+      NGO__Model.fromMap(json.decode(source));
 
   @override
   String toString() => 'NGO__(id: $id, orgName: $orgName, orgPhoto: $orgPhoto)';
@@ -59,7 +60,7 @@ class NGO__ {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NGO__ &&
+    return other is NGO__Model &&
         other.id == id &&
         other.orgName == orgName &&
         other.orgPhoto == orgPhoto;

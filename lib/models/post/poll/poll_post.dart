@@ -7,8 +7,8 @@ import 'package:sasae_flutter_app/models/post/abstract_post.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 
-class PollPost implements AbstractPost {
-  final List<PollOption> polls;
+class PollPostModel implements AbstractPostModel {
+  final List<PollOptionModel> polls;
   final DateTime? endsOn;
   final int? choice;
 
@@ -31,7 +31,7 @@ class PollPost implements AbstractPost {
   DateTime? modifiedOn;
 
   @override
-  List<NGO__> pokedNGO;
+  List<NGO__Model> pokedNGO;
 
   @override
   String postContent;
@@ -42,7 +42,7 @@ class PollPost implements AbstractPost {
   @override
   List<String> relatedTo;
 
-  PollPost({
+  PollPostModel({
     required this.polls,
     this.endsOn,
     this.choice,
@@ -58,8 +58,8 @@ class PollPost implements AbstractPost {
     required this.relatedTo,
   });
 
-  PollPost copyWith({
-    List<PollOption>? polls,
+  PollPostModel copyWith({
+    List<PollOptionModel>? polls,
     DateTime? endsOn,
     int? choice,
     String? author,
@@ -68,12 +68,12 @@ class PollPost implements AbstractPost {
     int? id,
     bool? isAnonymous,
     DateTime? modifiedOn,
-    List<NGO__>? pokedNGO,
+    List<NGO__Model>? pokedNGO,
     String? postContent,
     String? postType,
     List<String>? relatedTo,
   }) {
-    return PollPost(
+    return PollPostModel(
       polls: polls ?? this.polls,
       endsOn: endsOn ?? this.endsOn,
       choice: choice ?? this.choice,
@@ -108,10 +108,10 @@ class PollPost implements AbstractPost {
     };
   }
 
-  factory PollPost.fromAPIResponse(Map<String, dynamic> map) {
-    return PollPost(
-      polls: List<PollOption>.from(map['post_poll']['options']
-          ?.map((x) => PollOption.fromAPIResponse(x))),
+  factory PollPostModel.fromAPIResponse(Map<String, dynamic> map) {
+    return PollPostModel(
+      polls: List<PollOptionModel>.from(map['post_poll']['options']
+          ?.map((x) => PollOptionModel.fromAPIResponse(x))),
       endsOn: map['post_poll']['ends_on'] != null
           ? Jiffy(map['post_poll']['ends_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
@@ -124,18 +124,18 @@ class PollPost implements AbstractPost {
       modifiedOn: map['modified_on'] != null
           ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
-      pokedNGO: List<NGO__>.from(
-          map['poked_ngo']?.map((x) => NGO__.fromAPIResponse(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['poked_ngo']?.map((x) => NGO__Model.fromAPIResponse(x))),
       postContent: map['post_content'] ?? '',
       postType: map['post_type'] ?? '',
       relatedTo: List<String>.from(map['related_to']),
     );
   }
 
-  factory PollPost.fromMap(Map<String, dynamic> map) {
-    return PollPost(
-      polls: List<PollOption>.from(
-          map['polls']?.map((x) => PollOption.fromMap(x))),
+  factory PollPostModel.fromMap(Map<String, dynamic> map) {
+    return PollPostModel(
+      polls: List<PollOptionModel>.from(
+          map['polls']?.map((x) => PollOptionModel.fromMap(x))),
       endsOn: map['endsOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['endsOn'])
           : null,
@@ -148,7 +148,8 @@ class PollPost implements AbstractPost {
       modifiedOn: map['modifiedOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
           : null,
-      pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['pokedNGO']?.map((x) => NGO__Model.fromMap(x))),
       postContent: map['postContent'] ?? '',
       postType: map['postType'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
@@ -157,8 +158,8 @@ class PollPost implements AbstractPost {
 
   String toJson() => json.encode(toMap());
 
-  factory PollPost.fromJson(String source) =>
-      PollPost.fromMap(json.decode(source));
+  factory PollPostModel.fromJson(String source) =>
+      PollPostModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -169,7 +170,7 @@ class PollPost implements AbstractPost {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PollPost &&
+    return other is PollPostModel &&
         listEquals(other.polls, polls) &&
         other.endsOn == endsOn &&
         other.choice == choice &&

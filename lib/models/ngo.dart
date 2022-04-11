@@ -7,7 +7,7 @@ import 'package:sasae_flutter_app/models/user.dart';
 
 import 'bank.dart';
 
-class NGO extends User {
+class NGOModel extends UserModel {
   final double latitude;
   final double longitude;
   final String orgName;
@@ -16,11 +16,11 @@ class NGO extends User {
   final String address;
 
   final String? epayAccount;
-  final Bank? bank;
+  final BankModel? bank;
   final String? swcCertificateURL;
   final String? panCertificateURL;
 
-  NGO({
+  NGOModel({
     required int id,
     required this.latitude,
     required this.longitude,
@@ -50,7 +50,7 @@ class NGO extends User {
           joinedDate: joinedDate,
         );
 
-  NGO copyWith({
+  NGOModel copyWith({
     int? id,
     double? latitude,
     double? longitude,
@@ -66,11 +66,11 @@ class NGO extends User {
     List<int>? postedPosts,
     DateTime? joinedDate,
     String? epayAccount,
-    Bank? bank,
+    BankModel? bank,
     String? swcCertificateURL,
     String? panCertificateURL,
   }) {
-    return NGO(
+    return NGOModel(
       id: id ?? this.id,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -115,8 +115,8 @@ class NGO extends User {
     };
   }
 
-  factory NGO.fromAPIResponse(Map<String, dynamic> map) {
-    return NGO(
+  factory NGOModel.fromAPIResponse(Map<String, dynamic> map) {
+    return NGOModel(
       id: map['id']?.toInt() ?? 0,
       latitude: map['latitude'] == null ? 0.0 : double.parse(map['latitude']),
       longitude:
@@ -133,14 +133,14 @@ class NGO extends User {
       postedPosts: List<int>.from(map['posted_post']),
       joinedDate: Jiffy(map['date_joined'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
       epayAccount: map['epay_account'],
-      bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
+      bank: map['bank'] != null ? BankModel.fromMap(map['bank']) : null,
       swcCertificateURL: map['swc_affl_cert'],
       panCertificateURL: map['pan_cert'],
     );
   }
 
-  factory NGO.fromMap(Map<String, dynamic> map) {
-    return NGO(
+  factory NGOModel.fromMap(Map<String, dynamic> map) {
+    return NGOModel(
       id: map['id']?.toInt() ?? 0,
       latitude: map['latitude']?.toDouble() ?? 0.0,
       longitude: map['longitude']?.toDouble() ?? 0.0,
@@ -156,7 +156,7 @@ class NGO extends User {
       postedPosts: List<int>.from(map['postedPosts']),
       joinedDate: DateTime.fromMillisecondsSinceEpoch(map['joinedDate']),
       epayAccount: map['epayAccount'],
-      bank: map['bank'] != null ? Bank.fromMap(map['bank']) : null,
+      bank: map['bank'] != null ? BankModel.fromMap(map['bank']) : null,
       swcCertificateURL: map['swcCertificateURL'],
       panCertificateURL: map['panCertificateURL'],
     );
@@ -164,7 +164,8 @@ class NGO extends User {
 
   String toJson() => json.encode(toMap());
 
-  factory NGO.fromJson(String source) => NGO.fromMap(json.decode(source));
+  factory NGOModel.fromJson(String source) =>
+      NGOModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -175,7 +176,7 @@ class NGO extends User {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NGO &&
+    return other is NGOModel &&
         other.id == id &&
         other.latitude == latitude &&
         other.longitude == longitude &&

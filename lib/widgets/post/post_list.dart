@@ -3,7 +3,7 @@ import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/widgets/post/post_card.dart';
 
 class PostList extends StatefulWidget {
-  final List<Post_> posts;
+  final List<Post_Model> posts;
   final ScrollController? scrollController;
   final bool isActionable;
 

@@ -14,7 +14,7 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 
 class PostCreateForm extends StatefulWidget {
   static const routeName = '/post/form';
-  final List<NGO__> snapshotNGOList;
+  final List<NGO__Model> snapshotNGOList;
   final List<String> snapshotRelatedList;
 
   const PostCreateForm(
@@ -28,9 +28,9 @@ class PostCreateForm extends StatefulWidget {
 }
 
 class _PostCreateFormState extends State<PostCreateForm> {
-  late final NormalPostCU _normalPostCreate;
-  late final PollPostCU _pollPostCreate;
-  late final RequestPostCU _requestPostCreate;
+  late final NormalPostCUModel _normalPostCreate;
+  late final PollPostCUModel _pollPostCreate;
+  late final RequestPostCUModel _requestPostCreate;
 
   final GlobalKey<FormBuilderState> _superPostKey,
       _requestFormKey,
@@ -114,7 +114,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
           return InputChip(
             key: ObjectKey(data),
             label: Text(
-              (data as NGO__).orgName,
+              (data as NGO__Model).orgName,
               overflow: TextOverflow.fade,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -126,7 +126,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
           );
         },
         findSuggestions: (String query) {
-          List<NGO__> tempList = [];
+          List<NGO__Model> tempList = [];
           if (pokedNGO == null || pokedNGO!.isEmpty) {
             tempList = widget.snapshotNGOList;
           } else {
@@ -141,7 +141,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
               .toList();
         },
         suggestionBuilder: (context, state, data) {
-          data = data as NGO__;
+          data = data as NGO__Model;
           return ListTile(
             key: ObjectKey(data),
             leading: ClipOval(
@@ -157,7 +157,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
           );
         },
         onChanged: (value) {
-          var _ = (value as List<NGO__>).map((e) => e.id).toList();
+          var _ = (value as List<NGO__Model>).map((e) => e.id).toList();
           _normalPostCreate.setPokedNGO = _;
           _pollPostCreate.setPokedNGO = _;
           _requestPostCreate.setPokedNGO = _;

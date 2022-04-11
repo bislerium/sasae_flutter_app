@@ -13,14 +13,14 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class PeopleProvider with ChangeNotifier {
   late AuthProvider _authP;
-  People? _people;
+  PeopleModel? _people;
 
-  People? get peopleData => _people;
+  PeopleModel? get peopleData => _people;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  static People randPeople() {
+  static PeopleModel randPeople() {
     bool isVerified = faker.randomGenerator.boolean();
-    return People(
+    return PeopleModel(
       id: faker.randomGenerator.integer(1000),
       isVerified: isVerified,
       displayPicture: faker.image.image(width: 600, height: 600, random: true),
@@ -101,9 +101,9 @@ class PeopleProvider with ChangeNotifier {
     }
   }
 
-  PeopleUpdate? _peopleUpdate;
+  PeopleUpdateModel? _peopleUpdate;
 
-  PeopleUpdate? get getPeopleUpdate => _peopleUpdate;
+  PeopleUpdateModel? get getPeopleUpdate => _peopleUpdate;
 
   void nullifyPeopleUpdate() => _peopleUpdate = null;
 
@@ -129,7 +129,8 @@ class PeopleProvider with ChangeNotifier {
 
       await Future.delayed(const Duration(seconds: 1));
 
-      _peopleUpdate = PeopleUpdate.fromAPIResponse(json.decode(responseBody));
+      _peopleUpdate =
+          PeopleUpdateModel.fromAPIResponse(json.decode(responseBody));
 
       String? citizenshipPhotoLink = _peopleUpdate!.getCitizenshipPhotoLink;
       String? displayPictureLink = _peopleUpdate!.getDisplayPictureLink;
@@ -197,9 +198,9 @@ class PeopleProvider with ChangeNotifier {
   }
 
   //Can be used for fetching multiple people data in parallel
-  static Future<People?> fetchPeople({
+  static Future<PeopleModel?> fetchPeople({
     int? peopleID,
-    required Auth auth,
+    required AuthModel auth,
     bool isDemo = false,
   }) async {
     if (isDemo) {
@@ -218,7 +219,7 @@ class PeopleProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(json.decode(response.body));
         }
-        return People.fromAPIResponse(responseData);
+        return PeopleModel.fromAPIResponse(responseData);
       } catch (error) {
         return null;
       }

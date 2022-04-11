@@ -2,20 +2,13 @@
     package="com.example.sasae_flutter_app">
     <!-- Required to fetch data from the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE" /> -->
    <application
         android:label="sasae_flutter_app"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <!-- <service   android:name="me.carda.awesome_notifications.services.ForegroundService"
-            android:enabled="true"            
-            android:exported="false"
-            android:stopWithTask="true"
-            android:foregroundServiceType="FOREGROUND_SERVICE_TYPE_NONE"
-></service> -->
+        android:icon="@mipmap/ic_launcher">   
         <!-- <meta-data
         android:name="com.google.firebase.messaging.default_notification_channel_id"
-        android:value="default"/> -->
+        android:value="channel"/> -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

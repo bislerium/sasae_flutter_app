@@ -13,7 +13,7 @@ import 'package:sasae_flutter_app/widgets/post/post_type/request_post_screen.dar
 import 'package:sasae_flutter_app/widgets/post/post_update_form_screen.dart';
 
 class PostCard extends StatelessWidget {
-  final Post_ post;
+  final Post_Model post;
   final bool isActionable;
 
   const PostCard({Key? key, required this.post, this.isActionable = false})

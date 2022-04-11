@@ -10,8 +10,8 @@ import 'package:sasae_flutter_app/providers/people_provider.dart';
 class ProfileProvider with ChangeNotifier {
   late AuthProvider _authP;
   final Dio _dio;
-  User? _user;
-  List<Post_>? _userPosts;
+  UserModel? _user;
+  List<Post_Model>? _userPosts;
 
   ProfileProvider()
       : _dio = Dio(
@@ -22,8 +22,8 @@ class ProfileProvider with ChangeNotifier {
           ),
         );
 
-  User? get userData => _user;
-  List<Post_>? get getUserPostData => _userPosts;
+  UserModel? get userData => _user;
+  List<Post_Model>? get getUserPostData => _userPosts;
 
   set setAuthP(AuthProvider authP) => _authP = authP;
 
@@ -55,7 +55,8 @@ class ProfileProvider with ChangeNotifier {
     _userPosts = await fetchUserPosts(userID: userID, userType: userType);
   }
 
-  Future<List<Post_>?> fetchUserPosts({int? userID, UserType? userType}) async {
+  Future<List<Post_Model>?> fetchUserPosts(
+      {int? userID, UserType? userType}) async {
     late String endpoint;
     if (userID == null || userType == null) {
       switch (_authP.auth!.group) {
@@ -79,7 +80,7 @@ class ProfileProvider with ChangeNotifier {
         ),
       );
       return (response.data['results'] as List)
-          .map((element) => Post_.fromAPIResponse(element))
+          .map((element) => Post_Model.fromAPIResponse(element))
           .toList();
     } on DioError catch (e) {
       print(e.response?.data);

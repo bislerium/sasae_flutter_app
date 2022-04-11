@@ -10,7 +10,7 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/poll_bar_reveal_list.dart';
 
 class PollCard extends StatefulWidget {
-  final List<PollOption> list;
+  final List<PollOptionModel> list;
   final int? choice;
   final DateTime? endsOn;
   const PollCard({Key? key, required this.list, this.choice, this.endsOn})

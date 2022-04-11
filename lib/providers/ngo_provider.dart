@@ -14,8 +14,8 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class NGOProvider with ChangeNotifier {
   late AuthProvider _authP;
-  List<NGO_>? _ngos; // Actual Untouched DataList
-  List<NGO_>? _ngosToShow; // Filtered/search data
+  List<NGO_Model>? _ngos; // Actual Untouched DataList
+  List<NGO_Model>? _ngosToShow; // Filtered/search data
   final Set<String> _fieldOfWork;
   bool _isFiltered;
   bool _isSearched;
@@ -30,7 +30,7 @@ class NGOProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  List<NGO_>? get ngosData => _ngosToShow;
+  List<NGO_Model>? get ngosData => _ngosToShow;
   Set<String> get fieldOfWork => _fieldOfWork;
   bool get fetchError => _ngos == null;
   bool get isFiltered => _isFiltered;
@@ -42,7 +42,7 @@ class NGOProvider with ChangeNotifier {
     _ngosToShow = _ngos = List.generate(
       length,
       (index) {
-        return NGO_(
+        return NGO_Model(
           ngoID: index,
           orgName: faker.company.name(),
           orgPhoto: faker.image.image(random: true),
@@ -74,8 +74,9 @@ class NGOProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
         }
-        _ngos = _ngosToShow =
-            (responseData as List).map((e) => NGO_.fromAPIResponse(e)).toList();
+        _ngos = _ngosToShow = (responseData as List)
+            .map((e) => NGO_Model.fromAPIResponse(e))
+            .toList();
       } catch (error) {
         _ngos = _ngosToShow = null;
       }
@@ -140,14 +141,14 @@ class NGOProvider with ChangeNotifier {
   }
 
   //----------------------------- NGO -----------------------------------------
-  NGO? _ngo;
+  NGOModel? _ngo;
 
-  NGO? get getNGO => _ngo;
+  NGOModel? get getNGO => _ngo;
 
-  static NGO randNGO() {
+  static NGOModel randNGO() {
     var _isVerified = faker.randomGenerator.boolean();
     var ngoName = faker.company.name();
-    return NGO(
+    return NGOModel(
       id: faker.randomGenerator.integer(1000),
       latitude: faker.randomGenerator.decimal(scale: (90 - (-90)), min: -90),
       longitude:
@@ -169,7 +170,7 @@ class NGOProvider with ChangeNotifier {
       joinedDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
       epayAccount: _isVerified ? getRandPhoneNumber() : null,
       bank: _isVerified
-          ? Bank(
+          ? BankModel(
               bankName: faker.company.name(),
               bankBranch: faker.address.city(),
               bankBSB:
@@ -201,9 +202,9 @@ class NGOProvider with ChangeNotifier {
 
   void nullifyNGO() => _ngo = null;
 
-  static Future<NGO?> fetchNGO({
+  static Future<NGOModel?> fetchNGO({
     int? ngoID,
-    required Auth auth,
+    required AuthModel auth,
     bool isDemo = false,
   }) async {
     if (isDemo) {
@@ -221,7 +222,7 @@ class NGOProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
         }
-        return NGO.fromAPIResponse(responseData);
+        return NGOModel.fromAPIResponse(responseData);
       } catch (error) {
         return null;
       }

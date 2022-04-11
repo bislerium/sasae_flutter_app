@@ -1,25 +1,25 @@
 import 'dart:convert';
 
-class Auth {
+class AuthModel {
   final String tokenKey;
   final String group;
   final int accountID;
   final int profileID;
 
-  Auth({
+  AuthModel({
     required this.tokenKey,
     required this.group,
     required this.accountID,
     required this.profileID,
   });
 
-  Auth copyWith({
+  AuthModel copyWith({
     String? tokenKey,
     String? group,
     int? accountID,
     int? profileID,
   }) {
-    return Auth(
+    return AuthModel(
       tokenKey: tokenKey ?? this.tokenKey,
       group: group ?? this.group,
       accountID: accountID ?? this.accountID,
@@ -36,8 +36,8 @@ class Auth {
     };
   }
 
-  factory Auth.fromAPIResponse(Map<String, dynamic> map) {
-    return Auth(
+  factory AuthModel.fromAPIResponse(Map<String, dynamic> map) {
+    return AuthModel(
       tokenKey: map['key'] ?? '',
       group: map['group'] ?? '',
       accountID: map['account_id']?.toInt() ?? 0,
@@ -45,8 +45,8 @@ class Auth {
     );
   }
 
-  factory Auth.fromMap(Map<String, dynamic> map) {
-    return Auth(
+  factory AuthModel.fromMap(Map<String, dynamic> map) {
+    return AuthModel(
       tokenKey: map['tokenKey'] ?? '',
       group: map['group'] ?? '',
       accountID: map['accountID']?.toInt() ?? 0,
@@ -56,7 +56,8 @@ class Auth {
 
   String toJson() => json.encode(toMap());
 
-  factory Auth.fromJson(String source) => Auth.fromMap(json.decode(source));
+  factory AuthModel.fromJson(String source) =>
+      AuthModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -67,7 +68,7 @@ class Auth {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Auth &&
+    return other is AuthModel &&
         other.tokenKey == tokenKey &&
         other.group == group &&
         other.accountID == accountID &&

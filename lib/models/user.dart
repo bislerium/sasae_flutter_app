@@ -1,4 +1,4 @@
-class User {
+class UserModel {
   final int id;
   final String username;
   final bool isVerified;
@@ -8,7 +8,7 @@ class User {
   final DateTime joinedDate;
   final List<int> postedPosts;
 
-  User(
+  UserModel(
       {required this.id,
       required this.username,
       required this.isVerified,

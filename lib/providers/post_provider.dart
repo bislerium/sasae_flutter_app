@@ -19,7 +19,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
-  static List<Post_>? _posts;
+  static List<Post_Model>? _posts;
   final Dio _dio;
 
   PostProvider()
@@ -31,16 +31,16 @@ class PostProvider with ChangeNotifier {
           ),
         );
 
-  List<Post_>? get getPostData => _posts;
+  List<Post_Model>? get getPostData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  List<Post_> _randPosts() {
+  List<Post_Model> _randPosts() {
     var random = Random();
     int length = random.nextInt(100 - 20) + 20;
     return List.generate(
       length,
       (index) {
-        return Post_(
+        return Post_Model(
           id: index,
           relatedTo: List.generate(
             random.nextInt(8 - 1) + 1,
@@ -72,7 +72,7 @@ class PostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<List<Post_>?> fetchPosts() async {
+  Future<List<Post_Model>?> fetchPosts() async {
     try {
       var response = await _dio.get(
         postsEndpoint,
@@ -83,7 +83,7 @@ class PostProvider with ChangeNotifier {
         ),
       );
       return (response.data['results'] as List)
-          .map((element) => Post_.fromAPIResponse(element))
+          .map((element) => Post_Model.fromAPIResponse(element))
           .toList();
     } on DioError catch (e) {
       print(e.response?.data);
@@ -124,17 +124,17 @@ class PostCreateProvider with ChangeNotifier {
           ),
         ),
         _createPostType = PostType.normal,
-        _normalPostCreate = NormalPostCU(),
-        _pollPostCreate = PollPostCU(),
-        _requestPostCreate = RequestPostCU();
+        _normalPostCreate = NormalPostCUModel(),
+        _pollPostCreate = PollPostCUModel(),
+        _requestPostCreate = RequestPostCUModel();
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
   List<String>? _postRelatedTo;
-  List<NGO__>? _ngoOptions;
+  List<NGO__Model>? _ngoOptions;
 
   List<String>? get getPostRelatedToData => _postRelatedTo;
-  List<NGO__>? get getNGOOptionsData => _ngoOptions;
+  List<NGO__Model>? get getNGOOptionsData => _ngoOptions;
 
   Future<void> initPostRelatedTo() async {
     _postRelatedTo = await getPostRelatedTo();
@@ -169,7 +169,7 @@ class PostCreateProvider with ChangeNotifier {
     }
   }
 
-  Future<List<NGO__>?> getNGOOptions() async {
+  Future<List<NGO__Model>?> getNGOOptions() async {
     try {
       var response = await _dio.get(
         postNGOsEndpoint,
@@ -178,7 +178,7 @@ class PostCreateProvider with ChangeNotifier {
         }),
       );
       return (response.data as List)
-          .map((e) => NGO__.fromAPIResponse(e))
+          .map((e) => NGO__Model.fromAPIResponse(e))
           .toList();
     } on DioError catch (e) {
       print(e.response?.data);
@@ -208,16 +208,16 @@ class PostCreateProvider with ChangeNotifier {
     }
   }
 
-  final NormalPostCU _normalPostCreate;
-  final PollPostCU _pollPostCreate;
-  final RequestPostCU _requestPostCreate;
+  final NormalPostCUModel _normalPostCreate;
+  final PollPostCUModel _pollPostCreate;
+  final RequestPostCUModel _requestPostCreate;
 
-  NormalPostCU get getNormalPostCreate => _normalPostCreate;
-  PollPostCU get getPollPostCreate => _pollPostCreate;
-  RequestPostCU get getRequestPostCreate => _requestPostCreate;
+  NormalPostCUModel get getNormalPostCreate => _normalPostCreate;
+  PollPostCUModel get getPollPostCreate => _pollPostCreate;
+  RequestPostCUModel get getRequestPostCreate => _requestPostCreate;
 
   void pushCreatedPost(Map<String, dynamic> responseData) {
-    Post_ post = Post_.fromAPIResponse(responseData);
+    Post_Model post = Post_Model.fromAPIResponse(responseData);
     PostProvider._posts?.insert(0, post);
     print(post);
     notifyListeners();
@@ -359,14 +359,14 @@ class PostUpdateProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  NormalPostCU? _normalPostCU;
-  PollPostCU? _pollPostCU;
-  RequestPostCU? _requestPostCU;
+  NormalPostCUModel? _normalPostCU;
+  PollPostCUModel? _pollPostCU;
+  RequestPostCUModel? _requestPostCU;
   PostType? _updatePostType;
 
-  NormalPostCU? get getNormalPostCU => _normalPostCU;
-  PollPostCU? get getPollPostCU => _pollPostCU;
-  RequestPostCU? get getRequestPostCU => _requestPostCU;
+  NormalPostCUModel? get getNormalPostCU => _normalPostCU;
+  PollPostCUModel? get getPollPostCU => _pollPostCU;
+  RequestPostCUModel? get getRequestPostCU => _requestPostCU;
   PostType? get getUpdatePostType => _updatePostType;
 
   void nullifyNormalPostCU() => _normalPostCU = null;
@@ -430,7 +430,7 @@ class PostUpdateProvider with ChangeNotifier {
 
       switch (jsonBody['post_type']) {
         case 'Normal':
-          _normalPostCU = NormalPostCU.fromAPIResponse(jsonBody);
+          _normalPostCU = NormalPostCUModel.fromAPIResponse(jsonBody);
           if (_normalPostCU?.getPostImageLink != null) {
             _normalPostCU!.setPostImage =
                 await imageURLToXFile(_normalPostCU!.getPostImageLink!);
@@ -438,11 +438,11 @@ class PostUpdateProvider with ChangeNotifier {
           _updatePostType = PostType.normal;
           break;
         case 'Poll':
-          _pollPostCU = PollPostCU.fromAPIResponse(jsonBody);
+          _pollPostCU = PollPostCUModel.fromAPIResponse(jsonBody);
           _updatePostType = PostType.poll;
           break;
         case 'Request':
-          _requestPostCU = RequestPostCU.fromAPIResponse(jsonBody);
+          _requestPostCU = RequestPostCUModel.fromAPIResponse(jsonBody);
           _updatePostType = PostType.request;
           break;
       }
@@ -557,7 +557,7 @@ class PostUpdateProvider with ChangeNotifier {
 //------------------------------Normal Post --------------------------------//
 
 class NormalPostProvider with ChangeNotifier {
-  NormalPost? _normalPost;
+  NormalPostModel? _normalPost;
   late AuthProvider _authP;
   final Dio _dio;
 
@@ -571,12 +571,12 @@ class NormalPostProvider with ChangeNotifier {
         );
 
   set setAuthP(AuthProvider auth) => _authP = auth;
-  NormalPost? get normalPostData => _normalPost;
+  NormalPostModel? get normalPostData => _normalPost;
 
-  NormalPost _randNormalPost() {
+  NormalPostModel _randNormalPost() {
     Random rand = Random();
     bool upvoted = faker.randomGenerator.boolean();
-    return NormalPost(
+    return NormalPostModel(
       attachedImage: faker.randomGenerator.boolean()
           ? faker.image.image(random: true)
           : null,
@@ -593,7 +593,7 @@ class NormalPostProvider with ChangeNotifier {
       isAnonymous: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
-          (index) => NGO__(
+          (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
@@ -618,7 +618,7 @@ class NormalPostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<NormalPost?> fetchNormalPost({required int postID}) async {
+  Future<NormalPostModel?> fetchNormalPost({required int postID}) async {
     try {
       var response = await _dio.get(
         '$postEndpoint$postID/',
@@ -626,7 +626,7 @@ class NormalPostProvider with ChangeNotifier {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      return NormalPost.fromAPIResponse(response.data);
+      return NormalPostModel.fromAPIResponse(response.data);
     } on DioError catch (e) {
       print(e.response?.data);
       return null;
@@ -666,7 +666,7 @@ class NormalPostProvider with ChangeNotifier {
 //--------------------------------Poll Post ----------------------------------//
 
 class PollPostProvider with ChangeNotifier {
-  PollPost? _pollPost;
+  PollPostModel? _pollPost;
   late AuthProvider _authP;
   final Dio _dio;
 
@@ -681,13 +681,13 @@ class PollPostProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  PollPost? get pollPostData => _pollPost;
+  PollPostModel? get pollPostData => _pollPost;
 
-  PollPost _randPollPost() {
+  PollPostModel _randPollPost() {
     Random rand = Random();
     var pollOptions = List.generate(
       faker.randomGenerator.integer(10, min: 2),
-      (index) => PollOption(
+      (index) => PollOptionModel(
         id: faker.randomGenerator.integer(1500),
         option: faker.food.dish(),
         reaction: faker.randomGenerator
@@ -697,7 +697,7 @@ class PollPostProvider with ChangeNotifier {
     int? choice = faker.randomGenerator.boolean()
         ? null
         : (faker.randomGenerator.element(pollOptions)).id;
-    return PollPost(
+    return PollPostModel(
       postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
@@ -705,7 +705,7 @@ class PollPostProvider with ChangeNotifier {
       isAnonymous: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
-          (index) => NGO__(
+          (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
@@ -737,7 +737,7 @@ class PollPostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<PollPost?> fetchPollPost({required int postID}) async {
+  Future<PollPostModel?> fetchPollPost({required int postID}) async {
     try {
       var response = await _dio.get(
         '$postEndpoint$postID/',
@@ -745,7 +745,7 @@ class PollPostProvider with ChangeNotifier {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      return PollPost.fromAPIResponse(response.data);
+      return PollPostModel.fromAPIResponse(response.data);
     } on DioError catch (e) {
       print(e.response?.data);
       return null;
@@ -777,7 +777,7 @@ class PollPostProvider with ChangeNotifier {
 //-------------------------------Request Post --------------------------------//
 
 class RequestPostProvider with ChangeNotifier {
-  RequestPost? _requestPost;
+  RequestPostModel? _requestPost;
   late AuthProvider _authP;
   final Dio _dio;
 
@@ -792,9 +792,9 @@ class RequestPostProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  RequestPost? get requestPostData => _requestPost;
+  RequestPostModel? get requestPostData => _requestPost;
 
-  RequestPost _randRequestPost() {
+  RequestPostModel _randRequestPost() {
     Random rand = Random();
     int min = faker.randomGenerator.integer(1500);
     int target = faker.randomGenerator.integer(2000, min: min);
@@ -802,7 +802,7 @@ class RequestPostProvider with ChangeNotifier {
         ? faker.randomGenerator.integer(3000, min: target)
         : null;
     int numReaction = faker.randomGenerator.integer(max ?? (target * 2));
-    return RequestPost(
+    return RequestPostModel(
       postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
@@ -810,7 +810,7 @@ class RequestPostProvider with ChangeNotifier {
       isAnonymous: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
-          (index) => NGO__(
+          (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
@@ -844,7 +844,7 @@ class RequestPostProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<RequestPost?> fetchRequestPost({required int postID}) async {
+  Future<RequestPostModel?> fetchRequestPost({required int postID}) async {
     try {
       var response = await _dio.get(
         '$postEndpoint$postID/',
@@ -852,7 +852,7 @@ class RequestPostProvider with ChangeNotifier {
           'Authorization': 'Token ${_authP.auth!.tokenKey}',
         }),
       );
-      return RequestPost.fromAPIResponse(response.data);
+      return RequestPostModel.fromAPIResponse(response.data);
     } on DioError catch (e) {
       print(e.response?.data);
       return null;

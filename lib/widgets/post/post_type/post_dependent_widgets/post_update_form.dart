@@ -13,7 +13,7 @@ import 'package:sasae_flutter_app/widgets/post/post_type/post_dependent_widgets/
 
 class PostUpdateForm extends StatefulWidget {
   static const routeName = '/post/form';
-  final List<NGO__> snapshotNGOList;
+  final List<NGO__Model> snapshotNGOList;
   final List<String> snapshotRelatedList;
   final ScrollController? scrollController;
 
@@ -136,7 +136,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
           return InputChip(
             key: ObjectKey(data),
             label: Text(
-              (data as NGO__).orgName,
+              (data as NGO__Model).orgName,
               overflow: TextOverflow.fade,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -148,11 +148,11 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
           );
         },
         initialValue: _postHead.getPokedNGO!
-            .map<NGO__>((e) =>
+            .map<NGO__Model>((e) =>
                 widget.snapshotNGOList.firstWhere((element) => element.id == e))
             .toList(),
         findSuggestions: (String query) {
-          List<NGO__> tempList = [];
+          List<NGO__Model> tempList = [];
           if (pokedNGO == null || pokedNGO!.isEmpty) {
             tempList = widget.snapshotNGOList;
           } else {
@@ -167,7 +167,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
               .toList();
         },
         suggestionBuilder: (context, state, data) {
-          data = data as NGO__;
+          data = data as NGO__Model;
           return ListTile(
             key: ObjectKey(data),
             leading: ClipOval(
@@ -183,7 +183,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
           );
         },
         onChanged: (value) {
-          var _ = (value as List<NGO__>).map((e) => e.id).toList();
+          var _ = (value as List<NGO__Model>).map((e) => e.id).toList();
           _postHead.setPokedNGO = _;
         },
         inputType: TextInputType.name,

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 
 // ignore: camel_case_types
-class Post_ {
+class Post_Model {
   final int id;
   final List<String> relatedTo;
   final String postContent;
@@ -13,7 +13,7 @@ class Post_ {
   final bool isPostedAnonymously;
   final bool isPokedToNGO;
 
-  Post_({
+  Post_Model({
     required this.id,
     required this.relatedTo,
     required this.postContent,
@@ -23,7 +23,7 @@ class Post_ {
     required this.isPokedToNGO,
   });
 
-  Post_ copyWith({
+  Post_Model copyWith({
     int? id,
     List<String>? relatedTo,
     String? postContent,
@@ -32,7 +32,7 @@ class Post_ {
     bool? isPostedAnonymously,
     bool? isPokedToNGO,
   }) {
-    return Post_(
+    return Post_Model(
       id: id ?? this.id,
       relatedTo: relatedTo ?? this.relatedTo,
       postContent: postContent ?? this.postContent,
@@ -55,8 +55,8 @@ class Post_ {
     };
   }
 
-  factory Post_.fromAPIResponse(Map<String, dynamic> map) {
-    return Post_(
+  factory Post_Model.fromAPIResponse(Map<String, dynamic> map) {
+    return Post_Model(
       id: map['id']?.toInt() ?? 0,
       relatedTo: List<String>.from(map['related_to']),
       postContent: map['post_content'] ?? '',
@@ -67,8 +67,8 @@ class Post_ {
     );
   }
 
-  factory Post_.fromMap(Map<String, dynamic> map) {
-    return Post_(
+  factory Post_Model.fromMap(Map<String, dynamic> map) {
+    return Post_Model(
       id: map['id']?.toInt() ?? 0,
       relatedTo: List<String>.from(map['relatedTo']),
       postContent: map['postContent'] ?? '',
@@ -81,7 +81,8 @@ class Post_ {
 
   String toJson() => json.encode(toMap());
 
-  factory Post_.fromJson(String source) => Post_.fromMap(json.decode(source));
+  factory Post_Model.fromJson(String source) =>
+      Post_Model.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -92,7 +93,7 @@ class Post_ {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Post_ &&
+    return other is Post_Model &&
         other.id == id &&
         listEquals(other.relatedTo, relatedTo) &&
         other.postContent == postContent &&

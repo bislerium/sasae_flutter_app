@@ -20,7 +20,7 @@ class FormCardNormalPost extends StatefulWidget {
 
 class _FormCardNormalPostState extends State<FormCardNormalPost>
     with AutomaticKeepAliveClientMixin {
-  late final NormalPostCU _normalPostCU;
+  late final NormalPostCUModel _normalPostCU;
 
   @override
   void initState() {

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
 
-class NormalPostCU {
+class NormalPostCUModel {
   int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
@@ -12,7 +12,7 @@ class NormalPostCU {
   String? _postImageLink;
   XFile? _postImage;
 
-  NormalPostCU();
+  NormalPostCUModel();
   int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
   String? get getPostContent => _postContent;
@@ -32,8 +32,8 @@ class NormalPostCU {
       _postImageLink = postImageLink;
   set setPostImage(XFile? postImage) => _postImage = postImage;
 
-  factory NormalPostCU.fromAPIResponse(Map<String, dynamic> map) {
-    return NormalPostCU()
+  factory NormalPostCUModel.fromAPIResponse(Map<String, dynamic> map) {
+    return NormalPostCUModel()
       .._postID = map['id']?.toInt() ?? 0
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
@@ -63,7 +63,7 @@ class NormalPostCU {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NormalPostCU &&
+    return other is NormalPostCUModel &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&
@@ -81,7 +81,7 @@ class NormalPostCU {
   }
 }
 
-class PollPostCU {
+class PollPostCUModel {
   int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
@@ -91,7 +91,7 @@ class PollPostCU {
   List<String>? _pollOptions;
   DateTime? _pollDuration;
 
-  PollPostCU();
+  PollPostCUModel();
 
   int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
@@ -111,8 +111,8 @@ class PollPostCU {
   set setPollOptions(List<String>? pollOptions) => _pollOptions = pollOptions;
   set setPollDuration(DateTime? pollDuration) => _pollDuration = pollDuration;
 
-  factory PollPostCU.fromAPIResponse(Map<String, dynamic> map) {
-    return PollPostCU()
+  factory PollPostCUModel.fromAPIResponse(Map<String, dynamic> map) {
+    return PollPostCUModel()
       .._postID = map['id']?.toInt() ?? 0
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
@@ -146,7 +146,7 @@ class PollPostCU {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PollPostCU &&
+    return other is PollPostCUModel &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&
@@ -166,7 +166,7 @@ class PollPostCU {
   }
 }
 
-class RequestPostCU {
+class RequestPostCUModel {
   int? _postID;
   List<String>? _relatedTo;
   String? _postContent;
@@ -179,7 +179,7 @@ class RequestPostCU {
   String? _requestType;
   DateTime? _requestDuration;
 
-  RequestPostCU();
+  RequestPostCUModel();
 
   int? get getPostID => _postID;
   List<String>? get getRelatedTo => _relatedTo;
@@ -206,8 +206,8 @@ class RequestPostCU {
   set setRequestDuration(DateTime? requestDuration) =>
       _requestDuration = requestDuration;
 
-  factory RequestPostCU.fromAPIResponse(Map<String, dynamic> map) {
-    return RequestPostCU()
+  factory RequestPostCUModel.fromAPIResponse(Map<String, dynamic> map) {
+    return RequestPostCUModel()
       .._postID = map['id']?.toInt() ?? 0
       .._relatedTo = List<String>.from(map['related_to'])
       .._postContent = map['post_content']
@@ -246,7 +246,7 @@ class RequestPostCU {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is RequestPostCU &&
+    return other is RequestPostCUModel &&
         listEquals(other._relatedTo, _relatedTo) &&
         other._postContent == _postContent &&
         other._isAnonymous == _isAnonymous &&

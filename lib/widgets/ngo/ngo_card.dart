@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 
 class NGOCard extends StatelessWidget {
-  final NGO_ ngo_;
+  final NGO_Model ngo_;
 
   const NGOCard({Key? key, required this.ngo_}) : super(key: key);
 

@@ -46,19 +46,19 @@ class _UserInfoTabState extends State<UserInfoTab>
 
   Future<void> _fetchUser() async {
     await profileP.initFetchUser();
-    User? data = profileP.userData;
+    UserModel? data = profileP.userData;
     if (data == null) {
       profileSettingFABP.setOnPressedHandler = null;
       profileSettingFABP.setShowFAB = false;
       return;
     }
-    if (data is NGO) {
+    if (data is NGOModel) {
       profileSettingFABP.setOnPressedHandler = null;
       profileSettingFABP.setUserType = UserType.ngo;
       profileSettingFABP.setShowFAB = false;
       return;
     }
-    if (data is People) {
+    if (data is PeopleModel) {
       WidgetsBinding.instance?.addPostFrameCallback((_) {
         profileSettingFABP.setOnPressedHandler = () => Navigator.pushNamed(
               context,
@@ -73,7 +73,7 @@ class _UserInfoTabState extends State<UserInfoTab>
   void profleEditfabListenScroll() {
     var _ = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController.position.userScrollDirection;
-    if (profileP.userData is People) {
+    if (profileP.userData is PeopleModel) {
       direction == ScrollDirection.reverse
           ? _.setShowFAB = false
           : _.setShowFAB = true;
@@ -85,37 +85,37 @@ class _UserInfoTabState extends State<UserInfoTab>
     super.build(context);
     return FutureBuilder(
       future: _fetchUserFUTURE,
-      builder: (context, snapshot) =>
-          snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
-              : Consumer<ProfileProvider>(
-                  builder: (context, profileP, child) => RefreshIndicator(
-                    onRefresh: _fetchUser,
-                    child: profileP.userData == null
-                        ? const FetchError()
-                        : profileP.userData is People
-                            ? ListView(
-                                controller: widget.scrollController,
-                                children: [
-                                  const ChangeDeleteAction(),
-                                  PeopleProfile(
-                                    peopleData: profileP.userData! as People,
-                                  ),
-                                ],
-                              )
-                            : ListView(
-                                controller: widget.scrollController,
-                                children: [
-                                  const ChangeDeleteAction(
-                                    deletable: false,
-                                  ),
-                                  NGOProfile(
-                                    ngoData: profileP.userData! as NGO,
-                                  ),
-                                ],
+      builder: (context, snapshot) => snapshot.connectionState ==
+              ConnectionState.waiting
+          ? const CustomLoading()
+          : Consumer<ProfileProvider>(
+              builder: (context, profileP, child) => RefreshIndicator(
+                onRefresh: _fetchUser,
+                child: profileP.userData == null
+                    ? const FetchError()
+                    : profileP.userData is PeopleModel
+                        ? ListView(
+                            controller: widget.scrollController,
+                            children: [
+                              const ChangeDeleteAction(),
+                              PeopleProfile(
+                                peopleData: profileP.userData! as PeopleModel,
                               ),
-                  ),
-                ),
+                            ],
+                          )
+                        : ListView(
+                            controller: widget.scrollController,
+                            children: [
+                              const ChangeDeleteAction(
+                                deletable: false,
+                              ),
+                              NGOProfile(
+                                ngoData: profileP.userData! as NGOModel,
+                              ),
+                            ],
+                          ),
+              ),
+            ),
     );
   }
 

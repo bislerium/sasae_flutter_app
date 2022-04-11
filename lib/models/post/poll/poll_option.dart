@@ -2,23 +2,23 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
-class PollOption {
+class PollOptionModel {
   final int id;
   final String option;
   List<int> reaction;
 
-  PollOption({
+  PollOptionModel({
     required this.id,
     required this.option,
     required this.reaction,
   });
 
-  PollOption copyWith({
+  PollOptionModel copyWith({
     int? id,
     String? option,
     List<int>? reaction,
   }) {
-    return PollOption(
+    return PollOptionModel(
       id: id ?? this.id,
       option: option ?? this.option,
       reaction: reaction ?? this.reaction,
@@ -33,16 +33,16 @@ class PollOption {
     };
   }
 
-  factory PollOption.fromAPIResponse(Map<String, dynamic> map) {
-    return PollOption(
+  factory PollOptionModel.fromAPIResponse(Map<String, dynamic> map) {
+    return PollOptionModel(
       id: map['id']?.toInt() ?? 0,
       option: map['option'] ?? '',
       reaction: List<int>.from(map['reacted_by']),
     );
   }
 
-  factory PollOption.fromMap(Map<String, dynamic> map) {
-    return PollOption(
+  factory PollOptionModel.fromMap(Map<String, dynamic> map) {
+    return PollOptionModel(
       id: map['id']?.toInt() ?? 0,
       option: map['option'] ?? '',
       reaction: List<int>.from(map['reaction']),
@@ -51,8 +51,8 @@ class PollOption {
 
   String toJson() => json.encode(toMap());
 
-  factory PollOption.fromJson(String source) =>
-      PollOption.fromMap(json.decode(source));
+  factory PollOptionModel.fromJson(String source) =>
+      PollOptionModel.fromMap(json.decode(source));
 
   @override
   String toString() =>
@@ -62,7 +62,7 @@ class PollOption {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PollOption &&
+    return other is PollOptionModel &&
         other.id == id &&
         other.option == option &&
         listEquals(other.reaction, reaction);

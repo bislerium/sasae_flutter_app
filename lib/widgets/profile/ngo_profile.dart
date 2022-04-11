@@ -9,7 +9,7 @@ import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NGOProfile extends StatelessWidget {
-  final NGO ngoData;
+  final NGOModel ngoData;
 
   const NGOProfile({
     Key? key,

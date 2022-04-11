@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_profile_screen.dart';
 
 class PokedNGOCard extends StatelessWidget {
-  final List<NGO__> list;
+  final List<NGO__Model> list;
   const PokedNGOCard({Key? key, required this.list}) : super(key: key);
 
   @override

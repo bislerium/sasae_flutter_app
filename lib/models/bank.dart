@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-class Bank {
+class BankModel {
   final String bankName;
   final String bankBranch;
   final String bankBSB;
   final String bankAccountName;
   final String bankAccountNumber;
 
-  Bank({
+  BankModel({
     required this.bankName,
     required this.bankBranch,
     required this.bankBSB,
@@ -15,14 +15,14 @@ class Bank {
     required this.bankAccountNumber,
   });
 
-  Bank copyWith({
+  BankModel copyWith({
     String? bankName,
     String? bankBranch,
     String? bankBSB,
     String? bankAccountName,
     String? bankAccountNumber,
   }) {
-    return Bank(
+    return BankModel(
       bankName: bankName ?? this.bankName,
       bankBranch: bankBranch ?? this.bankBranch,
       bankBSB: bankBSB ?? this.bankBSB,
@@ -41,8 +41,8 @@ class Bank {
     };
   }
 
-  factory Bank.fromMap(Map<String, dynamic> map) {
-    return Bank(
+  factory BankModel.fromMap(Map<String, dynamic> map) {
+    return BankModel(
       bankName: map['bank_name'] ?? '',
       bankBranch: map['bank_branch'] ?? '',
       bankBSB: map['bank_BSB'] ?? '',
@@ -53,7 +53,8 @@ class Bank {
 
   String toJson() => json.encode(toMap());
 
-  factory Bank.fromJson(String source) => Bank.fromMap(json.decode(source));
+  factory BankModel.fromJson(String source) =>
+      BankModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -64,7 +65,7 @@ class Bank {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Bank &&
+    return other is BankModel &&
         other.bankName == bankName &&
         other.bankBranch == bankBranch &&
         other.bankBSB == bankBSB &&

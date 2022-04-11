@@ -6,7 +6,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/models/post/abstract_post.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 
-class RequestPost implements AbstractPost {
+class RequestPostModel implements AbstractPostModel {
   final int min;
   final int target;
   final int? max;
@@ -34,7 +34,7 @@ class RequestPost implements AbstractPost {
   DateTime? modifiedOn;
 
   @override
-  List<NGO__> pokedNGO;
+  List<NGO__Model> pokedNGO;
 
   @override
   String postContent;
@@ -45,7 +45,7 @@ class RequestPost implements AbstractPost {
   @override
   List<String> relatedTo;
 
-  RequestPost({
+  RequestPostModel({
     required this.min,
     required this.target,
     this.max,
@@ -65,7 +65,7 @@ class RequestPost implements AbstractPost {
     required this.relatedTo,
   });
 
-  RequestPost copyWith({
+  RequestPostModel copyWith({
     int? min,
     int? target,
     int? max,
@@ -79,12 +79,12 @@ class RequestPost implements AbstractPost {
     int? id,
     bool? isAnonymous,
     DateTime? modifiedOn,
-    List<NGO__>? pokedNGO,
+    List<NGO__Model>? pokedNGO,
     String? postContent,
     String? postType,
     List<String>? relatedTo,
   }) {
-    return RequestPost(
+    return RequestPostModel(
       min: min ?? this.min,
       target: target ?? this.target,
       max: max ?? this.max,
@@ -127,8 +127,8 @@ class RequestPost implements AbstractPost {
     };
   }
 
-  factory RequestPost.fromAPIResponse(Map<String, dynamic> map) {
-    return RequestPost(
+  factory RequestPostModel.fromAPIResponse(Map<String, dynamic> map) {
+    return RequestPostModel(
       min: map['post_request']['min']?.toInt() ?? 0,
       target: map['post_request']['target']?.toInt() ?? 0,
       max: map['post_request']['max']?.toInt(),
@@ -145,16 +145,16 @@ class RequestPost implements AbstractPost {
       modifiedOn: map['modified_on'] != null
           ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
-      pokedNGO: List<NGO__>.from(
-          map['poked_ngo']?.map((x) => NGO__.fromAPIResponse(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['poked_ngo']?.map((x) => NGO__Model.fromAPIResponse(x))),
       postContent: map['post_content'] ?? '',
       postType: map['post_type'] ?? '',
       relatedTo: List<String>.from(map['related_to']),
     );
   }
 
-  factory RequestPost.fromMap(Map<String, dynamic> map) {
-    return RequestPost(
+  factory RequestPostModel.fromMap(Map<String, dynamic> map) {
+    return RequestPostModel(
       min: map['min']?.toInt() ?? 0,
       target: map['target']?.toInt() ?? 0,
       max: map['max']?.toInt(),
@@ -170,7 +170,8 @@ class RequestPost implements AbstractPost {
       modifiedOn: map['modifiedOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
           : null,
-      pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['pokedNGO']?.map((x) => NGO__Model.fromMap(x))),
       postContent: map['postContent'] ?? '',
       postType: map['postType'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
@@ -179,8 +180,8 @@ class RequestPost implements AbstractPost {
 
   String toJson() => json.encode(toMap());
 
-  factory RequestPost.fromJson(String source) =>
-      RequestPost.fromMap(json.decode(source));
+  factory RequestPostModel.fromJson(String source) =>
+      RequestPostModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -191,7 +192,7 @@ class RequestPost implements AbstractPost {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is RequestPost &&
+    return other is RequestPostModel &&
         other.min == min &&
         other.target == target &&
         other.max == max &&

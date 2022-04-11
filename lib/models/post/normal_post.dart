@@ -9,7 +9,7 @@ import 'abstract_post.dart';
 
 enum NormalPostReactionType { upVote, downVote }
 
-class NormalPost implements AbstractPost {
+class NormalPostModel implements AbstractPostModel {
   final String? attachedImage;
   final List<int> upVote;
   final List<int> downVote;
@@ -35,7 +35,7 @@ class NormalPost implements AbstractPost {
   DateTime? modifiedOn;
 
   @override
-  List<NGO__> pokedNGO;
+  List<NGO__Model> pokedNGO;
 
   @override
   String postContent;
@@ -45,7 +45,7 @@ class NormalPost implements AbstractPost {
 
   @override
   List<String> relatedTo;
-  NormalPost({
+  NormalPostModel({
     this.attachedImage,
     required this.upVote,
     required this.downVote,
@@ -63,7 +63,7 @@ class NormalPost implements AbstractPost {
     required this.relatedTo,
   });
 
-  NormalPost copyWith({
+  NormalPostModel copyWith({
     String? attachedImage,
     List<int>? upVote,
     List<int>? downVote,
@@ -75,12 +75,12 @@ class NormalPost implements AbstractPost {
     int? id,
     bool? isAnonymous,
     DateTime? modifiedOn,
-    List<NGO__>? pokedNGO,
+    List<NGO__Model>? pokedNGO,
     String? postContent,
     String? postType,
     List<String>? relatedTo,
   }) {
-    return NormalPost(
+    return NormalPostModel(
       attachedImage: attachedImage ?? this.attachedImage,
       upVote: upVote ?? this.upVote,
       downVote: downVote ?? this.downVote,
@@ -119,8 +119,8 @@ class NormalPost implements AbstractPost {
     };
   }
 
-  factory NormalPost.fromAPIResponse(Map<String, dynamic> map) {
-    return NormalPost(
+  factory NormalPostModel.fromAPIResponse(Map<String, dynamic> map) {
+    return NormalPostModel(
       attachedImage: map['post_normal']['post_image'],
       upVote: List<int>.from(map['post_normal']['up_vote']),
       downVote: List<int>.from(map['post_normal']['down_vote']),
@@ -134,16 +134,16 @@ class NormalPost implements AbstractPost {
       modifiedOn: map['modified_on'] != null
           ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
-      pokedNGO: List<NGO__>.from(
-          map['poked_ngo']?.map((x) => NGO__.fromAPIResponse(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['poked_ngo']?.map((x) => NGO__Model.fromAPIResponse(x))),
       postContent: map['post_content'] ?? '',
       postType: map['post_type'] ?? '',
       relatedTo: List<String>.from(map['related_to']),
     );
   }
 
-  factory NormalPost.fromMap(Map<String, dynamic> map) {
-    return NormalPost(
+  factory NormalPostModel.fromMap(Map<String, dynamic> map) {
+    return NormalPostModel(
       attachedImage: map['attachedImage'],
       upVote: List<int>.from(map['upVote']),
       downVote: List<int>.from(map['downVote']),
@@ -157,7 +157,8 @@ class NormalPost implements AbstractPost {
       modifiedOn: map['modifiedOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
           : null,
-      pokedNGO: List<NGO__>.from(map['pokedNGO']?.map((x) => NGO__.fromMap(x))),
+      pokedNGO: List<NGO__Model>.from(
+          map['pokedNGO']?.map((x) => NGO__Model.fromMap(x))),
       postContent: map['postContent'] ?? '',
       postType: map['postType'] ?? '',
       relatedTo: List<String>.from(map['relatedTo']),
@@ -166,8 +167,8 @@ class NormalPost implements AbstractPost {
 
   String toJson() => json.encode(toMap());
 
-  factory NormalPost.fromJson(String source) =>
-      NormalPost.fromMap(json.decode(source));
+  factory NormalPostModel.fromJson(String source) =>
+      NormalPostModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -178,7 +179,7 @@ class NormalPost implements AbstractPost {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NormalPost &&
+    return other is NormalPostModel &&
         other.attachedImage == attachedImage &&
         listEquals(other.upVote, upVote) &&
         listEquals(other.downVote, downVote) &&

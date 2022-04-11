@@ -7,7 +7,7 @@ import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 
 class AuthProvider with ChangeNotifier {
-  Auth? _auth;
+  AuthModel? _auth;
   bool _isAuthenticating;
   final SessionManager _sessionManager;
 
@@ -16,7 +16,7 @@ class AuthProvider with ChangeNotifier {
         _isAuthenticating = false;
 
   bool get isAuth => _auth != null;
-  Auth? get auth => _auth;
+  AuthModel? get auth => _auth;
   bool get isAuthenticating => _isAuthenticating;
 
   Future<void> _authenticate({
@@ -43,7 +43,7 @@ class AuthProvider with ChangeNotifier {
         throw HttpException(responseData.toString());
       }
       await Future.delayed(const Duration(milliseconds: 1500));
-      _auth = Auth.fromAPIResponse(responseData);
+      _auth = AuthModel.fromAPIResponse(responseData);
       _sessionManager.set('auth_data', _auth!);
     } catch (error) {
       _auth = null;
@@ -67,7 +67,7 @@ class AuthProvider with ChangeNotifier {
     var _ = await _sessionManager.get('auth_data');
     await Future.delayed(const Duration(milliseconds: 1500));
     if (_ == null) return;
-    _auth = Auth.fromJson(_);
+    _auth = AuthModel.fromJson(_);
     try {
       var headers = {
         'Authorization': 'Token ${_auth!.tokenKey}',

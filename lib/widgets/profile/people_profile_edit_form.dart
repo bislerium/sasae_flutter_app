@@ -9,7 +9,7 @@ import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
 class PeopleProfileEditForm extends StatefulWidget {
-  final PeopleUpdate peopleUpdate;
+  final PeopleUpdateModel peopleUpdate;
   final ScrollController scrollController;
   final GlobalKey<FormBuilderState> formKey;
 

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:jiffy/jiffy.dart';
 
 // ignore: camel_case_types
-class NGO_ {
+class NGO_Model {
   final int ngoID;
   final String orgName;
   final String orgPhoto;
@@ -12,7 +12,7 @@ class NGO_ {
   final List<String> fieldOfWork;
   final String address;
 
-  NGO_({
+  NGO_Model({
     required this.ngoID,
     required this.orgName,
     required this.orgPhoto,
@@ -21,7 +21,7 @@ class NGO_ {
     required this.address,
   });
 
-  NGO_ copyWith({
+  NGO_Model copyWith({
     int? ngoID,
     String? orgName,
     String? orgPhoto,
@@ -29,7 +29,7 @@ class NGO_ {
     List<String>? fieldOfWork,
     String? address,
   }) {
-    return NGO_(
+    return NGO_Model(
       ngoID: ngoID ?? this.ngoID,
       orgName: orgName ?? this.orgName,
       orgPhoto: orgPhoto ?? this.orgPhoto,
@@ -50,8 +50,8 @@ class NGO_ {
     };
   }
 
-  factory NGO_.fromAPIResponse(Map<String, dynamic> map) {
-    return NGO_(
+  factory NGO_Model.fromAPIResponse(Map<String, dynamic> map) {
+    return NGO_Model(
       ngoID: map['id']?.toInt() ?? 0,
       orgName: map['full_name'] ?? '',
       orgPhoto: map['display_picture'] ?? '',
@@ -61,8 +61,8 @@ class NGO_ {
     );
   }
 
-  factory NGO_.fromMap(Map<String, dynamic> map) {
-    return NGO_(
+  factory NGO_Model.fromMap(Map<String, dynamic> map) {
+    return NGO_Model(
       ngoID: map['ngoID']?.toInt() ?? 0,
       orgName: map['orgName'] ?? '',
       orgPhoto: map['orgPhoto'] ?? '',
@@ -74,7 +74,8 @@ class NGO_ {
 
   String toJson() => json.encode(toMap());
 
-  factory NGO_.fromJson(String source) => NGO_.fromMap(json.decode(source));
+  factory NGO_Model.fromJson(String source) =>
+      NGO_Model.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -85,7 +86,7 @@ class NGO_ {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is NGO_ &&
+    return other is NGO_Model &&
         other.ngoID == ngoID &&
         other.orgName == orgName &&
         other.orgPhoto == orgPhoto &&

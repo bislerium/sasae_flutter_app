@@ -6,14 +6,14 @@ import 'package:jiffy/jiffy.dart';
 
 import 'package:sasae_flutter_app/models/user.dart';
 
-class People extends User {
+class PeopleModel extends UserModel {
   final String fullname;
   final String gender;
   final DateTime birthDate;
   final String address;
   final String? citizenshipPhoto;
 
-  People({
+  PeopleModel({
     required int id,
     required bool isVerified,
     required String displayPicture,
@@ -38,7 +38,7 @@ class People extends User {
           joinedDate: joinedDate,
         );
 
-  People copyWith({
+  PeopleModel copyWith({
     int? id,
     bool? isVerified,
     String? displayPicture,
@@ -53,7 +53,7 @@ class People extends User {
     DateTime? joinedDate,
     String? citizenshipPhoto,
   }) {
-    return People(
+    return PeopleModel(
       id: id ?? this.id,
       isVerified: isVerified ?? this.isVerified,
       displayPicture: displayPicture ?? this.displayPicture,
@@ -88,8 +88,8 @@ class People extends User {
     };
   }
 
-  factory People.fromAPIResponse(Map<String, dynamic> map) {
-    return People(
+  factory PeopleModel.fromAPIResponse(Map<String, dynamic> map) {
+    return PeopleModel(
       id: map['id']?.toInt() ?? 0,
       isVerified: map['is_verified'] ?? false,
       displayPicture: map['display_picture'] ?? '',
@@ -106,8 +106,8 @@ class People extends User {
     );
   }
 
-  factory People.fromMap(Map<String, dynamic> map) {
-    return People(
+  factory PeopleModel.fromMap(Map<String, dynamic> map) {
+    return PeopleModel(
       id: map['id']?.toInt() ?? 0,
       isVerified: map['isVerified'] ?? false,
       displayPicture: map['displayPicture'] ?? '',
@@ -126,7 +126,8 @@ class People extends User {
 
   String toJson() => json.encode(toMap());
 
-  factory People.fromJson(String source) => People.fromMap(json.decode(source));
+  factory PeopleModel.fromJson(String source) =>
+      PeopleModel.fromMap(json.decode(source));
 
   @override
   String toString() {
@@ -137,7 +138,7 @@ class People extends User {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is People &&
+    return other is PeopleModel &&
         other.id == id &&
         other.isVerified == isVerified &&
         other.displayPicture == displayPicture &&
@@ -171,7 +172,7 @@ class People extends User {
   }
 }
 
-class PeopleUpdate {
+class PeopleUpdateModel {
   String? _fullname;
   String? _gender;
   DateTime? _birthDate;
@@ -196,7 +197,7 @@ class PeopleUpdate {
   String? get getCitizenshipPhotoLink => _citizenshipPhotoLink;
   String? get getDisplayPictureLink => _displayPictureLink;
 
-  PeopleUpdate();
+  PeopleUpdateModel();
 
   set setFullname(String? fullName) => _fullname = fullName;
   set setGender(String? gender) => _gender = gender;
@@ -221,8 +222,8 @@ class PeopleUpdate {
     _isVerified = null;
   }
 
-  factory PeopleUpdate.fromAPIResponse(Map<String, dynamic> map) {
-    return PeopleUpdate()
+  factory PeopleUpdateModel.fromAPIResponse(Map<String, dynamic> map) {
+    return PeopleUpdateModel()
       .._fullname = map['full_name'] ?? ''
       .._gender = map['gender'] ?? ''
       .._birthDate = Jiffy(map['date_of_birth'], 'yyyy-MM-dd').dateTime

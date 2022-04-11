@@ -8,7 +8,7 @@ import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PeopleProfile extends StatelessWidget {
-  final People peopleData;
+  final PeopleModel peopleData;
 
   const PeopleProfile({Key? key, required this.peopleData}) : super(key: key);
 

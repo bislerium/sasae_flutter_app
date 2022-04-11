@@ -25,7 +25,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
     with AutomaticKeepAliveClientMixin {
   final TextEditingController _itemTEC;
   final GlobalKey<FormBuilderState> _optionsAddFormKey;
-  late final PollPostCU _pollPostCU;
+  late final PollPostCUModel _pollPostCU;
 
   _FormCardPollPostState()
       : _itemTEC = TextEditingController(),

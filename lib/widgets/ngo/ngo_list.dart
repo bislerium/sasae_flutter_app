@@ -3,7 +3,7 @@ import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/widgets/ngo/ngo_card.dart';
 
 class NGOList extends StatefulWidget {
-  final List<NGO_> ngoList;
+  final List<NGO_Model> ngoList;
 
   const NGOList({Key? key, required this.ngoList}) : super(key: key);
 
