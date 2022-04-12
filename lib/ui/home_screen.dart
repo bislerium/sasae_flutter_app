@@ -40,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       RemoteNotification? notification = event.notification;
       AndroidNotification? android = event.notification?.android;
+      print(event.data);
       if (notification != null && android != null && !kIsWeb) {
         var additionalData = event.data;
         int id =
@@ -54,7 +55,9 @@ class _HomePageState extends State<HomePage> {
             postType: additionalData['post_type'] == null
                 ? null
                 : NotificationModel.getPostType(additionalData['post_type']),
-            postID: int.tryParse(additionalData['post_id']));
+            postID: additionalData['post_id'] == null
+                ? null
+                : int.parse(additionalData['post_id']));
         Provider.of<NotificationProvider>(context, listen: false)
             .addNotification(_);
         NotificationService.getInstance().notify(notification);

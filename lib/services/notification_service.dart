@@ -46,6 +46,8 @@ class NotificationService {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
 
+      await FirebaseMessaging.instance.subscribeToTopic('post');
+
       /// heads up notifications.
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
@@ -83,4 +85,5 @@ enum NotificationChannel {
   petition,
   poke,
   remove,
+  verify,
 }

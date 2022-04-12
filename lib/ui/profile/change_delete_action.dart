@@ -168,7 +168,6 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
     double scale = 2;
     double _ = faker.randomGenerator.decimal(scale: scale, min: min);
     _ = double.parse((_).toStringAsFixed(2));
-    print(_);
 
     await showDialog(
       context: context,

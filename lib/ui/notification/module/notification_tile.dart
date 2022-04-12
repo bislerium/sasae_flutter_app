@@ -27,6 +27,8 @@ class NotificationTile extends StatelessWidget {
         return Icons.waving_hand;
       case NotificationChannel.remove:
         return Icons.remove_circle_outline_rounded;
+      case NotificationChannel.verify:
+        return Icons.verified_rounded;
     }
   }
 
@@ -75,6 +77,7 @@ class NotificationTile extends StatelessWidget {
               case null:
                 return;
             }
+            if (notification.postID == null) return;
             Navigator.pushNamed(context, routeName,
                 arguments: {'postID': notification.postID!});
           }),

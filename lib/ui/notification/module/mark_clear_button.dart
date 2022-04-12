@@ -61,26 +61,25 @@ class _MarkClearButtonState extends State<MarkClearButton> {
             ElevatedButton.icon(
               onPressed: () async {
                 showCustomDialog(
-                  context: context,
-                  title: 'Clear Notifications',
-                  content: 'You cannot undo this action.',
-                  okFunc: () =>
+                    context: context,
+                    title: 'Clear Notifications',
+                    content: 'You cannot undo this action.',
+                    okFunc: () {
                       Provider.of<NotificationProvider>(context, listen: false)
-                          .clearNotification(),
-                );
+                          .clearNotification();
+                      Navigator.of(context).pop();
+                    });
               },
               icon: const Icon(Icons.clear_all_rounded),
               label: const Text(
                 'Clear',
               ),
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).colorScheme.error,
-                onPrimary: Theme.of(context).colorScheme.onError,
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(16),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    bottomLeft: Radius.circular(10),
+                    topLeft: Radius.circular(16),
+                    bottomLeft: Radius.circular(16),
                   ),
                 ),
               ),
@@ -94,11 +93,11 @@ class _MarkClearButtonState extends State<MarkClearButton> {
                 'Mark',
               ),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(16),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
+                    topRight: Radius.circular(16),
+                    bottomRight: Radius.circular(16),
                   ),
                 ),
               ),
