@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-
-import '../services/notification_service.dart';
+import 'package:sasae_flutter_app/services/notification_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
   final JsonStore jsonStore;
@@ -38,10 +37,9 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> addNotification(NotificationModel notification) async {
-    _notifications.add(notification);
-    print('added');
-    // await jsonStore.setItem(
-    //     'notification-${notification.id}', notification.toMap());
+    _notifications.insert(0, notification);
+    await jsonStore.setItem(
+        'notification-${notification.id}', notification.toMap());
     notifyListeners();
   }
 
@@ -58,11 +56,13 @@ class NotificationProvider extends ChangeNotifier {
       element.isRead = true;
     }
     await flushNotifications();
+    notifyListeners();
   }
 
   Future<void> clearNotification() async {
     _notifications.clear();
     await jsonStore.clearDataBase();
+    notifyListeners();
   }
 
   Future<void> flushNotifications() async {
@@ -75,7 +75,7 @@ class NotificationProvider extends ChangeNotifier {
         batch: batch,
       );
     });
-    jsonStore.commitBatch(batch);
+    await jsonStore.commitBatch(batch);
   }
 
   Future<void> fetchNotifications({bool demo = false}) async {
@@ -83,9 +83,13 @@ class NotificationProvider extends ChangeNotifier {
       _notifications = _randNotifications();
     } else {
       List<Map<String, dynamic>>? json =
-          await jsonStore.getListLike('messages-%');
+          await jsonStore.getListLike('notification-%');
       _notifications = json != null
-          ? json.map((element) => NotificationModel.fromMap(element)).toList()
+          ? json
+              .map((element) => NotificationModel.fromMap(element))
+              .toList()
+              .reversed
+              .toList()
           : [];
     }
   }

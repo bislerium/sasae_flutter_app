@@ -32,6 +32,8 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color? color =
+        notification.isRead ? null : Theme.of(context).colorScheme.primary;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
@@ -43,13 +45,19 @@ class NotificationTile extends StatelessWidget {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          selectedTileColor: Theme.of(context).colorScheme.primaryContainer,
-          selected: notification.isRead,
-          leading: Icon(
-            getIcon(notification.channel),
+          leading: Icon(getIcon(notification.channel), color: color),
+          title: Text(
+            notification.title,
+            style: TextStyle(
+              color: color,
+            ),
           ),
-          title: Text(notification.title),
-          subtitle: Text(notification.body),
+          subtitle: Text(
+            notification.body,
+            style: TextStyle(
+              color: color,
+            ),
+          ),
           onTap: () {
             Provider.of<NotificationProvider>(context, listen: false)
                 .markRead(notification.id);

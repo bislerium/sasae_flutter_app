@@ -44,8 +44,6 @@ class _HomePageState extends State<HomePage> {
         var additionalData = event.data;
         int id =
             Provider.of<AuthProvider>(context, listen: false).auth!.accountID;
-        print(id);
-        print(additionalData['account_id']);
         if (id != int.parse(additionalData['account_id'])) return;
         NotificationModel _ = NotificationModel(
             id: notification.hashCode,
@@ -59,10 +57,6 @@ class _HomePageState extends State<HomePage> {
             postID: int.tryParse(additionalData['post_id']));
         Provider.of<NotificationProvider>(context, listen: false)
             .addNotification(_);
-        // Provider.of<NotificationProvider>(context, listen: false)
-        //     .fetchNotifications();
-        print(Provider.of<NotificationProvider>(context, listen: false)
-            .getNotifications);
         NotificationService.getInstance().notify(notification);
       }
     });
