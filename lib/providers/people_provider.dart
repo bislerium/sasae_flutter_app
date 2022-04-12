@@ -90,7 +90,8 @@ class PeopleProvider with ChangeNotifier {
             "citizenship_photo", citizenshipPhoto.path));
       }
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
       }
@@ -119,7 +120,8 @@ class PeopleProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       String responseBody = await response.stream.bytesToString();
 
@@ -186,7 +188,8 @@ class PeopleProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
       if (response.statusCode >= 400) {
         throw HttpException(response.reasonPhrase!);
       }

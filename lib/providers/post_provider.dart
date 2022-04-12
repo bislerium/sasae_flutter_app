@@ -251,7 +251,8 @@ class PostCreateProvider with ChangeNotifier {
       }
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -293,7 +294,8 @@ class PostCreateProvider with ChangeNotifier {
       });
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -338,7 +340,8 @@ class PostCreateProvider with ChangeNotifier {
       });
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -416,7 +419,8 @@ class PostUpdateProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       String responseBody = await response.stream.bytesToString();
 
@@ -539,7 +543,8 @@ class PostUpdateProvider with ChangeNotifier {
       }
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       String responseBody = await response.stream.bytesToString();
 

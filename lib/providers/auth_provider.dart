@@ -25,19 +25,21 @@ class AuthProvider with ChangeNotifier {
   }) async {
     _isAuthenticating = true;
     try {
-      final response = await http.post(
-        Uri.parse('${getHostName()}$loginEndpoint'),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: json.encode(
-          {
-            "username": username,
-            "password": password,
-          },
-        ),
-      );
+      final response = await http
+          .post(
+            Uri.parse('${getHostName()}$loginEndpoint'),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: json.encode(
+              {
+                "username": username,
+                "password": password,
+              },
+            ),
+          )
+          .timeout(const Duration(seconds: 5));
       final responseData = json.decode(response.body);
       if (response.statusCode >= 400) {
         throw HttpException(responseData.toString());
@@ -51,10 +53,6 @@ class AuthProvider with ChangeNotifier {
     _isAuthenticating = false;
     notifyListeners();
   }
-
-  // Future<void> signup(String email, String password) async {
-  //   return _authenticate(email, password);
-  // }
 
   Future<void> login(
           {required String username, required String password}) async =>
@@ -77,7 +75,8 @@ class AuthProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
@@ -96,7 +95,7 @@ class AuthProvider with ChangeNotifier {
         headers: {
           'Authorization': 'Token ${_auth!.tokenKey}',
         },
-      );
+      ).timeout(const Duration(seconds: 5));
       if (response.statusCode >= 400) {
         throw HttpException(json.decode(response.body));
       }
@@ -110,16 +109,18 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> resetPassword(String email) async {
     try {
-      await http.post(
-        Uri.parse('${getHostName()}$passwordResetEndpoint'),
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: json.encode({
-          "email": email,
-        }),
-      );
+      await http
+          .post(
+            Uri.parse('${getHostName()}$passwordResetEndpoint'),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: json.encode({
+              "email": email,
+            }),
+          )
+          .timeout(const Duration(seconds: 5));
     } catch (error) {
       return false;
     }
@@ -137,7 +138,8 @@ class AuthProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
       }
@@ -167,7 +169,8 @@ class AuthProvider with ChangeNotifier {
       });
       request.headers.addAll(headers);
 
-      http.StreamedResponse response = await request.send();
+      http.StreamedResponse response =
+          await request.send().timeout(const Duration(seconds: 5));
 
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());

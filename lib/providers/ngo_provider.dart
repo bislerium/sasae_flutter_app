@@ -69,7 +69,7 @@ class NGOProvider with ChangeNotifier {
             'Accept': 'application/json',
             'Authorization': 'Token ${_authP.auth!.tokenKey}'
           },
-        );
+        ).timeout(const Duration(seconds: 5));
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
@@ -217,7 +217,7 @@ class NGOProvider with ChangeNotifier {
             'Accept': 'application/json',
             'Authorization': 'Token ${auth.tokenKey}'
           },
-        );
+        ).timeout(const Duration(seconds: 5));
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());

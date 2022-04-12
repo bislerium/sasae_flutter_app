@@ -40,7 +40,6 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       RemoteNotification? notification = event.notification;
       AndroidNotification? android = event.notification?.android;
-      print(event.data);
       if (notification != null && android != null && !kIsWeb) {
         var additionalData = event.data;
         int id =
