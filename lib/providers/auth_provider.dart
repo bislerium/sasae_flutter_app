@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
+import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 
@@ -100,6 +101,7 @@ class AuthProvider with ChangeNotifier {
         throw HttpException(json.decode(response.body));
       }
       await _sessionManager.remove('auth_data');
+      JsonStore().clearDataBase();
       _auth = null;
     } catch (error) {
       return false;

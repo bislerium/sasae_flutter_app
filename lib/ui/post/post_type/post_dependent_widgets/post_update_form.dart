@@ -91,13 +91,12 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         break;
     }
     if (isSuperPostFormValid && isOtherPostFormValid) {
+      showSnackBar(context: context, message: 'Successfully posted.');
+      Navigator.of(context).pop();
       _superPostKey.currentState!.save();
       success = await postUpdateP.updatePost(
           postID: _postHead.getPostID, postType: postType);
-      if (success) {
-        showSnackBar(context: context, message: 'Successfully posted.');
-        Navigator.of(context).pop();
-      } else {
+      if (!success) {
         showSnackBar(
             context: context,
             message: 'Something went wrong.',

@@ -72,6 +72,9 @@ class PostCard extends StatelessWidget {
                             ..pop()
                             ..pop(),
                           okFunc: () async {
+                            Navigator.of(context)
+                              ..pop()
+                              ..pop();
                             bool success = await Provider.of<ProfileProvider>(
                                     context,
                                     listen: false)
@@ -89,9 +92,6 @@ class PostCard extends StatelessWidget {
                                 errorSnackBar: true,
                               );
                             }
-                            Navigator.of(context)
-                              ..pop()
-                              ..pop();
                           },
                         );
                       },

@@ -64,6 +64,7 @@ class PostTailCard extends StatelessWidget {
                   title: 'Report',
                   content: 'Are you Sure?',
                   okFunc: () async {
+                    Navigator.of(context).pop();
                     bool success =
                         await Provider.of<PostProvider>(context, listen: false)
                             .report(postID: postID);
@@ -79,7 +80,6 @@ class PostTailCard extends StatelessWidget {
                         errorSnackBar: true,
                       );
                     }
-                    Navigator.of(context).pop();
                   },
                 ),
                 icon: const Icon(Icons.report_outlined),

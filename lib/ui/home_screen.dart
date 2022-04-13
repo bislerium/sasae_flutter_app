@@ -62,14 +62,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    _pageNavigatorP.getPageController.dispose();
+    _pageNavigatorP.reset();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<PageNavigatorProvider>(
-      builder: (context, pageNavigatorP, child) => Scaffold(
+        builder: (context, pageNavigatorP, child) {
+      pageNavigatorP.initPageController();
+      return Scaffold(
         body: SafeArea(
           child: PageView(
             children: const [
@@ -160,7 +162,7 @@ class _HomePageState extends State<HomePage> {
             },
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

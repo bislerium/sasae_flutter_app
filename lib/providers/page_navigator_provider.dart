@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class PageNavigatorProvider extends ChangeNotifier {
   int _pageIndex;
-  final PageController _pageController;
+  late PageController _pageController;
 
-  PageNavigatorProvider()
-      : _pageIndex = 2,
-        _pageController = PageController(initialPage: 2);
+  PageNavigatorProvider() : _pageIndex = 2;
 
   int get getPageIndex => _pageIndex;
+
+  void initPageController() => _pageController = PageController(initialPage: 2);
 
   PageController get getPageController => _pageController;
 
@@ -25,5 +25,10 @@ class PageNavigatorProvider extends ChangeNotifier {
       duration: const Duration(milliseconds: 300),
       curve: Curves.ease,
     );
+  }
+
+  void reset() {
+    _pageIndex = 2;
+    _pageController.dispose();
   }
 }

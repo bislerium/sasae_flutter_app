@@ -40,8 +40,9 @@ class _SettingScreenState extends State<SettingScreen>
       title: 'Logout',
       content: 'Do it with passion or not at all',
       okFunc: () async {
-        var _ = Provider.of<AuthProvider>(context, listen: false);
-        bool success = await _.logout();
+        Navigator.of(context).pop();
+        bool success =
+            await Provider.of<AuthProvider>(context, listen: false).logout();
         if (success) {
           Navigator.of(context).pushNamedAndRemoveUntil(
               AuthScreen.routeName, (Route<dynamic> route) => false);

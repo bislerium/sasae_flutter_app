@@ -212,6 +212,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               onPressed: () async {
                 bool isValid = _deleteformKey.currentState!.validate();
                 if (isValid) {
+                  Navigator.of(context).pop();
                   bool success =
                       await Provider.of<AuthProvider>(context, listen: false)
                           .deleteUser();
