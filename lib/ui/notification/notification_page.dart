@@ -49,7 +49,7 @@ class _NotificationPageState extends State<NotificationPage>
                   builder: (context, notificationP, child) =>
                       notificationP.getNotifications.isEmpty
                           ? const FetchError(
-                              errorMessage: 'No Notifications yet...',
+                              errorMessage: 'No Notifications yet 🔔...',
                             )
                           : Stack(
                               alignment: AlignmentDirectional.bottomEnd,

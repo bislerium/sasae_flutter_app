@@ -138,12 +138,12 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget upvoteButton() => TextButton(
         onPressed: () async {
+          setState(() => upvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)
                   .toggleReaction(NormalPostReactionType.upVote);
-          if (success) {
+          if (!success) {
             setState(() => upvote());
-          } else {
             showSnackBar(
                 context: context,
                 message: 'Something went wrong!',
@@ -164,12 +164,12 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget downvoteButton() => TextButton(
         onPressed: () async {
+          setState(() => downvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)
                   .toggleReaction(NormalPostReactionType.downVote);
-          if (success) {
+          if (!success) {
             setState(() => downvote());
-          } else {
             showSnackBar(
                 context: context,
                 message: 'Something went wrong!',

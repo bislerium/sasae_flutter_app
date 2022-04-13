@@ -19,7 +19,7 @@ import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class PostProvider with ChangeNotifier {
   late AuthProvider _authP;
-  static List<Post_Model>? _posts;
+  List<Post_Model>? _posts;
   final Dio _dio;
 
   PostProvider()
@@ -216,13 +216,6 @@ class PostCreateProvider with ChangeNotifier {
   PollPostCUModel get getPollPostCreate => _pollPostCreate;
   RequestPostCUModel get getRequestPostCreate => _requestPostCreate;
 
-  void pushCreatedPost(Map<String, dynamic> responseData) {
-    Post_Model post = Post_Model.fromAPIResponse(responseData);
-    PostProvider._posts?.insert(0, post);
-    print(post);
-    notifyListeners();
-  }
-
   Future<bool> createNormalPost() async {
     try {
       var headers = {
@@ -259,7 +252,6 @@ class PostCreateProvider with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw HttpException(jsonResponse);
       }
-      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);
@@ -302,7 +294,6 @@ class PostCreateProvider with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw HttpException(jsonResponse);
       }
-      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);
@@ -348,7 +339,6 @@ class PostCreateProvider with ChangeNotifier {
       if (response.statusCode >= 400) {
         throw HttpException(jsonResponse);
       }
-      pushCreatedPost(jsonResponse['post_data']);
       return true;
     } catch (error) {
       print(error);

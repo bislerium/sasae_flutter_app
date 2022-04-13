@@ -1,5 +1,7 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
@@ -7,7 +9,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sasae_flutter_app/lib_color_schemes.g.dart';
-import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
+import 'package:sasae_flutter_app/page_router.dart';
+import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
@@ -27,17 +30,24 @@ import 'package:sasae_flutter_app/ui/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
-import 'package:sasae_flutter_app/ui/splash_screen.dart';
+
+late final AdaptiveThemeMode? deviceThemeMode;
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
-  NotificationService.getInstance().initialize();
-  runApp(const MyApp());
+  deviceThemeMode = await AdaptiveTheme.getThemeMode();
+  runApp(
+    MyApp(
+      savedThemeMode: deviceThemeMode,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final AdaptiveThemeMode? savedThemeMode;
+  const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -163,10 +173,10 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
 
 List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
-        create: (_) => AppPreferenceProvider(),
+        create: (_) => AuthProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => AuthProvider(),
+        create: (_) => PageNavigatorProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => NotificationProvider(),
@@ -236,41 +246,32 @@ class _MyAppState extends State<MyApp> {
       builder: (context, navigatorKey) {
         return MultiProvider(
           providers: _providers(),
-          child: Consumer2<AppPreferenceProvider, AuthProvider>(
-            builder: (context, appPreference, auth, child) {
-              var colorScheme =
-                  appPreference.darkMode ? darkColorScheme : lightColorScheme;
-              return MaterialApp(
-                navigatorKey: navigatorKey,
-                supportedLocales: const [
-                  Locale('en', 'US'),
-                  Locale('ne', 'NP'),
-                ],
-                localizationsDelegates: const [
-                  KhaltiLocalizations.delegate,
-                  FormBuilderLocalizations.delegate,
-                ],
-                // debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme: colorScheme,
-                  backgroundColor: colorScheme.background,
-                  primaryColor: colorScheme.primary,
-                  errorColor: colorScheme.error,
-                  textTheme: _textTheme(),
-                ),
-                title: 'Sasae',
-                home: FutureBuilder(
-                  future: auth.tryAutoLogin(),
-                  builder: (ctx, authSnapshot) =>
-                      authSnapshot.connectionState == ConnectionState.waiting
-                          ? const SplashScreen()
-                          : auth.isAuth
-                              ? const HomePage()
-                              : const AuthScreen(),
-                ),
-                onGenerateRoute: (settings) => _screenRoutes(settings),
-              );
-            },
+          child: AdaptiveTheme(
+            light: ThemeData(
+              colorScheme: lightColorScheme,
+              textTheme: _textTheme(),
+            ),
+            dark: ThemeData(
+              colorScheme: darkColorScheme,
+              textTheme: _textTheme(),
+            ),
+            initial: widget.savedThemeMode ?? AdaptiveThemeMode.system,
+            builder: (theme, darkTheme) => MaterialApp(
+              navigatorKey: navigatorKey,
+              supportedLocales: const [
+                Locale('en', 'US'),
+                Locale('ne', 'NP'),
+              ],
+              localizationsDelegates: const [
+                KhaltiLocalizations.delegate,
+                FormBuilderLocalizations.delegate,
+              ],
+              theme: theme,
+              darkTheme: darkTheme,
+              title: 'Sasae',
+              home: const PageRouter(),
+              onGenerateRoute: (settings) => _screenRoutes(settings),
+            ),
           ),
         );
       },

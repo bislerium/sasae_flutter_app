@@ -1,6 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
+import 'package:sasae_flutter_app/ui/home_screen.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/normal_post_screen.dart';
 
 class NotificationService {
   static NotificationService? _notificationService;
@@ -14,11 +19,31 @@ class NotificationService {
 
   late AndroidNotificationChannel channel;
 
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-  void initialize() async {
+  void initialize(BuildContext context) async {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
+
     if (!kIsWeb) {
+      await FirebaseMessaging.instance.subscribeToTopic('post');
+
+      const InitializationSettings initializationSettings =
+          InitializationSettings(
+        android: AndroidInitializationSettings(
+            "@drawable/ic_stat_notification_icon"),
+      );
+
+      _notificationsPlugin.initialize(
+        initializationSettings,
+        onSelectNotification: (String? route) async {
+          Navigator.popUntil(
+            context,
+            ((route) => route.isFirst),
+          );
+          Provider.of<PageNavigatorProvider>(context, listen: false)
+            ..setPageIndex = 3
+            ..navigateToPage();
+        },
+      );
+
       channel = const AndroidNotificationChannel(
         'post_channel',
         'Post Notifications',
@@ -26,27 +51,11 @@ class NotificationService {
         importance: Importance.high,
       );
 
-      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-      const InitializationSettings initializationSettings =
-          InitializationSettings(
-        android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-      );
-
-      flutterLocalNotificationsPlugin.initialize(initializationSettings,
-          onSelectNotification: (String? route) async {
-        if (route != null) {
-          print('route -> $route');
-          // Navigator.of(context).pushNamed(route);
-        }
-      });
-
       /// Create an Android Notification Channel.
-      await flutterLocalNotificationsPlugin
+      await _notificationsPlugin
           .resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
-
-      await FirebaseMessaging.instance.subscribeToTopic('post');
 
       /// heads up notifications.
       await FirebaseMessaging.instance
@@ -60,7 +69,7 @@ class NotificationService {
 
   void notify(RemoteNotification notification) async {
     try {
-      flutterLocalNotificationsPlugin.show(
+      _notificationsPlugin.show(
         notification.hashCode,
         notification.title,
         notification.body,

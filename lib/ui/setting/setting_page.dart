@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/app_preference_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
+import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -19,8 +19,8 @@ class _SettingScreenState extends State<SettingScreen>
       : _applicationName = 'Sasae',
         _applicationVersion = 'v0.0.1',
         _applicationLegalese =
-            'A Social Service Application to help NGO and the enthuhsiast people who wants to help others.',
-        _applicationIcon = const Icon(Icons.flutter_dash);
+            'A Social Service Application to bind NGOs and enthuhsiast peoples for social work.',
+        _applicationIcon = const Icon(Icons.flutter_dash_rounded);
 
   final String _applicationName, _applicationVersion, _applicationLegalese;
   final Icon _applicationIcon;
@@ -124,20 +124,12 @@ class _SettingScreenState extends State<SettingScreen>
         },
       );
 
-  Widget darkMode() => Consumer<AppPreferenceProvider>(
-        builder: (context, appPreference, child) => ListTile(
-          iconColor: Theme.of(context).colorScheme.secondary,
-          textColor: Theme.of(context).colorScheme.onBackground,
-          leading: const Icon(Icons.dark_mode_rounded),
-          title: const Text('Dark Mode'),
-          trailing: Switch(
-            activeColor: Theme.of(context).colorScheme.secondary,
-            onChanged: (value) {
-              appPreference.toggleDarkMode();
-            },
-            value: appPreference.darkMode,
-          ),
-        ),
+  Widget darkMode() => ListTile(
+        iconColor: Theme.of(context).colorScheme.secondary,
+        textColor: Theme.of(context).colorScheme.onBackground,
+        leading: const Icon(Icons.dark_mode_rounded),
+        title: const Text('Theme'),
+        trailing: const ThemeToggleButton(),
       );
 
   @override
