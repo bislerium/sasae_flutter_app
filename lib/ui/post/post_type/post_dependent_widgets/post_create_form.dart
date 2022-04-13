@@ -109,6 +109,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
 
   Widget pokeNGOField() => ChipsInput(
         key: _chipKey,
+        allowChipEditing: true,
         decoration: const InputDecoration(labelText: 'Poke NGO'),
         chipBuilder: (context, state, data) {
           return InputChip(
