@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
-import 'package:sasae_flutter_app/ui/ngo/ngo_card.dart';
+import 'package:sasae_flutter_app/ui/ngo/module/ngo_card.dart';
 
 class NGOList extends StatefulWidget {
   final List<NGO_Model> ngoList;

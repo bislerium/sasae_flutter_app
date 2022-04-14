@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/ui/ngo/ngo_list.dart';
-import 'package:sasae_flutter_app/ui/ngo/search_filter_bar.dart';
+import 'package:sasae_flutter_app/ui/ngo/module/ngo_list.dart';
+import 'package:sasae_flutter_app/ui/ngo/module/search_filter_bar.dart';
 
 class NGOPage extends StatefulWidget {
   const NGOPage({Key? key}) : super(key: key);
@@ -44,16 +44,16 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                       child: Consumer<NGOProvider>(
                         builder: (context, ngoP, child) => RefreshIndicator(
                           onRefresh: ngoP.refreshNGOs,
-                          child: ngoP.fetchError
+                          child: ngoP.getFetchError
                               ? const FetchError(
                                   fraction: 0.75,
                                 )
-                              : ngoP.ngosData!.isEmpty
+                              : ngoP.getNGOs!.isEmpty
                                   ? const Center(
                                       child: Text('No NGO found 🔍...'),
                                     )
                                   : NGOList(
-                                      ngoList: ngoP.ngosData!,
+                                      ngoList: ngoP.getNGOs!,
                                     ),
                         ),
                       ),

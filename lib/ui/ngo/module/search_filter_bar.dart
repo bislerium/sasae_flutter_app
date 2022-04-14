@@ -13,11 +13,15 @@ class SearchFilterBar extends StatefulWidget {
 
 class _SearchFilterBarState extends State<SearchFilterBar> {
   final TextEditingController _searchTEC;
-  List<String> _selectedChips;
+  late final NGOProvider _ngoP;
 
-  _SearchFilterBarState()
-      : _searchTEC = TextEditingController(),
-        _selectedChips = [];
+  _SearchFilterBarState() : _searchTEC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _ngoP = Provider.of<NGOProvider>(context, listen: false);
+  }
 
   @override
   void dispose() {
@@ -25,8 +29,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     super.dispose();
   }
 
-  Future<void> showFilterModal(NGOProvider provider) async {
-    _selectedChips.clear();
+  Future<void> showFilterModal() async {
     await showModalSheet(
       ctx: context,
       children: [
@@ -44,8 +47,11 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           child: SingleChildScrollView(
             child: FormBuilderFilterChip(
               name: 'filter_by_field_of_-work',
-              onChanged: (value) => _selectedChips = value!.cast<String>(),
-              options: provider.fieldOfWork
+              decoration: const InputDecoration(border: InputBorder.none),
+              onChanged: (value) =>
+                  _ngoP.setSelectedFOW = value!.cast<String>(),
+              initialValue: _ngoP.getSelectedFOW,
+              options: _ngoP.getFieldOfWork
                   .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
                   .toList()
                 ..sort((a, b) => a.value.compareTo(b.value)),
@@ -72,7 +78,8 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   child: TextButton(
                     child: const Text('Reset'),
                     onPressed: () {
-                      provider.clear();
+                      _ngoP.clear();
+                      FocusScope.of(context).unfocus();
                       Navigator.of(context).pop();
                     },
                   ),
@@ -89,8 +96,8 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                       shape: const StadiumBorder(),
                     ),
                     onPressed: () {
-                      if (_selectedChips.isNotEmpty) {
-                        provider.applyFieldOfWorkFilter(_selectedChips);
+                      if (_ngoP.getSelectedFOW.isNotEmpty) {
+                        _ngoP.applyFieldOfWorkFilter();
                         FocusScope.of(context).unfocus();
                         Navigator.of(context).pop();
                       }
@@ -109,8 +116,10 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
       builder: ((context, ngoP, child) {
-        bool isDataUnavailable = ngoP.fetchError ||
-            (ngoP.ngosData!.isEmpty && !ngoP.isFiltered && !ngoP.isSearched);
+        bool isDataUnavailable = ngoP.getFetchError ||
+            (ngoP.getNGOs!.isEmpty &&
+                !ngoP.getIsFiltered &&
+                !ngoP.getIsSearched);
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 10),
           child: Row(
@@ -138,7 +147,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                               controller: _searchTEC,
                               enabled: isDataUnavailable ? false : true,
                               onTap: () {
-                                if (ngoP.isFiltered) ngoP.clear();
+                                if (ngoP.getIsFiltered) ngoP.clear();
                               },
                               onChanged: (value) {
                                 ngoP.searchByName(value.trim());
@@ -174,7 +183,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: ClipOval(
                   child: Container(
-                    color: ngoP.isFiltered
+                    color: ngoP.getIsFiltered
                         ? Theme.of(context).colorScheme.secondaryContainer
                         : Theme.of(context).colorScheme.background,
                     child: IconButton(
@@ -182,11 +191,11 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                       onPressed: isDataUnavailable
                           ? null
                           : () async {
-                              if (ngoP.isSearched || ngoP.isFiltered) {
+                              if (ngoP.getIsSearched) {
                                 ngoP.clear();
                               }
                               _searchTEC.clear();
-                              await showFilterModal(ngoP);
+                              await showFilterModal();
                             },
                       icon: const Icon(
                         Icons.filter_list,

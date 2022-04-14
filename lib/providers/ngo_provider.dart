@@ -17,6 +17,7 @@ class NGOProvider with ChangeNotifier {
   List<NGO_Model>? _ngos; // Actual Untouched DataList
   List<NGO_Model>? _ngosToShow; // Filtered/search data
   final Set<String> _fieldOfWork;
+  List<String> _selectedFOW;
   bool _isFiltered;
   bool _isSearched;
   bool _isNGOsLoading;
@@ -26,16 +27,20 @@ class NGOProvider with ChangeNotifier {
       : _fieldOfWork = {},
         _isFiltered = false,
         _isSearched = false,
-        _isNGOsLoading = false;
+        _isNGOsLoading = false,
+        _selectedFOW = [];
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  List<NGO_Model>? get ngosData => _ngosToShow;
-  Set<String> get fieldOfWork => _fieldOfWork;
-  bool get fetchError => _ngos == null;
-  bool get isFiltered => _isFiltered;
-  bool get isSearched => _isSearched;
-  bool get isNGOsLoading => _isNGOsLoading;
+  set setSelectedFOW(List<String> selectedFOW) => _selectedFOW = selectedFOW;
+
+  List<NGO_Model>? get getNGOs => _ngosToShow;
+  Set<String> get getFieldOfWork => _fieldOfWork;
+  List<String> get getSelectedFOW => _selectedFOW;
+  bool get getFetchError => _ngos == null;
+  bool get getIsFiltered => _isFiltered;
+  bool get getIsSearched => _isSearched;
+  bool get getIsNGOsLoading => _isNGOsLoading;
 
   void _randNGOs() {
     int length = Random().nextInt(100 - 20) + 20;
@@ -123,10 +128,10 @@ class NGOProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> applyFieldOfWorkFilter(List<String> filters) async {
+  Future<void> applyFieldOfWorkFilter() async {
     await Future(
       () => _ngosToShow = _ngos!.where((element) {
-        return element.fieldOfWork.any((e) => filters.contains(e));
+        return element.fieldOfWork.any((e) => _selectedFOW.contains(e));
       }).toList(),
     );
     _isFiltered = true;
@@ -137,6 +142,7 @@ class NGOProvider with ChangeNotifier {
     _ngosToShow = _ngos;
     _isFiltered = false;
     _isSearched = false;
+    _selectedFOW = [];
     notifyListeners();
   }
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
-import 'package:sasae_flutter_app/ui/ngo/ngo_info_tab.dart';
+import 'package:sasae_flutter_app/ui/ngo/module/ngo_info_tab.dart';
 import 'package:sasae_flutter_app/ui/profile/info_post_tab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/ui/ngo/ngo_donation_button.dart';
+import 'package:sasae_flutter_app/ui/ngo/module/ngo_donation_button.dart';
 import 'package:sasae_flutter_app/ui/profile/user_post_tab.dart';
 
 class NGOProfileScreen extends StatefulWidget {
