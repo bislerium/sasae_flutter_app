@@ -24,7 +24,8 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
 
   @override
@@ -68,6 +69,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Consumer<PageNavigatorProvider>(
         builder: (context, pageNavigatorP, child) {
       pageNavigatorP.initPageController();
@@ -165,4 +167,7 @@ class _HomePageState extends State<HomePage> {
       );
     });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

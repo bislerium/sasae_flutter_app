@@ -7,7 +7,7 @@ class FetchError extends StatelessWidget {
   const FetchError({
     Key? key,
     this.fraction = 0.84,
-    this.errorMessage = 'Something went wrong 😵...',
+    this.errorMessage = 'Something went wrong 😞...',
   }) : super(key: key);
 
   @override

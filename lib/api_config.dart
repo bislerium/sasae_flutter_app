@@ -15,7 +15,7 @@ const Map _ipHost = {
 };
 //----------------------------------------------
 
-String getHostName({HostingMode hostingMode = HostingMode.local}) {
+String getHostName({HostingMode hostingMode = HostingMode.ip}) {
   late Map config;
   switch (hostingMode) {
     case HostingMode.local:

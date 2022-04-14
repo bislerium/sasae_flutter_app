@@ -25,9 +25,18 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
   Widget build(BuildContext context) {
     return ToggleButtons(
       children: const [
-        Icon(Icons.light_mode_rounded),
-        Icon(Icons.dark_mode_rounded),
-        Icon(Icons.brightness_medium_rounded),
+        Tooltip(
+          message: 'Light Theme',
+          child: Icon(Icons.light_mode_rounded),
+        ),
+        Tooltip(
+          message: 'Dark Theme',
+          child: Icon(Icons.dark_mode_rounded),
+        ),
+        Tooltip(
+          message: 'System Theme',
+          child: Icon(Icons.brightness_medium_rounded),
+        ),
       ],
       onPressed: (int index) {
         setState(() {

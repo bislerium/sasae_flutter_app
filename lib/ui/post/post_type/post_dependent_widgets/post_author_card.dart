@@ -40,7 +40,7 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
               ),
               Tooltip(
                 message:
-                    'Don\'t judge, bias, or ignore the post based on the author!',
+                    'Don\'t judge, bias, or ignore the post\n based on the author!',
                 preferBelow: false,
                 verticalOffset: 30,
                 showDuration: const Duration(seconds: 2),

@@ -34,22 +34,31 @@ class PostTypeRow extends StatelessWidget {
             }
           },
           tabs: const [
-            Tab(
-              icon: Icon(
-                Icons.add_circle_rounded,
-                size: 30,
+            Tooltip(
+              message: 'Normal Post',
+              child: Tab(
+                icon: Icon(
+                  Icons.add_circle_rounded,
+                  size: 30,
+                ),
               ),
             ),
-            Tab(
-              icon: Icon(
-                Icons.poll_rounded,
-                size: 30,
+            Tooltip(
+              message: 'Poll Post',
+              child: Tab(
+                icon: Icon(
+                  Icons.poll_rounded,
+                  size: 30,
+                ),
               ),
             ),
-            Tab(
-              icon: Icon(
-                Icons.front_hand_rounded,
-                size: 30,
+            Tooltip(
+              message: 'Request Post',
+              child: Tab(
+                icon: Icon(
+                  Icons.front_hand_rounded,
+                  size: 30,
+                ),
               ),
             ),
           ],

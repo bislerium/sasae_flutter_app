@@ -50,7 +50,7 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                                 )
                               : ngoP.getNGOs!.isEmpty
                                   ? const Center(
-                                      child: Text('No NGO found 🔍...'),
+                                      child: Text('No NGO found 🧐...'),
                                     )
                                   : NGOList(
                                       ngoList: ngoP.getNGOs!,

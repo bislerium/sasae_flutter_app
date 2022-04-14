@@ -38,7 +38,7 @@ class _SettingScreenState extends State<SettingScreen>
     showCustomDialog(
       context: context,
       title: 'Logout',
-      content: 'Do it with passion or not at all',
+      content: 'Do it with passion or not at all.',
       okFunc: () async {
         Navigator.of(context).pop();
         bool success =

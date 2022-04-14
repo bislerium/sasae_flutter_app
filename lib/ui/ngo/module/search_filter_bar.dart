@@ -78,7 +78,9 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   child: TextButton(
                     child: const Text('Reset'),
                     onPressed: () {
-                      _ngoP.clear();
+                      if (_ngoP.getIsFiltered) {
+                        _ngoP.clear();
+                      }
                       FocusScope.of(context).unfocus();
                       Navigator.of(context).pop();
                     },
