@@ -593,7 +593,7 @@ class NormalPostProvider with ChangeNotifier {
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
               )),
-      postType: 'Normal Post',
+      postType: 'Normal',
       relatedTo: List.generate(
         rand.nextInt(8 - 1) + 1,
         (index) => faker.lorem.word(),

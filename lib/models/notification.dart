@@ -61,6 +61,18 @@ class NotificationModel {
   static PostType getPostType(String channel) =>
       PostType.values.firstWhere((element) => element.name == channel);
 
+  factory NotificationModel.fromAPIResponse(Map<String, dynamic> map) {
+    return NotificationModel(
+      id: map['id']?.toInt() ?? map.hashCode,
+      title: map['title'] ?? '',
+      body: map['body'] ?? '',
+      channel: getNotificationChannel(map['channel']),
+      postType: map['post_type'] != null ? getPostType(map['post_type']) : null,
+      postID: map['post_id']?.toInt(),
+      isRead: map['isRead'] ?? false,
+    );
+  }
+
   factory NotificationModel.fromMap(Map<String, dynamic> map) {
     return NotificationModel(
       id: map['id']?.toInt() ?? 0,

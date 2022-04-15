@@ -133,7 +133,7 @@ class NGOModel extends UserModel {
       postedPosts: List<int>.from(map['posted_post']),
       joinedDate: Jiffy(map['date_joined'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
       epayAccount: map['epay_account'],
-      bank: map['bank'] != null ? BankModel.fromMap(map['bank']) : null,
+      bank: map['bank'] != null ? BankModel.fromAPIResponse(map['bank']) : null,
       swcCertificateURL: map['swc_affl_cert'],
       panCertificateURL: map['pan_cert'],
     );
@@ -156,7 +156,7 @@ class NGOModel extends UserModel {
       postedPosts: List<int>.from(map['postedPosts']),
       joinedDate: DateTime.fromMillisecondsSinceEpoch(map['joinedDate']),
       epayAccount: map['epayAccount'],
-      bank: map['bank'] != null ? BankModel.fromMap(map['bank']) : null,
+      bank: map['bank'] != null ? BankModel.fromAPIResponse(map['bank']) : null,
       swcCertificateURL: map['swcCertificateURL'],
       panCertificateURL: map['panCertificateURL'],
     );

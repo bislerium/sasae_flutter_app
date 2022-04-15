@@ -41,13 +41,23 @@ class BankModel {
     };
   }
 
-  factory BankModel.fromMap(Map<String, dynamic> map) {
+  factory BankModel.fromAPIResponse(Map<String, dynamic> map) {
     return BankModel(
       bankName: map['bank_name'] ?? '',
       bankBranch: map['bank_branch'] ?? '',
       bankBSB: map['bank_BSB'] ?? '',
       bankAccountName: map['bank_account_name'] ?? '',
       bankAccountNumber: map['bank_account_number'] ?? '',
+    );
+  }
+
+  factory BankModel.fromMap(Map<String, dynamic> map) {
+    return BankModel(
+      bankName: map['bankName'] ?? '',
+      bankBranch: map['bankBranch'] ?? '',
+      bankBSB: map['bankBSB'] ?? '',
+      bankAccountName: map['bankAccountName'] ?? '',
+      bankAccountNumber: map['bankAccountNumber'] ?? '',
     );
   }
 
@@ -58,7 +68,7 @@ class BankModel {
 
   @override
   String toString() {
-    return 'Bank(bankName: $bankName, bankBranch: $bankBranch, bankBSB: $bankBSB, bankAccountName: $bankAccountName, bankAccountNumber: $bankAccountNumber)';
+    return 'BankModel(bankName: $bankName, bankBranch: $bankBranch, bankBSB: $bankBSB, bankAccountName: $bankAccountName, bankAccountNumber: $bankAccountNumber)';
   }
 
   @override

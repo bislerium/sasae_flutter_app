@@ -78,14 +78,20 @@ class _CustomTabBarState extends State<CustomTabBar> {
             ),
             enableFeedback: true,
             tabs: const [
-              Tab(
-                icon: Icon(
-                  Icons.info_outline_rounded,
+              Tooltip(
+                message: 'My Information',
+                child: Tab(
+                  icon: Icon(
+                    Icons.info_outline_rounded,
+                  ),
                 ),
               ),
-              Tab(
-                icon: Icon(
-                  Icons.post_add_outlined,
+              Tooltip(
+                message: 'My Posts',
+                child: Tab(
+                  icon: Icon(
+                    Icons.post_add_outlined,
+                  ),
                 ),
               ),
             ],

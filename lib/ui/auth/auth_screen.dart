@@ -286,35 +286,33 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: height * 0.20),
-              _logo(),
-              const SizedBox(height: 50),
-              _loginForm(),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: _forgetButton(),
-                  ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: _loginButton(),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.16),
-              _createAccountLabel(),
-            ],
-          ),
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: height * 0.20),
+            _logo(),
+            const SizedBox(height: 50),
+            _loginForm(),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  flex: 10,
+                  child: _forgetButton(),
+                ),
+                const Spacer(
+                  flex: 1,
+                ),
+                Expanded(
+                  flex: 6,
+                  child: _loginButton(),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.16),
+            _createAccountLabel(),
+          ],
         ),
       ),
     );

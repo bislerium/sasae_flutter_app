@@ -100,6 +100,8 @@ String? checkValue({
   bool checkInt = false,
   bool checkDecimal = false,
 }) {
+  assert(
+      checkInt && checkDecimal, 'Either mark checkInt or checkDecimal: TRUE');
   bool isValueEmpty = value == null || value.isEmpty;
   var intPattern = r'^-?(([0-9]*))$';
   var decimalPattern = r'^-?(([0-9]*)|(([0-9]*)\.([0-9]*)))$';
