@@ -105,35 +105,31 @@ class PostCard extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           child: Column(
             children: [
-              Tooltip(
-                message: 'Related To',
-                child: SizedBox(
-                  height: 50,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: post.relatedTo
-                        .map(
-                          (e) => Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                            child: Chip(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              label: Text(
-                                e,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .subtitle1
-                                    ?.copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimaryContainer),
-                              ),
+              SizedBox(
+                height: 50,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: post.relatedTo
+                      .map(
+                        (e) => Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                          child: Chip(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            label: Text(
+                              e,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1
+                                  ?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimaryContainer),
                             ),
                           ),
-                        )
-                        .toList(),
-                  ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
               Container(
@@ -158,33 +154,24 @@ class PostCard extends StatelessWidget {
                         Chip(
                           label: post.postType.toLowerCase() ==
                                   PostType.normal.name
-                              ? Tooltip(
-                                  message: 'Normal Post',
-                                  child: Icon(
-                                    Icons.add_circle,
-                                    color:
-                                        Theme.of(context).colorScheme.onPrimary,
-                                  ),
+                              ? Icon(
+                                  Icons.add_circle,
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary,
                                 )
                               : post.postType.toLowerCase() ==
                                       PostType.poll.name
-                                  ? Tooltip(
-                                      message: 'Poll Post',
-                                      child: Icon(
-                                        Icons.poll_rounded,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
+                                  ? Icon(
+                                      Icons.poll_rounded,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
                                     )
-                                  : Tooltip(
-                                      message: 'Request Post',
-                                      child: Icon(
-                                        Icons.front_hand_rounded,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
+                                  : Icon(
+                                      Icons.front_hand_rounded,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onPrimary,
                                     ),
                           backgroundColor:
                               Theme.of(context).colorScheme.primary,
@@ -193,38 +180,31 @@ class PostCard extends StatelessWidget {
                           const SizedBox(
                             width: 10,
                           ),
-                          Tooltip(
-                            message: 'NGO Poked',
-                            child: Chip(
-                              label: Icon(
-                                Icons.health_and_safety_outlined,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSecondaryContainer,
-                              ),
-                              backgroundColor: Theme.of(context)
+                          Chip(
+                            label: Icon(
+                              Icons.health_and_safety_outlined,
+                              color: Theme.of(context)
                                   .colorScheme
-                                  .secondaryContainer,
+                                  .onSecondaryContainer,
                             ),
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
                           ),
                         ],
                         if (post.isPostedAnonymously) ...[
                           const SizedBox(
                             width: 10,
                           ),
-                          Tooltip(
-                            message: 'Anonymous Post',
-                            child: Chip(
-                              label: Icon(
-                                Icons.person_off_outlined,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onTertiaryContainer,
-                              ),
-                              backgroundColor: Theme.of(context)
+                          Chip(
+                            label: Icon(
+                              Icons.person_off_outlined,
+                              color: Theme.of(context)
                                   .colorScheme
-                                  .tertiaryContainer,
+                                  .onTertiaryContainer,
                             ),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.tertiaryContainer,
                           ),
                         ],
                       ],

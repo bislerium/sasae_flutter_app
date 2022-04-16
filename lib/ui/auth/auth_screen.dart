@@ -37,6 +37,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _userName() => FormBuilderTextField(
         name: 'userName',
+        key: const Key('usernameATF'),
         controller: _userNameTEC,
         decoration: InputDecoration(
           iconColor: Theme.of(context).colorScheme.secondary,
@@ -59,6 +60,7 @@ class _AuthScreenState extends State<AuthScreen> {
       );
 
   Widget _passwordField() => CustomObscureTextField(
+        key: const Key('passwordATF'),
         labeltext: 'Password',
         textEditingController: _passwordTEC,
         validators: FormBuilderValidators.compose(
@@ -74,6 +76,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _loginButton() => Consumer<AuthProvider>(
         builder: ((context, authP, child) => ElevatedButton(
+              key: const Key('loginAB'),
               child: authP.isAuthenticating
                   ? const Padding(
                       padding: EdgeInsets.all(7.0),

@@ -92,6 +92,7 @@ class _HomePageState extends State<HomePage>
         floatingActionButton: _pageNavigatorP.getPageIndex == 0 &&
                 Provider.of<ProfileSettingFABProvider>(context).getShowFAB
             ? CustomFAB(
+                key: const Key('updateProfileFAB'),
                 text: 'Update Profile',
                 icon: Icons.edit_rounded,
                 func: Provider.of<ProfileSettingFABProvider>(context)
@@ -100,6 +101,7 @@ class _HomePageState extends State<HomePage>
             : _pageNavigatorP.getPageIndex == 2 &&
                     Provider.of<PostFABProvider>(context).getShowFAB
                 ? CustomFAB(
+                    key: const Key('postFAB'),
                     text: 'Post',
                     icon: Icons.post_add,
                     func: Provider.of<PostFABProvider>(context)
@@ -107,6 +109,7 @@ class _HomePageState extends State<HomePage>
                   )
                 : _pageNavigatorP.getPageIndex == 4
                     ? CustomFAB(
+                        key: const Key('logoutFAB'),
                         text: 'Logout',
                         icon: Icons.logout,
                         func: Provider.of<LogoutFABProvider>(context)
@@ -132,26 +135,31 @@ class _HomePageState extends State<HomePage>
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
             destinations: const [
               NavigationDestination(
+                key: Key('profileNB'),
                 icon: Icon(Icons.account_circle_outlined),
                 selectedIcon: Icon(Icons.account_circle),
                 label: 'Profile',
               ),
               NavigationDestination(
+                key: Key('ngoNB'),
                 icon: Icon(Icons.health_and_safety_outlined),
                 selectedIcon: Icon(Icons.health_and_safety),
                 label: 'NGO',
               ),
               NavigationDestination(
+                key: Key('feedNB'),
                 icon: Icon(Icons.feed_outlined),
                 selectedIcon: Icon(Icons.feed),
                 label: 'Feed',
               ),
               NavigationDestination(
+                key: Key('notificationNB'),
                 icon: Icon(Icons.notifications_outlined),
                 selectedIcon: Icon(Icons.notifications),
                 label: 'Notification',
               ),
               NavigationDestination(
+                key: Key('settingNB'),
                 icon: Icon(Icons.settings_outlined),
                 selectedIcon: Icon(Icons.settings),
                 label: 'Setting',
