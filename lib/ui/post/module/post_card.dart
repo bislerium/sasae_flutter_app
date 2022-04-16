@@ -21,7 +21,7 @@ class PostCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      key: ValueKey(post.id),
+      key: ValueKey(post.hashCode),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         splashColor: Theme.of(context).colorScheme.primaryContainer,

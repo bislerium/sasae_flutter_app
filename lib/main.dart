@@ -30,12 +30,12 @@ import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
 
-late final AdaptiveThemeMode? deviceThemeMode;
+AdaptiveThemeMode? deviceThemeMode = AdaptiveThemeMode.system;
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   deviceThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
     MyApp(

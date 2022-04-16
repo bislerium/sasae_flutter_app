@@ -21,6 +21,7 @@ class PostList extends StatefulWidget {
 class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) => ListView.builder(
+        key: ValueKey(widget.posts.hashCode),
         controller: widget.scrollController,
         padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
