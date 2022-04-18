@@ -101,7 +101,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     username: _userNameTEC.text,
                     password: _passwordTEC.text,
                   );
-                  if (authP.isAuth) {
+                  if (authP.getIsAuth) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         HomePage.routeName, (Route<dynamic> route) => false);
                   } else {

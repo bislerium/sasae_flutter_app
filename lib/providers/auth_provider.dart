@@ -16,7 +16,7 @@ class AuthProvider with ChangeNotifier {
       : _sessionManager = SessionManager(),
         _isAuthenticating = false;
 
-  bool get isAuth => _auth != null;
+  bool get getIsAuth => _auth != null;
   AuthModel? get auth => _auth;
   bool get isAuthenticating => _isAuthenticating;
 

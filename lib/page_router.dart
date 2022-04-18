@@ -36,7 +36,7 @@ class _PageRouterState extends State<PageRouter> {
       builder: (ctx, authSnapshot) =>
           authSnapshot.connectionState == ConnectionState.waiting
               ? const CustomLoading()
-              : _authP.isAuth
+              : _authP.getIsAuth
                   ? const HomePage()
                   : const AuthScreen(),
     );

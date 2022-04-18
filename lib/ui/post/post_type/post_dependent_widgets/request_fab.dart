@@ -24,8 +24,9 @@ class RequestFAB extends StatelessWidget {
     if (isParticipated) {
       showSnackBar(
           context: context,
-          message:
-              requestType == 'Petition' ? 'Already signed!' : 'Already joined!',
+          message: requestType == 'Petition'
+              ? 'Already signed!'
+              : 'Already participated!',
           errorSnackBar: true);
       return;
     }
@@ -42,7 +43,7 @@ class RequestFAB extends StatelessWidget {
       message = 'signed';
     }
     if (requestType == 'Join') {
-      message = 'joined';
+      message = 'participated';
     }
     showCustomDialog(
       context: context,
@@ -75,8 +76,8 @@ class RequestFAB extends StatelessWidget {
               ? 'Signed'
               : 'Sign'
           : isParticipated
-              ? 'Joined'
-              : 'Join',
+              ? 'Participated'
+              : 'Participate',
       icon: requestType == 'Petition' ? Icons.gesture : Icons.handshake_rounded,
       func: () async => participate(context),
       scrollController: scrollController,

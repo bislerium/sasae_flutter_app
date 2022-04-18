@@ -10,12 +10,12 @@ const Map _localHost = {
   'port': '8000',
 };
 const Map _ipHost = {
-  'host': '192.168.1.163',
+  'host': '100.64.215.211',
   'port': '8000',
 };
 //----------------------------------------------
 
-String getHostName({HostingMode hostingMode = HostingMode.local}) {
+String getHostName({HostingMode hostingMode = HostingMode.ip}) {
   late Map config;
   switch (hostingMode) {
     case HostingMode.local:
