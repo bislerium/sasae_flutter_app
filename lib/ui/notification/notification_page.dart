@@ -48,7 +48,7 @@ class _NotificationPageState extends State<NotificationPage>
               : Consumer<NotificationProvider>(
                   builder: (context, notificationP, child) =>
                       notificationP.getNotifications.isEmpty
-                          ? const FetchError(
+                          ? const ErrorView(
                               errorMessage: 'No Notifications yet 😴...',
                             )
                           : Stack(

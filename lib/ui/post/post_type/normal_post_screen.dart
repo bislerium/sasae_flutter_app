@@ -65,54 +65,56 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                 builder: (context, postP, child) => RefreshIndicator(
                   onRefresh: () =>
                       postP.refreshNormalPost(postID: widget.postID),
-                  child: postP.normalPostData == null
-                      ? const FetchError()
+                  child: postP.getNormalPostData == null
+                      ? const ErrorView()
                       : ListView(
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
                           children: [
                             PostRelatedCard(
-                              list: postP.normalPostData!.relatedTo,
+                              list: postP.getNormalPostData!.relatedTo,
                             ),
                             const SizedBox(
                               height: 15,
                             ),
-                            if (postP.normalPostData!.pokedNGO.isNotEmpty) ...[
+                            if (postP
+                                .getNormalPostData!.pokedNGO.isNotEmpty) ...[
                               PokedNGOCard(
-                                list: postP.normalPostData!.pokedNGO,
+                                list: postP.getNormalPostData!.pokedNGO,
                               ),
                               const SizedBox(
                                 height: 15,
                               ),
                             ],
-                            if (postP.normalPostData!.attachedImage !=
+                            if (postP.getNormalPostData!.attachedImage !=
                                 null) ...[
                               NormalImageAttachmentCard(
-                                imageURL: postP.normalPostData!.attachedImage!,
+                                imageURL:
+                                    postP.getNormalPostData!.attachedImage!,
                               ),
                               const SizedBox(
                                 height: 15,
                               ),
                             ],
                             PostContentCard(
-                              content: postP.normalPostData!.postContent,
+                              content: postP.getNormalPostData!.postContent,
                             ),
                             const SizedBox(
                               height: 15,
                             ),
-                            if (!postP.normalPostData!.isAnonymous) ...[
+                            if (!postP.getNormalPostData!.isAnonymous) ...[
                               PostAuthorCard(
-                                author: postP.normalPostData!.author!,
+                                author: postP.getNormalPostData!.author!,
                               ),
                               const SizedBox(
                                 height: 15,
                               ),
                             ],
                             PostTailCard(
-                              postID: postP.normalPostData!.id,
-                              createdOn: postP.normalPostData!.createdOn,
-                              modifiedOn: postP.normalPostData!.modifiedOn,
+                              postID: postP.getNormalPostData!.id,
+                              createdOn: postP.getNormalPostData!.createdOn,
+                              modifiedOn: postP.getNormalPostData!.modifiedOn,
                             ),
                             const SizedBox(
                               height: 15,
@@ -123,15 +125,15 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
               ),
       ),
       bottomNavigationBar: Consumer<NormalPostProvider>(
-        builder: (context, postP, child) => postP.normalPostData == null
+        builder: (context, postP, child) => postP.getNormalPostData == null
             ? const SizedBox.shrink()
             : VotingBar(
-                key: ObjectKey(postP.normalPostData),
-                postID: postP.normalPostData!.id,
-                upvoteCount: postP.normalPostData!.upVote.length,
-                downvoteCount: postP.normalPostData!.downVote.length,
-                isUpvoted: postP.normalPostData!.upVoted,
-                isDownvoted: postP.normalPostData!.downVoted,
+                key: ObjectKey(postP.getNormalPostData),
+                postID: postP.getNormalPostData!.id,
+                upvoteCount: postP.getNormalPostData!.upVote.length,
+                downvoteCount: postP.getNormalPostData!.downVote.length,
+                isUpvoted: postP.getNormalPostData!.upVoted,
+                isDownvoted: postP.getNormalPostData!.downVoted,
                 scrollController: _scrollController,
               ),
       ),

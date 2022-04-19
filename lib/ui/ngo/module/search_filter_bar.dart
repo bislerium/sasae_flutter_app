@@ -118,7 +118,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
       builder: ((context, ngoP, child) {
-        bool isDataUnavailable = ngoP.getFetchError ||
+        bool isDataUnavailable = ngoP.getIsFetchError ||
             (ngoP.getNGOs!.isEmpty &&
                 !ngoP.getIsFiltered &&
                 !ngoP.getIsSearched);

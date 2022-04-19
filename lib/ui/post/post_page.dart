@@ -74,9 +74,9 @@ class _PostPageState extends State<PostPage>
                   builder: (context, postP, child) => RefreshIndicator(
                     onRefresh: postP.refreshPosts,
                     child: postP.getPostData == null
-                        ? const FetchError()
+                        ? const ErrorView()
                         : postP.getPostData!.isEmpty
-                            ? const FetchError(
+                            ? const ErrorView(
                                 errorMessage: 'No post yet... 😅',
                               )
                             : PostList(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class FetchError extends StatelessWidget {
+class ErrorView extends StatelessWidget {
   final double fraction;
   final String errorMessage;
 
-  const FetchError({
+  const ErrorView({
     Key? key,
     this.fraction = 0.84,
     this.errorMessage = 'Something went wrong 😞...',

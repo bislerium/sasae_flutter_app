@@ -61,7 +61,7 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                 : Consumer<PeopleProvider>(
                     builder: (context, peopleP, child) =>
                         peopleP.getPeopleUpdate == null
-                            ? const FetchError()
+                            ? const ErrorView()
                             : PeopleProfileEditForm(
                                 peopleUpdate: peopleP.getPeopleUpdate!,
                                 scrollController: _scrollController,

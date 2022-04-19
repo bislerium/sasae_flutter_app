@@ -63,7 +63,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                   onRefresh: () =>
                       postP.refreshRequestPost(postID: widget.postID),
                   child: postP.requestPostData == null
-                      ? const FetchError()
+                      ? const ErrorView()
                       : ListView(
                           controller: _scrollController,
                           physics: const AlwaysScrollableScrollPhysics(),
@@ -128,7 +128,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
             : RequestFAB(
                 key: ValueKey(postP.requestPostData!.id),
                 postID: postP.requestPostData!.id,
-                isParticipated: postP.requestPostData!.isParticipated,
+                isRequestConsidered: postP.requestPostData!.isParticipated,
                 requestType: postP.requestPostData!.requestType,
                 endsOn: postP.requestPostData!.endsOn,
                 scrollController: _scrollController,

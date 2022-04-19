@@ -78,7 +78,7 @@ class PostCard extends StatelessWidget {
                             bool success = await Provider.of<ProfileProvider>(
                                     context,
                                     listen: false)
-                                .delete(postID: post.id);
+                                .deletePost(postID: post.id);
                             if (success) {
                               showSnackBar(
                                 context: context,

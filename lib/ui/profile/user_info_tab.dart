@@ -92,7 +92,7 @@ class _UserInfoTabState extends State<UserInfoTab>
               builder: (context, profileP, child) => RefreshIndicator(
                 onRefresh: _fetchUser,
                 child: profileP.userData == null
-                    ? const FetchError()
+                    ? const ErrorView()
                     : profileP.userData is PeopleModel
                         ? ListView(
                             controller: widget.scrollController,

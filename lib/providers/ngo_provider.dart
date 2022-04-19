@@ -37,7 +37,7 @@ class NGOProvider with ChangeNotifier {
   List<NGO_Model>? get getNGOs => _ngosToShow;
   Set<String> get getFieldOfWork => _fieldOfWork;
   List<String> get getSelectedFOW => _selectedFOW;
-  bool get getFetchError => _ngos == null;
+  bool get getIsFetchError => _ngos == null;
   bool get getIsFiltered => _isFiltered;
   bool get getIsSearched => _isSearched;
   bool get getIsNGOsLoading => _isNGOsLoading;

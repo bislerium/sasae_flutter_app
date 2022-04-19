@@ -87,7 +87,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                       FormBuilderValidators.integer(),
-                      FormBuilderValidators.min(50),
+                      FormBuilderValidators.min(10),
                       FormBuilderValidators.max(100000),
                     ]),
                     keyboardType: TextInputType.number,

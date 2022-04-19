@@ -9,19 +9,19 @@ class RequestFAB extends StatelessWidget {
   final ScrollController scrollController;
   final String requestType;
   final DateTime endsOn;
-  final bool isParticipated;
+  final bool isRequestConsidered;
 
   const RequestFAB({
     Key? key,
     required this.postID,
     required this.scrollController,
-    required this.isParticipated,
+    required this.isRequestConsidered,
     required this.requestType,
     required this.endsOn,
   }) : super(key: key);
 
-  Future<void> participate(BuildContext context) async {
-    if (isParticipated) {
+  Future<void> request(BuildContext context) async {
+    if (isRequestConsidered) {
       showSnackBar(
           context: context,
           message: requestType == 'Petition'
@@ -72,14 +72,14 @@ class RequestFAB extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollAnimatedFAB(
       text: requestType == 'Petition'
-          ? isParticipated
+          ? isRequestConsidered
               ? 'Signed'
               : 'Sign'
-          : isParticipated
+          : isRequestConsidered
               ? 'Participated'
               : 'Participate',
       icon: requestType == 'Petition' ? Icons.gesture : Icons.handshake_rounded,
-      func: () async => participate(context),
+      func: () async => request(context),
       scrollController: scrollController,
     );
   }

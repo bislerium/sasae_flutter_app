@@ -74,9 +74,9 @@ class _UserPostTabState extends State<UserPostTab>
                       userType: widget.userType,
                     ),
                     child: profilePostP.getUserPostData == null
-                        ? const FetchError()
+                        ? const ErrorView()
                         : profilePostP.getUserPostData!.isEmpty
-                            ? const FetchError(
+                            ? const ErrorView(
                                 errorMessage: 'No post yet... 😅',
                               )
                             : PostList(

@@ -59,7 +59,7 @@ class _PostCreateFormScreenState extends State<PostCreateFormScreen>
                       },
                       child: postCreateP.getNGOOptionsData == null ||
                               postCreateP.getPostRelatedToData == null
-                          ? const FetchError()
+                          ? const ErrorView()
                           : PostCreateForm(
                               snapshotNGOList: postCreateP.getNGOOptionsData!,
                               snapshotRelatedList:

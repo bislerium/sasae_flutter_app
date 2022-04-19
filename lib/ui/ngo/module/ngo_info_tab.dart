@@ -62,7 +62,7 @@ class _NGOInfoTabState extends State<NGOInfoTab>
                   builder: (context, ngoP, child) => RefreshIndicator(
                     onRefresh: () => ngoP.refreshNGO(ngoID: widget.ngoID),
                     child: ngoP.getNGO == null
-                        ? const FetchError()
+                        ? const ErrorView()
                         : ListView(
                             controller: widget.scrollController,
                             children: [

@@ -60,7 +60,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
                 builder: (context, postP, child) => RefreshIndicator(
                   onRefresh: () => postP.refreshPollPost(postID: widget.postID),
                   child: postP.pollPostData == null
-                      ? const FetchError()
+                      ? const ErrorView()
                       : ListView(
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),

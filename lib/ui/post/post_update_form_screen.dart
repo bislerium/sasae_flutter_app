@@ -74,7 +74,7 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
                         postCreateP.getNGOOptionsData == null ||
                                 postCreateP.getPostRelatedToData == null ||
                                 postUpdateP.getUpdatePostType == null
-                            ? const FetchError()
+                            ? const ErrorView()
                             : PostUpdateForm(
                                 snapshotNGOList: postCreateP.getNGOOptionsData!,
                                 snapshotRelatedList:

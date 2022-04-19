@@ -152,7 +152,7 @@ void showCustomDialog(
             TextButton(
               onPressed: okFunc,
               child: Text(
-                'OK',
+                'Ok',
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.primary,
                 ),

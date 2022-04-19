@@ -465,7 +465,7 @@ class PostUpdateProvider with ChangeNotifier {
         'Authorization': 'Token ${_authP.auth!.tokenKey}',
       };
       var uri = Uri.parse(
-        '${getHostName()}$postEndpoint$postID/detail/',
+        '${getHostName()}$postEndpoint$postID/update/',
       );
 
       dynamic request;
@@ -566,7 +566,7 @@ class NormalPostProvider with ChangeNotifier {
         );
 
   set setAuthP(AuthProvider auth) => _authP = auth;
-  NormalPostModel? get normalPostData => _normalPost;
+  NormalPostModel? get getNormalPostData => _normalPost;
 
   NormalPostModel _randNormalPost() {
     Random rand = Random();

@@ -44,8 +44,8 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                       child: Consumer<NGOProvider>(
                         builder: (context, ngoP, child) => RefreshIndicator(
                           onRefresh: ngoP.refreshNGOs,
-                          child: ngoP.getFetchError
-                              ? const FetchError(
+                          child: ngoP.getIsFetchError
+                              ? const ErrorView(
                                   fraction: 0.75,
                                 )
                               : ngoP.getNGOs!.isEmpty
