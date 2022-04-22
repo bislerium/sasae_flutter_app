@@ -859,7 +859,7 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   //Sign for petition and join for Joinform
-  Future<bool> participateRequest() async {
+  Future<bool> considerRequest() async {
     try {
       await _dio.post(
         '$postEndpoint${_requestPost!.id}/participate/',

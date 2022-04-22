@@ -51,7 +51,7 @@ class RequestFAB extends StatelessWidget {
       okFunc: () async {
         var success =
             await Provider.of<RequestPostProvider>(context, listen: false)
-                .participateRequest();
+                .considerRequest();
         success
             ? showSnackBar(
                 context: context,

@@ -46,7 +46,7 @@ class _UserInfoTabState extends State<UserInfoTab>
 
   Future<void> _fetchUser() async {
     await profileP.initFetchUser();
-    UserModel? data = profileP.userData;
+    UserModel? data = profileP.getUserData;
     if (data == null) {
       profileSettingFABP.setOnPressedHandler = null;
       profileSettingFABP.setShowFAB = false;
@@ -73,7 +73,7 @@ class _UserInfoTabState extends State<UserInfoTab>
   void profleEditfabListenScroll() {
     var _ = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController.position.userScrollDirection;
-    if (profileP.userData is PeopleModel) {
+    if (profileP.getUserData is PeopleModel) {
       direction == ScrollDirection.reverse
           ? _.setShowFAB = false
           : _.setShowFAB = true;
@@ -85,37 +85,38 @@ class _UserInfoTabState extends State<UserInfoTab>
     super.build(context);
     return FutureBuilder(
       future: _fetchUserFUTURE,
-      builder: (context, snapshot) => snapshot.connectionState ==
-              ConnectionState.waiting
-          ? const CustomLoading()
-          : Consumer<ProfileProvider>(
-              builder: (context, profileP, child) => RefreshIndicator(
-                onRefresh: _fetchUser,
-                child: profileP.userData == null
-                    ? const ErrorView()
-                    : profileP.userData is PeopleModel
-                        ? ListView(
-                            controller: widget.scrollController,
-                            children: [
-                              const ChangeDeleteAction(),
-                              PeopleProfile(
-                                peopleData: profileP.userData! as PeopleModel,
+      builder: (context, snapshot) =>
+          snapshot.connectionState == ConnectionState.waiting
+              ? const CustomLoading()
+              : Consumer<ProfileProvider>(
+                  builder: (context, profileP, child) => RefreshIndicator(
+                    onRefresh: _fetchUser,
+                    child: profileP.getUserData == null
+                        ? const ErrorView()
+                        : profileP.getUserData is PeopleModel
+                            ? ListView(
+                                controller: widget.scrollController,
+                                children: [
+                                  const ChangeDeleteAction(),
+                                  PeopleProfile(
+                                    peopleData:
+                                        profileP.getUserData! as PeopleModel,
+                                  ),
+                                ],
+                              )
+                            : ListView(
+                                controller: widget.scrollController,
+                                children: [
+                                  const ChangeDeleteAction(
+                                    deletable: false,
+                                  ),
+                                  NGOProfile(
+                                    ngoData: profileP.getUserData! as NGOModel,
+                                  ),
+                                ],
                               ),
-                            ],
-                          )
-                        : ListView(
-                            controller: widget.scrollController,
-                            children: [
-                              const ChangeDeleteAction(
-                                deletable: false,
-                              ),
-                              NGOProfile(
-                                ngoData: profileP.userData! as NGOModel,
-                              ),
-                            ],
-                          ),
-              ),
-            ),
+                  ),
+                ),
     );
   }
 

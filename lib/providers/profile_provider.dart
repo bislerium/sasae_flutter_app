@@ -22,7 +22,7 @@ class ProfileProvider with ChangeNotifier {
           ),
         );
 
-  UserModel? get userData => _user;
+  UserModel? get getUserData => _user;
   List<Post_Model>? get getUserPostData => _userPosts;
 
   set setAuthP(AuthProvider authP) => _authP = authP;
