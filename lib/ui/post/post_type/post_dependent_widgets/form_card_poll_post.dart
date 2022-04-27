@@ -164,7 +164,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Poll post',
+                'Poll Post',
                 style: Theme.of(context).textTheme.headline6?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),

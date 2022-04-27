@@ -32,7 +32,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to PeopleModel Instance', () {
+  test('JSON deserialized to PeopleModel Instance', () {
     peopleModel = PeopleModel.fromAPIResponse(json);
     expect(peopleModel, isA<PeopleModel>());
   });

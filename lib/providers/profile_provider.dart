@@ -6,6 +6,7 @@ import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
+import 'package:sasae_flutter_app/providers/post_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
   late AuthProvider _authP;
@@ -27,7 +28,7 @@ class ProfileProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider authP) => _authP = authP;
 
-  Future<void> initFetchUser({bool isDemo = false}) async {
+  Future<void> initFetchUser({bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 1200));
     switch (_authP.auth!.group) {
       case 'General':
@@ -50,9 +51,14 @@ class ProfileProvider with ChangeNotifier {
     await initFetchUser();
   }
 
-  Future<void> intiFetchUserPosts({int? userID, UserType? userType}) async {
+  Future<void> intiFetchUserPosts(
+      {int? userID, UserType? userType, isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 800));
-    _userPosts = await fetchUserPosts(userID: userID, userType: userType);
+    if (isDemo) {
+      _userPosts = PostProvider.randPosts();
+    } else {
+      _userPosts = await fetchUserPosts(userID: userID, userType: userType);
+    }
   }
 
   Future<List<Post_Model>?> fetchUserPosts(
@@ -93,14 +99,16 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> deletePost({required int postID}) async {
+  Future<bool> deletePost({required int postID, bool isDemo = demo}) async {
     try {
-      await _dio.delete(
-        '$postEndpoint$postID/delete/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
+      if (!isDemo) {
+        await _dio.delete(
+          '$postEndpoint$postID/delete/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
+      }
       _userPosts!.removeWhere((element) => element.id == postID);
       notifyListeners();
       return true;

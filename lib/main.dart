@@ -35,7 +35,7 @@ AdaptiveThemeMode? deviceThemeMode = AdaptiveThemeMode.system;
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
   deviceThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
     MyApp(

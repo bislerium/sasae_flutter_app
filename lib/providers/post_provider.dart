@@ -34,7 +34,7 @@ class PostProvider with ChangeNotifier {
   List<Post_Model>? get getPostData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  List<Post_Model> _randPosts() {
+  static List<Post_Model> randPosts() {
     var random = Random();
     int length = random.nextInt(100 - 20) + 20;
     return List.generate(
@@ -49,12 +49,8 @@ class PostProvider with ChangeNotifier {
           postContent:
               faker.lorem.sentences(random.nextInt(15 - 2) + 2).join(' '),
           postedOn: faker.date.dateTime(minYear: 2018, maxYear: 2022),
-          postType: faker.randomGenerator.fromPattern([
-            'Normal Post',
-            'Poll Post',
-            'Join Request Post',
-            'Petition Request Post'
-          ]),
+          postType: faker.randomGenerator
+              .element(['Normal', 'Poll', 'Join Request', 'Petition Request']),
           isPostedAnonymously: faker.randomGenerator.boolean(),
           isPokedToNGO: faker.randomGenerator.boolean(),
         );
@@ -62,10 +58,10 @@ class PostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> intiFetchPosts({bool isDemo = false}) async {
+  Future<void> intiFetchPosts({bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
-      _posts = _randPosts();
+      _posts = randPosts();
     } else {
       _posts = await fetchPosts();
     }
@@ -154,7 +150,10 @@ class PostCreateProvider with ChangeNotifier {
     await initNGOOptions();
   }
 
-  Future<List<String>?> getPostRelatedTo() async {
+  Future<List<String>?> getPostRelatedTo({isDemo = demo}) async {
+    if (isDemo) {
+      return faker.lorem.words(faker.randomGenerator.integer(30, min: 5));
+    }
     try {
       var response = await _dio.get(
         postRelatedToEndpoint,
@@ -169,8 +168,20 @@ class PostCreateProvider with ChangeNotifier {
     }
   }
 
-  Future<List<NGO__Model>?> getNGOOptions() async {
+  List<NGO__Model> _randNGOOptions() => List.generate(
+        faker.randomGenerator.integer(40, min: 10),
+        (index) => NGO__Model(
+          id: faker.randomGenerator.integer(50000),
+          orgName: faker.company.name(),
+          orgPhoto: faker.image.image(random: true),
+        ),
+      );
+
+  Future<List<NGO__Model>?> getNGOOptions({bool isDemo = demo}) async {
     try {
+      if (isDemo) {
+        return _randNGOOptions();
+      }
       var response = await _dio.get(
         postNGOsEndpoint,
         options: Options(headers: {
@@ -603,7 +614,7 @@ class NormalPostProvider with ChangeNotifier {
   }
 
   Future<void> initFetchNormalPost(
-      {required int postID, bool isDemo = false}) async {
+      {required int postID, bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 1000));
     if (isDemo) {
       _normalPost = _randNormalPost();
@@ -632,7 +643,8 @@ class NormalPostProvider with ChangeNotifier {
     await initFetchNormalPost(postID: postID);
   }
 
-  Future<bool> toggleReaction(NormalPostReactionType type) async {
+  Future<bool> toggleReaction(NormalPostReactionType type,
+      {bool isDemo = demo}) async {
     try {
       late String uri;
       switch (type) {
@@ -642,12 +654,14 @@ class NormalPostProvider with ChangeNotifier {
         case NormalPostReactionType.downVote:
           uri = '$postEndpoint${_normalPost!.id}/downvote/';
       }
-      await _dio.post(
-        uri,
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
+      if (!isDemo) {
+        await _dio.post(
+          uri,
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
+      }
       return true;
     } on DioError catch (e) {
       print(e.response?.data);
@@ -722,7 +736,7 @@ class PollPostProvider with ChangeNotifier {
   }
 
   Future<void> initFetchPollPost(
-      {required int postID, bool isDemo = false}) async {
+      {required int postID, bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
       _pollPost = _randPollPost();
@@ -751,14 +765,16 @@ class PollPostProvider with ChangeNotifier {
     await initFetchPollPost(postID: postID);
   }
 
-  Future<bool> pollTheOption({required int optionID}) async {
+  Future<bool> pollTheOption({required int optionID, isDemo = demo}) async {
     try {
-      await _dio.post(
-        '$postEndpoint${_pollPost!.id}/poll/$optionID/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
+      if (!isDemo) {
+        await _dio.post(
+          '$postEndpoint${_pollPost!.id}/poll/$optionID/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
+      }
       return true;
     } on DioError catch (e) {
       print(e.response?.data);
@@ -829,7 +845,7 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   Future<void> intiFetchRequestPost(
-      {required int postID, bool isDemo = false}) async {
+      {required int postID, bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
       _requestPost = _randRequestPost();
@@ -859,16 +875,18 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   //Sign for petition and join for Joinform
-  Future<bool> considerRequest() async {
+  Future<bool> considerRequest({isDemo = demo}) async {
     try {
-      await _dio.post(
-        '$postEndpoint${_requestPost!.id}/participate/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
-      _requestPost!.reaction.add(_authP.auth!.profileID);
-      _requestPost!.isParticipated = true;
+      if (!isDemo) {
+        await _dio.post(
+          '$postEndpoint${_requestPost!.id}/participate/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
+        _requestPost!.reaction.add(_authP.auth!.profileID);
+        _requestPost!.isParticipated = true;
+      }
       notifyListeners();
       return true;
     } on DioError catch (e) {

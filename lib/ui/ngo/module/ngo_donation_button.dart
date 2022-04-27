@@ -127,18 +127,19 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                           onSuccess: (su) {
                             showSnackBar(
                               context: context,
-                              message: 'Payment Successful',
+                              message: 'Donation Successful',
                             );
                           },
                           onFailure: (fa) {
                             showSnackBar(
                               context: context,
-                              message: 'Payment Failed',
+                              message: 'Donation Failed',
                             );
                           },
                           onCancel: () {
                             showSnackBar(
-                                context: context, message: 'Payment Cancelled');
+                                context: context,
+                                message: 'Donation Cancelled');
                           },
                         )
                             .then((value) {

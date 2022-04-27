@@ -62,7 +62,7 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGOs({bool isDemo = false}) async {
+  Future<void> fetchNGOs({bool isDemo = demo}) async {
     await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
       _randNGOs();
@@ -211,7 +211,7 @@ class NGOProvider with ChangeNotifier {
   static Future<NGOModel?> fetchNGO({
     int? ngoID,
     required AuthModel auth,
-    bool isDemo = false,
+    bool isDemo = demo,
   }) async {
     if (isDemo) {
       return randNGO();

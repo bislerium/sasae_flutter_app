@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_store/json_store.dart';
+import 'package:sasae_flutter_app/api_config.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
@@ -78,7 +79,7 @@ class NotificationProvider extends ChangeNotifier {
     await jsonStore.commitBatch(batch);
   }
 
-  Future<void> fetchNotifications({bool demo = false}) async {
+  Future<void> fetchNotifications({bool isDemo = demo}) async {
     if (demo) {
       _notifications = _randNotifications();
     } else {

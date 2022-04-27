@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:faker/faker.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
@@ -20,33 +21,44 @@ class AuthProvider with ChangeNotifier {
   AuthModel? get auth => _auth;
   bool get isAuthenticating => _isAuthenticating;
 
-  Future<void> _authenticate({
-    required String username,
-    required String password,
-  }) async {
+  AuthModel _randAuth() => AuthModel(
+        tokenKey: faker.jwt.secret,
+        group: faker.randomGenerator.element(['General', 'NGO']),
+        accountID: faker.randomGenerator.integer(1000000),
+        profileID: faker.randomGenerator.integer(1000000),
+      );
+
+  Future<void> _authenticate(
+      {required String username,
+      required String password,
+      bool isDemo = demo}) async {
     _isAuthenticating = true;
     try {
-      final response = await http
-          .post(
-            Uri.parse('${getHostName()}$loginEndpoint'),
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: json.encode(
-              {
-                "username": username,
-                "password": password,
+      if (isDemo) {
+        _auth = _randAuth();
+      } else {
+        final response = await http
+            .post(
+              Uri.parse('${getHostName()}$loginEndpoint'),
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
               },
-            ),
-          )
-          .timeout(const Duration(seconds: 5));
-      final responseData = json.decode(response.body);
-      if (response.statusCode >= 400) {
-        throw HttpException(responseData.toString());
+              body: json.encode(
+                {
+                  "username": username,
+                  "password": password,
+                },
+              ),
+            )
+            .timeout(const Duration(seconds: 5));
+        final responseData = json.decode(response.body);
+        if (response.statusCode >= 400) {
+          throw HttpException(responseData.toString());
+        }
+        await Future.delayed(const Duration(milliseconds: 1500));
+        _auth = AuthModel.fromAPIResponse(responseData);
       }
-      await Future.delayed(const Duration(milliseconds: 1500));
-      _auth = AuthModel.fromAPIResponse(responseData);
       _sessionManager.set('auth_data', _auth!);
     } catch (error) {
       _auth = null;
@@ -62,11 +74,12 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
 
-  Future<void> tryAutoLogin() async {
+  Future<void> tryAutoLogin({isDemo = demo}) async {
     var _ = await _sessionManager.get('auth_data');
     await Future.delayed(const Duration(milliseconds: 1500));
     if (_ == null) return;
     _auth = AuthModel.fromJson(_);
+    if (isDemo) return;
     try {
       var headers = {
         'Authorization': 'Token ${_auth!.tokenKey}',
@@ -89,16 +102,18 @@ class AuthProvider with ChangeNotifier {
   }
 
   // return type: bool represents if the method executed successfully.
-  Future<bool> logout() async {
+  Future<bool> logout({bool isDemo = demo}) async {
     try {
-      final response = await http.post(
-        Uri.parse('${getHostName()}$logoutEndpoint'),
-        headers: {
-          'Authorization': 'Token ${_auth!.tokenKey}',
-        },
-      ).timeout(const Duration(seconds: 5));
-      if (response.statusCode >= 400) {
-        throw HttpException(json.decode(response.body));
+      if (!isDemo) {
+        final response = await http.post(
+          Uri.parse('${getHostName()}$logoutEndpoint'),
+          headers: {
+            'Authorization': 'Token ${_auth!.tokenKey}',
+          },
+        ).timeout(const Duration(seconds: 5));
+        if (response.statusCode >= 400) {
+          throw HttpException(json.decode(response.body));
+        }
       }
       await _sessionManager.remove('auth_data');
       JsonStore().clearDataBase();
@@ -129,21 +144,23 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> deleteUser() async {
+  Future<bool> deleteUser({isDemo = demo}) async {
     try {
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Token ${_auth!.tokenKey}',
-      };
-      var request = http.Request(
-          'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
+      if (!isDemo) {
+        var headers = {
+          'Accept': 'application/json',
+          'Authorization': 'Token ${_auth!.tokenKey}',
+        };
+        var request = http.Request(
+            'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
 
-      request.headers.addAll(headers);
+        request.headers.addAll(headers);
 
-      http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
-      if (response.statusCode >= 400) {
-        throw HttpException(await response.stream.bytesToString());
+        http.StreamedResponse response =
+            await request.send().timeout(const Duration(seconds: 5));
+        if (response.statusCode >= 400) {
+          throw HttpException(await response.stream.bytesToString());
+        }
       }
       return true;
     } catch (error) {

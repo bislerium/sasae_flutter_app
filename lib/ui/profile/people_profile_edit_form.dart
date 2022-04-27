@@ -28,7 +28,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
   Widget fullNameField() => FormBuilderTextField(
         name: 'update_fullName',
         decoration: const InputDecoration(
-          labelText: 'Full Name',
+          labelText: 'Full name',
           icon: Icon(Icons.person),
         ),
         initialValue: widget.peopleUpdate.getFullname,
@@ -42,9 +42,9 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
       );
 
   Widget genderField() => FormBuilderDropdown(
-        name: 'update_requestType',
+        name: 'update_gender',
         decoration: const InputDecoration(
-          labelText: 'Request type',
+          labelText: 'Gender',
           icon: Icon(Icons.transgender),
         ),
         initialValue: widget.peopleUpdate.getGender,
@@ -87,7 +87,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         inputType: InputType.date,
         decoration: const InputDecoration(
           labelText: 'Birthdate',
-          icon: Icon(Icons.calendar_today_rounded),
+          icon: Icon(Icons.cake_rounded),
         ),
         initialValue: widget.peopleUpdate.getBirthDate,
         firstDate: DateTime.now().subtract(const Duration(days: 365 * 100)),
@@ -136,7 +136,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
       );
 
   Widget displayPicture() => UpdatePicture(
-        labelText: 'Display Picture',
+        labelText: 'Display picture',
         picture: widget.peopleUpdate.getDisplayPicture,
         onSavedFunc: (list) => list == null || list.isEmpty
             ? widget.peopleUpdate.setDisplayPicture = null
@@ -144,7 +144,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
       );
 
   Widget citizenshipPhoto() => UpdatePicture(
-        labelText: 'Citizenship Photo',
+        labelText: 'Citizenship photo',
         picture: widget.peopleUpdate.getCitizenshipPhoto,
         onSavedFunc: (list) => list == null || list.isEmpty
             ? widget.peopleUpdate.setCitizenshipPhoto = null

@@ -56,7 +56,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to BankModel Instance', () {
+  test('JSON deserialized to BankModel Instance', () {
     pollPost = PollPostModel.fromAPIResponse(json);
     expect(pollPost, isA<PollPostModel>());
   });

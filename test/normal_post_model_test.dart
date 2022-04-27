@@ -49,7 +49,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to BankModel Instance', () {
+  test('JSON deserialized to BankModel Instance', () {
     normalPost = NormalPostModel.fromAPIResponse(json);
     expect(normalPost, isA<NormalPostModel>());
   });

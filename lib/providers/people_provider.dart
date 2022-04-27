@@ -204,7 +204,7 @@ class PeopleProvider with ChangeNotifier {
   static Future<PeopleModel?> fetchPeople({
     int? peopleID,
     required AuthModel auth,
-    bool isDemo = false,
+    bool isDemo = demo,
   }) async {
     if (isDemo) {
       return randPeople();

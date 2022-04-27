@@ -15,7 +15,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to AuthModel Instance', () {
+  test('JSON de-serialized to AuthModel Instance', () {
     authModel = AuthModel.fromAPIResponse(json);
     expect(authModel, isA<AuthModel>());
   });

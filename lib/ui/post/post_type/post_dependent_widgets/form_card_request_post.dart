@@ -196,7 +196,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Request post',
+                'Request Post',
                 style: Theme.of(context).textTheme.headline6?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),

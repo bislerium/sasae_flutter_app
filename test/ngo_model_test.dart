@@ -64,7 +64,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to NGOModel Instance', () {
+  test('JSON deserialized to NGOModel Instance', () {
     ngoModel = NGOModel.fromAPIResponse(json);
     expect(ngoModel, isA<NGOModel>());
   });

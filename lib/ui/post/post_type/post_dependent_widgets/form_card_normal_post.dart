@@ -53,7 +53,7 @@ class _FormCardNormalPostState extends State<FormCardNormalPost>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Normal post',
+              'Normal Post',
               style: Theme.of(context).textTheme.headline6?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),

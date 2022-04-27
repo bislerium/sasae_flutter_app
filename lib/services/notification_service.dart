@@ -4,8 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
-import 'package:sasae_flutter_app/ui/home_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/normal_post_screen.dart';
 
 class NotificationService {
   static NotificationService? _notificationService;

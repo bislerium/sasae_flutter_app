@@ -18,7 +18,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to BankModel Instance', () {
+  test('JSON deserialized to BankModel Instance', () {
     bankModel = BankModel.fromAPIResponse(json);
     expect(bankModel, isA<BankModel>());
   });

@@ -1,3 +1,5 @@
+const bool demo = true;
+
 //-------------For Deployment-------------------
 const Map _internetHost = {
   'host': '',
@@ -10,12 +12,12 @@ const Map _localHost = {
   'port': '8000',
 };
 const Map _ipHost = {
-  'host': '100.64.215.211',
+  'host': '192.168.1.163',
   'port': '8000',
 };
 //----------------------------------------------
 
-String getHostName({HostingMode hostingMode = HostingMode.ip}) {
+String getHostName({HostingMode hostingMode = HostingMode.local}) {
   late Map config;
   switch (hostingMode) {
     case HostingMode.local:

@@ -22,7 +22,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to NotificationModel Instance', () {
+  test('JSON deserialized to NotificationModel Instance', () {
     notificationModel = NotificationModel.fromAPIResponse(json);
     expect(notificationModel, isA<NotificationModel>());
   });

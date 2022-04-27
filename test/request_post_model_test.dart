@@ -54,7 +54,7 @@ void main() {
     };
   });
 
-  test('JSON serialized to RequestModel Instance', () {
+  test('JSON deserialized to RequestModel Instance', () {
     requestPostModel = RequestPostModel.fromAPIResponse(json);
     expect(requestPostModel, isA<RequestPostModel>());
   });
