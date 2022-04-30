@@ -256,6 +256,7 @@ class _MyAppState extends State<MyApp> {
             ),
             initial: widget.savedThemeMode ?? AdaptiveThemeMode.system,
             builder: (theme, darkTheme) => MaterialApp(
+              debugShowCheckedModeBanner: false,
               navigatorKey: navigatorKey,
               supportedLocales: const [
                 Locale('en', 'US'),

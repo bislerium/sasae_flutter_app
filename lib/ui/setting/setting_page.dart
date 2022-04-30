@@ -19,7 +19,7 @@ class _SettingScreenState extends State<SettingScreen>
       : _applicationName = 'Sasae',
         _applicationVersion = 'v0.0.1',
         _applicationLegalese =
-            'A Social Service Application to bind NGOs and enthuhsiasts for social work.',
+            'A Social Service Application to bind NGOs and enthuhsiasts for social work.\n\n@BishalGhartiChhetri',
         _applicationIcon = const Icon(Icons.flutter_dash_rounded);
 
   final String _applicationName, _applicationVersion, _applicationLegalese;

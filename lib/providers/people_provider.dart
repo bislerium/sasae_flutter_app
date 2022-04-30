@@ -108,43 +108,62 @@ class PeopleProvider with ChangeNotifier {
 
   void nullifyPeopleUpdate() => _peopleUpdate = null;
 
-  Future<void> retrieveUpdatePeople() async {
+  Future<PeopleUpdateModel> _randPeopleUpdateModel() async =>
+      PeopleUpdateModel()
+        ..setFullname = faker.person.name()
+        ..setAddress = faker.address.city()
+        ..setBirthDate = faker.date.dateTime(minYear: 2000, maxYear: 2025)
+        ..setDisplayPicture =
+            await imageURLToXFile(faker.image.image(random: true))
+        ..setGender =
+            faker.randomGenerator.element(['Male', 'Female', 'LGBTQ+'])
+        ..setEmail = faker.internet.email()
+        ..setPhone = faker.phoneNumber.us()
+        ..setCitizenshipPhoto =
+            await imageURLToXFile(faker.image.image(random: true))
+        ..setIsVerified = faker.randomGenerator.boolean();
+
+  Future<void> retrieveUpdatePeople({isDemo = demo}) async {
     try {
-      final request = http.MultipartRequest(
-          'GET', Uri.parse('${getHostName()}$peopleDetailEndpoint'));
+      if (isDemo) {
+        _peopleUpdate = await _randPeopleUpdateModel();
+      } else {
+        final request = http.MultipartRequest(
+            'GET', Uri.parse('${getHostName()}$peopleDetailEndpoint'));
 
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
-      };
+        var headers = {
+          'Accept': 'application/json',
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        };
 
-      request.headers.addAll(headers);
+        request.headers.addAll(headers);
 
-      http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+        http.StreamedResponse response =
+            await request.send().timeout(const Duration(seconds: 5));
 
-      String responseBody = await response.stream.bytesToString();
+        String responseBody = await response.stream.bytesToString();
 
-      if (response.statusCode >= 400) {
-        throw HttpException(responseBody);
-      }
+        if (response.statusCode >= 400) {
+          throw HttpException(responseBody);
+        }
 
-      await Future.delayed(const Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
 
-      _peopleUpdate =
-          PeopleUpdateModel.fromAPIResponse(json.decode(responseBody));
+        _peopleUpdate =
+            PeopleUpdateModel.fromAPIResponse(json.decode(responseBody));
 
-      String? citizenshipPhotoLink = _peopleUpdate!.getCitizenshipPhotoLink;
-      String? displayPictureLink = _peopleUpdate!.getDisplayPictureLink;
+        String? citizenshipPhotoLink = _peopleUpdate!.getCitizenshipPhotoLink;
+        String? displayPictureLink = _peopleUpdate!.getDisplayPictureLink;
 
-      if (displayPictureLink != null) {
-        _peopleUpdate!.setDisplayPicture =
-            await imageURLToXFile(displayPictureLink);
-      }
+        if (displayPictureLink != null) {
+          _peopleUpdate!.setDisplayPicture =
+              await imageURLToXFile(displayPictureLink);
+        }
 
-      if (citizenshipPhotoLink != null) {
-        _peopleUpdate!.setCitizenshipPhoto =
-            await imageURLToXFile(citizenshipPhotoLink);
+        if (citizenshipPhotoLink != null) {
+          _peopleUpdate!.setCitizenshipPhoto =
+              await imageURLToXFile(citizenshipPhotoLink);
+        }
       }
       notifyListeners();
     } catch (error) {
@@ -157,41 +176,43 @@ class PeopleProvider with ChangeNotifier {
     await retrieveUpdatePeople();
   }
 
-  Future<bool> updatePeople() async {
+  Future<bool> updatePeople({bool isDemo = demo}) async {
     try {
-      final request = http.MultipartRequest(
-          'PUT', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
+      if (!isDemo) {
+        final request = http.MultipartRequest(
+            'PUT', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
 
-      var headers = {
-        'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
-      };
+        var headers = {
+          'Accept': 'application/json',
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        };
 
-      request.fields.addAll({
-        'email': _peopleUpdate!.getEmail!,
-        'full_name': _peopleUpdate!.getFullname!,
-        'date_of_birth':
-            Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
-        'gender': _peopleUpdate!.getGender!,
-        'phone': _peopleUpdate!.getPhone!,
-        'address': _peopleUpdate!.getAddress!,
-      });
-      if (_peopleUpdate!.getDisplayPicture != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-            "display_picture", _peopleUpdate!.getDisplayPicture!.path));
-      }
+        request.fields.addAll({
+          'email': _peopleUpdate!.getEmail!,
+          'full_name': _peopleUpdate!.getFullname!,
+          'date_of_birth':
+              Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
+          'gender': _peopleUpdate!.getGender!,
+          'phone': _peopleUpdate!.getPhone!,
+          'address': _peopleUpdate!.getAddress!,
+        });
+        if (_peopleUpdate!.getDisplayPicture != null) {
+          request.files.add(await http.MultipartFile.fromPath(
+              "display_picture", _peopleUpdate!.getDisplayPicture!.path));
+        }
 
-      if (_peopleUpdate!.getCitizenshipPhoto != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-            "citizenship_photo", _peopleUpdate!.getCitizenshipPhoto!.path));
-      }
+        if (_peopleUpdate!.getCitizenshipPhoto != null) {
+          request.files.add(await http.MultipartFile.fromPath(
+              "citizenship_photo", _peopleUpdate!.getCitizenshipPhoto!.path));
+        }
 
-      request.headers.addAll(headers);
+        request.headers.addAll(headers);
 
-      http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
-      if (response.statusCode >= 400) {
-        throw HttpException(response.reasonPhrase!);
+        http.StreamedResponse response =
+            await request.send().timeout(const Duration(seconds: 5));
+        if (response.statusCode >= 400) {
+          throw HttpException(response.reasonPhrase!);
+        }
       }
       return true;
     } catch (error) {

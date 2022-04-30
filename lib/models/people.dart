@@ -209,6 +209,7 @@ class PeopleUpdateModel {
       _citizenshipPhoto = citizenshipPhoto;
   set setDisplayPicture(XFile? displayPicture) =>
       _displayPicture = displayPicture;
+  set setIsVerified(bool? isVerified) => _isVerified = isVerified;
 
   void nullifyAll() {
     _fullname = null;

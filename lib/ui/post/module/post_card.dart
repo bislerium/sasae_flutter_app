@@ -49,7 +49,7 @@ class PostCard extends StatelessWidget {
                   children: [
                     ListTile(
                       leading: const Icon(Icons.edit),
-                      title: const Text('Edit'),
+                      title: const Text('Update'),
                       onTap: () {
                         Navigator.of(context).pop();
                         Navigator.pushNamed(

@@ -13,7 +13,7 @@ import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/reque
 import 'post_dependent_widgets/request_card.dart';
 
 class RequestPostScreen extends StatefulWidget {
-  static const routeName = '/post/request';
+  static const routeName = '/post/request/';
   final int postID;
 
   const RequestPostScreen({Key? key, required this.postID}) : super(key: key);

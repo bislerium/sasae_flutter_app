@@ -13,7 +13,7 @@ import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/normal_voting_bar.dart';
 
 class NormalPostScreen extends StatefulWidget {
-  static const routeName = '/post/normal';
+  static const routeName = '/post/normal/';
   final int postID;
 
   const NormalPostScreen({

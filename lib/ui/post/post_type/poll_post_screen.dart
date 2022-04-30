@@ -12,7 +12,7 @@ import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_tail_card.dart';
 
 class PollPostScreen extends StatefulWidget {
-  static const routeName = '/post/poll';
+  static const routeName = '/post/poll/';
   final int postID;
 
   const PollPostScreen({
