@@ -82,18 +82,22 @@ class PeopleProfile extends StatelessWidget {
                 CustomInfoTile(
                   leadingIcon: Icons.phone_android_rounded,
                   trailing: peopleData.phone,
-                  func: () => launch(Uri(
-                    scheme: 'tel',
-                    path: peopleData.phone,
-                  ).toString()),
+                  func: () => launchUrl(
+                    Uri(
+                      scheme: 'tel',
+                      path: peopleData.phone,
+                    ),
+                  ),
                 ),
                 CustomInfoTile(
                   leadingIcon: Icons.email_rounded,
                   trailing: peopleData.email,
-                  func: () => launch(Uri(
-                    scheme: 'mailto',
-                    path: peopleData.email,
-                  ).toString()),
+                  func: () => launchUrl(
+                    Uri(
+                      scheme: 'mailto',
+                      path: peopleData.email,
+                    ),
+                  ),
                 ),
                 Row(
                   children: [

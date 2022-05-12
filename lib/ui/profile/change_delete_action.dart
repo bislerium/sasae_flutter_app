@@ -30,10 +30,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
         _changeformKey = GlobalKey<FormBuilderState>(),
         _oldPasswordTEC = TextEditingController(),
         _newPassword1TEC = TextEditingController(),
-        _newPassword2TEC = TextEditingController(),
-        _error = false;
-
-  bool _error;
+        _newPassword2TEC = TextEditingController();
 
   @override
   void dispose() {

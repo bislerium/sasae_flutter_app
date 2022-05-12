@@ -84,19 +84,21 @@ class NGOProfile extends StatelessWidget {
                 CustomInfoTile(
                   leadingIcon: Icons.phone_android_rounded,
                   trailing: ngoData.phone,
-                  func: () => launch(Uri(
-                    scheme: 'tel',
-                    path: ngoData.phone,
-                  ).toString()),
+                  func: () => launchUrl(
+                    Uri(
+                      scheme: 'tel',
+                      path: ngoData.phone,
+                    ),
+                  ),
                 ),
                 CustomInfoTile(
                     leadingIcon: Icons.email_rounded,
                     trailing: ngoData.email,
-                    func: () => launch(
+                    func: () => launchUrl(
                           Uri(
                             scheme: 'mailto',
                             path: ngoData.email,
-                          ).toString(),
+                          ),
                         )),
                 if (ngoData.isVerified && ngoData.epayAccount != null)
                   CustomInfoTile(
