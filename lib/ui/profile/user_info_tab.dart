@@ -59,7 +59,7 @@ class _UserInfoTabState extends State<UserInfoTab>
       return;
     }
     if (data is PeopleModel) {
-      WidgetsBinding.instance?.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         profileSettingFABP.setOnPressedHandler = () => Navigator.pushNamed(
               context,
               PeopleProfileEditScreen.routeName,

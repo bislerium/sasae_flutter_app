@@ -48,8 +48,9 @@ class _PostPageState extends State<PostPage>
     var pProvider = Provider.of<PostProvider>(context, listen: false);
     await pProvider.intiFetchPosts();
     var data = pProvider.getPostData;
+    if (!mounted) return;
     var pfProvider = Provider.of<PostFABProvider>(context, listen: false);
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (data == null) {
         pfProvider.setOnPressedHandler = null;
         pfProvider.setShowFAB = false;

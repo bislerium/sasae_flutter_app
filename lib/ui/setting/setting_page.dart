@@ -28,7 +28,7 @@ class _SettingScreenState extends State<SettingScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<LogoutFABProvider>(context, listen: false)
           .setOnPressedHandler = onPressLogout;
     });

@@ -61,7 +61,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         _postHead = _postUpdateP.getRequestPostCU!;
         break;
     }
-    WidgetsBinding.instance!
+    WidgetsBinding.instance
         .addPostFrameCallback((_) => setPostUpdateOnPressed());
   }
 
@@ -111,7 +111,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         decoration: const InputDecoration(
             labelText: 'Related to', hintText: 'What\'s your post related to?'),
         options: widget.snapshotRelatedList
-            .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+            .map((e) => FormBuilderChipOption(value: e, child: Text(e)))
             .toList(),
         spacing: 10,
         runSpacing: -5,

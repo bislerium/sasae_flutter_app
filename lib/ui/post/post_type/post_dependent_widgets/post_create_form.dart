@@ -49,7 +49,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!
+    WidgetsBinding.instance
         .addPostFrameCallback((_) => setPostCreateOnPressed());
     initFormClass();
   }
@@ -89,7 +89,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
         decoration: const InputDecoration(
             labelText: 'Related to', hintText: 'What\'s your post related to?'),
         options: widget.snapshotRelatedList
-            .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+            .map((e) => FormBuilderChipOption(value: e, child: Text(e)))
             .toList(),
         spacing: 10,
         runSpacing: -5,

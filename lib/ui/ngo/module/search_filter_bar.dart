@@ -52,7 +52,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   _ngoP.setSelectedFOW = value!.cast<String>(),
               initialValue: _ngoP.getSelectedFOW,
               options: _ngoP.getFieldOfWork
-                  .map((e) => FormBuilderFieldOption(value: e, child: Text(e)))
+                  .map((e) => FormBuilderChipOption(value: e, child: Text(e)))
                   .toList()
                 ..sort((a, b) => a.value.compareTo(b.value)),
               spacing: 10,
