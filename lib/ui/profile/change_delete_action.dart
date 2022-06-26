@@ -161,11 +161,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   }
 
   Future<void> showDeleteDialog() async {
-    double min = 0;
-    double scale = 2;
-    double _ = faker.randomGenerator.decimal(scale: scale, min: min);
-    _ = double.parse((_).toStringAsFixed(2));
-
+    String _ = faker.randomGenerator.string(8, min: 6);
     await showDialog(
       context: context,
       builder: (context) => BackdropFilter(
@@ -177,29 +173,39 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           scrollable: true,
           backgroundColor: Theme.of(context).colorScheme.surface,
           elevation: 3,
-          title: const Text('Delete Account'),
+          title: const Text('Delete Account?'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text('Once deleted, You might not be able to recover.'),
               const SizedBox(height: 10),
-              Text('"Slide the slider to $_ to confirm!"'),
+              RichText(
+                text: TextSpan(
+                  text: 'Type ',
+                  style: DefaultTextStyle.of(context).style,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: _,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    const TextSpan(text: ' to Confirm!'),
+                  ],
+                ),
+              ),
               FormBuilder(
                 key: _deleteformKey,
-                child: FormBuilderSlider(
+                child: FormBuilderTextField(
                   name: 'check',
-                  initialValue: min.toDouble(),
-                  min: min,
-                  max: scale,
                   validator: FormBuilderValidators.compose(
                     [
                       FormBuilderValidators.required(),
-                      (value) => double.parse((value)!.toStringAsFixed(2)) != _
-                          ? 'Incorrect!'
-                          : null
+                      (value) => value != _ ? 'Incorrect value!' : null
                     ],
                   ),
-                  decoration: const InputDecoration(border: InputBorder.none),
+                  // decoration: const InputDecoration(border: InputBorder.none),
                 ),
               ),
             ],
@@ -228,7 +234,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   }
                 }
               },
-              child: const Text('Confirm'),
+              child: const Text('I Confirm'),
             ),
             TextButton(
                 onPressed: () => Navigator.of(context).pop(),

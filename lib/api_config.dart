@@ -1,8 +1,8 @@
-const bool demo = false;
+const bool demo = true;
 
 //-------------For Deployment-------------------
 const Map _internetHost = {
-  'host': '',
+  'host': 'asasae.herokuapp.com',
   'port': '',
 };
 
