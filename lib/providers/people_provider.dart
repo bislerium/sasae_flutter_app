@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
@@ -91,7 +91,7 @@ class PeopleProvider with ChangeNotifier {
       }
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
       }
@@ -139,7 +139,7 @@ class PeopleProvider with ChangeNotifier {
         request.headers.addAll(headers);
 
         http.StreamedResponse response =
-            await request.send().timeout(const Duration(seconds: 5));
+            await request.send().timeout(timeOutDuration);
 
         String responseBody = await response.stream.bytesToString();
 
@@ -158,6 +158,7 @@ class PeopleProvider with ChangeNotifier {
         if (displayPictureLink != null) {
           _peopleUpdate!.setDisplayPicture =
               await imageURLToXFile(displayPictureLink);
+          print(_peopleUpdate!.getDisplayPicture!.name);
         }
 
         if (citizenshipPhotoLink != null) {
@@ -208,10 +209,12 @@ class PeopleProvider with ChangeNotifier {
 
         request.headers.addAll(headers);
 
+        print(_peopleUpdate!.getDisplayPicture!.name);
+
         http.StreamedResponse response =
-            await request.send().timeout(const Duration(seconds: 5));
+            await request.send().timeout(timeOutDuration);
         if (response.statusCode >= 400) {
-          throw HttpException(response.reasonPhrase!);
+          throw HttpException(await response.stream.bytesToString());
         }
       }
       return true;

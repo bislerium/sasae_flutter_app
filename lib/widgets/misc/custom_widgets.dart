@@ -18,21 +18,41 @@ void showSnackBar({
   Color? foreground,
   Color? background,
   bool errorSnackBar = false,
-}) =>
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: foreground ??= errorSnackBar
-              ? Theme.of(context).colorScheme.onError
-              : Theme.of(context).colorScheme.onInverseSurface,
-        ),
+}) {
+  var onError = Theme.of(context).colorScheme.onError;
+  var onInfo = Theme.of(context).colorScheme.onInverseSurface;
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      action: SnackBarAction(
+        label: 'Dismiss',
+        textColor: errorSnackBar ? onError : onInfo,
+        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+      ),
+      // margin: const EdgeInsets.all(10),
+      // behavior: SnackBarBehavior.floating,
+      content: Row(
+        children: [
+          Icon(
+            errorSnackBar ? Icons.error_outline : Icons.info_outline,
+            color: errorSnackBar ? onError : onInfo,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          Text(
+            message,
+            style: TextStyle(
+              color: foreground ??= errorSnackBar ? onError : onInfo,
+            ),
+          ),
+        ],
       ),
       backgroundColor: background ??= errorSnackBar
           ? Theme.of(context).colorScheme.error
           : Theme.of(context).colorScheme.inverseSurface,
-    ));
+    ),
+  );
+}
 
 Future<void> showModalSheet({
   required BuildContext ctx,

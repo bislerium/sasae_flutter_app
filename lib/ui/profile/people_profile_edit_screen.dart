@@ -86,19 +86,17 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                           'Don\'t forget to refresh your profile page, once updated.',
                       okFunc: () async {
                         _formKey.currentState!.save();
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        Navigator.of(context).pop();
                         bool success = await peopleP.updatePeople();
                         if (success) {
                           showSnackBar(
-                              context: context,
-                              message: 'Your profile updated successfully');
+                              context: context, message: 'profile updated');
                         } else {
                           showSnackBar(
                               context: context,
-                              message: 'Something went wrong!',
+                              message: 'Something went wrong',
                               errorSnackBar: true);
+                          if (!mounted) return;
                           Navigator.of(context).pop();
                         }
                       },

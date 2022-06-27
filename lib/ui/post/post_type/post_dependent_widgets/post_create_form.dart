@@ -24,7 +24,7 @@ class PostCreateForm extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PostCreateFormState createState() => _PostCreateFormState();
+  State<PostCreateForm> createState() => _PostCreateFormState();
 }
 
 class _PostCreateFormState extends State<PostCreateForm> {
@@ -265,12 +265,13 @@ class _PostCreateFormState extends State<PostCreateForm> {
           break;
       }
       if (success) {
-        showSnackBar(context: context, message: 'Successfully posted.');
+        showSnackBar(context: context, message: 'Successfully posted');
+        if (!mounted) return;
         Navigator.of(context).pop();
       } else {
         showSnackBar(
             context: context,
-            message: 'Something went wrong.',
+            message: 'Something went wrong',
             errorSnackBar: true);
       }
     }

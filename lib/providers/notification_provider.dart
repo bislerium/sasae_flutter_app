@@ -1,7 +1,7 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:json_store/json_store.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';

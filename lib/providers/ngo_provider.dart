@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
@@ -74,7 +74,7 @@ class NGOProvider with ChangeNotifier {
             'Accept': 'application/json',
             'Authorization': 'Token ${_authP.auth!.tokenKey}'
           },
-        ).timeout(const Duration(seconds: 5));
+        ).timeout(timeOutDuration);
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
@@ -223,7 +223,7 @@ class NGOProvider with ChangeNotifier {
             'Accept': 'application/json',
             'Authorization': 'Token ${auth.tokenKey}'
           },
-        ).timeout(const Duration(seconds: 5));
+        ).timeout(timeOutDuration);
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());

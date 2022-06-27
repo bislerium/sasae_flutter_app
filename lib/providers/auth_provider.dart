@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:json_store/json_store.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -51,7 +51,7 @@ class AuthProvider with ChangeNotifier {
                 },
               ),
             )
-            .timeout(const Duration(seconds: 5));
+            .timeout(timeOutDuration);
         final responseData = json.decode(response.body);
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
@@ -90,7 +90,7 @@ class AuthProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
@@ -110,7 +110,7 @@ class AuthProvider with ChangeNotifier {
           headers: {
             'Authorization': 'Token ${_auth!.tokenKey}',
           },
-        ).timeout(const Duration(seconds: 5));
+        ).timeout(timeOutDuration);
         if (response.statusCode >= 400) {
           throw HttpException(json.decode(response.body));
         }
@@ -137,7 +137,7 @@ class AuthProvider with ChangeNotifier {
               "email": email,
             }),
           )
-          .timeout(const Duration(seconds: 8));
+          .timeout(timeOutDuration);
     } catch (error) {
       return false;
     }
@@ -157,7 +157,7 @@ class AuthProvider with ChangeNotifier {
         request.headers.addAll(headers);
 
         http.StreamedResponse response =
-            await request.send().timeout(const Duration(seconds: 5));
+            await request.send().timeout(timeOutDuration);
         if (response.statusCode >= 400) {
           throw HttpException(await response.stream.bytesToString());
         }
@@ -189,7 +189,7 @@ class AuthProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());

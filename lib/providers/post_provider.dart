@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:jiffy/jiffy.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
@@ -27,7 +27,7 @@ class PostProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         );
 
@@ -116,7 +116,7 @@ class PostCreateProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         ),
         _createPostType = PostType.normal,
@@ -256,7 +256,7 @@ class PostCreateProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -298,7 +298,7 @@ class PostCreateProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -343,7 +343,7 @@ class PostCreateProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
@@ -421,7 +421,7 @@ class PostUpdateProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       String responseBody = await response.stream.bytesToString();
 
@@ -545,7 +545,7 @@ class PostUpdateProvider with ChangeNotifier {
       request.headers.addAll(headers);
 
       http.StreamedResponse response =
-          await request.send().timeout(const Duration(seconds: 5));
+          await request.send().timeout(timeOutDuration);
 
       String responseBody = await response.stream.bytesToString();
 
@@ -572,7 +572,7 @@ class NormalPostProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         );
 
@@ -684,7 +684,7 @@ class PollPostProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         );
 
@@ -797,7 +797,7 @@ class RequestPostProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         );
 

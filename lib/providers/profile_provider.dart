@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:sasae_flutter_app/api_config.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
@@ -19,7 +19,7 @@ class ProfileProvider with ChangeNotifier {
           BaseOptions(
             baseUrl: getHostName(),
             receiveDataWhenStatusError: true,
-            connectTimeout: 5 * 1000,
+            connectTimeout: 10 * 1000,
           ),
         );
 

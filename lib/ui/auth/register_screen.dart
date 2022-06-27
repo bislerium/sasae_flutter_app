@@ -497,15 +497,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               if (success) {
                 showSnackBar(
                   context: context,
-                  message: 'Successfully registered.',
+                  message: 'Successfully registered',
                 );
                 if (!mounted) return;
                 Navigator.of(context).pop();
               } else {
                 showSnackBar(
-                  context: context,
-                  message: 'Something went wrong.',
-                );
+                    context: context,
+                    message: 'Something went wrong',
+                    errorSnackBar: true);
               }
             }
           } else {

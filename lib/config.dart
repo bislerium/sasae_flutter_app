@@ -1,4 +1,5 @@
 const bool demo = false;
+const Duration timeOutDuration = Duration(seconds: 10);
 
 //-------------For Deployment-------------------
 const Map _internetHost = {
