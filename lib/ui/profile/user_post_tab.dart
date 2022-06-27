@@ -77,7 +77,7 @@ class _UserPostTabState extends State<UserPostTab>
                         ? const ErrorView()
                         : profilePostP.getUserPostData!.isEmpty
                             ? const ErrorView(
-                                errorMessage: 'No post yet... 😅',
+                                errorMessage: 'Nothing posted yet 😅...',
                               )
                             : PostList(
                                 posts: profilePostP.getUserPostData!,

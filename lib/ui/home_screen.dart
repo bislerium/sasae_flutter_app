@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage>
@@ -76,6 +76,9 @@ class _HomePageState extends State<HomePage>
       return Scaffold(
         body: SafeArea(
           child: PageView(
+            onPageChanged: (index) => _pageNavigatorP.setPageIndex = index,
+            controller: pageNavigatorP.getPageController,
+            physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
             children: const [
               UserProfilePage(),
               NGOPage(),
@@ -83,9 +86,6 @@ class _HomePageState extends State<HomePage>
               NotificationPage(),
               SettingScreen(),
             ],
-            onPageChanged: (index) => _pageNavigatorP.setPageIndex = index,
-            controller: pageNavigatorP.getPageController,
-            physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

@@ -78,7 +78,7 @@ class _PostPageState extends State<PostPage>
                         ? const ErrorView()
                         : postP.getPostData!.isEmpty
                             ? const ErrorView(
-                                errorMessage: 'No post yet... 😅',
+                                errorMessage: 'No post yet 😒...',
                               )
                             : PostList(
                                 posts: postP.getPostData!,

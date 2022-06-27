@@ -21,7 +21,7 @@ class PeopleProfileEditForm extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PeopleProfileEditFormState createState() => _PeopleProfileEditFormState();
+  State<PeopleProfileEditForm> createState() => _PeopleProfileEditFormState();
 }
 
 class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {

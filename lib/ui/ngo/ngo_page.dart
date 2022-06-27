@@ -10,7 +10,7 @@ class NGOPage extends StatefulWidget {
   const NGOPage({Key? key}) : super(key: key);
 
   @override
-  _NGOPageState createState() => _NGOPageState();
+  State<NGOPage> createState() => _NGOPageState();
 }
 
 class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {

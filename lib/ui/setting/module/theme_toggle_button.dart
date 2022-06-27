@@ -24,20 +24,6 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
   @override
   Widget build(BuildContext context) {
     return ToggleButtons(
-      children: const [
-        Tooltip(
-          message: 'Light Theme',
-          child: Icon(Icons.light_mode_rounded),
-        ),
-        Tooltip(
-          message: 'Dark Theme',
-          child: Icon(Icons.dark_mode_rounded),
-        ),
-        Tooltip(
-          message: 'System Theme',
-          child: Icon(Icons.brightness_medium_rounded),
-        ),
-      ],
       onPressed: (int index) {
         setState(() {
           switch (index) {
@@ -63,6 +49,20 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
         });
       },
       isSelected: _toggleButtonsState,
+      children: const [
+        Tooltip(
+          message: 'Light Theme',
+          child: Icon(Icons.light_mode_rounded),
+        ),
+        Tooltip(
+          message: 'Dark Theme',
+          child: Icon(Icons.dark_mode_rounded),
+        ),
+        Tooltip(
+          message: 'System Theme',
+          child: Icon(Icons.brightness_medium_rounded),
+        ),
+      ],
     );
   }
 }

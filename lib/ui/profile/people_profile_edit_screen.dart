@@ -17,7 +17,7 @@ class PeopleProfileEditScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PeopleProfileEditScreenState createState() =>
+  State<PeopleProfileEditScreen> createState() =>
       _PeopleProfileEditScreenState();
 }
 

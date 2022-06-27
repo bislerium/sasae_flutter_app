@@ -13,7 +13,7 @@ class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -489,7 +489,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 dob: _birthdate!,
                 address:
                     '$_stAddressHouseNum, $_cityLocality, $_province, $_country',
-                phone: '977$_phone!',
+                phone: _phone.toString(),
                 displayPicture: _displayPicture,
                 citizenshipPhoto: _citizenshipPhoto,
               );
@@ -499,6 +499,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context: context,
                   message: 'Successfully registered.',
                 );
+                if (!mounted) return;
                 Navigator.of(context).pop();
               } else {
                 showSnackBar(
@@ -560,8 +561,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Expanded(
                   child: TextButton(
-                    child: const Text('Back'),
                     onPressed: details.onStepCancel,
+                    child: const Text('Back'),
                   ),
                 ),
               ],

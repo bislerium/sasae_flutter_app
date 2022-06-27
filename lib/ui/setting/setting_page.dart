@@ -44,6 +44,7 @@ class _SettingScreenState extends State<SettingScreen>
         bool success =
             await Provider.of<AuthProvider>(context, listen: false).logout();
         if (success) {
+          if (!mounted) return;
           Navigator.of(context).pushNamedAndRemoveUntil(
               AuthScreen.routeName, (Route<dynamic> route) => false);
         } else {

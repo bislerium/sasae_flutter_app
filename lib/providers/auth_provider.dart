@@ -137,7 +137,7 @@ class AuthProvider with ChangeNotifier {
               "email": email,
             }),
           )
-          .timeout(const Duration(seconds: 5));
+          .timeout(const Duration(seconds: 8));
     } catch (error) {
       return false;
     }

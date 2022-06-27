@@ -15,7 +15,7 @@ class NGOInfoTab extends StatefulWidget {
       : super(key: key);
 
   @override
-  _NGOInfoTabState createState() => _NGOInfoTabState();
+  State<NGOInfoTab> createState() => _NGOInfoTabState();
 }
 
 class _NGOInfoTabState extends State<NGOInfoTab>

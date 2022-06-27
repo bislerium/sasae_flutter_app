@@ -15,7 +15,7 @@ class NGOProfileScreen extends StatefulWidget {
   const NGOProfileScreen({Key? key, required this.ngoID}) : super(key: key);
 
   @override
-  _NGOProfileScreenState createState() => _NGOProfileScreenState();
+  State<NGOProfileScreen> createState() => _NGOProfileScreenState();
 }
 
 class _NGOProfileScreenState extends State<NGOProfileScreen> {

@@ -1,4 +1,4 @@
-const bool demo = true;
+const bool demo = false;
 
 //-------------For Deployment-------------------
 const Map _internetHost = {

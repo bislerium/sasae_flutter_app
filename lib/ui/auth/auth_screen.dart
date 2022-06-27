@@ -13,7 +13,7 @@ class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
 
   @override
-  _AuthScreenState createState() => _AuthScreenState();
+  State<AuthScreen> createState() => _AuthScreenState();
 }
 
 class _AuthScreenState extends State<AuthScreen> {
@@ -77,16 +77,6 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _loginButton() => Consumer<AuthProvider>(
         builder: ((context, authP, child) => ElevatedButton(
               key: const Key('loginAB'),
-              child: authP.isAuthenticating
-                  ? const Padding(
-                      padding: EdgeInsets.all(7.0),
-                      child: CircularProgressIndicator(),
-                    )
-                  : Icon(
-                      Icons.navigate_next_rounded,
-                      size: 50,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
                 primary: Theme.of(context).colorScheme.secondaryContainer,
@@ -102,6 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     password: _passwordTEC.text,
                   );
                   if (authP.getIsAuth) {
+                    if (!mounted) return;
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         HomePage.routeName, (Route<dynamic> route) => false);
                   } else {
@@ -113,33 +104,43 @@ class _AuthScreenState extends State<AuthScreen> {
                   }
                 }
               },
+              child: authP.isAuthenticating
+                  ? const Padding(
+                      padding: EdgeInsets.all(7.0),
+                      child: CircularProgressIndicator(),
+                    )
+                  : Icon(
+                      Icons.navigate_next_rounded,
+                      size: 50,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
+                    ),
             )),
       );
 
   Widget _forgetButton() => Builder(builder: (context) {
         return TextButton(
-          child: Text(
-            'Forget Password?',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-          ),
           style: ElevatedButton.styleFrom(
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           ),
           onPressed: () async => showResetPasswordModal(),
+          child: Text(
+            'Forget Password?',
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+          ),
         );
       });
 
   Widget _createAccountLabel() => InkWell(
-        splashColor: Theme.of(context).primaryColorLight,
+        splashColor: Theme.of(context).colorScheme.secondaryContainer,
+        borderRadius: BorderRadius.circular(25),
         onTap: () {
           Navigator.of(context).pushNamed(
             RegisterScreen.routeName,
           );
         },
         child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 20),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(20),
           width: double.infinity,
           child: RichText(
             textAlign: TextAlign.center,
@@ -249,25 +250,20 @@ class _AuthScreenState extends State<AuthScreen> {
             constraints: const BoxConstraints.tightFor(
                 height: 60, width: double.infinity),
             child: ElevatedButton(
-              child: const Text(
-                'Request reset link',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
               onPressed: () async {
                 final isValid = _passwordResetFormKey.currentState!.validate();
                 if (isValid) {
+                  Navigator.of(context).pop();
                   bool success =
                       await Provider.of<AuthProvider>(context, listen: false)
                           .resetPassword(_resetEmailTEC.text);
+                  print(success);
                   if (success) {
                     showSnackBar(
                       context: context,
                       message: 'Password reset email sent, Check your inbox!',
                     );
                     _resetEmailTEC.clear();
-                    Navigator.of(context).pop();
                   } else {
                     showSnackBar(
                       context: context,
@@ -279,6 +275,12 @@ class _AuthScreenState extends State<AuthScreen> {
               },
               style: ElevatedButton.styleFrom(
                 shape: const StadiumBorder(),
+              ),
+              child: const Text(
+                'Request reset link',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
