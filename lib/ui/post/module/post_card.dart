@@ -24,7 +24,7 @@ class PostCard extends StatelessWidget {
       key: ValueKey(post.hashCode),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        splashColor: Theme.of(context).colorScheme.primaryContainer,
+        splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: () {
           late String routeName;
           switch (post.postType) {
@@ -53,10 +53,12 @@ class PostCard extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).pop();
                         Navigator.pushNamed(
-                            context, PostUpdateFormScreen.routeName,
-                            arguments: {
-                              'postID': post.id,
-                            });
+                          context,
+                          PostUpdateFormScreen.routeName,
+                          arguments: {
+                            'postID': post.id,
+                          },
+                        );
                       },
                       shape: const StadiumBorder(),
                     ),

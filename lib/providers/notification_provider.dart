@@ -81,6 +81,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<void> fetchNotifications({bool isDemo = demo}) async {
     if (demo) {
+      await delay();
       _notifications = _randNotifications();
     } else {
       List<Map<String, dynamic>>? json =

@@ -86,7 +86,9 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                           'Don\'t forget to refresh your profile page, once updated.',
                       okFunc: () async {
                         _formKey.currentState!.save();
-                        Navigator.of(context).pop();
+                        Navigator.of(context)
+                          ..pop()
+                          ..pop();
                         bool success = await peopleP.updatePeople();
                         if (success) {
                           showSnackBar(
@@ -96,8 +98,6 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                               context: context,
                               message: 'Something went wrong',
                               errorSnackBar: true);
-                          if (!mounted) return;
-                          Navigator.of(context).pop();
                         }
                       },
                     );

@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
@@ -17,6 +18,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  bool _isLoading = false;
   final GlobalKey<FormBuilderState> _personalInfoFormKey;
   final GlobalKey<FormBuilderState> _addressFormKey;
   final GlobalKey<FormBuilderState> _contactFormKey;
@@ -457,21 +459,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         steps: getSteps(),
         currentStep: _currentStep,
         onStepContinue: () async {
+          if (_isLoading) return;
           if (isLastStep) {
             if (_stepErrors.contains(true)) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Please fill required fields!',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onError,
-                    ),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.error,
-                ),
+              showSnackBar(
+                context: context,
+                message: 'Please fill required fields',
+                errorSnackBar: true,
               );
             } else {
+              setState(() => _isLoading = true);
               _personalInfoFormKey.currentState!.save();
               _contactFormKey.currentState!.save();
               _addressFormKey.currentState!.save();
@@ -493,19 +490,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 displayPicture: _displayPicture,
                 citizenshipPhoto: _citizenshipPhoto,
               );
+              setState(() => _isLoading = false);
 
               if (success) {
+                if (!mounted) return;
+                Navigator.of(context).pop();
                 showSnackBar(
                   context: context,
                   message: 'Successfully registered',
                 );
-                if (!mounted) return;
-                Navigator.of(context).pop();
               } else {
                 showSnackBar(
-                    context: context,
-                    message: 'Something went wrong',
-                    errorSnackBar: true);
+                  context: context,
+                  message: 'Something went wrong',
+                  errorSnackBar: true,
+                );
               }
             }
           } else {
@@ -538,22 +537,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
         controlsBuilder: (BuildContext context, ControlsDetails details) {
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            height: 40,
+            height: 60,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: Icon(
-                      isLastStep ? Icons.how_to_reg : Icons.navigate_next,
+                ElevatedButton(
+                  onPressed: details.onStepContinue,
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: _isLoading ? 32 : 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        isLastStep & _isLoading
+                            ? LoadingAnimationWidget.horizontalRotatingDots(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                size: 50,
+                              )
+                            : isLastStep & !_isLoading
+                                ? const Icon(Icons.how_to_reg)
+                                : const Icon(
+                                    Icons.navigate_next,
+                                  ),
+                        if ((!_isLoading & isLastStep) || !isLastStep) ...[
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          Text(
+                            isLastStep ? 'Register' : 'Next',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ],
                     ),
-                    label: Text(
-                      isLastStep ? 'Register' : 'Next',
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                    ),
-                    onPressed: details.onStepContinue,
                   ),
                 ),
                 const SizedBox(
@@ -562,7 +583,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Expanded(
                   child: TextButton(
                     onPressed: details.onStepCancel,
-                    child: const Text('Back'),
+                    child: const Text(
+                      'Back',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],

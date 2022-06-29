@@ -110,7 +110,10 @@ class _PostCreateFormState extends State<PostCreateForm> {
   Widget pokeNGOField() => ChipsInput(
         key: _chipKey,
         allowChipEditing: true,
-        decoration: const InputDecoration(labelText: 'Poke NGO'),
+        decoration: const InputDecoration(
+          labelText: 'Poke NGO',
+          hintText: 'Let the NGO(s) know!',
+        ),
         chipBuilder: (context, state, data) {
           return InputChip(
             key: ObjectKey(data),
@@ -157,11 +160,13 @@ class _PostCreateFormState extends State<PostCreateForm> {
             onTap: () => state.selectSuggestion(data),
           );
         },
+        initialSuggestions: widget.snapshotNGOList,
         onChanged: (value) {
-          var _ = (value as List<NGO__Model>).map((e) => e.id).toList();
-          _normalPostCreate.setPokedNGO = _;
-          _pollPostCreate.setPokedNGO = _;
-          _requestPostCreate.setPokedNGO = _;
+          var selectedNGOs =
+              (value as List<NGO__Model>).map((e) => e.id).toList();
+          _normalPostCreate.setPokedNGO = selectedNGOs;
+          _pollPostCreate.setPokedNGO = selectedNGOs;
+          _requestPostCreate.setPokedNGO = selectedNGOs;
         },
         inputType: TextInputType.name,
       );
@@ -288,24 +293,24 @@ class _PostCreateFormState extends State<PostCreateForm> {
         ),
         Consumer<PostCreateProvider>(
           builder: (context, postCreateP, child) => IndexedStack(
+            index: postCreateP.getCreatePostType.index,
             children: [
               Visibility(
-                child: FormCardNormalPost(formKey: _normalFormKey),
                 maintainState: true,
                 visible: postCreateP.getCreatePostType == PostType.normal,
+                child: FormCardNormalPost(formKey: _normalFormKey),
               ),
               Visibility(
-                child: FormCardPollPost(formKey: _pollFormKey),
                 maintainState: true,
                 visible: postCreateP.getCreatePostType == PostType.poll,
+                child: FormCardPollPost(formKey: _pollFormKey),
               ),
               Visibility(
-                child: FormCardRequestPost(formKey: _requestFormKey),
                 maintainState: true,
                 visible: postCreateP.getCreatePostType == PostType.request,
+                child: FormCardRequestPost(formKey: _requestFormKey),
               ),
             ],
-            index: postCreateP.getCreatePostType.index,
           ),
         ),
         const SizedBox(

@@ -120,15 +120,10 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           constraints:
               const BoxConstraints.tightFor(height: 60, width: double.infinity),
           child: ElevatedButton(
-            child: const Text(
-              'Change',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
             onPressed: () async {
               final isValid = _changeformKey.currentState!.validate();
               if (isValid) {
+                Navigator.of(context).pop();
                 bool success =
                     await Provider.of<AuthProvider>(context, listen: false)
                         .changePassword(
@@ -139,20 +134,28 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 if (success) {
                   showSnackBar(
                     context: context,
-                    message: 'Password changed successfully.',
+                    message: 'Password changed successfully',
                   );
                 } else {
                   showSnackBar(
                     context: context,
-                    message: 'Unable to change password!',
+                    message: 'Unable to change password',
                     errorSnackBar: true,
                   );
                 }
-                Navigator.of(context).pop();
+                _oldPasswordTEC.clear();
+                _newPassword1TEC.clear();
+                _newPassword2TEC.clear();
               }
             },
             style: ElevatedButton.styleFrom(
               shape: const StadiumBorder(),
+            ),
+            child: const Text(
+              'Change',
+              style: TextStyle(
+                fontSize: 16,
+              ),
             ),
           ),
         ),
@@ -224,12 +227,13 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                     showSnackBar(
                         context: context,
                         message: 'Account deleted successfully!');
-                    await Navigator.of(context).pushNamedAndRemoveUntil(
+                    if (!mounted) return;
+                    Navigator.of(context).pushNamedAndRemoveUntil(
                         AuthScreen.routeName, (Route<dynamic> route) => false);
                   } else {
                     showSnackBar(
                         context: context,
-                        message: 'Something went wrong!',
+                        message: 'Something went wrong',
                         errorSnackBar: true);
                   }
                 }

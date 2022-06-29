@@ -35,6 +35,7 @@ class AuthProvider with ChangeNotifier {
     _isAuthenticating = true;
     try {
       if (isDemo) {
+        await delay();
         _auth = _randAuth();
       } else {
         final response = await http
@@ -56,7 +57,6 @@ class AuthProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
         }
-        await Future.delayed(const Duration(milliseconds: 1500));
         _auth = AuthModel.fromAPIResponse(responseData);
       }
       _sessionManager.set('auth_data', _auth!);
@@ -75,12 +75,14 @@ class AuthProvider with ChangeNotifier {
       );
 
   Future<void> tryAutoLogin({isDemo = demo}) async {
-    var _ = await _sessionManager.get('auth_data');
-    await Future.delayed(const Duration(milliseconds: 1500));
-    if (_ == null) return;
-    _auth = AuthModel.fromJson(_);
-    if (isDemo) return;
+    var authData = await _sessionManager.get('auth_data');
+    if (authData == null) return;
+    _auth = AuthModel.fromJson(authData);
     try {
+      if (isDemo) {
+        await delay();
+        return;
+      }
       var headers = {
         'Authorization': 'Token ${_auth!.tokenKey}',
       };
@@ -124,8 +126,12 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> resetPassword(String email) async {
+  Future<bool> resetPassword(String email, {bool isDemo = demo}) async {
     try {
+      if (isDemo) {
+        await delay();
+        return true;
+      }
       await http
           .post(
             Uri.parse('${getHostName()}$passwordResetEndpoint'),
@@ -172,8 +178,13 @@ class AuthProvider with ChangeNotifier {
   Future<bool> changePassword(
       {required String oldPassword,
       required String newPassword1,
-      required String newPassword2}) async {
+      required String newPassword2,
+      bool isDemo = demo}) async {
     try {
+      if (isDemo) {
+        await delay();
+        return true;
+      }
       var headers = {
         'Accept': 'application/json',
         'Authorization': 'Token ${_auth!.tokenKey}',

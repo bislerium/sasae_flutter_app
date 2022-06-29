@@ -42,7 +42,6 @@ class PeopleProvider with ChangeNotifier {
 
   //Used to fetch people data per screen. Will fetch logged in user data if peopleID not given.
   Future<void> initFetchPeople({int? peopleID}) async {
-    await Future.delayed(const Duration(milliseconds: 1200));
     _people = await fetchPeople(peopleID: peopleID, auth: _authP.auth!);
     notifyListeners();
   }
@@ -54,19 +53,23 @@ class PeopleProvider with ChangeNotifier {
   //Always nullify the _people attribute on disposing the screen
   void nullifyPeople() => _people = null;
 
-  Future<bool> registerPeople({
-    required String username,
-    required String email,
-    required String password,
-    required String fullname,
-    required DateTime dob,
-    required String gender,
-    required String phone,
-    required String address,
-    XFile? displayPicture,
-    XFile? citizenshipPhoto,
-  }) async {
+  Future<bool> registerPeople(
+      {required String username,
+      required String email,
+      required String password,
+      required String fullname,
+      required DateTime dob,
+      required String gender,
+      required String phone,
+      required String address,
+      XFile? displayPicture,
+      XFile? citizenshipPhoto,
+      bool isDemo = demo}) async {
     try {
+      if (isDemo) {
+        await delay();
+        return true;
+      }
       final request = http.MultipartRequest(
           'POST', Uri.parse('${getHostName()}$peopleAddEndpoint'));
 
@@ -126,6 +129,7 @@ class PeopleProvider with ChangeNotifier {
   Future<void> retrieveUpdatePeople({isDemo = demo}) async {
     try {
       if (isDemo) {
+        await delay();
         _peopleUpdate = await _randPeopleUpdateModel();
       } else {
         final request = http.MultipartRequest(
@@ -146,8 +150,6 @@ class PeopleProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(responseBody);
         }
-
-        await Future.delayed(const Duration(seconds: 1));
 
         _peopleUpdate =
             PeopleUpdateModel.fromAPIResponse(json.decode(responseBody));
@@ -179,44 +181,47 @@ class PeopleProvider with ChangeNotifier {
 
   Future<bool> updatePeople({bool isDemo = demo}) async {
     try {
-      if (!isDemo) {
-        final request = http.MultipartRequest(
-            'PUT', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
-
-        var headers = {
-          'Accept': 'application/json',
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        };
-
-        request.fields.addAll({
-          'email': _peopleUpdate!.getEmail!,
-          'full_name': _peopleUpdate!.getFullname!,
-          'date_of_birth':
-              Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
-          'gender': _peopleUpdate!.getGender!,
-          'phone': _peopleUpdate!.getPhone!,
-          'address': _peopleUpdate!.getAddress!,
-        });
-        if (_peopleUpdate!.getDisplayPicture != null) {
-          request.files.add(await http.MultipartFile.fromPath(
-              "display_picture", _peopleUpdate!.getDisplayPicture!.path));
-        }
-
-        if (_peopleUpdate!.getCitizenshipPhoto != null) {
-          request.files.add(await http.MultipartFile.fromPath(
-              "citizenship_photo", _peopleUpdate!.getCitizenshipPhoto!.path));
-        }
-
-        request.headers.addAll(headers);
-
-        print(_peopleUpdate!.getDisplayPicture!.name);
-
-        http.StreamedResponse response =
-            await request.send().timeout(timeOutDuration);
-        if (response.statusCode >= 400) {
-          throw HttpException(await response.stream.bytesToString());
-        }
+      if (isDemo) {
+        await delay();
+        return true;
       }
+      final request = http.MultipartRequest(
+          'PUT', Uri.parse('${getHostName()}$peopleUpdateEndpoint'));
+
+      var headers = {
+        'Accept': 'application/json',
+        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+      };
+
+      request.fields.addAll({
+        'email': _peopleUpdate!.getEmail!,
+        'full_name': _peopleUpdate!.getFullname!,
+        'date_of_birth':
+            Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
+        'gender': _peopleUpdate!.getGender!,
+        'phone': _peopleUpdate!.getPhone!,
+        'address': _peopleUpdate!.getAddress!,
+      });
+      if (_peopleUpdate!.getDisplayPicture != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "display_picture", _peopleUpdate!.getDisplayPicture!.path));
+      }
+
+      if (_peopleUpdate!.getCitizenshipPhoto != null) {
+        request.files.add(await http.MultipartFile.fromPath(
+            "citizenship_photo", _peopleUpdate!.getCitizenshipPhoto!.path));
+      }
+
+      request.headers.addAll(headers);
+
+      print(_peopleUpdate!.getDisplayPicture!.name);
+
+      http.StreamedResponse response =
+          await request.send().timeout(timeOutDuration);
+      if (response.statusCode >= 400) {
+        throw HttpException(await response.stream.bytesToString());
+      }
+
       return true;
     } catch (error) {
       print(error);
@@ -231,25 +236,25 @@ class PeopleProvider with ChangeNotifier {
     bool isDemo = demo,
   }) async {
     if (isDemo) {
+      await delay();
       return randPeople();
-    } else {
-      try {
-        final response = await http.get(
-          Uri.parse(
-              '${getHostName()}$peopleEndpoint${peopleID ?? auth.profileID}/'),
-          headers: {
-            'Accept': 'application/json',
-            'Authorization': 'Token ${auth.tokenKey}',
-          },
-        );
-        final responseData = json.decode(response.body);
-        if (response.statusCode >= 400) {
-          throw HttpException(json.decode(response.body));
-        }
-        return PeopleModel.fromAPIResponse(responseData);
-      } catch (error) {
-        return null;
+    }
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '${getHostName()}$peopleEndpoint${peopleID ?? auth.profileID}/'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Token ${auth.tokenKey}',
+        },
+      );
+      final responseData = json.decode(response.body);
+      if (response.statusCode >= 400) {
+        throw HttpException(json.decode(response.body));
       }
+      return PeopleModel.fromAPIResponse(responseData);
+    } catch (error) {
+      return null;
     }
   }
 }

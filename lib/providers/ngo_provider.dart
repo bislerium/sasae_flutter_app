@@ -63,8 +63,8 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> fetchNGOs({bool isDemo = demo}) async {
-    await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
+      await delay();
       _randNGOs();
     } else {
       try {
@@ -197,7 +197,6 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> initFetchNGO({int? ngoID}) async {
-    await Future.delayed(const Duration(seconds: 1));
     _ngo = await fetchNGO(ngoID: ngoID, auth: _authP.auth!);
   }
 
@@ -214,6 +213,7 @@ class NGOProvider with ChangeNotifier {
     bool isDemo = demo,
   }) async {
     if (isDemo) {
+      await delay();
       return randNGO();
     } else {
       try {

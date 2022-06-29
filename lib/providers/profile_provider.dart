@@ -29,7 +29,6 @@ class ProfileProvider with ChangeNotifier {
   set setAuthP(AuthProvider authP) => _authP = authP;
 
   Future<void> initFetchUser({bool isDemo = demo}) async {
-    await Future.delayed(const Duration(milliseconds: 1200));
     switch (_authP.auth!.group) {
       case 'General':
         _user = await PeopleProvider.fetchPeople(
@@ -53,8 +52,8 @@ class ProfileProvider with ChangeNotifier {
 
   Future<void> intiFetchUserPosts(
       {int? userID, UserType? userType, isDemo = demo}) async {
-    await Future.delayed(const Duration(milliseconds: 800));
     if (isDemo) {
+      await delay();
       _userPosts = PostProvider.randPosts();
     } else {
       _userPosts = await fetchUserPosts(userID: userID, userType: userType);
@@ -101,14 +100,17 @@ class ProfileProvider with ChangeNotifier {
 
   Future<bool> deletePost({required int postID, bool isDemo = demo}) async {
     try {
-      if (!isDemo) {
-        await _dio.delete(
-          '$postEndpoint$postID/delete/',
-          options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
-          }),
-        );
+      if (isDemo) {
+        await delay();
+        return true;
       }
+      await _dio.delete(
+        '$postEndpoint$postID/delete/',
+        options: Options(headers: {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        }),
+      );
+
       _userPosts!.removeWhere((element) => element.id == postID);
       notifyListeners();
       return true;

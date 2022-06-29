@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
@@ -84,6 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
               onPressed: () async {
+                if (authP.isAuthenticating) return;
                 final isValid = _loginFormKey.currentState!.validate();
                 FocusScope.of(context).unfocus();
                 if (isValid) {
@@ -98,16 +100,20 @@ class _AuthScreenState extends State<AuthScreen> {
                   } else {
                     showSnackBar(
                       context: context,
-                      message: 'Unable to login!',
+                      message: 'Unable to login',
                       errorSnackBar: true,
                     );
                   }
                 }
               },
               child: authP.isAuthenticating
-                  ? const Padding(
-                      padding: EdgeInsets.all(7.0),
-                      child: CircularProgressIndicator(),
+                  ? Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: LoadingAnimationWidget.fallingDot(
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer,
+                        size: 46,
+                      ),
                     )
                   : Icon(
                       Icons.navigate_next_rounded,
@@ -257,13 +263,12 @@ class _AuthScreenState extends State<AuthScreen> {
                   bool success =
                       await Provider.of<AuthProvider>(context, listen: false)
                           .resetPassword(_resetEmailTEC.text);
-                  print(success);
+                  _resetEmailTEC.clear();
                   if (success) {
                     showSnackBar(
                       context: context,
-                      message: 'Password reset email sent, Check your inbox!',
+                      message: 'Password reset email sent',
                     );
-                    _resetEmailTEC.clear();
                   } else {
                     showSnackBar(
                       context: context,
@@ -297,9 +302,9 @@ class _AuthScreenState extends State<AuthScreen> {
           children: <Widget>[
             SizedBox(height: height * 0.20),
             _logo(),
-            const SizedBox(height: 50),
+            SizedBox(height: height * 0.05),
             _loginForm(),
-            const SizedBox(height: 20),
+            SizedBox(height: height * 0.025),
             Row(
               children: [
                 Expanded(
@@ -315,7 +320,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ],
             ),
-            SizedBox(height: height * 0.16),
+            SizedBox(height: height * 0.15),
             _createAccountLabel(),
           ],
         ),

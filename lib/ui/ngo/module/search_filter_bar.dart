@@ -61,6 +61,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               labelStyle: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               alignment: WrapAlignment.center,
             ),
           ),
@@ -93,7 +94,6 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   fit: FlexFit.tight,
                   flex: 10,
                   child: ElevatedButton(
-                    child: const Text('Apply'),
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
                     ),
@@ -104,6 +104,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                         Navigator.of(context).pop();
                       }
                     },
+                    child: const Text('Apply'),
                   ),
                 ),
               ],

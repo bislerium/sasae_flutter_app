@@ -14,7 +14,7 @@ class NGOCard extends StatelessWidget {
     return CustomCard(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        splashColor: Theme.of(context).colorScheme.primaryContainer,
+        splashColor: Theme.of(context).colorScheme.inversePrimary,
         onTap: () {
           Navigator.pushNamed(context, NGOProfileScreen.routeName,
               arguments: {'ngoID': ngo_.ngoID});
