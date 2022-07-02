@@ -43,32 +43,25 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   Future<void> showPasswordChangeModal() async {
     showModalSheet(
       ctx: context,
-      topPadding: 30,
+      topPadding: 40,
       bottomPadding: 20,
       leftPadding: 30,
       rightPadding: 30,
       children: [
         Text(
           'Change Password',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.onSurface,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(
-          height: 30,
+          height: 20,
         ),
         Text(
           'Enter your old and new password to proceed password change.',
-          style: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).colorScheme.onSurface,
-            // fontWeight: FontWeight.bold,
-          ),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.subtitle2,
         ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
         FormBuilder(
           key: _changeformKey,
@@ -176,7 +169,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           scrollable: true,
           backgroundColor: Theme.of(context).colorScheme.surface,
           elevation: 3,
-          title: const Text('Delete Account?'),
+          title: const Text('Delete Account'),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -205,7 +198,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   validator: FormBuilderValidators.compose(
                     [
                       FormBuilderValidators.required(),
-                      (value) => value != _ ? 'Incorrect value!' : null
+                      (value) => value != _ ? 'Incorrect value' : null
                     ],
                   ),
                   // decoration: const InputDecoration(border: InputBorder.none),
@@ -226,7 +219,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                     await SessionManager().remove('auth_data');
                     showSnackBar(
                         context: context,
-                        message: 'Account deleted successfully!');
+                        message: 'Account deleted successfully');
                     if (!mounted) return;
                     Navigator.of(context).pushNamedAndRemoveUntil(
                         AuthScreen.routeName, (Route<dynamic> route) => false);

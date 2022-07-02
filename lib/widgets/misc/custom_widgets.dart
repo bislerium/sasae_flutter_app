@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,46 +13,43 @@ import 'package:path_provider/path_provider.dart';
 import 'package:randexp/randexp.dart';
 import 'package:http/http.dart' as http;
 
+late Flushbar flushbar;
+
 void showSnackBar({
   required BuildContext context,
-  required String message,
-  Color? foreground,
-  Color? background,
+  String? message,
   bool errorSnackBar = false,
 }) {
+  assert((!errorSnackBar && (message != null)) || errorSnackBar);
   var onError = Theme.of(context).colorScheme.onError;
   var onInfo = Theme.of(context).colorScheme.onInverseSurface;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      action: SnackBarAction(
-        label: 'Dismiss',
-        textColor: errorSnackBar ? onError : onInfo,
-        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-      ),
-      // margin: const EdgeInsets.all(10),
-      // behavior: SnackBarBehavior.floating,
-      content: Row(
-        children: [
-          Icon(
-            errorSnackBar ? Icons.error_outline : Icons.info_outline,
-            color: errorSnackBar ? onError : onInfo,
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          Text(
-            message,
-            style: TextStyle(
-              color: foreground ??= errorSnackBar ? onError : onInfo,
-            ),
-          ),
-        ],
-      ),
-      backgroundColor: background ??= errorSnackBar
-          ? Theme.of(context).colorScheme.error
-          : Theme.of(context).colorScheme.inverseSurface,
+
+  flushbar = Flushbar(
+    icon: Icon(
+      errorSnackBar ? Icons.error_outline : Icons.info_outline,
+      color: errorSnackBar ? onError : onInfo,
     ),
-  );
+    margin: const EdgeInsets.all(12),
+    borderRadius: BorderRadius.circular(6),
+    message: message ?? 'Something went wrong',
+    // messageSize: 16,
+    messageColor: errorSnackBar ? onError : onInfo,
+    backgroundColor: errorSnackBar
+        ? Theme.of(context).colorScheme.error
+        : Theme.of(context).colorScheme.inverseSurface,
+    duration: const Duration(seconds: 6),
+    mainButton: TextButton(
+      onPressed: () => flushbar.dismiss(true),
+      child: Text(
+        "Dismiss",
+        style: TextStyle(
+          color: errorSnackBar ? onError : onInfo,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+    animationDuration: const Duration(milliseconds: 600),
+  )..show(context);
 }
 
 Future<void> showModalSheet({

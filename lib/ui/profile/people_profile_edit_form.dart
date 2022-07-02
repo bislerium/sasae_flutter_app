@@ -90,7 +90,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
           icon: Icon(Icons.cake_rounded),
         ),
         initialValue: widget.peopleUpdate.getBirthDate,
-        firstDate: DateTime.now().subtract(const Duration(days: 365 * 100)),
+        firstDate: DateTime.now().subtract(const Duration(days: 365 * 122)),
         lastDate: DateTime.now().subtract(const Duration(days: 365 * 16)),
         validator: FormBuilderValidators.compose(
           [

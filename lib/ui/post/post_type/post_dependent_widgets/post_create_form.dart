@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -270,14 +271,11 @@ class _PostCreateFormState extends State<PostCreateForm> {
           break;
       }
       if (success) {
-        showSnackBar(context: context, message: 'Successfully posted');
         if (!mounted) return;
         Navigator.of(context).pop();
+        showSnackBar(context: context, message: 'Successfully posted');
       } else {
-        showSnackBar(
-            context: context,
-            message: 'Something went wrong',
-            errorSnackBar: true);
+        showSnackBar(context: context, errorSnackBar: true);
       }
     }
   }

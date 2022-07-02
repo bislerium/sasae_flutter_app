@@ -115,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           labelText: 'Birthdate',
           icon: Icon(Icons.calendar_today_rounded),
         ),
-        firstDate: DateTime.now().subtract(const Duration(days: 365 * 100)),
+        firstDate: DateTime.now().subtract(const Duration(days: 365 * 122)),
         currentDate: DateTime.now(),
         validator: FormBuilderValidators.compose(
           [
@@ -197,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           [
             FormBuilderValidators.required(),
             FormBuilderValidators.match(r'(^[9][678][0-9]{8}$)',
-                errorText: 'Must be valid number.'),
+                errorText: 'Must be valid number'),
           ],
         ),
         keyboardType: TextInputType.phone,
@@ -244,7 +244,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             FormBuilderValidators.required(),
             FormBuilderValidators.maxLength(15),
             (value) =>
-                value!.contains(' ') ? 'Username must be spaceless!' : null
+                value!.contains(' ') ? 'Username must be spaceless' : null
           ],
         ),
         maxLength: 15,
@@ -264,7 +264,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           [
             FormBuilderValidators.required(),
             FormBuilderValidators.minLength(8,
-                errorText: 'Password must be 8 to 20 characters long.'),
+                errorText: 'Password must be 8 to 20 characters long'),
             FormBuilderValidators.maxLength(20),
           ],
         ),
@@ -282,7 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           [
             FormBuilderValidators.required(),
             (value) =>
-                (_passwordTEC.text != value) ? 'Passwords did not match!' : null
+                (_passwordTEC.text != value) ? 'Passwords did not match' : null
           ],
         ),
         keyboardType: TextInputType.visiblePassword,
@@ -370,7 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           isActive: _currentStep >= 2,
           title: const Text('Contact'),
           subtitle: const Text(
-              'Email is not only used to contact\n but also to secure your account.'),
+              'Email is not only used to contact but also to secure your account.'),
           content: FormBuilder(
             key: _contactFormKey,
             child: Column(
@@ -502,7 +502,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               } else {
                 showSnackBar(
                   context: context,
-                  message: 'Something went wrong',
                   errorSnackBar: true,
                 );
               }

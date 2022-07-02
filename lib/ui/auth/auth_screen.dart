@@ -272,7 +272,6 @@ class _AuthScreenState extends State<AuthScreen> {
                   } else {
                     showSnackBar(
                       context: context,
-                      message: 'Something went wrong!',
                       errorSnackBar: true,
                     );
                   }

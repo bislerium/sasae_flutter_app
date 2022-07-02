@@ -38,7 +38,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           child: Text(
             'Filter by Field of Work',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headline6,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
         ),
         Container(

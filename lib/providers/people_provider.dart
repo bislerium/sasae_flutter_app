@@ -29,7 +29,11 @@ class PeopleProvider with ChangeNotifier {
       username: faker.person.firstName(),
       fullname: faker.person.name(),
       gender: faker.randomGenerator.element(['Male', 'Female', 'LGBTQ+']),
-      birthDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
+      birthDate: faker.date.dateTime(
+          minYear:
+              DateTime.now().subtract(const Duration(days: 365 * 122)).year,
+          maxYear:
+              DateTime.now().subtract(const Duration(days: 365 * 16)).year),
       address: faker.address.streetAddress(),
       phone: faker.phoneNumber.us(),
       email: faker.internet.email(),
@@ -115,7 +119,11 @@ class PeopleProvider with ChangeNotifier {
       PeopleUpdateModel()
         ..setFullname = faker.person.name()
         ..setAddress = faker.address.city()
-        ..setBirthDate = faker.date.dateTime(minYear: 2000, maxYear: 2025)
+        ..setBirthDate = faker.date.dateTime(
+            minYear:
+                DateTime.now().subtract(const Duration(days: 365 * 122)).year,
+            maxYear:
+                DateTime.now().subtract(const Duration(days: 365 * 16)).year)
         ..setDisplayPicture =
             await imageURLToXFile(faker.image.image(random: true))
         ..setGender =

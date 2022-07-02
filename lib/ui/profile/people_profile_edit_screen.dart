@@ -22,13 +22,15 @@ class PeopleProfileEditScreen extends StatefulWidget {
 }
 
 class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
+  bool _isLoading;
   final ScrollController _scrollController;
   final GlobalKey<FormBuilderState> _formKey;
   late final PeopleProvider peopleP;
   late final Future<void> _fetchPeopleUpdateFUTURE;
 
   _PeopleProfileEditScreenState()
-      : _scrollController = ScrollController(),
+      : _isLoading = false,
+        _scrollController = ScrollController(),
         _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -73,12 +75,13 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
         builder: (context, peopleP, child) => peopleP.getPeopleUpdate == null
             ? const SizedBox.shrink()
             : CustomScrollAnimatedFAB(
-                text: 'Done',
+                text: !_isLoading ? 'Done' : '',
                 background: Theme.of(context).colorScheme.primary,
                 icon: Icons.done_rounded,
                 func: () async {
                   bool validForm = _formKey.currentState!.validate();
                   if (validForm) {
+                    if (_isLoading) return;
                     showCustomDialog(
                       context: context,
                       title: 'Confirm Update',
@@ -86,11 +89,13 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                           'Don\'t forget to refresh your profile page, once updated.',
                       okFunc: () async {
                         _formKey.currentState!.save();
-                        Navigator.of(context)
-                          ..pop()
-                          ..pop();
+                        Navigator.of(context).pop();
+                        setState(() => _isLoading = true);
                         bool success = await peopleP.updatePeople();
-                        if (success) {
+                        setState(() => _isLoading = false);
+                        if (!success) {
+                          if (!mounted) return;
+                          Navigator.of(context).pop();
                           showSnackBar(
                               context: context, message: 'profile updated');
                         } else {
