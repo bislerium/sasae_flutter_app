@@ -1,22 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 
 class CustomScrollAnimatedFAB extends StatefulWidget {
-  final String text;
-  final IconData icon;
-  final VoidCallback? func;
-  final Color? background;
-  final Color? foreground;
+  final Widget child;
   final ScrollController? scrollController;
 
   const CustomScrollAnimatedFAB({
     Key? key,
-    required this.text,
-    required this.icon,
-    required this.func,
-    this.background,
-    this.foreground,
+    required this.child,
     this.scrollController,
   }) : super(key: key);
 
@@ -63,16 +54,7 @@ class _CustomScrollAnimatedFABState extends State<CustomScrollAnimatedFAB> {
     return AnimatedSlide(
       duration: const Duration(milliseconds: 200),
       offset: showFAB ? Offset.zero : const Offset(0, 2),
-      child: SizedBox(
-        height: 60,
-        child: CustomFAB(
-          func: widget.func,
-          text: widget.text,
-          icon: widget.icon,
-          background: widget.background,
-          foreground: widget.foreground,
-        ),
-      ),
+      child: widget.child,
     );
   }
 }

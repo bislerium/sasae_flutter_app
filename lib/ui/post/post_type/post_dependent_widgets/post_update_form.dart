@@ -25,7 +25,7 @@ class PostUpdateForm extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PostUpdateFormState createState() => _PostUpdateFormState();
+  State<PostUpdateForm> createState() => _PostUpdateFormState();
 }
 
 class _PostUpdateFormState extends State<PostUpdateForm> {
@@ -71,11 +71,10 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
   }
 
   Future<void> postHandler() async {
-    bool isOtherPostFormValid = false;
-    bool success = false;
+    if (!_superPostKey.currentState!.validate()) return;
+    bool isOtherPostFormValid, success = false;
     var postUpdateP = Provider.of<PostUpdateProvider>(context, listen: false);
     var postType = postUpdateP.getUpdatePostType;
-    bool isSuperPostFormValid = _superPostKey.currentState!.validate();
     switch (postType!) {
       case PostType.normal:
         isOtherPostFormValid = _normalFormKey.currentState!.validate();
@@ -90,16 +89,18 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         if (isOtherPostFormValid) _requestFormKey.currentState!.save();
         break;
     }
-    if (isSuperPostFormValid && isOtherPostFormValid) {
-      showSnackBar(context: context, message: 'Successfully updated.');
-      Navigator.of(context).pop();
+    if (isOtherPostFormValid) {
       _superPostKey.currentState!.save();
       success = await postUpdateP.updatePost(
           postID: _postHead.getPostID, postType: postType);
-      if (!success) {
+      if (success) {
+        if (!mounted) return;
+        Navigator.of(context).pop();
+        showSnackBar(context: context, message: 'Post updated');
+      } else {
         showSnackBar(
             context: context,
-            message: 'Something went wrong.',
+            message: 'Something went wrong',
             errorSnackBar: true);
       }
     }

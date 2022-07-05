@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
+import 'package:sasae_flutter_app/ui/profile/profile_update_button.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_form.dart';
 
@@ -71,45 +70,9 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                   ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Consumer<PeopleProvider>(
-        builder: (context, peopleP, child) => peopleP.getPeopleUpdate == null
-            ? const SizedBox.shrink()
-            : CustomScrollAnimatedFAB(
-                text: !_isLoading ? 'Done' : '',
-                background: Theme.of(context).colorScheme.primary,
-                icon: Icons.done_rounded,
-                func: () async {
-                  bool validForm = _formKey.currentState!.validate();
-                  if (validForm) {
-                    if (_isLoading) return;
-                    showCustomDialog(
-                      context: context,
-                      title: 'Confirm Update',
-                      content:
-                          'Don\'t forget to refresh your profile page, once updated.',
-                      okFunc: () async {
-                        _formKey.currentState!.save();
-                        Navigator.of(context).pop();
-                        setState(() => _isLoading = true);
-                        bool success = await peopleP.updatePeople();
-                        setState(() => _isLoading = false);
-                        if (!success) {
-                          if (!mounted) return;
-                          Navigator.of(context).pop();
-                          showSnackBar(
-                              context: context, message: 'profile updated');
-                        } else {
-                          showSnackBar(
-                              context: context,
-                              message: 'Something went wrong',
-                              errorSnackBar: true);
-                        }
-                      },
-                    );
-                  }
-                },
-                scrollController: _scrollController,
-              ),
+      floatingActionButton: ProfileUpdateButton(
+        formKey: _formKey,
+        scrollController: _scrollController,
       ),
     );
   }

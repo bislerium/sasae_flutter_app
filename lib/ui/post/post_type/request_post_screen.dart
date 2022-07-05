@@ -19,7 +19,7 @@ class RequestPostScreen extends StatefulWidget {
   const RequestPostScreen({Key? key, required this.postID}) : super(key: key);
 
   @override
-  _RequestPostScreenState createState() => _RequestPostScreenState();
+  State<RequestPostScreen> createState() => _RequestPostScreenState();
 }
 
 class _RequestPostScreenState extends State<RequestPostScreen> {
@@ -126,7 +126,6 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         builder: (context, postP, child) => postP.requestPostData == null
             ? const SizedBox.shrink()
             : RequestFAB(
-                key: ValueKey(postP.requestPostData!.id),
                 postID: postP.requestPostData!.id,
                 isRequestConsidered: postP.requestPostData!.isParticipated,
                 requestType: postP.requestPostData!.requestType,

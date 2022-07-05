@@ -3,7 +3,7 @@ import 'package:faker/faker.dart';
 const bool demo = true;
 const Duration timeOutDuration = Duration(seconds: 10);
 
-Future<dynamic> delay({int min = 1, int max = 4, bool random = true}) =>
+Future<dynamic> delay({int min = 1, int max = 4, bool random = false}) =>
     Future.delayed(Duration(
         seconds: random ? faker.randomGenerator.integer(max, min: min) : min));
 

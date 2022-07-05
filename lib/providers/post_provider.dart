@@ -91,14 +91,19 @@ class PostProvider with ChangeNotifier {
     await intiFetchPosts();
   }
 
-  Future<bool> report({required int postID}) async {
+  Future<bool> report({required int postID, bool isDemo = demo}) async {
     try {
-      await _dio.post(
-        '$postEndpoint$postID/report/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
+      if (isDemo) {
+        await delay();
+      } else {
+        await _dio.post(
+          '$postEndpoint$postID/report/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
+      }
+
       return true;
     } on DioError catch (e) {
       print(e.response?.data);
@@ -280,40 +285,40 @@ class PostCreateProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
-      }
-      var headers = {
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        'Content-Type': 'application/json',
-      };
-      var request = http.Request(
-        'POST',
-        Uri.parse('${getHostName()}$postPollPostEndpoint'),
-      );
-      request.body = json.encode({
-        "poll_post": {
-          "option": _pollPostCreate.getPollOptions,
-          "ends_on": _pollPostCreate.getPollDuration == null
-              ? null
-              : Jiffy(_pollPostCreate.getPollDuration)
-                  .format("yyyy-MM-dd'T'HH:mm:ss"),
-        },
-        "post_head": {
-          "related_to": _pollPostCreate.getRelatedTo,
-          "post_content": _pollPostCreate.getPostContent,
-          "is_anonymous": _pollPostCreate.getIsAnonymous
-        },
-        "poked_to": _pollPostCreate.getPokedNGO
-      });
-      request.headers.addAll(headers);
+      } else {
+        var headers = {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Content-Type': 'application/json',
+        };
+        var request = http.Request(
+          'POST',
+          Uri.parse('${getHostName()}$postPollPostEndpoint'),
+        );
+        request.body = json.encode({
+          "poll_post": {
+            "option": _pollPostCreate.getPollOptions,
+            "ends_on": _pollPostCreate.getPollDuration == null
+                ? null
+                : Jiffy(_pollPostCreate.getPollDuration)
+                    .format("yyyy-MM-dd'T'HH:mm:ss"),
+          },
+          "post_head": {
+            "related_to": _pollPostCreate.getRelatedTo,
+            "post_content": _pollPostCreate.getPostContent,
+            "is_anonymous": _pollPostCreate.getIsAnonymous
+          },
+          "poked_to": _pollPostCreate.getPokedNGO
+        });
+        request.headers.addAll(headers);
 
-      http.StreamedResponse response =
-          await request.send().timeout(timeOutDuration);
+        http.StreamedResponse response =
+            await request.send().timeout(timeOutDuration);
 
-      var jsonResponse = jsonDecode(await response.stream.bytesToString());
+        var jsonResponse = jsonDecode(await response.stream.bytesToString());
 
-      if (response.statusCode >= 400) {
-        throw HttpException(jsonResponse);
+        if (response.statusCode >= 400) {
+          throw HttpException(jsonResponse);
+        }
       }
       return true;
     } catch (error) {
@@ -326,44 +331,45 @@ class PostCreateProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
+      } else {
+        var headers = {
+          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Content-Type': 'application/json',
+        };
+        var request = http.Request(
+          'POST',
+          Uri.parse('${getHostName()}$postRequestPostEndpoint'),
+        );
+        request.body = json.encode({
+          "request_post": {
+            "min": _requestPostCreate.getMin,
+            "max": _requestPostCreate.getMax,
+            "target": _requestPostCreate.getTarget,
+            "ends_on": _requestPostCreate.getRequestDuration == null
+                ? null
+                : Jiffy(_requestPostCreate.getRequestDuration)
+                    .format("yyyy-MM-dd'T'HH:mm:ss"),
+            "request_type": _requestPostCreate.getRequestType
+          },
+          "post_head": {
+            "related_to": _requestPostCreate.getRelatedTo,
+            "post_content": _requestPostCreate.getPostContent,
+            "is_anonymous": _requestPostCreate.getIsAnonymous
+          },
+          "poked_to": _requestPostCreate.getPokedNGO
+        });
+        request.headers.addAll(headers);
+
+        http.StreamedResponse response =
+            await request.send().timeout(timeOutDuration);
+
+        var jsonResponse = jsonDecode(await response.stream.bytesToString());
+
+        if (response.statusCode >= 400) {
+          throw HttpException(jsonResponse);
+        }
       }
-      var headers = {
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        'Content-Type': 'application/json',
-      };
-      var request = http.Request(
-        'POST',
-        Uri.parse('${getHostName()}$postRequestPostEndpoint'),
-      );
-      request.body = json.encode({
-        "request_post": {
-          "min": _requestPostCreate.getMin,
-          "max": _requestPostCreate.getMax,
-          "target": _requestPostCreate.getTarget,
-          "ends_on": _requestPostCreate.getRequestDuration == null
-              ? null
-              : Jiffy(_requestPostCreate.getRequestDuration)
-                  .format("yyyy-MM-dd'T'HH:mm:ss"),
-          "request_type": _requestPostCreate.getRequestType
-        },
-        "post_head": {
-          "related_to": _requestPostCreate.getRelatedTo,
-          "post_content": _requestPostCreate.getPostContent,
-          "is_anonymous": _requestPostCreate.getIsAnonymous
-        },
-        "poked_to": _requestPostCreate.getPokedNGO
-      });
-      request.headers.addAll(headers);
 
-      http.StreamedResponse response =
-          await request.send().timeout(timeOutDuration);
-
-      var jsonResponse = jsonDecode(await response.stream.bytesToString());
-
-      if (response.statusCode >= 400) {
-        throw HttpException(jsonResponse);
-      }
       return true;
     } catch (error) {
       print(error);
@@ -660,22 +666,22 @@ class NormalPostProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
+      } else {
+        late String uri;
+        switch (type) {
+          case NormalPostReactionType.upVote:
+            uri = '$postEndpoint${_normalPost!.id}/upvote/';
+            break;
+          case NormalPostReactionType.downVote:
+            uri = '$postEndpoint${_normalPost!.id}/downvote/';
+        }
+        await _dio.post(
+          uri,
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
       }
-      late String uri;
-      switch (type) {
-        case NormalPostReactionType.upVote:
-          uri = '$postEndpoint${_normalPost!.id}/upvote/';
-          break;
-        case NormalPostReactionType.downVote:
-          uri = '$postEndpoint${_normalPost!.id}/downvote/';
-      }
-      await _dio.post(
-        uri,
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
 
       return true;
     } on DioError catch (e) {
@@ -784,14 +790,14 @@ class PollPostProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
+      } else {
+        await _dio.post(
+          '$postEndpoint${_pollPost!.id}/poll/$optionID/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
       }
-      await _dio.post(
-        '$postEndpoint${_pollPost!.id}/poll/$optionID/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
 
       return true;
     } on DioError catch (e) {
@@ -897,14 +903,14 @@ class RequestPostProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
+      } else {
+        await _dio.post(
+          '$postEndpoint${_requestPost!.id}/participate/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
       }
-      await _dio.post(
-        '$postEndpoint${_requestPost!.id}/participate/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
       _requestPost!.reaction.add(_authP.auth!.profileID);
       _requestPost!.isParticipated = true;
 

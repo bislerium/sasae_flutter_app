@@ -4,6 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -100,12 +101,6 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                   constraints: const BoxConstraints.tightFor(
                       height: 60, width: double.infinity),
                   child: ElevatedButton(
-                    child: const Text(
-                      'Donate with Khalti',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
                     onPressed: () {
                       final isValid = _donationFormKey.currentState!.validate();
                       if (isValid) {
@@ -151,6 +146,12 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),
                     ),
+                    child: const Text(
+                      'Donate with Khalti',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 )
               ],
@@ -163,17 +164,17 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   Widget build(BuildContext context) {
     return Consumer<NGOProvider>(
       builder: (context, ngoP, child) => CustomScrollAnimatedFAB(
-        text: 'Donate',
-        icon: Icons.hail_rounded,
-        background: Theme.of(context).colorScheme.primary,
-        foreground: Theme.of(context).colorScheme.onPrimary,
-        func: () {
-          showDonationModalSheet(
-            ngoP.getNGO!.epayAccount!,
-            ngoP.getNGO!.orgName,
-          );
-        },
         scrollController: widget.scrollController,
+        child: CustomFAB(
+          text: 'Donate',
+          icon: Icons.hail_rounded,
+          func: () {
+            showDonationModalSheet(
+              ngoP.getNGO!.epayAccount!,
+              ngoP.getNGO!.orgName,
+            );
+          },
+        ),
       ),
     );
   }
