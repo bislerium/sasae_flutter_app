@@ -11,44 +11,49 @@ class DissmissableTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(item),
-      direction: DismissDirection.startToEnd,
-      background: Container(
-        decoration: BoxDecoration(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Dismissible(
+        key: Key(item),
+        direction: DismissDirection.startToEnd,
+        background: Container(
           color: Theme.of(context).colorScheme.error,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Text(
-              'Remove',
-              style: TextStyle(
+          child: Row(
+            children: [
+              const SizedBox(
+                width: 14,
+              ),
+              Icon(
+                Icons.delete,
                 color: Theme.of(context).colorScheme.onError,
               ),
-            ),
+              const SizedBox(
+                width: 6,
+              ),
+              Text(
+                'Remove',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onError,
+                ),
+              ),
+            ],
           ),
         ),
-      ),
-      onDismissed: (direction) {
-        removeHandler(item);
-        showSnackBar(context: context, message: 'Item: $item removed!');
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
+        onDismissed: (direction) {
+          removeHandler(item);
+          showSnackBar(context: context, message: '$item removed');
+        },
+        child: Container(
+          width: double.infinity,
           color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-        padding: const EdgeInsets.all(10),
-        height: 50,
-        child: Center(
-          child: Text(
-            item,
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+          padding: const EdgeInsets.all(10),
+          height: 54,
+          child: Center(
+            child: Text(
+              item,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
           ),
         ),

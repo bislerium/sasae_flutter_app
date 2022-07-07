@@ -52,12 +52,12 @@ class DonationFABProvider with ChangeNotifier {
   set setNGOVerified(bool ngoVerified) => _ngoVerified = ngoVerified;
 
   set setShowFAB(bool show) {
-    if (_showFAB != show) {
-      if (_tabIndex == 1 || _ngoVerified == false) {
-        _showFAB = false;
-      } else {
-        _showFAB = show;
-      }
+    var value = show;
+    if (_tabIndex == 1 || _ngoVerified == false) {
+      value = false;
+    }
+    if (_showFAB != value) {
+      _showFAB = value;
       notifyListeners();
     }
   }

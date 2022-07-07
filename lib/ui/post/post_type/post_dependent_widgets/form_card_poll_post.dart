@@ -18,7 +18,7 @@ class FormCardPollPost extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _FormCardPollPostState createState() => _FormCardPollPostState();
+  State<FormCardPollPost> createState() => _FormCardPollPostState();
 }
 
 class _FormCardPollPostState extends State<FormCardPollPost>

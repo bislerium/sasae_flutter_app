@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -44,10 +45,15 @@ class _NGOInfoTabState extends State<NGOInfoTab>
     );
     var data = _ngoP.getNGO;
     if (data != null) {
+      if (!mounted) return;
       _donationFABP = Provider.of<DonationFABProvider>(context, listen: false);
-      _donationFABP.setNGOVerified = data.isVerified;
-      _donationFABP.setShowFAB = true;
+      setDonationFAB(data);
     }
+  }
+
+  void setDonationFAB(NGOModel data) {
+    _donationFABP.setNGOVerified = data.isVerified;
+    _donationFABP.setShowFAB = true;
   }
 
   @override
@@ -60,12 +66,19 @@ class _NGOInfoTabState extends State<NGOInfoTab>
               ? const CustomLoading()
               : Consumer<NGOProvider>(
                   builder: (context, ngoP, child) => RefreshIndicator(
-                    onRefresh: () => ngoP.refreshNGO(ngoID: widget.ngoID),
+                    onRefresh: () async {
+                      await ngoP.refreshNGO(ngoID: widget.ngoID);
+                      var data = _ngoP.getNGO;
+                      if (data != null) setDonationFAB(data);
+                    },
                     child: ngoP.getNGO == null
                         ? const ErrorView()
                         : ListView(
                             controller: widget.scrollController,
                             children: [
+                              const SizedBox(
+                                height: 40.0,
+                              ),
                               NGOProfile(
                                 ngoData: ngoP.getNGO!,
                               ),

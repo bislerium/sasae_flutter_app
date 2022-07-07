@@ -35,127 +35,121 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   void showDonationModalSheet(String epayAccount, String donationTo) =>
       showModalSheet(
         ctx: context,
+        topPadding: 40,
+        bottomPadding: 20,
+        leftPadding: 30,
+        rightPadding: 30,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Text(
-              'NGO Donation',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+          Text(
+            'Donate to an NGO',
+            style: Theme.of(context).textTheme.titleLarge,
           ),
-          Padding(
-            padding:
-                const EdgeInsets.only(right: 10, left: 10, top: 12, bottom: 5),
-            child: RichText(
-              textAlign: TextAlign.justify,
-              text: TextSpan(
-                  text:
-                      'Making a donation is the ultimate sign of solidarity. Actions speak louder than words.',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontSize: 15,
+          const SizedBox(
+            height: 20,
+          ),
+          RichText(
+            textAlign: TextAlign.justify,
+            text: TextSpan(
+                text:
+                    'Making a donation is the ultimate sign of solidarity. Actions speak louder than words.',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                children: [
+                  TextSpan(
+                    text: '- Ibrahim Hooper',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      height: 1.6,
+                    ),
+                  )
+                ]),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Column(
+            children: [
+              FormBuilder(
+                key: _donationFormKey,
+                child: FormBuilderTextField(
+                  name: 'donationAmount',
+                  controller: _amountTEC,
+                  decoration: const InputDecoration(
+                    prefixIcon: Icon(Icons.money_rounded),
+                    labelText: 'Amount',
                   ),
-                  children: [
-                    TextSpan(
-                      text: '\n- Ibrahim Hooper',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        height: 1.6,
-                      ),
-                    )
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.integer(),
+                    FormBuilderValidators.min(10),
+                    FormBuilderValidators.max(100000),
                   ]),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: Column(
-              children: [
-                FormBuilder(
-                  key: _donationFormKey,
-                  child: FormBuilderTextField(
-                    name: 'donationAmount',
-                    controller: _amountTEC,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.money_rounded),
-                      labelText: 'Amount',
+                  keyboardType: TextInputType.number,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ConstrainedBox(
+                constraints: const BoxConstraints.tightFor(
+                    height: 60, width: double.infinity),
+                child: ElevatedButton(
+                  onPressed: () {
+                    final isValid = _donationFormKey.currentState!.validate();
+                    if (isValid) {
+                      KhaltiScope.of(context)
+                          .pay(
+                        config: PaymentConfig(
+                          amount: int.parse(_amountTEC.text) * 100,
+                          productIdentity: 'dells-sssssg5-g5510-2021',
+                          productName: 'NGO Donation: $donationTo',
+                          // mobile: epayAccount,
+                          // mobileReadOnly: true,
+                        ),
+                        preferences: [
+                          // Not providing this will enable all the payment methods.
+                          PaymentPreference.khalti,
+                          PaymentPreference.connectIPS,
+                          PaymentPreference.mobileBanking,
+                        ],
+                        onSuccess: (su) {
+                          showSnackBar(
+                            context: context,
+                            message: 'Donation Successful',
+                          );
+                        },
+                        onFailure: (fa) {
+                          showSnackBar(
+                            context: context,
+                            message: 'Donation Failed',
+                          );
+                        },
+                        onCancel: () {
+                          showSnackBar(
+                              context: context, message: 'Donation Cancelled');
+                        },
+                      )
+                          .then((value) {
+                        Navigator.of(context).pop();
+                        _amountTEC.clear();
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                  ),
+                  child: const Text(
+                    'Donate with Khalti',
+                    style: TextStyle(
+                      fontSize: 16,
                     ),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                      FormBuilderValidators.integer(),
-                      FormBuilderValidators.min(10),
-                      FormBuilderValidators.max(100000),
-                    ]),
-                    keyboardType: TextInputType.number,
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                ConstrainedBox(
-                  constraints: const BoxConstraints.tightFor(
-                      height: 60, width: double.infinity),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final isValid = _donationFormKey.currentState!.validate();
-                      if (isValid) {
-                        KhaltiScope.of(context)
-                            .pay(
-                          config: PaymentConfig(
-                            amount: int.parse(_amountTEC.text) * 100,
-                            productIdentity: 'dells-sssssg5-g5510-2021',
-                            productName: 'NGO Donation: $donationTo',
-                            // mobile: epayAccount,
-                            // mobileReadOnly: true,
-                          ),
-                          preferences: [
-                            // Not providing this will enable all the payment methods.
-                            PaymentPreference.khalti,
-                            PaymentPreference.connectIPS,
-                            PaymentPreference.mobileBanking,
-                          ],
-                          onSuccess: (su) {
-                            showSnackBar(
-                              context: context,
-                              message: 'Donation Successful',
-                            );
-                          },
-                          onFailure: (fa) {
-                            showSnackBar(
-                              context: context,
-                              message: 'Donation Failed',
-                            );
-                          },
-                          onCancel: () {
-                            showSnackBar(
-                                context: context,
-                                message: 'Donation Cancelled');
-                          },
-                        )
-                            .then((value) {
-                          Navigator.of(context).pop();
-                          _amountTEC.clear();
-                        });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                    ),
-                    child: const Text(
-                      'Donate with Khalti',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ],
       );
