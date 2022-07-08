@@ -22,6 +22,7 @@ class ImageViewScreen extends StatelessWidget {
         backgroundDecoration: BoxDecoration(
           color: Theme.of(context).colorScheme.background,
         ),
+        enableRotation: true,
       ),
     );
   }

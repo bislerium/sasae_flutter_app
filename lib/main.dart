@@ -1,8 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +18,6 @@ import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
-import 'package:sasae_flutter_app/scheme/color_schemes.dart';
 import 'package:sasae_flutter_app/scheme/font_scheme.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
@@ -29,6 +30,7 @@ import 'package:sasae_flutter_app/ui/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 AdaptiveThemeMode? deviceThemeMode = AdaptiveThemeMode.system;
 
@@ -36,7 +38,7 @@ void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
-  deviceThemeMode = await AdaptiveTheme.getThemeMode();
+  AdaptiveThemeMode? deviceThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
     MyApp(
       savedThemeMode: deviceThemeMode,
@@ -219,16 +221,43 @@ class _MyAppState extends State<MyApp> {
         return MultiProvider(
           providers: _providers(),
           child: AdaptiveTheme(
-            light: ThemeData(
-              colorScheme: lightColorScheme,
-              textTheme: textTheme,
+            light: FlexThemeData.light(
+              scheme: FlexScheme.materialBaseline,
+              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+              blendLevel: 20,
+              appBarOpacity: 0.95,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 20,
+                blendOnColors: false,
+                inputDecoratorIsFilled: false,
+                inputDecoratorBorderType: FlexInputBorderType.underline,
+              ),
+              useMaterial3ErrorColors: true,
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              useMaterial3: true,
+              // To use the playground font, add GoogleFonts package and uncomment
+              // fontFamily: GoogleFonts.notoSans().fontFamily,
             ),
-            dark: ThemeData(
-              colorScheme: darkColorScheme,
-              textTheme: textTheme,
+            dark: FlexThemeData.dark(
+              scheme: FlexScheme.materialBaseline,
+              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+              blendLevel: 15,
+              appBarStyle: FlexAppBarStyle.background,
+              appBarOpacity: 0.90,
+              // darkIsTrueBlack: true,
+              subThemesData: const FlexSubThemesData(
+                blendOnLevel: 30,
+                inputDecoratorIsFilled: false,
+                inputDecoratorBorderType: FlexInputBorderType.underline,
+              ),
+              useMaterial3ErrorColors: true,
+              visualDensity: FlexColorScheme.comfortablePlatformDensity,
+              useMaterial3: true,
+              // To use the playground font, add GoogleFonts package and uncomment
+              // fontFamily: GoogleFonts.notoSans().fontFamily,
             ),
             initial: widget.savedThemeMode ?? AdaptiveThemeMode.system,
-            builder: (theme, darkTheme) => MaterialApp(
+            builder: (theme, darkTheme) => (MaterialApp(
               debugShowCheckedModeBanner: false,
               navigatorKey: navigatorKey,
               supportedLocales: const [
@@ -242,9 +271,22 @@ class _MyAppState extends State<MyApp> {
               theme: theme,
               darkTheme: darkTheme,
               title: 'Sasae',
-              home: const PageRouter(),
+              home: AnnotatedRegion<SystemUiOverlayStyle>(
+                value: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  systemNavigationBarColor:
+                      deviceThemeMode!.isLight ? Colors.white : Colors.black,
+                  statusBarIconBrightness: deviceThemeMode!.isLight
+                      ? Brightness.dark
+                      : Brightness.light,
+                  systemNavigationBarIconBrightness: deviceThemeMode!.isLight
+                      ? Brightness.dark
+                      : Brightness.light,
+                ),
+                child: PageRouter(),
+              ),
               onGenerateRoute: (settings) => _screenRoutes(settings),
-            ),
+            )),
           ),
         );
       },

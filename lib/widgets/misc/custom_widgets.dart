@@ -3,6 +3,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:another_flushbar/flushbar.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -218,12 +219,6 @@ Widget getWrappedChips(
           .toList(),
     );
 
-Future<XFile> imageURLToXFile(String imageURL) async {
-  Directory tempDir = await getTemporaryDirectory();
-  File file = File(tempDir.path + Guid(random).guid() + extension(imageURL));
-  http.Response response = await http.get(Uri.parse(imageURL));
-  await file.writeAsBytes(response.bodyBytes);
-  return XFile(
-    file.path,
-  );
-}
+Future<XFile> imageURLToXFile(String imageURL) async => XFile(
+      (await DefaultCacheManager().getSingleFile(imageURL)).path,
+    );
