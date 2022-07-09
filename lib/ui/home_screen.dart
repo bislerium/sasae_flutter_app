@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage>
         int id =
             Provider.of<AuthProvider>(context, listen: false).auth!.accountID;
         if (id != int.parse(additionalData['account_id'])) return;
-        NotificationModel _ = NotificationModel(
+        NotificationModel notificationModel = NotificationModel(
             id: notification.hashCode,
             title: notification.title!,
             body: notification.body!,
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage>
                 ? null
                 : int.parse(additionalData['post_id']));
         Provider.of<NotificationProvider>(context, listen: false)
-            .addNotification(_);
+            .addNotification(notificationModel);
         NotificationService.getInstance().notify(notification);
       }
     });
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage>
             ],
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: _pageNavigatorP.getPageIndex == 0 &&
                 Provider.of<ProfileSettingFABProvider>(context).getShowFAB
             ? CustomFAB(
@@ -97,15 +97,17 @@ class _HomePageState extends State<HomePage>
                 icon: Icons.edit_rounded,
                 func: Provider.of<ProfileSettingFABProvider>(context)
                     .getOnPressedHandler,
+                tooltip: 'Update Profile',
               )
             : _pageNavigatorP.getPageIndex == 2 &&
                     Provider.of<PostFABProvider>(context).getShowFAB
                 ? CustomFAB(
                     key: const Key('postFAB'),
                     text: 'Post',
-                    icon: Icons.post_add,
+                    icon: Icons.add,
                     func: Provider.of<PostFABProvider>(context)
                         .getOnPressedHandler,
+                    tooltip: 'Post a Post',
                   )
                 : _pageNavigatorP.getPageIndex == 4
                     ? CustomFAB(
@@ -116,61 +118,48 @@ class _HomePageState extends State<HomePage>
                             .getOnPressedHandler,
                         foreground: Theme.of(context).colorScheme.onError,
                         background: Theme.of(context).colorScheme.error,
+                        tooltip: 'Logout',
                       )
                     : null,
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: Theme.of(context).colorScheme.secondaryContainer,
-            iconTheme: MaterialStateProperty.all(
-              IconThemeData(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
+        bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: const [
+            NavigationDestination(
+              key: Key('profileNB'),
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: 'Profile',
             ),
-            labelTextStyle: MaterialStateProperty.all(
-              TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            NavigationDestination(
+              key: Key('ngoNB'),
+              icon: Icon(Icons.health_and_safety_outlined),
+              selectedIcon: Icon(Icons.health_and_safety),
+              label: 'NGO',
             ),
-          ),
-          child: NavigationBar(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: const [
-              NavigationDestination(
-                key: Key('profileNB'),
-                icon: Icon(Icons.account_circle_outlined),
-                selectedIcon: Icon(Icons.account_circle),
-                label: 'Profile',
-              ),
-              NavigationDestination(
-                key: Key('ngoNB'),
-                icon: Icon(Icons.health_and_safety_outlined),
-                selectedIcon: Icon(Icons.health_and_safety),
-                label: 'NGO',
-              ),
-              NavigationDestination(
-                key: Key('feedNB'),
-                icon: Icon(Icons.feed_outlined),
-                selectedIcon: Icon(Icons.feed),
-                label: 'Feed',
-              ),
-              NavigationDestination(
-                key: Key('notificationNB'),
-                icon: Icon(Icons.notifications_outlined),
-                selectedIcon: Icon(Icons.notifications),
-                label: 'Notification',
-              ),
-              NavigationDestination(
-                key: Key('settingNB'),
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings),
-                label: 'Setting',
-              ),
-            ],
-            selectedIndex: _pageNavigatorP.getPageIndex, //New
-            onDestinationSelected: (index) {
-              _pageNavigatorP.setPageIndex = index;
-              _pageNavigatorP.navigateToPage();
-            },
-          ),
+            NavigationDestination(
+              key: Key('feedNB'),
+              icon: Icon(Icons.feed_outlined),
+              selectedIcon: Icon(Icons.feed),
+              label: 'Feed',
+            ),
+            NavigationDestination(
+              key: Key('notificationNB'),
+              icon: Icon(Icons.notifications_outlined),
+              selectedIcon: Icon(Icons.notifications),
+              label: 'Notification',
+            ),
+            NavigationDestination(
+              key: Key('settingNB'),
+              icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings),
+              label: 'Setting',
+            ),
+          ],
+          selectedIndex: _pageNavigatorP.getPageIndex, //New
+          onDestinationSelected: (index) {
+            _pageNavigatorP.setPageIndex = index;
+            _pageNavigatorP.navigateToPage();
+          },
         ),
       );
     });

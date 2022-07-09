@@ -13,10 +13,10 @@ class PostTypeRow extends StatelessWidget {
         length: 3,
         child: TabBar(
           isScrollable: true,
-          labelColor: Theme.of(context).colorScheme.onSecondaryContainer,
-          unselectedLabelColor: Theme.of(context).colorScheme.secondary,
+          labelColor: Theme.of(context).colorScheme.onPrimaryContainer,
+          unselectedLabelColor: Theme.of(context).colorScheme.outline,
           indicator: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondaryContainer,
+            color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(30),
           ),
           enableFeedback: true,

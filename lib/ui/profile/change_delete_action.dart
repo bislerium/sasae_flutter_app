@@ -259,7 +259,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           if (widget.deletable)
             Ink(
               decoration: ShapeDecoration(
-                color: Theme.of(context).colorScheme.errorContainer,
+                color: Theme.of(context).colorScheme.tertiaryContainer,
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
@@ -270,12 +270,12 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               child: IconButton(
                 onPressed: () async => showDeleteDialog(),
                 icon: const Icon(Icons.person_remove_rounded),
-                color: Theme.of(context).colorScheme.onErrorContainer,
+                color: Theme.of(context).colorScheme.onTertiaryContainer,
               ),
             ),
           Ink(
             decoration: ShapeDecoration(
-              color: Theme.of(context).colorScheme.primaryContainer,
+              color: Theme.of(context).colorScheme.secondaryContainer,
               shape: widget.deletable
                   ? const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -288,7 +288,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
             child: IconButton(
               onPressed: () async => showPasswordChangeModal(),
               icon: const Icon(Icons.password_rounded),
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),
           ),
         ],

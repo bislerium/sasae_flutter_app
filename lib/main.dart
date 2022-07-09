@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -212,6 +213,40 @@ List<SingleChildWidget> _providers() => [
       ),
     ];
 
+@immutable
+class CustomColors extends ThemeExtension<CustomColors> {
+  const CustomColors({
+    required this.danger,
+  });
+
+  final Color? danger;
+
+  @override
+  CustomColors copyWith({Color? danger}) {
+    return CustomColors(
+      danger: danger ?? this.danger,
+    );
+  }
+
+  @override
+  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
+    if (other is! CustomColors) {
+      return this;
+    }
+    return CustomColors(
+      danger: Color.lerp(danger, other.danger, t),
+    );
+  }
+
+  CustomColors harmonized(ColorScheme dynamic) {
+    return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
+  }
+}
+
+const _brand = Colors.orange;
+CustomColors lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
+CustomColors darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
+
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
@@ -220,44 +255,37 @@ class _MyAppState extends State<MyApp> {
       builder: (context, navigatorKey) {
         return MultiProvider(
           providers: _providers(),
-          child: AdaptiveTheme(
-            light: FlexThemeData.light(
-              scheme: FlexScheme.materialBaseline,
-              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-              blendLevel: 20,
-              appBarOpacity: 0.95,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 20,
-                blendOnColors: false,
-                inputDecoratorIsFilled: false,
-                inputDecoratorBorderType: FlexInputBorderType.underline,
-              ),
-              useMaterial3ErrorColors: true,
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              useMaterial3: true,
-              // To use the playground font, add GoogleFonts package and uncomment
-              // fontFamily: GoogleFonts.notoSans().fontFamily,
-            ),
-            dark: FlexThemeData.dark(
-              scheme: FlexScheme.materialBaseline,
-              surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-              blendLevel: 15,
-              appBarStyle: FlexAppBarStyle.background,
-              appBarOpacity: 0.90,
-              // darkIsTrueBlack: true,
-              subThemesData: const FlexSubThemesData(
-                blendOnLevel: 30,
-                inputDecoratorIsFilled: false,
-                inputDecoratorBorderType: FlexInputBorderType.underline,
-              ),
-              useMaterial3ErrorColors: true,
-              visualDensity: FlexColorScheme.comfortablePlatformDensity,
-              useMaterial3: true,
-              // To use the playground font, add GoogleFonts package and uncomment
-              // fontFamily: GoogleFonts.notoSans().fontFamily,
-            ),
-            initial: widget.savedThemeMode ?? AdaptiveThemeMode.system,
-            builder: (theme, darkTheme) => (MaterialApp(
+          child: DynamicColorBuilder(
+              builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+            ColorScheme lightColorScheme;
+            ColorScheme darkColorScheme;
+
+            if (lightDynamic != null && darkDynamic != null) {
+              // On Android S+ devices, use the provided dynamic color scheme.
+              // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+              lightColorScheme = lightDynamic.harmonized();
+              // (Optional) Customize the scheme as desired. For example, one might
+              // want to use a brand color to override the dynamic [ColorScheme.secondary].
+              lightColorScheme = lightColorScheme.copyWith(secondary: _brand);
+              // (Optional) If applicable, harmonize custom colors.
+              lightCustomColors =
+                  lightCustomColors.harmonized(lightColorScheme);
+
+              // Repeat for the dark color scheme.
+              darkColorScheme = darkDynamic.harmonized();
+              darkColorScheme = darkColorScheme.copyWith(secondary: _brand);
+              darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
+            } else {
+              // Otherwise, use fallback schemes.
+              lightColorScheme = ColorScheme.fromSeed(
+                seedColor: _brand,
+              );
+              darkColorScheme = ColorScheme.fromSeed(
+                seedColor: _brand,
+                brightness: Brightness.dark,
+              );
+            }
+            return MaterialApp(
               debugShowCheckedModeBanner: false,
               navigatorKey: navigatorKey,
               supportedLocales: const [
@@ -268,26 +296,22 @@ class _MyAppState extends State<MyApp> {
                 KhaltiLocalizations.delegate,
                 FormBuilderLocalizations.delegate,
               ],
-              theme: theme,
-              darkTheme: darkTheme,
+              theme: ThemeData(
+                  platform: TargetPlatform.android,
+                  colorScheme: lightColorScheme,
+                  extensions: [lightCustomColors],
+                  useMaterial3: true),
+              darkTheme: ThemeData(
+                  platform: TargetPlatform.android,
+                  colorScheme: darkColorScheme,
+                  extensions: [darkCustomColors],
+                  useMaterial3: true),
+              themeMode: ThemeMode.system,
               title: 'Sasae',
-              home: AnnotatedRegion<SystemUiOverlayStyle>(
-                value: SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  systemNavigationBarColor:
-                      deviceThemeMode!.isLight ? Colors.white : Colors.black,
-                  statusBarIconBrightness: deviceThemeMode!.isLight
-                      ? Brightness.dark
-                      : Brightness.light,
-                  systemNavigationBarIconBrightness: deviceThemeMode!.isLight
-                      ? Brightness.dark
-                      : Brightness.light,
-                ),
-                child: PageRouter(),
-              ),
+              home: const PageRouter(),
               onGenerateRoute: (settings) => _screenRoutes(settings),
-            )),
-          ),
+            );
+          }),
         );
       },
     );

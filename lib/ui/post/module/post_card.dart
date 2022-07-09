@@ -23,8 +23,9 @@ class PostCard extends StatelessWidget {
     return CustomCard(
       key: ValueKey(post.hashCode),
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        splashColor: Theme.of(context).colorScheme.inversePrimary,
+        borderRadius: BorderRadius.circular(12),
+        // splashColor: Theme.of(context).colorScheme.primaryContainer,
+        // highlightColor: Theme.of(context).colorScheme.primaryContainer,
         onTap: () {
           late String routeName;
           switch (post.postType) {
@@ -104,7 +105,7 @@ class PostCard extends StatelessWidget {
               }
             : null,
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
           child: Column(
             children: [
               SizedBox(
@@ -116,17 +117,11 @@ class PostCard extends StatelessWidget {
                         (e) => Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                           child: Chip(
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primaryContainer,
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
                             label: Text(
                               e,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .subtitle1
-                                  ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onPrimaryContainer),
                             ),
                           ),
                         ),
@@ -135,7 +130,7 @@ class PostCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 6),
+                padding: const EdgeInsets.symmetric(vertical: 4),
                 width: MediaQuery.of(context).size.width - 20,
                 child: Text(
                   post.postContent,

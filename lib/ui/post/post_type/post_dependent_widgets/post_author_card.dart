@@ -24,7 +24,6 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
       margin: EdgeInsets.zero,
       borderRadius: 30,
       child: InkWell(
-        splashColor: Theme.of(context).colorScheme.inversePrimary,
         borderRadius: BorderRadius.circular(30),
         onTap: toggleHidePostAuthor,
         child: Padding(
@@ -51,13 +50,16 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
                       ),
                 ),
               ),
-              Expanded(
-                child: Visibility(
-                  visible: !hidePostAuthor,
+              const SizedBox(
+                width: 20,
+              ),
+              Visibility(
+                visible: !hidePostAuthor,
+                child: Expanded(
                   child: Text(
                     widget.author,
                     textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold),
                   ),

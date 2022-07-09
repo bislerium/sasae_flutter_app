@@ -13,8 +13,7 @@ class NGOCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomCard(
       child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        splashColor: Theme.of(context).colorScheme.inversePrimary,
+        borderRadius: BorderRadius.circular(12),
         onTap: () {
           Navigator.pushNamed(context, NGOProfileScreen.routeName,
               arguments: {'ngoID': ngo_.ngoID});
@@ -26,7 +25,7 @@ class NGOCard extends StatelessWidget {
               CustomImage(
                 imageURL: ngo_.orgPhoto,
                 width: 100.0,
-                radius: 15,
+                radius: 10,
                 onTapViewImage: false,
                 includeHero: false,
               ),
@@ -45,8 +44,11 @@ class NGOCard extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.location_pin,
-                                size: 18,
+                                size: 15,
                                 color: Theme.of(context).colorScheme.primary,
+                              ),
+                              const SizedBox(
+                                width: 4,
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.4,
@@ -77,13 +79,26 @@ class NGOCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Text(
-                        ngo_.orgName,
-                        style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      SizedBox(
+                        height: 20,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            ngo_.orgName,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
                       ),
+                      // SizedBox(
+                      //   height: 40,
+                      //   child: AutoSizeText(
+                      //     ngo_.orgName,
+                      //     softWrap: true,
+                      //     style: Theme.of(context).textTheme.headline6,
+                      //     maxLines: 2,
+                      //     minFontSize: 10,
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 40,
                         child: ListView.builder(
@@ -91,8 +106,7 @@ class NGOCard extends StatelessWidget {
                           itemCount: ngo_.fieldOfWork.length,
                           itemBuilder: (context, _) {
                             return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.fromLTRB(0, 0, 6, 0),
                               child: Chip(
                                 label: Text(
                                   ngo_.fieldOfWork[_],
@@ -102,12 +116,12 @@ class NGOCard extends StatelessWidget {
                                       ?.copyWith(
                                         color: Theme.of(context)
                                             .colorScheme
-                                            .onPrimaryContainer,
+                                            .onSecondaryContainer,
                                       ),
                                 ),
                                 backgroundColor: Theme.of(context)
                                     .colorScheme
-                                    .primaryContainer,
+                                    .secondaryContainer,
                               ),
                             );
                           },

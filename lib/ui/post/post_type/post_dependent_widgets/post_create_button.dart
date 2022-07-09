@@ -32,14 +32,15 @@ class _PostCreateButtonState extends State<PostCreateButton> {
             }
           },
           style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
+            primary: Theme.of(context).colorScheme.primaryContainer,
+            onPrimary: Theme.of(context).colorScheme.onPrimaryContainer,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _isLoading
                   ? LoadingAnimationWidget.horizontalRotatingDots(
-                      color: Theme.of(context).colorScheme.primaryContainer,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       size: 50,
                     )
                   : const Icon(

@@ -53,7 +53,7 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
         tabBarMargin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
         fabType: FABType.donation,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Provider.of<DonationFABProvider>(context).getShowFAB
           ? NGODonationButton(
               scrollController: _infoScrollController,

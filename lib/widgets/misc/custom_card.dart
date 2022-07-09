@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CustomCard extends StatelessWidget {
   final Widget child;
-  final double borderRadius;
+  final double? borderRadius;
   final double elevation;
   final Color? shadowColor;
   final Color? cardColor;
@@ -11,8 +11,8 @@ class CustomCard extends StatelessWidget {
   const CustomCard({
     Key? key,
     required this.child,
-    this.borderRadius = 20,
-    this.elevation = 1,
+    this.borderRadius,
+    this.elevation = 0.0,
     this.shadowColor,
     this.cardColor,
     this.margin = const EdgeInsets.symmetric(vertical: 8),
@@ -23,11 +23,13 @@ class CustomCard extends StatelessWidget {
     return Card(
       key: ObjectKey(child),
       elevation: elevation,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      shadowColor: shadowColor ?? Theme.of(context).colorScheme.shadow,
-      color: cardColor ?? Theme.of(context).colorScheme.surface,
+      shape: borderRadius == null
+          ? null
+          : RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(borderRadius!),
+            ),
+      shadowColor: shadowColor,
+      color: cardColor,
       margin: margin,
       child: child,
     );

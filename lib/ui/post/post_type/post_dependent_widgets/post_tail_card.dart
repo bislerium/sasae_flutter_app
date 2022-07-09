@@ -61,8 +61,9 @@ class PostTailCard extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: () => showCustomDialog(
                   context: context,
-                  title: 'Report',
-                  content: 'Are you Sure?',
+                  title: 'Confirm Report',
+                  content:
+                      'Think wise & avoid unnecesary report just for personal annoyance & grudge!, ',
                   okFunc: () async {
                     Navigator.of(context).pop();
                     bool success =

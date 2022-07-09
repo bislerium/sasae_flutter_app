@@ -29,72 +29,47 @@ class _ProfileUpdateButtonState extends State<ProfileUpdateButton> {
           ? const SizedBox.shrink()
           : CustomScrollAnimatedFAB(
               scrollController: widget.scrollController,
-              child: SizedBox(
-                width: 120,
-                height: 60,
-                child: FloatingActionButton(
-                  onPressed: () async {
+              child: FloatingActionButton.large(
+                onPressed: () async {
+                  if (_isLoading) return;
+                  bool validForm = widget.formKey.currentState!.validate();
+                  if (validForm) {
                     if (_isLoading) return;
-                    bool validForm = widget.formKey.currentState!.validate();
-                    if (validForm) {
-                      if (_isLoading) return;
-                      showCustomDialog(
-                        context: context,
-                        title: 'Confirm Update',
-                        content:
-                            'Don\'t forget to refresh your profile page, once updated.',
-                        okFunc: () async {
-                          widget.formKey.currentState!.save();
+                    showCustomDialog(
+                      context: context,
+                      title: 'Confirm Update',
+                      content:
+                          'Don\'t forget to refresh your profile page, once updated.',
+                      okFunc: () async {
+                        widget.formKey.currentState!.save();
+                        Navigator.of(context).pop();
+                        setState(() => _isLoading = true);
+                        bool success = await peopleP.updatePeople();
+                        setState(() => _isLoading = false);
+                        if (success) {
+                          if (!mounted) return;
                           Navigator.of(context).pop();
-                          setState(() => _isLoading = true);
-                          bool success = await peopleP.updatePeople();
-                          setState(() => _isLoading = false);
-                          if (success) {
-                            if (!mounted) return;
-                            Navigator.of(context).pop();
-                            showSnackBar(
-                              context: context,
-                              message: 'profile updated',
-                            );
-                          } else {
-                            showSnackBar(context: context, errorSnackBar: true);
-                          }
-                        },
-                      );
-                    }
-                  },
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16.0),
-                    ),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  elevation: 3,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _isLoading
-                          ? LoadingAnimationWidget.horizontalRotatingDots(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              size: 50,
-                            )
-                          : const Icon(
-                              Icons.done_rounded,
-                            ),
-                      if (!_isLoading) ...[
-                        const SizedBox(
-                          width: 6,
-                        ),
-                        const Text(
-                          'Done',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
+                          showSnackBar(
+                            context: context,
+                            message: 'profile updated',
+                          );
+                        } else {
+                          showSnackBar(context: context, errorSnackBar: true);
+                        }
+                      },
+                    );
+                  }
+                },
+                tooltip: 'Done',
+                enableFeedback: true,
+                child: _isLoading
+                    ? LoadingAnimationWidget.horizontalRotatingDots(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        size: 50,
+                      )
+                    : const Icon(
+                        Icons.done_rounded,
+                      ),
               ),
             ),
     );

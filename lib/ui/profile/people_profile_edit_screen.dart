@@ -21,15 +21,13 @@ class PeopleProfileEditScreen extends StatefulWidget {
 }
 
 class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
-  bool _isLoading;
   final ScrollController _scrollController;
   final GlobalKey<FormBuilderState> _formKey;
   late final PeopleProvider peopleP;
   late final Future<void> _fetchPeopleUpdateFUTURE;
 
   _PeopleProfileEditScreenState()
-      : _isLoading = false,
-        _scrollController = ScrollController(),
+      : _scrollController = ScrollController(),
         _formKey = GlobalKey<FormBuilderState>();
 
   @override
@@ -69,7 +67,7 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
                                 formKey: _formKey),
                   ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: ProfileUpdateButton(
         formKey: _formKey,
         scrollController: _scrollController,

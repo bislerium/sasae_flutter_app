@@ -40,11 +40,11 @@ class NotificationTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 6),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
           shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           leading: Icon(getIcon(notification.channel), color: color),

@@ -48,7 +48,7 @@ class _FormCardNormalPostState extends State<FormCardNormalPost>
     double width = MediaQuery.of(context).size.width - 60;
     return CustomCard(
       child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.fromLTRB(15, 15, 15, 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -74,6 +74,7 @@ class _FormCardNormalPostState extends State<FormCardNormalPost>
                 previewWidth: width,
                 previewHeight: width,
                 maxImages: 1,
+                iconColor: Theme.of(context).colorScheme.secondary,
                 onSaved: (list) => list == null || list.isEmpty
                     ? _normalPostCU.setPostImage = null
                     : _normalPostCU.setPostImage = list.first,

@@ -70,10 +70,10 @@ class _CustomTabBarState extends State<CustomTabBar> {
               highlightColor: Colors.transparent),
           child: TabBar(
             isScrollable: true,
-            labelColor: Theme.of(context).colorScheme.onSecondaryContainer,
-            unselectedLabelColor: Theme.of(context).colorScheme.onSurface,
+            labelColor: Theme.of(context).colorScheme.onSecondary,
+            unselectedLabelColor: Theme.of(context).colorScheme.outline,
             indicator: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondaryContainer,
+              color: Theme.of(context).colorScheme.secondary,
               borderRadius: BorderRadius.circular(30),
             ),
             enableFeedback: true,

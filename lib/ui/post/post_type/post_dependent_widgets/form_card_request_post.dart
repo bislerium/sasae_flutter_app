@@ -14,7 +14,7 @@ class FormCardRequestPost extends StatefulWidget {
       : super(key: key);
 
   @override
-  _FormCardRequestPostState createState() => _FormCardRequestPostState();
+  State<FormCardRequestPost> createState() => _FormCardRequestPostState();
 }
 
 class _FormCardRequestPostState extends State<FormCardRequestPost>

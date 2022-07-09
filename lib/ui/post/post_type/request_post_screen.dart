@@ -121,7 +121,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                 ),
               ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Consumer<RequestPostProvider>(
         builder: (context, postP, child) => postP.requestPostData == null
             ? const SizedBox.shrink()

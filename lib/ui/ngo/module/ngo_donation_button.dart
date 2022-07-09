@@ -162,6 +162,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
         child: CustomFAB(
           text: 'Donate',
           icon: Icons.hail_rounded,
+          tooltip: 'Donate',
           func: () {
             showDonationModalSheet(
               ngoP.getNGO!.epayAccount!,

@@ -128,83 +128,71 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           child: Row(
             children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.search,
-                          color:
-                              Theme.of(context).colorScheme.onPrimaryContainer,
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextField(
-                              keyboardType: TextInputType.text,
-                              controller: _searchTEC,
-                              enabled: isDataUnavailable ? false : true,
-                              onTap: () {
-                                if (ngoP.getIsFiltered) ngoP.clear();
-                              },
-                              onChanged: (value) {
-                                ngoP.searchByName(value.trim());
-                              },
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Search NGO by name',
-                              ),
-                              textInputAction: TextInputAction.search,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.search,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextField(
+                            keyboardType: TextInputType.text,
+                            controller: _searchTEC,
+                            enabled: isDataUnavailable ? false : true,
+                            onTap: () {
+                              if (ngoP.getIsFiltered) ngoP.clear();
+                            },
+                            onChanged: (value) {
+                              ngoP.searchByName(value.trim());
+                            },
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search NGO by name',
                             ),
+                            textInputAction: TextInputAction.search,
                           ),
                         ),
-                        if (_searchTEC.text.isNotEmpty)
-                          InkWell(
-                            onTap: () {
-                              ngoP.clear();
-                              _searchTEC.clear();
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: Icon(
-                              Icons.clear,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                            ),
-                          )
-                      ],
-                    ),
+                      ),
+                      if (_searchTEC.text.isNotEmpty)
+                        InkWell(
+                          onTap: () {
+                            ngoP.clear();
+                            _searchTEC.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: Icon(
+                            Icons.clear,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        )
+                    ],
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: ClipOval(
-                  child: Container(
-                    color: ngoP.getIsFiltered
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: ngoP.getIsFiltered
                         ? Theme.of(context).colorScheme.secondaryContainer
                         : Theme.of(context).colorScheme.background,
-                    child: IconButton(
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                      onPressed: isDataUnavailable
-                          ? null
-                          : () async {
-                              if (ngoP.getIsSearched) {
-                                ngoP.clear();
-                              }
-                              _searchTEC.clear();
-                              await showFilterModal();
-                            },
-                      icon: const Icon(
-                        Icons.filter_list,
-                        size: 30,
-                      ),
-                    ),
+                  ),
+                  onPressed: isDataUnavailable
+                      ? null
+                      : () async {
+                          if (ngoP.getIsSearched) {
+                            ngoP.clear();
+                          }
+                          _searchTEC.clear();
+                          await showFilterModal();
+                        },
+                  child: const Icon(
+                    Icons.filter_list,
                   ),
                 ),
               ),

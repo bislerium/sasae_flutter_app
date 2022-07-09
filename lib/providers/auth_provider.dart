@@ -26,6 +26,7 @@ class AuthProvider with ChangeNotifier {
         group: faker.randomGenerator.element(['General', 'NGO']),
         accountID: faker.randomGenerator.integer(1000000),
         profileID: faker.randomGenerator.integer(1000000),
+        isVerified: faker.randomGenerator.boolean(),
       );
 
   Future<void> _authenticate(

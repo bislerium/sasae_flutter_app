@@ -123,28 +123,25 @@ class _AuthScreenState extends State<AuthScreen> {
             )),
       );
 
-  Widget _forgetButton() => Builder(builder: (context) {
-        return TextButton(
-          style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          ),
-          onPressed: () async => showResetPasswordModal(),
-          child: Text(
-            'Forget Password?',
-            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-          ),
-        );
-      });
+  Widget _forgetButton() => TextButton(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        ),
+        onPressed: () async => showResetPasswordModal(),
+        child: Text(
+          'Forgot Password?',
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2!
+              .copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
+      );
 
   Widget _createAccountLabel() => InkWell(
-        splashColor: Theme.of(context).colorScheme.secondaryContainer,
         borderRadius: BorderRadius.circular(25),
-        onTap: () {
-          Navigator.of(context).pushNamed(
-            RegisterScreen.routeName,
-          );
-        },
+        onTap: () => Navigator.of(context).pushNamed(
+          RegisterScreen.routeName,
+        ),
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
@@ -152,9 +149,9 @@ class _AuthScreenState extends State<AuthScreen> {
             textAlign: TextAlign.center,
             text: TextSpan(
               text: 'Don\'t have an account?  ',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
               children: [
                 TextSpan(
                   text: 'Register',

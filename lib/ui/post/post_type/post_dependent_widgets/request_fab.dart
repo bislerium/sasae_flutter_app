@@ -29,7 +29,7 @@ class _RequestFABState extends State<RequestFAB> {
   bool _isLoading;
   _RequestFABState() : _isLoading = false;
 
-  Future<void> request() async {
+  Future<void> requestCallBack() async {
     if (_isLoading) return;
     if (widget.isRequestConsidered) {
       showSnackBar(
@@ -73,47 +73,21 @@ class _RequestFABState extends State<RequestFAB> {
   Widget build(BuildContext context) {
     return CustomScrollAnimatedFAB(
       scrollController: widget.scrollController,
-      child: SizedBox(
-        width: 120,
-        height: 60,
-        child: FloatingActionButton(
-          onPressed: () async => request(),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16.0),
-            ),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          elevation: 3,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _isLoading
-                  ? LoadingAnimationWidget.horizontalRotatingDots(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      size: 50,
-                    )
-                  : widget.requestType == 'Petition'
-                      ? const Icon(Icons.gesture)
-                      : const Icon(Icons.handshake_rounded),
-              if (!_isLoading) ...[
-                const SizedBox(
-                  width: 6,
-                ),
-                Text(
-                  widget.requestType == 'Petition'
-                      ? widget.isRequestConsidered
-                          ? 'Signed'
-                          : 'Sign'
-                      : widget.isRequestConsidered
-                          ? 'Joined'
-                          : 'Join',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ],
-          ),
-        ),
+      child: FloatingActionButton.large(
+        onPressed: requestCallBack,
+        elevation: 3,
+        child: _isLoading
+            ? LoadingAnimationWidget.horizontalRotatingDots(
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                size: 50,
+              )
+            : widget.requestType == 'Petition'
+                ? widget.isRequestConsidered
+                    ? const Icon(Icons.draw)
+                    : const Icon(Icons.draw_outlined)
+                : widget.isRequestConsidered
+                    ? const Icon(Icons.handshake_rounded)
+                    : const Icon(Icons.handshake_outlined),
       ),
     );
   }

@@ -21,6 +21,8 @@ class CustomInfoTile extends StatefulWidget {
 class _CustomInfoTileState extends State<CustomInfoTile> {
   @override
   Widget build(BuildContext context) => CustomMaterialTile(
+        func: widget.func,
+        borderRadius: 12,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -38,7 +40,6 @@ class _CustomInfoTileState extends State<CustomInfoTile> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              const SizedBox(width: 20),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -55,6 +56,5 @@ class _CustomInfoTileState extends State<CustomInfoTile> {
             ],
           ),
         ),
-        func: widget.func,
       );
 }

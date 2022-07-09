@@ -168,7 +168,7 @@ void showCustomDialog(
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
-            TextButton(
+            ElevatedButton(
               onPressed: okFunc,
               child: Text(
                 'Ok',
