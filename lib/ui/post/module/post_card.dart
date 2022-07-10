@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
@@ -27,6 +28,9 @@ class PostCard extends StatelessWidget {
         // splashColor: Theme.of(context).colorScheme.primaryContainer,
         // highlightColor: Theme.of(context).colorScheme.primaryContainer,
         onTap: () {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
           late String routeName;
           switch (post.postType) {
             case 'Normal':
@@ -53,6 +57,10 @@ class PostCard extends StatelessWidget {
                       title: const Text('Update'),
                       onTap: () {
                         Navigator.of(context).pop();
+                        if (!Provider.of<InternetConnetionProvider>(context,
+                                listen: false)
+                            .getConnectionStatusCallBack(context)
+                            .call()) return;
                         Navigator.pushNamed(
                           context,
                           PostUpdateFormScreen.routeName,
@@ -69,12 +77,16 @@ class PostCard extends StatelessWidget {
                       onTap: () {
                         showCustomDialog(
                           context: context,
-                          title: 'Post Deletion',
-                          content: 'Are you sure?\nCannot undo, once deleted.',
+                          title: 'Confirm Delete',
+                          content: 'Are you sure? Cannot undo, once deleted.',
                           cancelFunc: () => Navigator.of(context)
                             ..pop()
                             ..pop(),
                           okFunc: () async {
+                            if (!Provider.of<InternetConnetionProvider>(context,
+                                    listen: false)
+                                .getConnectionStatusCallBack(context)
+                                .call()) return;
                             Navigator.of(context)
                               ..pop()
                               ..pop();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 
@@ -25,6 +26,9 @@ class _PostUpdateButtonState extends State<PostUpdateButton> {
         child: FloatingActionButton.large(
           onPressed: () async {
             if (_isLoading) return;
+            if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+                .getConnectionStatusCallBack(context)
+                .call()) return;
             setState(() => _isLoading = true);
             await postUpdateP.getPostUpdateHandler!();
             setState(() => _isLoading = false);

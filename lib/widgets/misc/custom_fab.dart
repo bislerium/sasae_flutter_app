@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 
 class CustomFAB extends StatelessWidget {
   final String text;
@@ -20,7 +22,12 @@ class CustomFAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) => FloatingActionButton.large(
         heroTag: null,
-        onPressed: func,
+        onPressed: () {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
+          func!.call();
+        },
         tooltip: tooltip,
         backgroundColor: background,
         foregroundColor: foreground,

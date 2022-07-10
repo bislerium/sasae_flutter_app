@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -60,8 +61,11 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
             ? const CustomLoading()
             : Consumer<RequestPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
-                  onRefresh: () =>
-                      postP.refreshRequestPost(postID: widget.postID),
+                  onRefresh: () async => await refreshCallBack(
+                    context: context,
+                    func: () async =>
+                        await postP.refreshRequestPost(postID: widget.postID),
+                  ),
                   child: postP.requestPostData == null
                       ? const ErrorView()
                       : ListView(

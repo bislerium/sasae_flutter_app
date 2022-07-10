@@ -1,9 +1,14 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
@@ -20,6 +25,7 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final GlobalKey<FormBuilderState> _loginFormKey, _passwordResetFormKey;
   final TextEditingController _userNameTEC, _passwordTEC, _resetEmailTEC;
+  late final StreamSubscription<ConnectivityResult> subscription;
 
   _AuthScreenState()
       : _loginFormKey = GlobalKey<FormBuilderState>(),
@@ -29,7 +35,14 @@ class _AuthScreenState extends State<AuthScreen> {
         _resetEmailTEC = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    subscription = getConnectivitySubscription(context);
+  }
+
+  @override
   void dispose() {
+    subscription.cancel();
     _userNameTEC.dispose();
     _passwordTEC.dispose();
     _resetEmailTEC.dispose();
@@ -86,6 +99,10 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               onPressed: () async {
                 if (authP.isAuthenticating) return;
+                if (!Provider.of<InternetConnetionProvider>(context,
+                        listen: false)
+                    .getConnectionStatusCallBack(context)
+                    .call()) return;
                 final isValid = _loginFormKey.currentState!.validate();
                 FocusScope.of(context).unfocus();
                 if (isValid) {
@@ -127,21 +144,31 @@ class _AuthScreenState extends State<AuthScreen> {
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         ),
-        onPressed: () async => showResetPasswordModal(),
+        onPressed: () {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
+          showResetPasswordModal();
+        },
         child: Text(
           'Forgot Password?',
           style: Theme.of(context)
               .textTheme
-              .subtitle2!
+              .subtitle1!
               .copyWith(color: Theme.of(context).colorScheme.secondary),
         ),
       );
 
   Widget _createAccountLabel() => InkWell(
         borderRadius: BorderRadius.circular(25),
-        onTap: () => Navigator.of(context).pushNamed(
-          RegisterScreen.routeName,
-        ),
+        onTap: () {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
+          Navigator.of(context).pushNamed(
+            RegisterScreen.routeName,
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
@@ -254,6 +281,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 height: 60, width: double.infinity),
             child: ElevatedButton(
               onPressed: () async {
+                if (!Provider.of<InternetConnetionProvider>(context,
+                        listen: false)
+                    .getConnectionStatusCallBack(context)
+                    .call()) return;
                 final isValid = _passwordResetFormKey.currentState!.validate();
                 if (isValid) {
                   Navigator.of(context).pop();

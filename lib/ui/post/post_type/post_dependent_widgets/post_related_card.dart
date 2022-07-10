@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/widgets/misc/wrapped_chips.dart';
 
 class PostRelatedCard extends StatelessWidget {
   final List<String> list;
@@ -25,8 +25,8 @@ class PostRelatedCard extends StatelessWidget {
             const SizedBox(
               height: 15,
             ),
-            getWrappedChips(
-              context: context,
+            WrappedChips(
+              key: ValueKey(list.hashCode),
               list: list,
               center: false,
             ),

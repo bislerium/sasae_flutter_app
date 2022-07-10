@@ -7,6 +7,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -114,6 +115,10 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               const BoxConstraints.tightFor(height: 60, width: double.infinity),
           child: ElevatedButton(
             onPressed: () async {
+              if (!Provider.of<InternetConnetionProvider>(context,
+                      listen: false)
+                  .getConnectionStatusCallBack(context)
+                  .call()) return;
               final isValid = _changeformKey.currentState!.validate();
               if (isValid) {
                 Navigator.of(context).pop();
@@ -141,9 +146,6 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 _newPassword2TEC.clear();
               }
             },
-            style: ElevatedButton.styleFrom(
-              shape: const StadiumBorder(),
-            ),
             child: const Text(
               'Change',
               style: TextStyle(
@@ -209,6 +211,10 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           actions: [
             ElevatedButton(
               onPressed: () async {
+                if (!Provider.of<InternetConnetionProvider>(context,
+                        listen: false)
+                    .getConnectionStatusCallBack(context)
+                    .call()) return;
                 bool isValid = _deleteformKey.currentState!.validate();
                 if (isValid) {
                   Navigator.of(context).pop();
@@ -268,7 +274,13 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 ),
               ),
               child: IconButton(
-                onPressed: () async => showDeleteDialog(),
+                onPressed: () {
+                  if (!Provider.of<InternetConnetionProvider>(context,
+                          listen: false)
+                      .getConnectionStatusCallBack(context)
+                      .call()) return;
+                  showDeleteDialog();
+                },
                 icon: const Icon(Icons.person_remove_rounded),
                 color: Theme.of(context).colorScheme.onTertiaryContainer,
               ),
@@ -286,7 +298,13 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   : const CircleBorder(),
             ),
             child: IconButton(
-              onPressed: () async => showPasswordChangeModal(),
+              onPressed: () {
+                if (!Provider.of<InternetConnetionProvider>(context,
+                        listen: false)
+                    .getConnectionStatusCallBack(context)
+                    .call()) return;
+                showPasswordChangeModal();
+              },
               icon: const Icon(Icons.password_rounded),
               color: Theme.of(context).colorScheme.onSecondaryContainer,
             ),

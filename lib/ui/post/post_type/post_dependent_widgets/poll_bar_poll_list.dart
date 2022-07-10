@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
+import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 
 class PollBarPollList extends StatelessWidget {
   final List<PollOptionModel> list;
 
-  final Future<void> Function(int choice) handler;
+  final Future<void> Function(int choice) pollCallBack;
 
-  const PollBarPollList({Key? key, required this.list, required this.handler})
+  const PollBarPollList(
+      {Key? key, required this.list, required this.pollCallBack})
       : super(key: key);
 
   @override
@@ -19,7 +22,13 @@ class PollBarPollList extends StatelessWidget {
             (e) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: GestureDetector(
-                  onTap: () async => handler(e.id),
+                  onTap: () async {
+                    if (!Provider.of<InternetConnetionProvider>(context,
+                            listen: false)
+                        .getConnectionStatusCallBack(context)
+                        .call()) return;
+                    await pollCallBack(e.id);
+                  },
                   child: RoundedProgressBar(
                     percent: 0,
                     style: RoundedProgressBarStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -53,10 +54,13 @@ class _PostCreateFormScreenState extends State<PostCreateFormScreen>
                 ? const CustomLoading()
                 : Consumer<PostCreateProvider>(
                     builder: (context, postCreateP, child) => RefreshIndicator(
-                      onRefresh: () async {
-                        await postCreateP.refreshNGOOptions();
-                        await postCreateP.refreshPostRelatedTo();
-                      },
+                      onRefresh: () async => await refreshCallBack(
+                        context: context,
+                        func: () async {
+                          await postCreateP.refreshNGOOptions();
+                          await postCreateP.refreshPostRelatedTo();
+                        },
+                      ),
                       child: postCreateP.getNGOOptionsData == null ||
                               postCreateP.getPostRelatedToData == null
                           ? const ErrorView()

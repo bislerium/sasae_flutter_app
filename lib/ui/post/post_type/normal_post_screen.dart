@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -22,7 +23,7 @@ class NormalPostScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _NormalPostScreenState createState() => _NormalPostScreenState();
+  State<NormalPostScreen> createState() => _NormalPostScreenState();
 }
 
 class _NormalPostScreenState extends State<NormalPostScreen> {
@@ -63,8 +64,11 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
             ? const CustomLoading()
             : Consumer<NormalPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
-                  onRefresh: () =>
-                      postP.refreshNormalPost(postID: widget.postID),
+                  onRefresh: () async => await refreshCallBack(
+                    context: context,
+                    func: () async =>
+                        await postP.refreshNormalPost(postID: widget.postID),
+                  ),
                   child: postP.getNormalPostData == null
                       ? const ErrorView()
                       : ListView(

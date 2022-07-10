@@ -10,7 +10,7 @@ import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 
 class NGOProvider with ChangeNotifier {
   late AuthProvider _authP;

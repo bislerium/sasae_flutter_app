@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class VotingBar extends StatefulWidget {
@@ -24,7 +26,7 @@ class VotingBar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _VotingBarState createState() => _VotingBarState();
+  State<VotingBar> createState() => _VotingBarState();
 }
 
 class _VotingBarState extends State<VotingBar> {
@@ -138,6 +140,9 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget upvoteButton() => TextButton(
         onPressed: () async {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
           setState(() => upvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)
@@ -150,20 +155,23 @@ class _VotingBarState extends State<VotingBar> {
                 errorSnackBar: true);
           }
         },
-        child: const Icon(
-          Icons.arrow_upward_rounded,
-          size: 30,
-        ),
         style: TextButton.styleFrom(
             shape: const StadiumBorder(),
             backgroundColor:
                 isUpvoted ? Theme.of(context).colorScheme.primary : null,
             primary:
                 isUpvoted ? Theme.of(context).colorScheme.onPrimary : null),
+        child: const Icon(
+          Icons.arrow_upward_rounded,
+          size: 30,
+        ),
       );
 
   Widget downvoteButton() => TextButton(
         onPressed: () async {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
           setState(() => downvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)
@@ -176,16 +184,16 @@ class _VotingBarState extends State<VotingBar> {
                 errorSnackBar: true);
           }
         },
-        child: const Icon(
-          Icons.arrow_downward_rounded,
-          size: 30,
-        ),
         style: TextButton.styleFrom(
             shape: const StadiumBorder(),
             backgroundColor:
                 isDownvoted ? Theme.of(context).colorScheme.primary : null,
             primary:
                 isDownvoted ? Theme.of(context).colorScheme.onPrimary : null),
+        child: const Icon(
+          Icons.arrow_downward_rounded,
+          size: 30,
+        ),
       );
 
   @override

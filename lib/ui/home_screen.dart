@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +11,7 @@ import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/notification/notification_page.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_page.dart';
@@ -27,10 +31,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
+  late final StreamSubscription<ConnectivityResult> subscription;
 
   @override
   void initState() {
     super.initState();
+    subscription = getConnectivitySubscription(context);
     _pageNavigatorP =
         Provider.of<PageNavigatorProvider>(context, listen: false);
     NotificationService.getInstance().initialize(context);
@@ -63,6 +69,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
+    subscription.cancel();
     _pageNavigatorP.reset();
     super.dispose();
   }

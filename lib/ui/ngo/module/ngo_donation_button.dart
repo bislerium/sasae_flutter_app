@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
@@ -98,6 +99,10 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                     height: 60, width: double.infinity),
                 child: ElevatedButton(
                   onPressed: () {
+                    if (!Provider.of<InternetConnetionProvider>(context,
+                            listen: false)
+                        .getConnectionStatusCallBack(context)
+                        .call()) return;
                     final isValid = _donationFormKey.currentState!.validate();
                     if (isValid) {
                       KhaltiScope.of(context)
@@ -164,6 +169,9 @@ class _NGODonationButtonState extends State<NGODonationButton> {
           icon: Icons.hail_rounded,
           tooltip: 'Donate',
           func: () {
+            if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+                .getConnectionStatusCallBack(context)
+                .call()) return;
             showDonationModalSheet(
               ngoP.getNGO!.epayAccount!,
               ngoP.getNGO!.orgName,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_image_tile.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_info_tile.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/misc/verified_chip.dart';
+import 'package:sasae_flutter_app/widgets/misc/wrapped_chips.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NGOProfile extends StatelessWidget {
@@ -49,8 +50,8 @@ class NGOProfile extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: getWrappedChips(
-            context: context,
+          child: WrappedChips(
+            key: ValueKey(ngoData.fieldOfWork.hashCode),
             list: ngoData.fieldOfWork,
           ),
         ),

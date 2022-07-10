@@ -4,7 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:test/test.dart';
 
 void main() {

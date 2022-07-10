@@ -6,6 +6,7 @@ import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/profile/change_delete_action.dart';
@@ -90,7 +91,10 @@ class _UserInfoTabState extends State<UserInfoTab>
               ? const CustomLoading()
               : Consumer<ProfileProvider>(
                   builder: (context, profileP, child) => RefreshIndicator(
-                    onRefresh: _fetchUser,
+                    onRefresh: () async => await refreshCallBack(
+                      context: context,
+                      func: _fetchUser,
+                    ),
                     child: profileP.getUserData == null
                         ? const ErrorView()
                         : profileP.getUserData is PeopleModel

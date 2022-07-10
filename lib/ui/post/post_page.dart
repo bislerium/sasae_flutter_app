@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/post/post_create_form_screen.dart';
@@ -73,7 +74,10 @@ class _PostPageState extends State<PostPage>
               ? const CustomLoading()
               : Consumer<PostProvider>(
                   builder: (context, postP, child) => RefreshIndicator(
-                    onRefresh: postP.refreshPosts,
+                    onRefresh: () async => await refreshCallBack(
+                      context: context,
+                      func: postP.refreshPosts,
+                    ),
                     child: postP.getPostData == null
                         ? const ErrorView()
                         : postP.getPostData!.isEmpty

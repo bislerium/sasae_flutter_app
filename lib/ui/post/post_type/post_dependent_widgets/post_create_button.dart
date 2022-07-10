@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 
 class PostCreateButton extends StatefulWidget {
@@ -25,11 +26,13 @@ class _PostCreateButtonState extends State<PostCreateButton> {
         ),
         child: ElevatedButton(
           onPressed: () async {
-            if (!_isLoading) {
-              setState(() => _isLoading = true);
-              await postCreateP.getPostCreateHandler!();
-              setState(() => _isLoading = false);
-            }
+            if (_isLoading) return;
+            if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+                .getConnectionStatusCallBack(context)
+                .call()) return;
+            setState(() => _isLoading = true);
+            await postCreateP.getPostCreateHandler!();
+            setState(() => _isLoading = false);
           },
           style: ElevatedButton.styleFrom(
             primary: Theme.of(context).colorScheme.primaryContainer,

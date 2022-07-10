@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/poll_bar.dart';
 
 class PollBarRevealList extends StatelessWidget {

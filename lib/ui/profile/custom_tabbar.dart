@@ -79,7 +79,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
             enableFeedback: true,
             tabs: const [
               Tooltip(
-                message: 'My Information',
+                message: 'Information',
                 child: Tab(
                   icon: Icon(
                     Icons.info_outline_rounded,
@@ -87,7 +87,7 @@ class _CustomTabBarState extends State<CustomTabBar> {
                 ),
               ),
               Tooltip(
-                message: 'My Posts',
+                message: 'Posts',
                 child: Tab(
                   icon: Icon(
                     Icons.post_add_outlined,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
 
@@ -53,6 +55,10 @@ class PokedNGOCard extends StatelessWidget {
                             Theme.of(context).colorScheme.tertiaryContainer,
                         pressElevation: 2,
                         onPressed: () {
+                          if (!Provider.of<InternetConnetionProvider>(context,
+                                  listen: false)
+                              .getConnectionStatusCallBack(context)
+                              .call()) return;
                           Navigator.pushNamed(
                             context,
                             NGOProfileScreen.routeName,

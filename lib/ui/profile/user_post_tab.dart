@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/post/module/post_list.dart';
@@ -69,9 +70,12 @@ class _UserPostTabState extends State<UserPostTab>
               ? const CustomLoading()
               : Consumer<ProfileProvider>(
                   builder: (context, profilePostP, child) => RefreshIndicator(
-                    onRefresh: () async => profilePostP.refreshUserPosts(
-                      userID: widget.userID,
-                      userType: widget.userType,
+                    onRefresh: () async => await refreshCallBack(
+                      context: context,
+                      func: () async => await profilePostP.refreshUserPosts(
+                        userID: widget.userID,
+                        userType: widget.userType,
+                      ),
                     ),
                     child: profilePostP.getUserPostData == null
                         ? const ErrorView()

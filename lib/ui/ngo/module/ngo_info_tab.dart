@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/profile/ngo_profile.dart';
@@ -66,11 +67,14 @@ class _NGOInfoTabState extends State<NGOInfoTab>
               ? const CustomLoading()
               : Consumer<NGOProvider>(
                   builder: (context, ngoP, child) => RefreshIndicator(
-                    onRefresh: () async {
-                      await ngoP.refreshNGO(ngoID: widget.ngoID);
-                      var data = _ngoP.getNGO;
-                      if (data != null) setDonationFAB(data);
-                    },
+                    onRefresh: () async => await refreshCallBack(
+                      context: context,
+                      func: () async {
+                        await ngoP.refreshNGO(ngoID: widget.ngoID);
+                        var data = _ngoP.getNGO;
+                        if (data != null) setDonationFAB(data);
+                      },
+                    ),
                     child: ngoP.getNGO == null
                         ? const ErrorView()
                         : ListView(

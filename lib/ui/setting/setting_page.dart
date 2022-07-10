@@ -37,7 +37,7 @@ class _SettingScreenState extends State<SettingScreen>
   void onPressLogout() {
     showCustomDialog(
       context: context,
-      title: 'Logout',
+      title: 'Confirm Logout',
       content: 'Do it with passion or not at all.',
       okFunc: () async {
         Navigator.of(context).pop();
@@ -50,7 +50,7 @@ class _SettingScreenState extends State<SettingScreen>
         } else {
           showSnackBar(
               context: context,
-              message: 'Unable to logout!',
+              message: 'Unable to logout',
               errorSnackBar: true);
         }
       },

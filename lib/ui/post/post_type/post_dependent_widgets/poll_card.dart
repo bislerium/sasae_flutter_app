@@ -17,7 +17,7 @@ class PollCard extends StatefulWidget {
       : super(key: key);
 
   @override
-  _PollCardState createState() => _PollCardState();
+  State<PollCard> createState() => _PollCardState();
 }
 
 class _PollCardState extends State<PollCard> {
@@ -87,7 +87,7 @@ class _PollCardState extends State<PollCard> {
                     DateTime.now().isBefore(widget.endsOn!)))
               PollBarPollList(
                 list: widget.list,
-                handler: setChoice,
+                pollCallBack: setChoice,
               )
             else
               PollBarRevealList(

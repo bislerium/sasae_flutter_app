@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -16,6 +17,32 @@ class PostTailCard extends StatelessWidget {
       required this.createdOn,
       this.modifiedOn})
       : super(key: key);
+
+  void showDialog(BuildContext context) => showCustomDialog(
+        context: context,
+        title: 'Confirm Report',
+        content:
+            'Think wise & avoid unnecesary report just for personal annoyance & grudge!, ',
+        okFunc: () async {
+          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
+              .getConnectionStatusCallBack(context)
+              .call()) return;
+          Navigator.of(context).pop();
+          bool success = await Provider.of<PostProvider>(context, listen: false)
+              .report(postID: postID);
+          if (success) {
+            showSnackBar(
+              context: context,
+              message: 'Reported successfully',
+            );
+          } else {
+            showSnackBar(
+              context: context,
+              errorSnackBar: true,
+            );
+          }
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -59,29 +86,13 @@ class PostTailCard extends StatelessWidget {
                 width: 140,
               ),
               child: ElevatedButton.icon(
-                onPressed: () => showCustomDialog(
-                  context: context,
-                  title: 'Confirm Report',
-                  content:
-                      'Think wise & avoid unnecesary report just for personal annoyance & grudge!, ',
-                  okFunc: () async {
-                    Navigator.of(context).pop();
-                    bool success =
-                        await Provider.of<PostProvider>(context, listen: false)
-                            .report(postID: postID);
-                    if (success) {
-                      showSnackBar(
-                        context: context,
-                        message: 'Reported successfully',
-                      );
-                    } else {
-                      showSnackBar(
-                        context: context,
-                        errorSnackBar: true,
-                      );
-                    }
-                  },
-                ),
+                onPressed: () {
+                  if (!Provider.of<InternetConnetionProvider>(context,
+                          listen: false)
+                      .getConnectionStatusCallBack(context)
+                      .call()) return;
+                  showDialog(context);
+                },
                 icon: const Icon(Icons.report_outlined),
                 style: ElevatedButton.styleFrom(
                   primary: Theme.of(context).colorScheme.error,

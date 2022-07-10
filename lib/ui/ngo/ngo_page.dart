@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_list.dart';
@@ -43,7 +44,10 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                     Expanded(
                       child: Consumer<NGOProvider>(
                         builder: (context, ngoP, child) => RefreshIndicator(
-                          onRefresh: ngoP.refreshNGOs,
+                          onRefresh: () async => await refreshCallBack(
+                            context: context,
+                            func: ngoP.refreshNGOs,
+                          ),
                           child: ngoP.getIsFetchError
                               ? const ErrorView(
                                   fraction: 0.75,

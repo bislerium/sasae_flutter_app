@@ -9,7 +9,7 @@ import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 
 class PeopleProvider with ChangeNotifier {
   late AuthProvider _authP;

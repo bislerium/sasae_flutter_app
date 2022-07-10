@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -58,7 +59,11 @@ class _PollPostScreenState extends State<PollPostScreen> {
             ? const CustomLoading()
             : Consumer<PollPostProvider>(
                 builder: (context, postP, child) => RefreshIndicator(
-                  onRefresh: () => postP.refreshPollPost(postID: widget.postID),
+                  onRefresh: () async => await refreshCallBack(
+                    context: context,
+                    func: () async =>
+                        await postP.refreshPollPost(postID: widget.postID),
+                  ),
                   child: postP.pollPostData == null
                       ? const ErrorView()
                       : ListView(
