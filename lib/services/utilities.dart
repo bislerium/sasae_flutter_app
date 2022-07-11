@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +9,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:randexp/randexp.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:shake/shake.dart';
 
 Future<void> refreshCallBack(
     {required BuildContext context,
@@ -24,6 +28,17 @@ Future<void> refreshCallBack(
 Future<XFile> imageURLToXFile(String imageURL) async => XFile(
       (await DefaultCacheManager().getSingleFile(imageURL)).path,
     );
+
+Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
+  final Directory output = await getTemporaryDirectory();
+  final String screenshotFilePath =
+      '${output.path}/feedback-${generateUID()}.png';
+  final File screenshotFile = File(screenshotFilePath);
+  await screenshotFile.writeAsBytes(feedbackScreenshot);
+  return screenshotFilePath;
+}
+
+String generateUID() => DateTime.now().microsecondsSinceEpoch.toString();
 
 num turnicate(num value, {int decimalPlace = 1}) {
   var _ = pow(10, decimalPlace);
@@ -81,3 +96,10 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
     }
   });
 }
+
+ShakeDetector getShakeDetector(BuildContext context) => ShakeDetector.autoStart(
+      onPhoneShake: () {
+        showSnackBar(
+            context: context, message: 'Shaked'); // Do stuff on phone shake
+      },
+    );

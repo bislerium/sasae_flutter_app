@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/notification_provider.dart';
-import 'package:sasae_flutter_app/ui/notification/module/mark_clear_button.dart';
 import 'package:sasae_flutter_app/ui/notification/module/notification_list.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -18,23 +19,38 @@ class _NotificationPageState extends State<NotificationPage>
   late final ScrollController _scrollController;
   late final Future<void> _fetchNotificationFUTURE;
   late final NotificationProvider _notificationP;
+  late final NotificationActionFABProvider _notificationFABP;
 
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    _fetchNotificationFUTURE = _fetchPost();
+    _scrollController.addListener(notificationActionFABListenScroll);
+    _fetchNotificationFUTURE = _fetchNotifications();
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(notificationActionFABListenScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
-  Future<void> _fetchPost() async {
+  Future<void> _fetchNotifications() async {
     _notificationP = Provider.of<NotificationProvider>(context, listen: false);
+    _notificationFABP =
+        Provider.of<NotificationActionFABProvider>(context, listen: false);
     await _notificationP.fetchNotifications();
+    if (_notificationP.getNotifications.isNotEmpty) {
+      _notificationFABP.setShowFAB = true;
+    }
+  }
+
+  void notificationActionFABListenScroll() {
+    var direction = _scrollController.position.userScrollDirection;
+    direction == ScrollDirection.reverse
+        ? _notificationFABP.setShowFAB = false
+        : _notificationFABP.setShowFAB = true;
   }
 
   @override
@@ -47,21 +63,13 @@ class _NotificationPageState extends State<NotificationPage>
               ? const CustomLoading()
               : Consumer<NotificationProvider>(
                   builder: (context, notificationP, child) =>
-                      notificationP.getNotifications.isEmpty
-                          ? const ErrorView(
-                              errorMessage: 'No Notifications yet 😴...',
+                      notificationP.getNotifications.isNotEmpty
+                          ? NotificationList(
+                              scrollController: _scrollController,
+                              notifications: notificationP.getNotifications,
                             )
-                          : Stack(
-                              alignment: AlignmentDirectional.bottomEnd,
-                              children: [
-                                NotificationList(
-                                  scrollController: _scrollController,
-                                  notifications: notificationP.getNotifications,
-                                ),
-                                MarkClearButton(
-                                  scrollController: _scrollController,
-                                ),
-                              ],
+                          : const ErrorView(
+                              errorMessage: 'No Notifications yet 😴...',
                             ),
                 ),
     );

@@ -89,7 +89,7 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
     return ListTile(
       iconColor: Theme.of(context).colorScheme.secondary,
       textColor: Theme.of(context).colorScheme.onBackground,
-      leading: const Icon(Icons.color_lens_rounded),
+      leading: const Icon(Icons.palette_rounded),
       title: const Text('Color'),
       trailing: GestureDetector(
         onTap: showColorPickerDialog,

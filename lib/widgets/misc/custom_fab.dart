@@ -31,9 +31,6 @@ class CustomFAB extends StatelessWidget {
         tooltip: tooltip,
         backgroundColor: background,
         foregroundColor: foreground,
-        // label: Text(
-        //   text,
-        // ),
         child: Icon(icon),
       );
 }

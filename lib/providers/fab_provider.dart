@@ -95,6 +95,32 @@ class PostFABProvider with ChangeNotifier {
   }
 }
 
+class NotificationActionFABProvider with ChangeNotifier {
+  bool _showFAB;
+
+  NotificationActionFABProvider() : _showFAB = false;
+
+  bool get getShowFAB => _showFAB;
+
+  set setShowFAB(bool show) {
+    if (_showFAB != show) {
+      _showFAB = show;
+      notifyListeners();
+    }
+  }
+
+  VoidCallback? _onPressedHandler;
+
+  VoidCallback? get getOnPressedHandler => _onPressedHandler;
+
+  set setOnPressedHandler(VoidCallback? handler) {
+    if (_onPressedHandler != handler) {
+      _onPressedHandler = handler;
+      notifyListeners();
+    }
+  }
+}
+
 class LogoutFABProvider with ChangeNotifier {
   bool _showFAB;
 

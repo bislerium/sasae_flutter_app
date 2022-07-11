@@ -92,10 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
         builder: ((context, authP, child) => ElevatedButton(
               key: const Key('loginAB'),
               style: ElevatedButton.styleFrom(
-                shape: const CircleBorder(),
-                primary: Theme.of(context).colorScheme.secondaryContainer,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                padding: const EdgeInsets.all(20),
               ),
               onPressed: () async {
                 if (authP.isAuthenticating) return;
@@ -170,7 +167,7 @@ class _AuthScreenState extends State<AuthScreen> {
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           width: double.infinity,
           child: RichText(
             textAlign: TextAlign.center,
@@ -204,11 +201,10 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           Text(
             'Sasae',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ],
       );
@@ -219,7 +215,7 @@ class _AuthScreenState extends State<AuthScreen> {
           children: <Widget>[
             _userName(),
             const SizedBox(
-              height: 2,
+              height: 1,
             ),
             _passwordField(),
           ],
@@ -327,7 +323,7 @@ class _AuthScreenState extends State<AuthScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 40.0),
         child: Column(
           children: <Widget>[
-            SizedBox(height: height * 0.20),
+            SizedBox(height: height * 0.17),
             _logo(),
             SizedBox(height: height * 0.05),
             _loginForm(),
@@ -347,7 +343,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ],
             ),
-            SizedBox(height: height * 0.15),
+            SizedBox(height: height * 0.18),
             _createAccountLabel(),
           ],
         ),

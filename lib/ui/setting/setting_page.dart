@@ -59,7 +59,7 @@ class _SettingScreenState extends State<SettingScreen>
   }
 
   Widget about() => ListTile(
-        leading: const Icon(Icons.info),
+        leading: const Icon(Icons.info_rounded),
         iconColor: Theme.of(context).colorScheme.secondary,
         textColor: Theme.of(context).colorScheme.onBackground,
         title: const Text('About'),
@@ -112,7 +112,7 @@ class _SettingScreenState extends State<SettingScreen>
       );
 
   Widget licenses() => ListTile(
-        leading: const Icon(Icons.source),
+        leading: const Icon(Icons.source_rounded),
         iconColor: Theme.of(context).colorScheme.secondary,
         textColor: Theme.of(context).colorScheme.onBackground,
         title: const Text('Licenses'),
@@ -130,8 +130,8 @@ class _SettingScreenState extends State<SettingScreen>
   Widget themeToggleTile() => ListTile(
         iconColor: Theme.of(context).colorScheme.secondary,
         textColor: Theme.of(context).colorScheme.onBackground,
-        leading: const Icon(Icons.dark_mode_rounded),
-        title: const Text('Theme'),
+        leading: const Icon(Icons.contrast_rounded),
+        title: const Text('Mode'),
         trailing: const ThemeToggleButton(),
       );
 

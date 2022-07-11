@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:feedback/feedback.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
@@ -18,6 +21,8 @@ import 'package:sasae_flutter_app/ui/ngo/ngo_page.dart';
 import 'package:sasae_flutter_app/ui/post/post_page.dart';
 import 'package:sasae_flutter_app/ui/profile/user_profile_page.dart';
 import 'package:sasae_flutter_app/ui/setting/setting_page.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:shake/shake.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -31,12 +36,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
-  late final StreamSubscription<ConnectivityResult> subscription;
+  late final StreamSubscription<ConnectivityResult> _subscription;
+  late final ShakeDetector _shakeDetector;
 
   @override
   void initState() {
     super.initState();
-    subscription = getConnectivitySubscription(context);
+    _subscription = getConnectivitySubscription(context);
+    _shakeDetector = ShakeDetector.autoStart(
+      onPhoneShake: () {
+        print('hghg-------------------');
+        showSnackBar(
+            context: context, message: 'Shaked'); // Do stuff on phone shake
+      },
+    );
+
     _pageNavigatorP =
         Provider.of<PageNavigatorProvider>(context, listen: false);
     NotificationService.getInstance().initialize(context);
@@ -69,7 +83,8 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
-    subscription.cancel();
+    _subscription.cancel();
+    _shakeDetector.stopListening();
     _pageNavigatorP.reset();
     super.dispose();
   }
@@ -116,18 +131,74 @@ class _HomePageState extends State<HomePage>
                         .getOnPressedHandler,
                     tooltip: 'Post a Post',
                   )
-                : _pageNavigatorP.getPageIndex == 4
-                    ? CustomFAB(
-                        key: const Key('logoutFAB'),
-                        text: 'Logout',
-                        icon: Icons.logout,
-                        func: Provider.of<LogoutFABProvider>(context)
-                            .getOnPressedHandler,
-                        foreground: Theme.of(context).colorScheme.onError,
-                        background: Theme.of(context).colorScheme.error,
-                        tooltip: 'Logout',
+                : _pageNavigatorP.getPageIndex == 3 &&
+                        Provider.of<NotificationActionFABProvider>(context)
+                            .getShowFAB
+                    ? Wrap(
+                        direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.end,
+                        spacing: 20,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: () {
+                              BetterFeedback.of(context).show((feedback) async {
+                                // draft an email and send to developer
+                                final String screenshotFilePath =
+                                    await writeImageToStorage(
+                                        feedback.screenshot);
+
+                                final Email email = Email(
+                                  body: feedback.text,
+                                  subject: 'App Feedback',
+                                  recipients: ['bigc.liaise@gmail.com'],
+                                  attachmentPaths: [
+                                    screenshotFilePath,
+                                  ],
+                                  isHTML: false,
+                                );
+                                await FlutterEmailSender.send(email);
+                              });
+                              // showCustomDialog(
+                              //     context: context,
+                              //     title: 'Clear Notifications',
+                              //     content: 'You cannot undo this action.',
+                              //     okFunc: () async {
+                              //       await Provider.of<NotificationProvider>(
+                              //               context,
+                              //               listen: false)
+                              //           .clearNotification();
+                              //       if (!mounted) return;
+                              //       Navigator.of(context).pop();
+                              //     });
+                            },
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
+                            foregroundColor: Theme.of(context)
+                                .colorScheme
+                                .onSecondaryContainer,
+                            child: const Icon(Icons.clear_all_rounded),
+                          ),
+                          FloatingActionButton.large(
+                              onPressed: () async =>
+                                  Provider.of<NotificationProvider>(context,
+                                          listen: false)
+                                      .markAsReadAll(),
+                              child: const Icon(Icons.done_all))
+                        ],
                       )
-                    : null,
+                    : _pageNavigatorP.getPageIndex == 4
+                        ? CustomFAB(
+                            key: const Key('logoutFAB'),
+                            text: 'Logout',
+                            icon: Icons.logout,
+                            func: Provider.of<LogoutFABProvider>(context)
+                                .getOnPressedHandler,
+                            foreground: Theme.of(context).colorScheme.onError,
+                            background: Theme.of(context).colorScheme.error,
+                            tooltip: 'Logout',
+                          )
+                        : null,
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
           destinations: const [

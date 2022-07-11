@@ -45,10 +45,11 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> markRead(int notificationID) async {
-    NotificationModel _ = _notifications
+    NotificationModel notification = _notifications
         .firstWhere((element) => element.id == notificationID)
       ..isRead = true;
-    await jsonStore.setItem('notification-$notificationID', _.toMap());
+    await jsonStore.setItem(
+        'notification-$notificationID', notification.toMap());
     notifyListeners();
   }
 
@@ -62,7 +63,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<void> clearNotification() async {
     _notifications.clear();
-    await jsonStore.clearDataBase();
+    await jsonStore.deleteLike('notification%');
     notifyListeners();
   }
 
@@ -79,7 +80,7 @@ class NotificationProvider extends ChangeNotifier {
     await jsonStore.commitBatch(batch);
   }
 
-  Future<void> fetchNotifications({bool isDemo = demo}) async {
+  Future<void> fetchNotifications() async {
     if (demo) {
       await delay();
       _notifications = _randNotifications();

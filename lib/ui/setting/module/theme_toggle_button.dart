@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/main.dart';
 import 'package:sasae_flutter_app/providers/theme_provider.dart';
 
 class ThemeToggleButton extends StatefulWidget {
@@ -11,7 +10,7 @@ class ThemeToggleButton extends StatefulWidget {
 }
 
 class _ThemeToggleButtonState extends State<ThemeToggleButton> {
-  // Light, Dark, System
+  // System, Light, Dark
   final List<bool> _toggleButtonsState = [false, false, false];
   late final ThemeProvider themeP;
 
@@ -19,15 +18,15 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
   void initState() {
     super.initState();
     themeP = Provider.of<ThemeProvider>(context, listen: false);
-    _toggleButtonsState[themeP.getThemeMode.index - 1] = true;
+    _toggleButtonsState[themeP.getThemeMode.index] = true;
   }
 
   void setToggleButtonState(
-      {bool light = false, bool dark = false, bool system = false}) {
+      {bool system = false, bool light = false, bool dark = false}) {
     setState(() {
-      _toggleButtonsState[0] = light;
-      _toggleButtonsState[1] = dark;
-      _toggleButtonsState[2] = system;
+      _toggleButtonsState[0] = system;
+      _toggleButtonsState[1] = light;
+      _toggleButtonsState[2] = dark;
     });
   }
 
@@ -37,21 +36,25 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
       onPressed: (int index) {
         switch (index) {
           case 0:
+            themeP.setThemeMode = ThemeMode.system;
+            setToggleButtonState(system: true);
+            break;
+          case 1:
             themeP.setThemeMode = ThemeMode.light;
             setToggleButtonState(light: true);
             break;
-          case 1:
+          case 2:
             themeP.setThemeMode = ThemeMode.dark;
             setToggleButtonState(dark: true);
-            break;
-          case 2:
-            themeP.setThemeMode = ThemeMode.system;
-            setToggleButtonState(system: true);
             break;
         }
       },
       isSelected: _toggleButtonsState,
       children: const [
+        Tooltip(
+          message: 'System Theme',
+          child: Icon(Icons.brightness_medium_rounded),
+        ),
         Tooltip(
           message: 'Light Theme',
           child: Icon(Icons.light_mode_rounded),
@@ -59,10 +62,6 @@ class _ThemeToggleButtonState extends State<ThemeToggleButton> {
         Tooltip(
           message: 'Dark Theme',
           child: Icon(Icons.dark_mode_rounded),
-        ),
-        Tooltip(
-          message: 'System Theme',
-          child: Icon(Icons.brightness_medium_rounded),
         ),
       ],
     );

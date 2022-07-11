@@ -7,6 +7,7 @@ import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 
 class NotificationTile extends StatelessWidget {
   final NotificationModel notification;
@@ -36,18 +37,16 @@ class NotificationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     Color? color =
         notification.isRead ? null : Theme.of(context).colorScheme.primary;
-    return Container(
+    return CustomCard(
       margin: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
+      elevation: 0,
       child: ListTile(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           leading: Icon(getIcon(notification.channel), color: color),
+          horizontalTitleGap: 6,
           title: Text(
             notification.title,
             style: TextStyle(

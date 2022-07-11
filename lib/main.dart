@@ -1,4 +1,4 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:feedback/feedback.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -32,19 +32,14 @@ import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
 
-AdaptiveThemeMode? deviceThemeMode = AdaptiveThemeMode.system;
-
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
-  AdaptiveThemeMode? deviceThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
     ChangeNotifierProvider<ThemeProvider>(
       create: (context) => ThemeProvider(),
-      child: MyApp(
-        savedThemeMode: deviceThemeMode,
-      ),
+      child: const MyApp(),
     ),
   );
 }
@@ -166,6 +161,9 @@ List<SingleChildWidget> _providers() => [
         create: (_) => PostFABProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => NotificationActionFABProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => LogoutFABProvider(),
       ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
@@ -214,14 +212,21 @@ List<SingleChildWidget> _providers() => [
     ];
 
 class MyApp extends StatefulWidget {
-  final AdaptiveThemeMode? savedThemeMode;
-  const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ThemeProvider>(context, listen: false).fetchTheme();
+  }
+
   @override
   Widget build(BuildContext context) {
     return KhaltiScope(
@@ -260,47 +265,55 @@ class _MyAppState extends State<MyApp> {
                   brightness: Brightness.dark,
                 );
               }
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                navigatorKey: navigatorKey,
-                supportedLocales: const [
-                  Locale('en', 'US'),
-                  Locale('ne', 'NP'),
+              return BetterFeedback(
+                localeOverride: const Locale('en'),
+                mode: FeedbackMode.draw,
+                pixelRatio: 1,
+                localizationsDelegates: [
+                  GlobalFeedbackLocalizationsDelegate(),
                 ],
-                localizationsDelegates: const [
-                  KhaltiLocalizations.delegate,
-                  FormBuilderLocalizations.delegate,
-                ],
-                theme: ThemeData(
-                  visualDensity: VisualDensity.comfortable,
-                  platform: TargetPlatform.android,
-                  colorScheme: lightColorScheme,
-                  useMaterial3: true,
-                  chipTheme: ChipThemeData(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  navigatorKey: navigatorKey,
+                  supportedLocales: const [
+                    Locale('en', 'US'),
+                    Locale('ne', 'NP'),
+                  ],
+                  localizationsDelegates: const [
+                    KhaltiLocalizations.delegate,
+                    FormBuilderLocalizations.delegate,
+                  ],
+                  theme: ThemeData(
+                    visualDensity: VisualDensity.comfortable,
+                    platform: TargetPlatform.android,
+                    colorScheme: lightColorScheme,
+                    useMaterial3: true,
+                    chipTheme: ChipThemeData(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                    typography: Typography.material2021(),
                   ),
-                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                  typography: Typography.material2021(),
-                ),
-                darkTheme: ThemeData(
-                  visualDensity: VisualDensity.comfortable,
-                  platform: TargetPlatform.android,
-                  colorScheme: darkColorScheme,
-                  useMaterial3: true,
-                  chipTheme: ChipThemeData(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  darkTheme: ThemeData(
+                    visualDensity: VisualDensity.comfortable,
+                    platform: TargetPlatform.android,
+                    colorScheme: darkColorScheme,
+                    useMaterial3: true,
+                    chipTheme: ChipThemeData(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
+                    fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                    typography: Typography.material2021(),
                   ),
-                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                  typography: Typography.material2021(),
+                  themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
+                  title: 'Sasae',
+                  home: const PageRouter(),
+                  onGenerateRoute: (settings) => _screenRoutes(settings),
                 ),
-                themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
-                title: 'Sasae',
-                home: const PageRouter(),
-                onGenerateRoute: (settings) => _screenRoutes(settings),
               );
             });
           }),
