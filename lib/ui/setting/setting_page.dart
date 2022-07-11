@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
+import 'package:sasae_flutter_app/ui/setting/module/branding_color_tile.dart';
 import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -126,7 +127,7 @@ class _SettingScreenState extends State<SettingScreen>
         },
       );
 
-  Widget darkMode() => ListTile(
+  Widget themeToggleTile() => ListTile(
         iconColor: Theme.of(context).colorScheme.secondary,
         textColor: Theme.of(context).colorScheme.onBackground,
         leading: const Icon(Icons.dark_mode_rounded),
@@ -143,7 +144,8 @@ class _SettingScreenState extends State<SettingScreen>
       children: [
         about(),
         licenses(),
-        darkMode(),
+        themeToggleTile(),
+        const BrandingColorTile(),
       ],
     );
   }

@@ -40,7 +40,7 @@ class _RequestFABState extends State<RequestFAB> {
           context: context,
           message: widget.requestType == 'Petition'
               ? 'Already signed'
-              : 'Already Joined',
+              : 'Already joined',
           errorSnackBar: true);
       return;
     }

@@ -177,11 +177,11 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: ngoP.getIsFiltered
-                        ? Theme.of(context).colorScheme.secondaryContainer
-                        : Theme.of(context).colorScheme.background,
-                  ),
+                  // style: ElevatedButton.styleFrom(
+                  //   primary: ngoP.getIsFiltered
+                  //       ? Theme.of(context).colorScheme.secondaryContainer
+                  //       : Theme.of(context).colorScheme.background,
+                  // ),
                   onPressed: isDataUnavailable
                       ? null
                       : () async {

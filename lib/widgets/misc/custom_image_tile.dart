@@ -16,6 +16,7 @@ class CustomImageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomMaterialTile(
+        borderRadius: 12,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(

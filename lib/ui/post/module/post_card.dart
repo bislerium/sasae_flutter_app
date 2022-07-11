@@ -141,17 +141,11 @@ class PostCard extends StatelessWidget {
                       .toList(),
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                width: MediaQuery.of(context).size.width - 20,
-                child: Text(
-                  post.postContent,
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              Text(
+                post.postContent,
+                style: Theme.of(context).textTheme.bodyMedium,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
               ),
               SizedBox(
                 height: 50,

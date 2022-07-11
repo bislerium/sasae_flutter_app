@@ -66,7 +66,7 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
           .setIsConnected = false;
       showSnackBar(
         context: context,
-        icon: Icons.cloud_outlined,
+        icon: Icons.ssid_chart_rounded,
         message: 'Internet disconnected',
         errorSnackBar: true,
       );

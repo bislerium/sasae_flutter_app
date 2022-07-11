@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.0"
-  another_flushbar:
-    dependency: "direct main"
-    description:
-      name: another_flushbar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.10.29"
   archive:
     dependency: transitive
     description:
@@ -365,13 +358,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.2"
-  flex_color_scheme:
+  flex_color_picker:
     dependency: "direct main"
     description:
-      name: flex_color_scheme
+      name: flex_color_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.1"
+    version: "2.5.0"
   flutter:
     dependency: "direct main"
     description: flutter

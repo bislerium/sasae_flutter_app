@@ -68,12 +68,11 @@ dependencies:
   adaptive_theme: any
   dcdg: any
   photo_view: any
-  another_flushbar: ^1.10.29
   cached_network_image: ^3.2.1
   flutter_cache_manager: ^3.3.0
   connectivity_plus: ^2.3.5
-  flex_color_scheme: ^5.0.1
   dynamic_color: ^1.4.0
+  flex_color_picker: ^2.5.0
 
 dev_dependencies:
   flutter_launcher_icons: any

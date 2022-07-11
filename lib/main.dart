@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/providers/theme_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
@@ -38,8 +40,11 @@ void main() async {
   await Firebase.initializeApp();
   AdaptiveThemeMode? deviceThemeMode = await AdaptiveTheme.getThemeMode();
   runApp(
-    MyApp(
-      savedThemeMode: deviceThemeMode,
+    ChangeNotifierProvider<ThemeProvider>(
+      create: (context) => ThemeProvider(),
+      child: MyApp(
+        savedThemeMode: deviceThemeMode,
+      ),
     ),
   );
 }
@@ -142,6 +147,9 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
         create: (_) => InternetConnetionProvider(),
       ),
+      // ChangeNotifierProvider(
+      //   create: (_) => ThemeProvider(),
+      // ),
       ChangeNotifierProvider(
         create: (_) => PageNavigatorProvider(),
       ),
@@ -205,40 +213,6 @@ List<SingleChildWidget> _providers() => [
       ),
     ];
 
-@immutable
-class CustomColors extends ThemeExtension<CustomColors> {
-  const CustomColors({
-    required this.danger,
-  });
-
-  final Color? danger;
-
-  @override
-  CustomColors copyWith({Color? danger}) {
-    return CustomColors(
-      danger: danger ?? this.danger,
-    );
-  }
-
-  @override
-  CustomColors lerp(ThemeExtension<CustomColors>? other, double t) {
-    if (other is! CustomColors) {
-      return this;
-    }
-    return CustomColors(
-      danger: Color.lerp(danger, other.danger, t),
-    );
-  }
-
-  CustomColors harmonized(ColorScheme dynamic) {
-    return copyWith(danger: danger!.harmonizeWith(dynamic.primary));
-  }
-}
-
-const _brand = Colors.deepPurple;
-CustomColors lightCustomColors = const CustomColors(danger: Color(0xFFE53935));
-CustomColors darkCustomColors = const CustomColors(danger: Color(0xFFEF9A9A));
-
 class MyApp extends StatefulWidget {
   final AdaptiveThemeMode? savedThemeMode;
   const MyApp({Key? key, this.savedThemeMode}) : super(key: key);
@@ -255,62 +229,80 @@ class _MyAppState extends State<MyApp> {
       builder: (context, navigatorKey) {
         return MultiProvider(
           providers: _providers(),
-          child: DynamicColorBuilder(
-              builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-            ColorScheme lightColorScheme;
-            ColorScheme darkColorScheme;
+          child: Builder(builder: (context) {
+            Color brandingColor =
+                Provider.of<ThemeProvider>(context).getBrandingColor;
+            return DynamicColorBuilder(
+                builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+              ColorScheme lightColorScheme;
+              ColorScheme darkColorScheme;
 
-            if (lightDynamic != null && darkDynamic != null) {
-              // On Android S+ devices, use the provided dynamic color scheme.
-              // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
-              lightColorScheme = lightDynamic.harmonized();
-              // (Optional) Customize the scheme as desired. For example, one might
-              // want to use a brand color to override the dynamic [ColorScheme.secondary].
-              lightColorScheme = lightColorScheme.copyWith(secondary: _brand);
-              // (Optional) If applicable, harmonize custom colors.
-              lightCustomColors =
-                  lightCustomColors.harmonized(lightColorScheme);
+              if (lightDynamic != null && darkDynamic != null) {
+                // On Android S+ devices, use the provided dynamic color scheme.
+                // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+                lightColorScheme = lightDynamic.harmonized();
+                // (Optional) Customize the scheme as desired. For example, one might
+                // want to use a brand color to override the dynamic [ColorScheme.secondary].
+                lightColorScheme =
+                    lightColorScheme.copyWith(secondary: brandingColor);
 
-              // Repeat for the dark color scheme.
-              darkColorScheme = darkDynamic.harmonized();
-              darkColorScheme = darkColorScheme.copyWith(secondary: _brand);
-              darkCustomColors = darkCustomColors.harmonized(darkColorScheme);
-            } else {
-              // Otherwise, use fallback schemes.
-              lightColorScheme = ColorScheme.fromSeed(
-                seedColor: _brand,
-              );
-              darkColorScheme = ColorScheme.fromSeed(
-                seedColor: _brand,
-                brightness: Brightness.dark,
-              );
-            }
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              navigatorKey: navigatorKey,
-              supportedLocales: const [
-                Locale('en', 'US'),
-                Locale('ne', 'NP'),
-              ],
-              localizationsDelegates: const [
-                KhaltiLocalizations.delegate,
-                FormBuilderLocalizations.delegate,
-              ],
-              theme: ThemeData(
+                // Repeat for the dark color scheme.
+                darkColorScheme = darkDynamic.harmonized();
+                darkColorScheme =
+                    darkColorScheme.copyWith(secondary: brandingColor);
+              } else {
+                // Otherwise, use fallback schemes.
+                lightColorScheme = ColorScheme.fromSeed(
+                  seedColor: brandingColor,
+                );
+                darkColorScheme = ColorScheme.fromSeed(
+                  seedColor: brandingColor,
+                  brightness: Brightness.dark,
+                );
+              }
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                navigatorKey: navigatorKey,
+                supportedLocales: const [
+                  Locale('en', 'US'),
+                  Locale('ne', 'NP'),
+                ],
+                localizationsDelegates: const [
+                  KhaltiLocalizations.delegate,
+                  FormBuilderLocalizations.delegate,
+                ],
+                theme: ThemeData(
+                  visualDensity: VisualDensity.comfortable,
                   platform: TargetPlatform.android,
                   colorScheme: lightColorScheme,
-                  extensions: [lightCustomColors],
-                  useMaterial3: true),
-              darkTheme: ThemeData(
+                  useMaterial3: true,
+                  chipTheme: ChipThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                  typography: Typography.material2021(),
+                ),
+                darkTheme: ThemeData(
+                  visualDensity: VisualDensity.comfortable,
                   platform: TargetPlatform.android,
                   colorScheme: darkColorScheme,
-                  extensions: [darkCustomColors],
-                  useMaterial3: true),
-              themeMode: ThemeMode.system,
-              title: 'Sasae',
-              home: const PageRouter(),
-              onGenerateRoute: (settings) => _screenRoutes(settings),
-            );
+                  useMaterial3: true,
+                  chipTheme: ChipThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                  typography: Typography.material2021(),
+                ),
+                themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
+                title: 'Sasae',
+                home: const PageRouter(),
+                onGenerateRoute: (settings) => _screenRoutes(settings),
+              );
+            });
           }),
         );
       },

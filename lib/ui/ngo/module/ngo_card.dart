@@ -30,7 +30,7 @@ class NGOCard extends StatelessWidget {
               CustomImage(
                 imageURL: ngo_.orgPhoto,
                 width: 100.0,
-                radius: 10,
+                radius: 12,
                 onTapViewImage: false,
                 includeHero: false,
               ),
@@ -94,16 +94,6 @@ class NGOCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // SizedBox(
-                      //   height: 40,
-                      //   child: AutoSizeText(
-                      //     ngo_.orgName,
-                      //     softWrap: true,
-                      //     style: Theme.of(context).textTheme.headline6,
-                      //     maxLines: 2,
-                      //     minFontSize: 10,
-                      //   ),
-                      // ),
                       SizedBox(
                         height: 40,
                         child: ListView.builder(

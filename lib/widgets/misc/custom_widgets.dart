@@ -1,9 +1,6 @@
 import 'dart:ui';
 
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-
-late Flushbar flushbar;
 
 void showSnackBar({
   required BuildContext context,
@@ -12,36 +9,37 @@ void showSnackBar({
   bool errorSnackBar = false,
   int durationInSecond = 6,
 }) {
-  assert((!errorSnackBar && (message != null)) || errorSnackBar);
   var onError = Theme.of(context).colorScheme.onError;
   var onInfo = Theme.of(context).colorScheme.onInverseSurface;
-
-  flushbar = Flushbar(
-    icon: Icon(
-      icon ?? (errorSnackBar ? Icons.error_outline : Icons.info_outline),
-      color: errorSnackBar ? onError : onInfo,
-    ),
-    margin: const EdgeInsets.all(12),
-    borderRadius: BorderRadius.circular(6),
-    message: message ?? 'Something went wrong',
-    // messageSize: 16,
-    messageColor: errorSnackBar ? onError : onInfo,
-    backgroundColor: errorSnackBar
-        ? Theme.of(context).colorScheme.error
-        : Theme.of(context).colorScheme.inverseSurface,
-    duration: Duration(seconds: durationInSecond),
-    mainButton: TextButton(
-      onPressed: () => flushbar.dismiss(true),
-      child: Text(
-        "Dismiss",
-        style: TextStyle(
-          color: errorSnackBar ? onError : onInfo,
-          fontWeight: FontWeight.bold,
-        ),
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      action: SnackBarAction(
+        label: 'Dismiss',
+        textColor: errorSnackBar ? onError : onInfo,
+        onPressed: () {},
       ),
+      content: Row(
+        children: [
+          Icon(
+            icon ?? (errorSnackBar ? Icons.error_outline : Icons.info_outline),
+            color: errorSnackBar ? onError : onInfo,
+          ),
+          const SizedBox(
+            width: 8,
+          ),
+          Text(
+            message ?? 'Something went wrong',
+            style: TextStyle(
+              color: errorSnackBar ? onError : onInfo,
+            ),
+          ),
+        ],
+      ),
+      backgroundColor: errorSnackBar
+          ? Theme.of(context).colorScheme.error
+          : Theme.of(context).colorScheme.inverseSurface,
     ),
-    animationDuration: const Duration(milliseconds: 600),
-  )..show(context);
+  );
 }
 
 Future<void> showModalSheet({
@@ -96,35 +94,22 @@ void showCustomDialog(
           sigmaY: 8,
         ),
         child: AlertDialog(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          elevation: 3,
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
             ElevatedButton(
               onPressed: okFunc,
-              child: Text(
+              child: const Text(
                 'Ok',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
               ),
             ),
             TextButton(
               onPressed: cancelFunc ?? () => Navigator.pop(context, 'Cancel'),
-              child: Text(
+              child: const Text(
                 'Cancel',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
               ),
             ),
           ],
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
-          ),
         ),
       ),
       barrierDismissible: false,

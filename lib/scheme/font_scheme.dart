@@ -6,7 +6,7 @@ TextStyle getTextStyle({
   FontWeight? fontWeight,
   double? letterSpacing,
 }) =>
-    GoogleFonts.robotoFlex(
+    GoogleFonts.openSans(
       fontSize: fontSize,
       fontWeight: fontWeight,
       letterSpacing: letterSpacing,
