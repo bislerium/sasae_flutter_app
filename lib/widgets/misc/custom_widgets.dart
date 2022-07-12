@@ -104,7 +104,7 @@ void showCustomDialog(
               ),
             ),
             TextButton(
-              onPressed: cancelFunc ?? () => Navigator.pop(context, 'Cancel'),
+              onPressed: cancelFunc ?? () => Navigator.pop(context),
               child: const Text(
                 'Cancel',
               ),

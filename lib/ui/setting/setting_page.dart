@@ -41,7 +41,7 @@ class _SettingScreenState extends State<SettingScreen>
       title: 'Confirm Logout',
       content: 'Do it with passion or not at all.',
       okFunc: () async {
-        Navigator.of(context).pop();
+        Navigator.pop(context);
         bool success =
             await Provider.of<AuthProvider>(context, listen: false).logout();
         if (success) {

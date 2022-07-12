@@ -16,10 +16,12 @@ class NotificationList extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       children: notifications
-          .map((e) => NotificationTile(
-                key: ValueKey(e.id),
-                notification: e,
-              ))
+          .map(
+            (e) => NotificationTile(
+              key: ValueKey(e.id),
+              notification: e,
+            ),
+          )
           .toList(),
     );
   }

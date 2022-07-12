@@ -35,6 +35,12 @@ class _PageRouterState extends State<PageRouter> {
     _autoLoginFuture = tryAutoLogin();
   }
 
+  @override
+  void dispose() {
+    _shakeDetector.stopListening();
+    super.dispose();
+  }
+
   Future<void> tryAutoLogin() async {
     _authP = Provider.of<AuthProvider>(context, listen: false);
     await _authP.tryAutoLogin();

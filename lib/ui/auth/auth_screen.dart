@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
         builder: ((context, authP, child) => ElevatedButton(
               key: const Key('loginAB'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(14),
               ),
               onPressed: () async {
                 if (authP.isAuthenticating) return;
@@ -343,7 +343,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ],
             ),
-            SizedBox(height: height * 0.18),
+            SizedBox(height: height * 0.20),
             _createAccountLabel(),
           ],
         ),

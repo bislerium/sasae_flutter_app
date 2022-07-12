@@ -141,35 +141,35 @@ class _HomePageState extends State<HomePage>
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              BetterFeedback.of(context).show((feedback) async {
-                                // draft an email and send to developer
-                                final String screenshotFilePath =
-                                    await writeImageToStorage(
-                                        feedback.screenshot);
+                              // BetterFeedback.of(context).show((feedback) async {
+                              //   // draft an email and send to developer
+                              //   final String screenshotFilePath =
+                              //       await writeImageToStorage(
+                              //           feedback.screenshot);
 
-                                final Email email = Email(
-                                  body: feedback.text,
-                                  subject: 'App Feedback',
-                                  recipients: ['bigc.liaise@gmail.com'],
-                                  attachmentPaths: [
-                                    screenshotFilePath,
-                                  ],
-                                  isHTML: false,
-                                );
-                                await FlutterEmailSender.send(email);
-                              });
-                              // showCustomDialog(
-                              //     context: context,
-                              //     title: 'Clear Notifications',
-                              //     content: 'You cannot undo this action.',
-                              //     okFunc: () async {
-                              //       await Provider.of<NotificationProvider>(
-                              //               context,
-                              //               listen: false)
-                              //           .clearNotification();
-                              //       if (!mounted) return;
-                              //       Navigator.of(context).pop();
-                              //     });
+                              //   final Email email = Email(
+                              //     body: feedback.text,
+                              //     subject: 'App Feedback',
+                              //     recipients: ['bigc.liaise@gmail.com'],
+                              //     attachmentPaths: [
+                              //       screenshotFilePath,
+                              //     ],
+                              //     isHTML: false,
+                              //   );
+                              //   await FlutterEmailSender.send(email);
+                              // });
+                              showCustomDialog(
+                                  context: context,
+                                  title: 'Clear Notifications',
+                                  content: 'You cannot undo this action.',
+                                  okFunc: () async {
+                                    await Provider.of<NotificationProvider>(
+                                            context,
+                                            listen: false)
+                                        .clearNotification();
+                                    if (!mounted) return;
+                                    Navigator.of(context).pop();
+                                  });
                             },
                             backgroundColor: Theme.of(context)
                                 .colorScheme
