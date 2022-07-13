@@ -34,6 +34,7 @@ class _PollCardState extends State<PollCard> {
     bool success = await Provider.of<PollPostProvider>(context, listen: false)
         .pollTheOption(optionID: choice);
     if (success) {
+      if (!mounted) return;
       option.reaction.add(
           Provider.of<AuthProvider>(context, listen: false).auth!.profileID);
       setState(() {

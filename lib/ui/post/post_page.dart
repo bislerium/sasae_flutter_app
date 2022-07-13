@@ -38,11 +38,11 @@ class _PostPageState extends State<PostPage>
   }
 
   void postfabListenScroll() {
-    var _ = Provider.of<PostFABProvider>(context, listen: false);
+    var a = Provider.of<PostFABProvider>(context, listen: false);
     var direction = _scrollController.position.userScrollDirection;
     direction == ScrollDirection.reverse
-        ? _.setShowFAB = false
-        : _.setShowFAB = true;
+        ? a.setShowFAB = false
+        : a.setShowFAB = true;
   }
 
   Future<void> _fetchPost() async {

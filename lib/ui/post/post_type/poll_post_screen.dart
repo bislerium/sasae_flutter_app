@@ -22,7 +22,7 @@ class PollPostScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PollPostScreenState createState() => _PollPostScreenState();
+  State<PollPostScreen> createState() => _PollPostScreenState();
 }
 
 class _PollPostScreenState extends State<PollPostScreen> {

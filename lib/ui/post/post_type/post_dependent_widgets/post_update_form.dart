@@ -128,8 +128,8 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         validator: (value) =>
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
         onSaved: (value) {
-          var _ = value!.cast<String>();
-          _postHead.setRelatedTo = _;
+          var a = value!.cast<String>();
+          _postHead.setRelatedTo = a;
         },
       );
 
@@ -188,8 +188,8 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
           );
         },
         onChanged: (value) {
-          var _ = (value as List<NGO__Model>).map((e) => e.id).toList();
-          _postHead.setPokedNGO = _;
+          var a = (value as List<NGO__Model>).map((e) => e.id).toList();
+          _postHead.setPokedNGO = a;
         },
         inputType: TextInputType.name,
       );
@@ -210,9 +210,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         maxLength: 500,
         maxLines: 6,
         keyboardType: TextInputType.multiline,
-        onSaved: (value) {
-          _postHead.setPostContent = value;
-        },
+        onSaved: (value) => _postHead.setPostContent = value,
         textInputAction: TextInputAction.next,
       );
 
@@ -224,10 +222,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         ),
         activeColor: Theme.of(context).colorScheme.primary,
         title: const Text('Post anonymously'),
-        onSaved: (value) {
-          var _ = value;
-          _postHead.setIsAnonymous = value;
-        },
+        onSaved: (value) => _postHead.setIsAnonymous = value,
       );
 
   Widget superPostFields() => CustomCard(

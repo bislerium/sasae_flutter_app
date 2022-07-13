@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:randexp/randexp.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:shake/shake.dart';
 
 Future<void> refreshCallBack(
     {required BuildContext context,
@@ -41,8 +40,8 @@ Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
 String generateUID() => DateTime.now().microsecondsSinceEpoch.toString();
 
 num turnicate(num value, {int decimalPlace = 1}) {
-  var _ = pow(10, decimalPlace);
-  var turnicatedValue = (value * _).truncateToDouble() / _;
+  var a = pow(10, decimalPlace);
+  var turnicatedValue = (value * a).truncateToDouble() / a;
   return turnicatedValue % 1 == 0 ? turnicatedValue.toInt() : turnicatedValue;
 }
 
@@ -96,10 +95,3 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
     }
   });
 }
-
-ShakeDetector getShakeDetector(BuildContext context) => ShakeDetector.autoStart(
-      onPhoneShake: () {
-        showSnackBar(
-            context: context, message: 'Shaked'); // Do stuff on phone shake
-      },
-    );

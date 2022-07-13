@@ -100,10 +100,10 @@ class _PostCreateFormState extends State<PostCreateForm> {
         validator: (value) =>
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
         onSaved: (value) {
-          var _ = value!.cast<String>();
-          _normalPostCreate.setRelatedTo = _;
-          _pollPostCreate.setRelatedTo = _;
-          _requestPostCreate.setRelatedTo = _;
+          var a = value!.cast<String>();
+          _normalPostCreate.setRelatedTo = a;
+          _pollPostCreate.setRelatedTo = a;
+          _requestPostCreate.setRelatedTo = a;
         },
       );
 
@@ -203,7 +203,6 @@ class _PostCreateFormState extends State<PostCreateForm> {
         activeColor: Theme.of(context).colorScheme.primary,
         title: const Text('Post anonymously'),
         onSaved: (value) {
-          var _ = value;
           _normalPostCreate.setIsAnonymous = value;
           _pollPostCreate.setIsAnonymous = value;
           _requestPostCreate.setIsAnonymous = value;

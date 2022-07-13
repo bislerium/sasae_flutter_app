@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:feedback/feedback.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
@@ -22,7 +19,7 @@ import 'package:sasae_flutter_app/ui/post/post_page.dart';
 import 'package:sasae_flutter_app/ui/profile/user_profile_page.dart';
 import 'package:sasae_flutter_app/ui/setting/setting_page.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:shake/shake.dart';
+// import 'package:shake/shake.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -37,19 +34,11 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
   late final StreamSubscription<ConnectivityResult> _subscription;
-  late final ShakeDetector _shakeDetector;
 
   @override
   void initState() {
     super.initState();
     _subscription = getConnectivitySubscription(context);
-    _shakeDetector = ShakeDetector.autoStart(
-      onPhoneShake: () {
-        print('hghg-------------------');
-        showSnackBar(
-            context: context, message: 'Shaked'); // Do stuff on phone shake
-      },
-    );
 
     _pageNavigatorP =
         Provider.of<PageNavigatorProvider>(context, listen: false);
@@ -84,7 +73,6 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     _subscription.cancel();
-    _shakeDetector.stopListening();
     _pageNavigatorP.reset();
     super.dispose();
   }

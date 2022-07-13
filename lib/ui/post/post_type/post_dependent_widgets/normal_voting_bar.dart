@@ -156,14 +156,13 @@ class _VotingBarState extends State<VotingBar> {
           }
         },
         style: TextButton.styleFrom(
-            shape: const StadiumBorder(),
             backgroundColor:
                 isUpvoted ? Theme.of(context).colorScheme.primary : null,
             primary:
                 isUpvoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_upward_rounded,
-          size: 30,
+          size: 36,
         ),
       );
 
@@ -185,64 +184,66 @@ class _VotingBarState extends State<VotingBar> {
           }
         },
         style: TextButton.styleFrom(
-            shape: const StadiumBorder(),
             backgroundColor:
                 isDownvoted ? Theme.of(context).colorScheme.primary : null,
             primary:
                 isDownvoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_downward_rounded,
-          size: 30,
+          size: 36,
         ),
       );
 
   @override
-  Widget build(BuildContext context) => AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: showVotingBar ? 70 : 0,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surfaceVariant,
-          ),
-          height: 60,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      children: [
-                        upvoteCounter(),
-                        SizedBox(
-                          height: 60,
-                          child: VerticalDivider(
-                            thickness: 2,
-                            width: 20,
-                            indent: 20,
-                            endIndent: 20,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
+  Widget build(BuildContext context) {
+    var colors = Theme.of(context).colorScheme;
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: showVotingBar ? 70 : 0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: ElevationOverlay.colorWithOverlay(
+              colors.surface, colors.primary, 3.0),
+        ),
+        height: 60,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    children: [
+                      upvoteCounter(),
+                      SizedBox(
+                        height: 60,
+                        child: VerticalDivider(
+                          thickness: 2,
+                          width: 20,
+                          indent: 20,
+                          endIndent: 20,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                        downvoteCounter(),
-                      ],
-                    ),
+                      ),
+                      downvoteCounter(),
+                    ],
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Row(
-                  children: [
-                    upvoteButton(),
-                    downvoteButton(),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Row(
+                children: [
+                  upvoteButton(),
+                  downvoteButton(),
+                ],
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
 }

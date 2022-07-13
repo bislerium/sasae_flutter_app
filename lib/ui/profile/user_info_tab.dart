@@ -72,12 +72,12 @@ class _UserInfoTabState extends State<UserInfoTab>
   }
 
   void profleEditfabListenScroll() {
-    var _ = Provider.of<ProfileSettingFABProvider>(context, listen: false);
+    var a = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController.position.userScrollDirection;
     if (profileP.getUserData is PeopleModel) {
       direction == ScrollDirection.reverse
-          ? _.setShowFAB = false
-          : _.setShowFAB = true;
+          ? a.setShowFAB = false
+          : a.setShowFAB = true;
     }
   }
 

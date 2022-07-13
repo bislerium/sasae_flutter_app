@@ -53,7 +53,6 @@ dependencies:
   form_builder_image_picker: any
   flutter_chips_input: any
   flutter_session_manager: any
-  page_transition: any
   firebase_core: any
   firebase_messaging: any
   flutter_local_notifications: any
@@ -72,8 +71,6 @@ dependencies:
   connectivity_plus: ^2.3.5
   dynamic_color: ^1.4.0
   flex_color_picker: ^2.5.0
-  shake: ^2.1.0
-  feedback: ^2.5.0
   flutter_email_sender: ^5.1.0
 
 dev_dependencies:

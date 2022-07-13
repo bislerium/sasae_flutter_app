@@ -26,22 +26,22 @@ class InfoPostTab extends StatelessWidget {
       length: 2,
       child: Builder(builder: (context) {
         final TabController tabController = DefaultTabController.of(context)!;
-        dynamic _;
+        dynamic a;
         tabController.addListener(() {
           switch (fabType) {
             case FABType.editProfile:
-              _ = Provider.of<ProfileSettingFABProvider>(context,
+              a = Provider.of<ProfileSettingFABProvider>(context,
                   listen: false);
               break;
             case FABType.donation:
-              _ = Provider.of<DonationFABProvider>(context, listen: false);
+              a = Provider.of<DonationFABProvider>(context, listen: false);
               break;
           }
 
           if (!tabController.indexIsChanging) {
             int index = tabController.index;
-            _.setTabIndex = index;
-            index == 0 ? _.setShowFAB = true : _.setShowFAB = false;
+            a.setTabIndex = index;
+            index == 0 ? a.setShowFAB = true : a.setShowFAB = false;
           }
         });
         return Stack(

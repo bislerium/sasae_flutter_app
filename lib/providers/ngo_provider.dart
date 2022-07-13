@@ -152,14 +152,14 @@ class NGOProvider with ChangeNotifier {
   NGOModel? get getNGO => _ngo;
 
   static NGOModel randNGO() {
-    var _isVerified = faker.randomGenerator.boolean();
+    var isVerified = faker.randomGenerator.boolean();
     var ngoName = faker.company.name();
     return NGOModel(
       id: faker.randomGenerator.integer(1000),
       latitude: faker.randomGenerator.decimal(scale: (90 - (-90)), min: -90),
       longitude:
           faker.randomGenerator.decimal(scale: (180 - (-180)), min: -180),
-      isVerified: _isVerified,
+      isVerified: isVerified,
       displayPicture: faker.image.image(width: 600, height: 600, random: true),
       username: faker.person.firstName(),
       orgName: ngoName,
@@ -174,8 +174,8 @@ class NGOProvider with ChangeNotifier {
       postedPosts: Set<int>.of(List.generate(faker.randomGenerator.integer(250),
           (index) => faker.randomGenerator.integer(3000))).toList(),
       joinedDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
-      epayAccount: _isVerified ? getRandPhoneNumber() : null,
-      bank: _isVerified
+      epayAccount: isVerified ? getRandPhoneNumber() : null,
+      bank: isVerified
           ? BankModel(
               bankName: faker.company.name(),
               bankBranch: faker.address.city(),
@@ -187,10 +187,10 @@ class NGOProvider with ChangeNotifier {
                   .toString(),
             )
           : null,
-      panCertificateURL: _isVerified
+      panCertificateURL: isVerified
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
-      swcCertificateURL: _isVerified
+      swcCertificateURL: isVerified
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
     );

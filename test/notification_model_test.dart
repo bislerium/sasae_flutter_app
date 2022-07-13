@@ -9,15 +9,15 @@ void main() {
   late NotificationModel notificationModel;
 
   setUpAll(() {
-    bool _ = faker.randomGenerator.boolean();
+    bool a = faker.randomGenerator.boolean();
     json = {
       'id': faker.randomGenerator.integer(1000),
       'title': faker.lorem.word(),
       'body': faker.lorem.sentences(5).join(''),
       'channel': faker.randomGenerator.element(NotificationChannel.values).name,
       'post_type':
-          _ ? faker.randomGenerator.element(PostType.values).name : null,
-      'post_id': _ ? faker.randomGenerator.integer(1000) : null,
+          a ? faker.randomGenerator.element(PostType.values).name : null,
+      'post_id': a ? faker.randomGenerator.integer(1000) : null,
       'isRead': faker.randomGenerator.boolean(),
     };
   });

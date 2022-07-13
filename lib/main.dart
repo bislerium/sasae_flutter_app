@@ -1,4 +1,3 @@
-import 'package:feedback/feedback.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -6,7 +5,6 @@ import 'package:form_builder_validators/localization/l10n.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sasae_flutter_app/page_router.dart';
@@ -46,87 +44,76 @@ void main() async {
 
 Route<dynamic>? _screenRoutes(RouteSettings settings) {
   final args = settings.arguments != null ? settings.arguments as Map : {};
-  PageTransitionType transitionType = PageTransitionType.leftToRightWithFade;
   switch (settings.name) {
     case (AuthScreen.routeName):
-      return PageTransition(
-        child: const AuthScreen(),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) => const AuthScreen(),
         settings: settings,
       );
     case (RegisterScreen.routeName):
-      return PageTransition(
-        child: const RegisterScreen(),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) => const RegisterScreen(),
         settings: settings,
       );
     case (HomePage.routeName):
-      return PageTransition(
-        child: const HomePage(),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) => const HomePage(),
         settings: settings,
       );
-
     //-1 as placeholder for post_id in create mode (post-id not required)
     case (PostUpdateFormScreen.routeName):
-      return PageTransition(
-        child: PostUpdateFormScreen(
+      return MaterialPageRoute(
+        builder: (context) => PostUpdateFormScreen(
           postID: args['postID'],
         ),
-        type: transitionType,
         settings: settings,
       );
     case (PostCreateFormScreen.routeName):
-      return PageTransition(
-        child: const PostCreateFormScreen(),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) => const PostCreateFormScreen(),
         settings: settings,
       );
     case (PeopleProfileEditScreen.routeName):
-      return PageTransition(
-        child: const PeopleProfileEditScreen(),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) => const PeopleProfileEditScreen(),
         settings: settings,
       );
     case (NGOProfileScreen.routeName):
-      return PageTransition(
-        child: NGOProfileScreen(
+      return MaterialPageRoute(
+        builder: (context) => NGOProfileScreen(
           ngoID: args['ngoID'],
         ),
-        type: transitionType,
         settings: settings,
       );
     case (NormalPostScreen.routeName):
-      return PageTransition(
-        child: NormalPostScreen(
+      return MaterialPageRoute(
+        builder: (context) => NormalPostScreen(
           postID: args['postID'],
         ),
-        type: transitionType,
         settings: settings,
       );
     case (PollPostScreen.routeName):
-      return PageTransition(
-        child: PollPostScreen(
-          postID: args['postID'],
-        ),
-        type: transitionType,
+      return MaterialPageRoute(
+        builder: (context) {
+          return PollPostScreen(
+            postID: args['postID'],
+          );
+        },
         settings: settings,
       );
     case (RequestPostScreen.routeName):
-      return PageTransition(
-        child: RequestPostScreen(
+      return MaterialPageRoute(
+        builder: (context) => RequestPostScreen(
           postID: args['postID'],
         ),
-        type: transitionType,
         settings: settings,
       );
     case (ImageViewScreen.routeName):
-      return PageTransition(
-        child: ImageViewScreen(
+      return MaterialPageRoute(
+        builder: (context) => ImageViewScreen(
           title: args['title'],
           imageURL: args['imageURL'],
         ),
-        type: PageTransitionType.fade,
         settings: settings,
       );
     default:
@@ -265,55 +252,47 @@ class _MyAppState extends State<MyApp> {
                   brightness: Brightness.dark,
                 );
               }
-              return BetterFeedback(
-                localeOverride: const Locale('en'),
-                mode: FeedbackMode.draw,
-                pixelRatio: 1,
-                localizationsDelegates: [
-                  GlobalFeedbackLocalizationsDelegate(),
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                navigatorKey: navigatorKey,
+                supportedLocales: const [
+                  Locale('en', 'US'),
+                  Locale('ne', 'NP'),
                 ],
-                child: MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  navigatorKey: navigatorKey,
-                  supportedLocales: const [
-                    Locale('en', 'US'),
-                    Locale('ne', 'NP'),
-                  ],
-                  localizationsDelegates: const [
-                    KhaltiLocalizations.delegate,
-                    FormBuilderLocalizations.delegate,
-                  ],
-                  theme: ThemeData(
-                    visualDensity: VisualDensity.comfortable,
-                    platform: TargetPlatform.android,
-                    colorScheme: lightColorScheme,
-                    useMaterial3: true,
-                    chipTheme: ChipThemeData(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                localizationsDelegates: const [
+                  KhaltiLocalizations.delegate,
+                  FormBuilderLocalizations.delegate,
+                ],
+                theme: ThemeData(
+                  visualDensity: VisualDensity.comfortable,
+                  platform: TargetPlatform.android,
+                  colorScheme: lightColorScheme,
+                  useMaterial3: true,
+                  chipTheme: ChipThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                    typography: Typography.material2021(),
                   ),
-                  darkTheme: ThemeData(
-                    visualDensity: VisualDensity.comfortable,
-                    platform: TargetPlatform.android,
-                    colorScheme: darkColorScheme,
-                    useMaterial3: true,
-                    chipTheme: ChipThemeData(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                    typography: Typography.material2021(),
-                  ),
-                  themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
-                  title: 'Sasae',
-                  home: const PageRouter(),
-                  onGenerateRoute: (settings) => _screenRoutes(settings),
+                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                  typography: Typography.material2021(),
                 ),
+                darkTheme: ThemeData(
+                  visualDensity: VisualDensity.comfortable,
+                  platform: TargetPlatform.android,
+                  colorScheme: darkColorScheme,
+                  useMaterial3: true,
+                  chipTheme: ChipThemeData(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                  typography: Typography.material2021(),
+                ),
+                themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
+                title: 'Sasae',
+                home: const PageRouter(),
+                onGenerateRoute: (settings) => _screenRoutes(settings),
               );
             });
           }),

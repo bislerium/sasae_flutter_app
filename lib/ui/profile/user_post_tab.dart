@@ -53,11 +53,11 @@ class _UserPostTabState extends State<UserPostTab>
   }
 
   void profleCreatefabListenScroll() {
-    var _ = Provider.of<ProfileSettingFABProvider>(context, listen: false);
+    var a = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController!.position.userScrollDirection;
     direction == ScrollDirection.reverse
-        ? _.setShowFAB = false
-        : _.setShowFAB = true;
+        ? a.setShowFAB = false
+        : a.setShowFAB = true;
   }
 
   @override

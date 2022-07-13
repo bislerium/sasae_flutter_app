@@ -12,9 +12,11 @@ class PostBar extends StatefulWidget {
 class _PostBarState extends State<PostBar> {
   @override
   Widget build(BuildContext context) {
+    var colors = Theme.of(context).colorScheme;
     return Container(
       margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      color: Theme.of(context).colorScheme.surface,
+      color: ElevationOverlay.colorWithOverlay(
+          colors.surface, colors.primary, 3.0),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(

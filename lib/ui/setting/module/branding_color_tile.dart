@@ -50,9 +50,16 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
               height: 60,
               title: Padding(
                 padding: const EdgeInsets.all(14.0),
-                child: Text(
-                  'Branding Color',
-                  style: Theme.of(context).textTheme.titleLarge,
+                child: Chip(
+                  backgroundColor:
+                      Theme.of(context).colorScheme.primaryContainer,
+                  label: Text(
+                    'Branding Color',
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                  ),
                 ),
               ),
               padding: EdgeInsets.zero,

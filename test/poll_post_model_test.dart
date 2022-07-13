@@ -20,9 +20,9 @@ void main() {
               "reacted_by": faker.randomGenerator
                   .numbers(1500, faker.randomGenerator.integer(1500)),
             });
-    int? _ = faker.randomGenerator.element(pollOptions)['id'] as int?;
+    int? a = faker.randomGenerator.element(pollOptions)['id'] as int?;
 
-    int? choice = faker.randomGenerator.boolean() ? null : _;
+    int? choice = faker.randomGenerator.boolean() ? null : a;
     Random rand = Random();
     json = {
       "id": faker.randomGenerator.integer(1000),

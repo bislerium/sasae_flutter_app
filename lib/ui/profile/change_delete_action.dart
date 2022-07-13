@@ -159,7 +159,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   }
 
   Future<void> showDeleteDialog() async {
-    String _ = faker.randomGenerator.string(8, min: 6);
+    String a = faker.randomGenerator.string(8, min: 6);
     await showDialog(
       context: context,
       builder: (context) => BackdropFilter(
@@ -183,7 +183,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   style: DefaultTextStyle.of(context).style,
                   children: <TextSpan>[
                     TextSpan(
-                      text: _,
+                      text: a,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.italic,
@@ -200,7 +200,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   validator: FormBuilderValidators.compose(
                     [
                       FormBuilderValidators.required(),
-                      (value) => value != _ ? 'Incorrect value' : null
+                      (value) => value != a ? 'Incorrect value' : null
                     ],
                   ),
                   // decoration: const InputDecoration(border: InputBorder.none),

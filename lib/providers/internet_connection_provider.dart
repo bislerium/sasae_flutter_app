@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class InternetConnetionProvider with ChangeNotifier {
@@ -17,6 +18,6 @@ class InternetConnetionProvider with ChangeNotifier {
               message: 'No internet connection',
               errorSnackBar: true);
         }
-        return _isConnected;
+        return demo ? true : _isConnected;
       };
 }

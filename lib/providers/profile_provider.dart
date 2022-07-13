@@ -102,14 +102,14 @@ class ProfileProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        return true;
+      } else {
+        await _dio.delete(
+          '$postEndpoint$postID/delete/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          }),
+        );
       }
-      await _dio.delete(
-        '$postEndpoint$postID/delete/',
-        options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
-        }),
-      );
 
       _userPosts!.removeWhere((element) => element.id == postID);
       notifyListeners();

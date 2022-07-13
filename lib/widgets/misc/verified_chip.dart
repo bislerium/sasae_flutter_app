@@ -8,14 +8,14 @@ class VerifiedChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Chip(
         backgroundColor: isVerified
-            ? Theme.of(context).colorScheme.inversePrimary
+            ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.error,
         avatar: CircleAvatar(
           backgroundColor: Colors.transparent,
           child: Icon(
             isVerified ? Icons.verified : Icons.new_releases,
             color: isVerified
-                ? Theme.of(context).colorScheme.onPrimaryContainer
+                ? Theme.of(context).colorScheme.onPrimary
                 : Theme.of(context).colorScheme.onError,
           ),
         ),
@@ -23,7 +23,7 @@ class VerifiedChip extends StatelessWidget {
           isVerified ? 'Verified' : 'Unverified',
           style: Theme.of(context).textTheme.subtitle1?.copyWith(
                 color: isVerified
-                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onError,
               ),
         ),
