@@ -12,7 +12,7 @@ class CustomCard extends StatelessWidget {
     Key? key,
     required this.child,
     this.borderRadius,
-    this.elevation = 1.0,
+    this.elevation = 0,
     this.shadowColor,
     this.cardColor,
     this.margin = const EdgeInsets.symmetric(vertical: 8),
@@ -21,7 +21,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      key: ObjectKey(child),
+      key: ValueKey(child.hashCode),
       elevation: elevation,
       shape: borderRadius == null
           ? null

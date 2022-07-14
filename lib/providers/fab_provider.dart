@@ -121,30 +121,4 @@ class NotificationActionFABProvider with ChangeNotifier {
   }
 }
 
-class LogoutFABProvider with ChangeNotifier {
-  bool _showFAB;
-
-  LogoutFABProvider() : _showFAB = false;
-
-  bool get getShowFAB => _showFAB;
-
-  set setShowFAB(bool show) {
-    if (_showFAB != show) {
-      _showFAB = show;
-      notifyListeners();
-    }
-  }
-
-  VoidCallback? _onPressedHandler;
-
-  VoidCallback? get getOnPressedHandler => _onPressedHandler;
-
-  set setOnPressedHandler(VoidCallback? handler) {
-    if (_onPressedHandler != handler) {
-      _onPressedHandler = handler;
-      notifyListeners();
-    }
-  }
-}
-
 enum FABType { editProfile, donation }

@@ -9,16 +9,18 @@ import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 
 class AuthProvider with ChangeNotifier {
-  AuthModel? _auth;
+  AuthModel? _authModel;
   bool _isAuthenticating;
   final SessionManager _sessionManager;
+  final String _authModelKey;
 
   AuthProvider()
       : _sessionManager = SessionManager(),
+        _authModelKey = 'auth',
         _isAuthenticating = false;
 
-  bool get getIsAuth => _auth != null;
-  AuthModel? get auth => _auth;
+  bool get getIsAuth => _authModel != null;
+  AuthModel? get getAuth => _authModel;
   bool get isAuthenticating => _isAuthenticating;
 
   AuthModel _randAuth() => AuthModel(
@@ -37,7 +39,7 @@ class AuthProvider with ChangeNotifier {
     try {
       if (isDemo) {
         await delay();
-        _auth = _randAuth();
+        _authModel = _randAuth();
       } else {
         final response = await http
             .post(
@@ -58,14 +60,24 @@ class AuthProvider with ChangeNotifier {
         if (response.statusCode >= 400) {
           throw HttpException(responseData.toString());
         }
-        _auth = AuthModel.fromAPIResponse(responseData);
+        _authModel = AuthModel.fromAPIResponse(responseData);
       }
-      _sessionManager.set('auth_data', _auth!);
+      await flushAuthCredential(_authModel!);
     } catch (error) {
-      _auth = null;
+      _authModel = null;
     }
     _isAuthenticating = false;
     notifyListeners();
+  }
+
+  Future<void> flushAuthCredential(AuthModel authModel) async {
+    await _sessionManager.set(_authModelKey, authModel);
+  }
+
+  Future<void> setIsVerified(bool isVerified) async {
+    if (isVerified != _authModel!.isVerified) {
+      await flushAuthCredential(_authModel!..isVerified = isVerified);
+    }
   }
 
   Future<void> login(
@@ -76,16 +88,16 @@ class AuthProvider with ChangeNotifier {
       );
 
   Future<void> tryAutoLogin({isDemo = demo}) async {
-    var authData = await _sessionManager.get('auth_data');
+    var authData = await _sessionManager.get(_authModelKey);
     if (authData == null) return;
-    _auth = AuthModel.fromJson(authData);
+    _authModel = AuthModel.fromJson(authData);
     try {
       if (isDemo) {
         await delay();
         return;
       }
       var headers = {
-        'Authorization': 'Token ${_auth!.tokenKey}',
+        'Authorization': 'Token ${_authModel!.tokenKey}',
       };
       var request =
           http.Request('GET', Uri.parse('${getHostName()}$verifyUserEndpoint'));
@@ -99,28 +111,27 @@ class AuthProvider with ChangeNotifier {
         throw HttpException(await response.stream.bytesToString());
       }
     } catch (error) {
-      await _sessionManager.remove('auth_data');
-      _auth = null;
+      await removeUser();
     }
   }
 
   // return type: bool represents if the method executed successfully.
   Future<bool> logout({bool isDemo = demo}) async {
     try {
-      if (!isDemo) {
+      if (isDemo) {
+        await delay();
+      } else {
         final response = await http.post(
           Uri.parse('${getHostName()}$logoutEndpoint'),
           headers: {
-            'Authorization': 'Token ${_auth!.tokenKey}',
+            'Authorization': 'Token ${_authModel!.tokenKey}',
           },
         ).timeout(timeOutDuration);
         if (response.statusCode >= 400) {
           throw HttpException(json.decode(response.body));
         }
       }
-      await _sessionManager.remove('auth_data');
-      JsonStore().clearDataBase();
-      _auth = null;
+      await removeUser();
     } catch (error) {
       return false;
     }
@@ -156,7 +167,7 @@ class AuthProvider with ChangeNotifier {
       if (!isDemo) {
         var headers = {
           'Accept': 'application/json',
-          'Authorization': 'Token ${_auth!.tokenKey}',
+          'Authorization': 'Token ${_authModel!.tokenKey}',
         };
         var request = http.Request(
             'DELETE', Uri.parse('${getHostName()}$peopleDeleteEndpoint'));
@@ -169,11 +180,17 @@ class AuthProvider with ChangeNotifier {
           throw HttpException(await response.stream.bytesToString());
         }
       }
+      await removeUser();
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
+  }
+
+  Future<void> removeUser() async {
+    await _sessionManager.remove(_authModelKey);
+    JsonStore().clearDataBase();
+    _authModel = null;
   }
 
   Future<bool> changePassword(
@@ -188,7 +205,7 @@ class AuthProvider with ChangeNotifier {
       }
       var headers = {
         'Accept': 'application/json',
-        'Authorization': 'Token ${_auth!.tokenKey}',
+        'Authorization': 'Token ${_authModel!.tokenKey}',
       };
 
       var request = http.MultipartRequest(
@@ -208,7 +225,6 @@ class AuthProvider with ChangeNotifier {
       }
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }

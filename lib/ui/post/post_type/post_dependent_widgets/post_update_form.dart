@@ -4,8 +4,8 @@ import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
@@ -72,9 +72,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
   }
 
   Future<void> postHandler() async {
-    if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-        .getConnectionStatusCallBack(context)
-        .call()) return;
+    if (!isInternetConnected(context)) return;
     if (!_superPostKey.currentState!.validate()) return;
     bool isOtherPostFormValid, success = false;
     var postUpdateP = Provider.of<PostUpdateProvider>(context, listen: false);

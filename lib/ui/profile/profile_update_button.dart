@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -33,10 +33,7 @@ class _ProfileUpdateButtonState extends State<ProfileUpdateButton> {
               child: FloatingActionButton.large(
                 onPressed: () async {
                   if (_isLoading) return;
-                  if (!Provider.of<InternetConnetionProvider>(context,
-                          listen: false)
-                      .getConnectionStatusCallBack(context)
-                      .call()) return;
+                  if (!isInternetConnected(context)) return;
                   bool validForm = widget.formKey.currentState!.validate();
                   if (validForm) {
                     showCustomDialog(

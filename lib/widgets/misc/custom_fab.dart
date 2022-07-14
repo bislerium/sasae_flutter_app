@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 
 class CustomFAB extends StatelessWidget {
   final String text;
@@ -9,11 +8,16 @@ class CustomFAB extends StatelessWidget {
   final Color? background;
   final Color? foreground;
   final String? tooltip;
+  final bool requiresProfileVerification;
+  final bool requiresInternetConnection;
+
   const CustomFAB(
       {Key? key,
       required this.text,
       required this.icon,
       required this.func,
+      this.requiresInternetConnection = true,
+      this.requiresProfileVerification = false,
       this.background,
       this.foreground,
       this.tooltip})
@@ -23,10 +27,13 @@ class CustomFAB extends StatelessWidget {
   Widget build(BuildContext context) => FloatingActionButton.large(
         heroTag: null,
         onPressed: () {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
-          func!.call();
+          if (requiresInternetConnection && !isInternetConnected(context)) {
+            return;
+          }
+          if (requiresProfileVerification && !isProfileVerified(context)) {
+            return;
+          }
+          func?.call();
         },
         tooltip: tooltip,
         backgroundColor: background,

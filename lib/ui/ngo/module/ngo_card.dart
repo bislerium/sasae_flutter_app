@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
@@ -17,9 +16,7 @@ class NGOCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
           Navigator.pushNamed(context, NGOProfileScreen.routeName,
               arguments: {'ngoID': ngo_.ngoID});
         },

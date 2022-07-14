@@ -10,14 +10,11 @@ class VerifiedChip extends StatelessWidget {
         backgroundColor: isVerified
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.error,
-        avatar: CircleAvatar(
-          backgroundColor: Colors.transparent,
-          child: Icon(
-            isVerified ? Icons.verified : Icons.new_releases,
-            color: isVerified
-                ? Theme.of(context).colorScheme.onPrimary
-                : Theme.of(context).colorScheme.onError,
-          ),
+        avatar: Icon(
+          isVerified ? Icons.verified : Icons.question_mark_rounded,
+          color: isVerified
+              ? Theme.of(context).colorScheme.onPrimary
+              : Theme.of(context).colorScheme.onError,
         ),
         label: Text(
           isVerified ? 'Verified' : 'Unverified',

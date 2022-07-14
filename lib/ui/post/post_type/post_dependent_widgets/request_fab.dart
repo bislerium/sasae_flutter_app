@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -32,9 +32,6 @@ class _RequestFABState extends State<RequestFAB> {
 
   Future<void> requestCallBack() async {
     if (_isLoading) return;
-    if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-        .getConnectionStatusCallBack(context)
-        .call()) return;
     if (widget.isRequestConsidered) {
       showSnackBar(
           context: context,
@@ -52,13 +49,14 @@ class _RequestFABState extends State<RequestFAB> {
       );
       return;
     }
+    if (!isInternetConnected(context)) return;
+    if (!isProfileVerified(context)) return;
     showCustomDialog(
       context: context,
       content: 'Once participated, You cannot undo!',
       okFunc: () async {
-        if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-            .getConnectionStatusCallBack(context)
-            .call()) return;
+        if (!isInternetConnected(context)) return;
+        if (!isProfileVerified(context)) return;
         Navigator.of(context).pop();
         setState(() => _isLoading = true);
         var success =

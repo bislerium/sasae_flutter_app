@@ -12,16 +12,14 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:randexp/randexp.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 Future<void> refreshCallBack(
     {required BuildContext context,
     required Future<void> Function() func}) async {
-  if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-      .getConnectionStatusCallBack(context)
-      .call()) return;
-  await func.call();
+  if (isInternetConnected(context)) await func.call();
 }
 
 Future<XFile> imageURLToXFile(String imageURL) async => XFile(
@@ -35,6 +33,31 @@ Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
   final File screenshotFile = File(screenshotFilePath);
   await screenshotFile.writeAsBytes(feedbackScreenshot);
   return screenshotFilePath;
+}
+
+bool isProfileVerified(BuildContext context) {
+  if (Provider.of<AuthProvider>(context, listen: false).getAuth!.isVerified) {
+    return true;
+  }
+  showSnackBar(
+      context: context,
+      icon: Icons.question_mark_rounded,
+      message: 'Verified account required',
+      errorSnackBar: true);
+  return false;
+}
+
+bool isInternetConnected(BuildContext context) {
+  if (Provider.of<InternetConnetionProvider>(context, listen: false)
+      .getIsConnected) {
+    return true;
+  }
+  showSnackBar(
+      context: context,
+      icon: Icons.cloud_off,
+      message: 'No internet connection',
+      errorSnackBar: true);
+  return false;
 }
 
 String generateUID() => DateTime.now().microsecondsSinceEpoch.toString();

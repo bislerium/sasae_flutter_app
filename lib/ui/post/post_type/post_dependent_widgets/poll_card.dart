@@ -36,14 +36,13 @@ class _PollCardState extends State<PollCard> {
     if (success) {
       if (!mounted) return;
       option.reaction.add(
-          Provider.of<AuthProvider>(context, listen: false).auth!.profileID);
+          Provider.of<AuthProvider>(context, listen: false).getAuth!.profileID);
       setState(() {
         _choice = choice;
       });
     } else {
       showSnackBar(
         context: context,
-        message: 'Something went wrong!',
         errorSnackBar: true,
       );
     }

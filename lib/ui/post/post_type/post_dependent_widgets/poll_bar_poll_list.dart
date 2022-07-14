@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
-import 'package:provider/provider.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 
-class PollBarPollList extends StatelessWidget {
+class PollBarPollList extends StatefulWidget {
   final List<PollOptionModel> list;
 
   final Future<void> Function(int choice) pollCallBack;
@@ -15,19 +15,29 @@ class PollBarPollList extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<PollBarPollList> createState() => _PollBarPollListState();
+}
+
+class _PollBarPollListState extends State<PollBarPollList> {
+  bool _isLoading;
+
+  _PollBarPollListState() : _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
-      children: list
+      children: widget.list
           .map(
             (e) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: GestureDetector(
                   onTap: () async {
-                    if (!Provider.of<InternetConnetionProvider>(context,
-                            listen: false)
-                        .getConnectionStatusCallBack(context)
-                        .call()) return;
-                    await pollCallBack(e.id);
+                    if (_isLoading) return;
+                    if (!isInternetConnected(context)) return;
+                    if (!isProfileVerified(context)) return;
+                    setState(() => _isLoading = true);
+                    await widget.pollCallBack(e.id);
+                    setState(() => _isLoading = false);
                   },
                   child: RoundedProgressBar(
                     percent: 0,
@@ -38,9 +48,16 @@ class PollBarPollList extends StatelessWidget {
                       backgroundProgress:
                           Theme.of(context).colorScheme.surfaceVariant,
                     ),
-                    childCenter: Text(
-                      e.option,
-                    ),
+                    childCenter: _isLoading
+                        ? LoadingAnimationWidget.horizontalRotatingDots(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                            size: 20,
+                          )
+                        : Text(
+                            e.option,
+                          ),
                     borderRadius: BorderRadius.circular(25),
                   ),
                 )),

@@ -74,7 +74,7 @@ class PostProvider with ChangeNotifier {
         postsEndpoint,
         options: Options(
           headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           },
         ),
       );
@@ -99,7 +99,7 @@ class PostProvider with ChangeNotifier {
         await _dio.post(
           '$postEndpoint$postID/report/',
           options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           }),
         );
       }
@@ -164,7 +164,7 @@ class PostCreateProvider with ChangeNotifier {
       var response = await _dio.get(
         postRelatedToEndpoint,
         options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         }),
       );
       return response.data['options'].cast<String>();
@@ -192,7 +192,7 @@ class PostCreateProvider with ChangeNotifier {
       var response = await _dio.get(
         postNGOsEndpoint,
         options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         }),
       );
       return (response.data as List)
@@ -241,7 +241,7 @@ class PostCreateProvider with ChangeNotifier {
         return true;
       }
       var headers = {
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
       };
       var request = http.MultipartRequest(
         'POST',
@@ -287,7 +287,7 @@ class PostCreateProvider with ChangeNotifier {
         await delay();
       } else {
         var headers = {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           'Content-Type': 'application/json',
         };
         var request = http.Request(
@@ -333,7 +333,7 @@ class PostCreateProvider with ChangeNotifier {
         await delay();
       } else {
         var headers = {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           'Content-Type': 'application/json',
         };
         var request = http.Request(
@@ -435,7 +435,7 @@ class PostUpdateProvider with ChangeNotifier {
 
       var headers = {
         'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
       };
 
       request.headers.addAll(headers);
@@ -491,7 +491,7 @@ class PostUpdateProvider with ChangeNotifier {
       var headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
       };
       var uri = Uri.parse(
         '${getHostName()}$postEndpoint$postID/update/',
@@ -647,7 +647,7 @@ class NormalPostProvider with ChangeNotifier {
       var response = await _dio.get(
         '$postEndpoint$postID/',
         options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         }),
       );
       return NormalPostModel.fromAPIResponse(response.data);
@@ -678,7 +678,7 @@ class NormalPostProvider with ChangeNotifier {
         await _dio.post(
           uri,
           options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           }),
         );
       }
@@ -772,7 +772,7 @@ class PollPostProvider with ChangeNotifier {
       var response = await _dio.get(
         '$postEndpoint$postID/',
         options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         }),
       );
       return PollPostModel.fromAPIResponse(response.data);
@@ -794,7 +794,7 @@ class PollPostProvider with ChangeNotifier {
         await _dio.post(
           '$postEndpoint${_pollPost!.id}/poll/$optionID/',
           options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           }),
         );
       }
@@ -884,7 +884,7 @@ class RequestPostProvider with ChangeNotifier {
       var response = await _dio.get(
         '$postEndpoint$postID/',
         options: Options(headers: {
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         }),
       );
       return RequestPostModel.fromAPIResponse(response.data);
@@ -907,11 +907,11 @@ class RequestPostProvider with ChangeNotifier {
         await _dio.post(
           '$postEndpoint${_requestPost!.id}/participate/',
           options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           }),
         );
       }
-      _requestPost!.reaction.add(_authP.auth!.profileID);
+      _requestPost!.reaction.add(_authP.getAuth!.profileID);
       _requestPost!.isParticipated = true;
 
       notifyListeners();

@@ -150,9 +150,6 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
         create: (_) => NotificationActionFABProvider(),
       ),
-      ChangeNotifierProvider(
-        create: (_) => LogoutFABProvider(),
-      ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),
         update: (context, authP, ngoP) => NGOProvider()..setAuthP = authP,

@@ -126,10 +126,10 @@ class NGOProfile extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(
-          height: 10,
-        ),
-        if (ngoData.isVerified && ngoData.bank != null)
+        if (ngoData.isVerified && ngoData.bank != null) ...[
+          const SizedBox(
+            height: 10,
+          ),
           Card(
             color: Theme.of(context).colorScheme.surface,
             shape: RoundedRectangleBorder(
@@ -196,6 +196,7 @@ class NGOProfile extends StatelessWidget {
               ),
             ),
           ),
+        ],
       ],
     );
   }

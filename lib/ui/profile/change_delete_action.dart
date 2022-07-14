@@ -7,7 +7,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -115,13 +115,10 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               const BoxConstraints.tightFor(height: 60, width: double.infinity),
           child: ElevatedButton(
             onPressed: () async {
-              if (!Provider.of<InternetConnetionProvider>(context,
-                      listen: false)
-                  .getConnectionStatusCallBack(context)
-                  .call()) return;
               final isValid = _changeformKey.currentState!.validate();
               if (isValid) {
                 Navigator.of(context).pop();
+                if (!isInternetConnected(context)) return;
                 bool success =
                     await Provider.of<AuthProvider>(context, listen: false)
                         .changePassword(
@@ -180,13 +177,19 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               RichText(
                 text: TextSpan(
                   text: 'Type ',
-                  style: DefaultTextStyle.of(context).style,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: a,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                      text: ' $a ',
+                      style: TextStyle(
                         fontStyle: FontStyle.italic,
+                        fontSize: 16,
+                        backgroundColor:
+                            Theme.of(context).colorScheme.tertiaryContainer,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
                       ),
                     ),
                     const TextSpan(text: ' to Confirm!'),
@@ -211,13 +214,10 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
           actions: [
             ElevatedButton(
               onPressed: () async {
-                if (!Provider.of<InternetConnetionProvider>(context,
-                        listen: false)
-                    .getConnectionStatusCallBack(context)
-                    .call()) return;
                 bool isValid = _deleteformKey.currentState!.validate();
                 if (isValid) {
                   Navigator.of(context).pop();
+                  if (!isInternetConnected(context)) return;
                   bool success =
                       await Provider.of<AuthProvider>(context, listen: false)
                           .deleteUser();
@@ -275,10 +275,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
               ),
               child: IconButton(
                 onPressed: () {
-                  if (!Provider.of<InternetConnetionProvider>(context,
-                          listen: false)
-                      .getConnectionStatusCallBack(context)
-                      .call()) return;
+                  if (!isInternetConnected(context)) return;
                   showDeleteDialog();
                 },
                 icon: const Icon(Icons.person_remove_rounded),
@@ -299,10 +296,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
             ),
             child: IconButton(
               onPressed: () {
-                if (!Provider.of<InternetConnetionProvider>(context,
-                        listen: false)
-                    .getConnectionStatusCallBack(context)
-                    .call()) return;
+                if (!isInternetConnected(context)) return;
                 showPasswordChangeModal();
               },
               icon: const Icon(Icons.password_rounded),

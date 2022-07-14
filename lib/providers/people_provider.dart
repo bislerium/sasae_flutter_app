@@ -46,7 +46,7 @@ class PeopleProvider with ChangeNotifier {
 
   //Used to fetch people data per screen. Will fetch logged in user data if peopleID not given.
   Future<void> initFetchPeople({int? peopleID}) async {
-    _people = await fetchPeople(peopleID: peopleID, auth: _authP.auth!);
+    _people = await fetchPeople(peopleID: peopleID, auth: _authP.getAuth!);
     notifyListeners();
   }
 
@@ -145,7 +145,7 @@ class PeopleProvider with ChangeNotifier {
 
         var headers = {
           'Accept': 'application/json',
-          'Authorization': 'Token ${_authP.auth!.tokenKey}',
+          'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
         };
 
         request.headers.addAll(headers);
@@ -198,7 +198,7 @@ class PeopleProvider with ChangeNotifier {
 
       var headers = {
         'Accept': 'application/json',
-        'Authorization': 'Token ${_authP.auth!.tokenKey}',
+        'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
       };
 
       request.fields.addAll({

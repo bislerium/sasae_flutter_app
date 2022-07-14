@@ -6,7 +6,7 @@ class AuthModel {
   final String group;
   final int accountID;
   final int profileID;
-  final bool isVerified;
+  bool isVerified;
   AuthModel({
     required this.tokenKey,
     required this.group,

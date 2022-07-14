@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 
 class PostCreateButton extends StatefulWidget {
   const PostCreateButton({Key? key}) : super(key: key);
@@ -27,9 +27,8 @@ class _PostCreateButtonState extends State<PostCreateButton> {
         child: ElevatedButton(
           onPressed: () async {
             if (_isLoading) return;
-            if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-                .getConnectionStatusCallBack(context)
-                .call()) return;
+            if (!isInternetConnected(context)) return;
+            if (!isProfileVerified(context)) return;
             setState(() => _isLoading = true);
             await postCreateP.getPostCreateHandler!();
             setState(() => _isLoading = false);

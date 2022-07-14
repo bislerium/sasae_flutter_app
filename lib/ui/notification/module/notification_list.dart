@@ -11,18 +11,15 @@ class NotificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return ListView.builder(
       controller: scrollController,
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-      children: notifications
-          .map(
-            (e) => NotificationTile(
-              key: ValueKey(e.id),
-              notification: e,
-            ),
-          )
-          .toList(),
+      itemCount: notifications.length,
+      itemBuilder: (context, index) => NotificationTile(
+        key: ValueKey(notifications[index].hashCode),
+        notification: notifications[index],
+      ),
     );
   }
 }

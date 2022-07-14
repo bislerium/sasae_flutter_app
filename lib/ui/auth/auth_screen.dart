@@ -7,7 +7,6 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
@@ -96,10 +95,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               onPressed: () async {
                 if (authP.isAuthenticating) return;
-                if (!Provider.of<InternetConnetionProvider>(context,
-                        listen: false)
-                    .getConnectionStatusCallBack(context)
-                    .call()) return;
+                if (!isInternetConnected(context)) return;
                 final isValid = _loginFormKey.currentState!.validate();
                 FocusScope.of(context).unfocus();
                 if (isValid) {
@@ -142,9 +138,7 @@ class _AuthScreenState extends State<AuthScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         ),
         onPressed: () {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
           showResetPasswordModal();
         },
         child: Text(
@@ -159,9 +153,7 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _createAccountLabel() => InkWell(
         borderRadius: BorderRadius.circular(25),
         onTap: () {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
           Navigator.of(context).pushNamed(
             RegisterScreen.routeName,
           );
@@ -277,10 +269,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 height: 60, width: double.infinity),
             child: ElevatedButton(
               onPressed: () async {
-                if (!Provider.of<InternetConnetionProvider>(context,
-                        listen: false)
-                    .getConnectionStatusCallBack(context)
-                    .call()) return;
+                if (!isInternetConnected(context)) return;
                 final isValid = _passwordResetFormKey.currentState!.validate();
                 if (isValid) {
                   Navigator.of(context).pop();

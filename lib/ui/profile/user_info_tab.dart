@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/models/user.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
@@ -53,6 +54,9 @@ class _UserInfoTabState extends State<UserInfoTab>
       profileSettingFABP.setShowFAB = false;
       return;
     }
+    if (!mounted) return;
+    await Provider.of<AuthProvider>(context, listen: false)
+        .setIsVerified(data.isVerified);
     if (data is NGOModel) {
       profileSettingFABP.setOnPressedHandler = null;
       profileSettingFABP.setUserType = UserType.ngo;

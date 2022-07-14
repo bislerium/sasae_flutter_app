@@ -38,15 +38,14 @@ class NotificationTile extends StatelessWidget {
     Color? color =
         notification.isRead ? null : Theme.of(context).colorScheme.primary;
     return CustomCard(
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      elevation: 0,
       child: ListTile(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           leading: Icon(getIcon(notification.channel), color: color),
-          horizontalTitleGap: 6,
+          horizontalTitleGap: 10,
           title: Text(
             notification.title,
             style: TextStyle(

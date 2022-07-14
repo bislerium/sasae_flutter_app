@@ -29,17 +29,17 @@ class ProfileProvider with ChangeNotifier {
   set setAuthP(AuthProvider authP) => _authP = authP;
 
   Future<void> initFetchUser({bool isDemo = demo}) async {
-    switch (_authP.auth!.group) {
+    switch (_authP.getAuth!.group) {
       case 'General':
         _user = await PeopleProvider.fetchPeople(
           isDemo: isDemo,
-          auth: _authP.auth!,
+          auth: _authP.getAuth!,
         );
         break;
       case 'NGO':
         _user = await NGOProvider.fetchNGO(
           isDemo: isDemo,
-          auth: _authP.auth!,
+          auth: _authP.getAuth!,
         );
         break;
     }
@@ -64,12 +64,12 @@ class ProfileProvider with ChangeNotifier {
       {int? userID, UserType? userType}) async {
     late String endpoint;
     if (userID == null || userType == null) {
-      switch (_authP.auth!.group) {
+      switch (_authP.getAuth!.group) {
         case 'General':
-          endpoint = '$peopleEndpoint${_authP.auth!.profileID}/posts/';
+          endpoint = '$peopleEndpoint${_authP.getAuth!.profileID}/posts/';
           break;
         case 'NGO':
-          endpoint = '$ngoEndpoint${_authP.auth!.profileID}/posts/';
+          endpoint = '$ngoEndpoint${_authP.getAuth!.profileID}/posts/';
           break;
       }
     } else {
@@ -80,7 +80,7 @@ class ProfileProvider with ChangeNotifier {
         endpoint,
         options: Options(
           headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           },
         ),
       );
@@ -106,7 +106,7 @@ class ProfileProvider with ChangeNotifier {
         await _dio.delete(
           '$postEndpoint$postID/delete/',
           options: Options(headers: {
-            'Authorization': 'Token ${_authP.auth!.tokenKey}',
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
           }),
         );
       }

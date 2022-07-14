@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/normal_post_screen.dart';
@@ -28,9 +28,7 @@ class PostCard extends StatelessWidget {
         // splashColor: Theme.of(context).colorScheme.primaryContainer,
         // highlightColor: Theme.of(context).colorScheme.primaryContainer,
         onTap: () {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
           late String routeName;
           switch (post.postType) {
             case 'Normal':
@@ -57,10 +55,7 @@ class PostCard extends StatelessWidget {
                       title: const Text('Update'),
                       onTap: () {
                         Navigator.of(context).pop();
-                        if (!Provider.of<InternetConnetionProvider>(context,
-                                listen: false)
-                            .getConnectionStatusCallBack(context)
-                            .call()) return;
+                        if (!isInternetConnected(context)) return;
                         Navigator.pushNamed(
                           context,
                           PostUpdateFormScreen.routeName,
@@ -83,10 +78,7 @@ class PostCard extends StatelessWidget {
                             ..pop()
                             ..pop(),
                           okFunc: () async {
-                            if (!Provider.of<InternetConnetionProvider>(context,
-                                    listen: false)
-                                .getConnectionStatusCallBack(context)
-                                .call()) return;
+                            if (!isInternetConnected(context)) return;
                             Navigator.of(context)
                               ..pop()
                               ..pop();

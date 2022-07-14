@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
-import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/setting/module/branding_color_tile.dart';
 import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -25,38 +20,6 @@ class _SettingScreenState extends State<SettingScreen>
 
   final String _applicationName, _applicationVersion, _applicationLegalese;
   final Icon _applicationIcon;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<LogoutFABProvider>(context, listen: false)
-          .setOnPressedHandler = onPressLogout;
-    });
-  }
-
-  void onPressLogout() {
-    showCustomDialog(
-      context: context,
-      title: 'Confirm Logout',
-      content: 'Do it with passion or not at all.',
-      okFunc: () async {
-        Navigator.pop(context);
-        bool success =
-            await Provider.of<AuthProvider>(context, listen: false).logout();
-        if (success) {
-          if (!mounted) return;
-          Navigator.of(context).pushNamedAndRemoveUntil(
-              AuthScreen.routeName, (Route<dynamic> route) => false);
-        } else {
-          showSnackBar(
-              context: context,
-              message: 'Unable to logout',
-              errorSnackBar: true);
-        }
-      },
-    );
-  }
 
   Widget about() => ListTile(
         leading: const Icon(Icons.info_rounded),

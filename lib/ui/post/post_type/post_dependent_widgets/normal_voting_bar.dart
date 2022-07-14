@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
@@ -140,9 +139,8 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget upvoteButton() => TextButton(
         onPressed: () async {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
+          if (!isProfileVerified(context)) return;
           setState(() => upvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)
@@ -168,9 +166,8 @@ class _VotingBarState extends State<VotingBar> {
 
   Widget downvoteButton() => TextButton(
         onPressed: () async {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
+          if (!isInternetConnected(context)) return;
+          if (!isProfileVerified(context)) return;
           setState(() => downvote());
           bool success =
               await Provider.of<NormalPostProvider>(context, listen: false)

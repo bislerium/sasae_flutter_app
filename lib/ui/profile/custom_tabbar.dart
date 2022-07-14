@@ -62,18 +62,19 @@ class _CustomTabBarState extends State<CustomTabBar> {
         margin: widget.margin,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: Theme.of(context).colorScheme.surface,
+          color: Theme.of(context).colorScheme.surfaceVariant,
         ),
         child: Theme(
           data: ThemeData(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent),
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
           child: TabBar(
             isScrollable: true,
-            labelColor: Theme.of(context).colorScheme.onSecondary,
+            labelColor: Theme.of(context).colorScheme.onPrimary,
             unselectedLabelColor: Theme.of(context).colorScheme.outline,
             indicator: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(30),
             ),
             enableFeedback: true,

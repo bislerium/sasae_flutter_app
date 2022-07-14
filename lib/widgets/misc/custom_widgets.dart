@@ -7,10 +7,11 @@ void showSnackBar({
   String? message,
   IconData? icon,
   bool errorSnackBar = false,
-  int durationInSecond = 6,
+  int durationInSecond = 3,
 }) {
   var onError = Theme.of(context).colorScheme.onError;
   var onInfo = Theme.of(context).colorScheme.onInverseSurface;
+  ScaffoldMessenger.of(context).removeCurrentSnackBar();
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       action: SnackBarAction(
@@ -18,6 +19,7 @@ void showSnackBar({
         textColor: errorSnackBar ? onError : onInfo,
         onPressed: () {},
       ),
+      duration: Duration(seconds: durationInSecond),
       content: Row(
         children: [
           Icon(

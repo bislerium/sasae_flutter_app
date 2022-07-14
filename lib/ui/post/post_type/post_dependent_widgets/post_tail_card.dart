@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -24,10 +24,9 @@ class PostTailCard extends StatelessWidget {
         content:
             'Think wise & avoid unnecesary report just for personal annoyance & grudge!, ',
         okFunc: () async {
-          if (!Provider.of<InternetConnetionProvider>(context, listen: false)
-              .getConnectionStatusCallBack(context)
-              .call()) return;
           Navigator.of(context).pop();
+          if (!isInternetConnected(context)) return;
+          if (!isProfileVerified(context)) return;
           bool success = await Provider.of<PostProvider>(context, listen: false)
               .report(postID: postID);
           if (success) {
@@ -87,10 +86,8 @@ class PostTailCard extends StatelessWidget {
               ),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  if (!Provider.of<InternetConnetionProvider>(context,
-                          listen: false)
-                      .getConnectionStatusCallBack(context)
-                      .call()) return;
+                  if (!isInternetConnected(context)) return;
+                  if (!isProfileVerified(context)) return;
                   showDialog(context);
                 },
                 icon: const Icon(Icons.report_outlined),

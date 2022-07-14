@@ -13,6 +13,7 @@ import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/notification/notification_page.dart';
+import 'package:sasae_flutter_app/ui/setting/module/logout_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_page.dart';
 import 'package:sasae_flutter_app/ui/post/post_page.dart';
@@ -48,8 +49,9 @@ class _HomePageState extends State<HomePage>
       AndroidNotification? android = event.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
         var additionalData = event.data;
-        int id =
-            Provider.of<AuthProvider>(context, listen: false).auth!.accountID;
+        int id = Provider.of<AuthProvider>(context, listen: false)
+            .getAuth!
+            .accountID;
         if (id != int.parse(additionalData['account_id'])) return;
         NotificationModel notificationModel = NotificationModel(
             id: notification.hashCode,
@@ -115,6 +117,7 @@ class _HomePageState extends State<HomePage>
                     key: const Key('postFAB'),
                     text: 'Post',
                     icon: Icons.add,
+                    requiresProfileVerification: true,
                     func: Provider.of<PostFABProvider>(context)
                         .getOnPressedHandler,
                     tooltip: 'Post a Post',
@@ -127,26 +130,10 @@ class _HomePageState extends State<HomePage>
                         crossAxisAlignment: WrapCrossAlignment.end,
                         spacing: 20,
                         children: [
-                          FloatingActionButton(
-                            onPressed: () {
-                              // BetterFeedback.of(context).show((feedback) async {
-                              //   // draft an email and send to developer
-                              //   final String screenshotFilePath =
-                              //       await writeImageToStorage(
-                              //           feedback.screenshot);
-
-                              //   final Email email = Email(
-                              //     body: feedback.text,
-                              //     subject: 'App Feedback',
-                              //     recipients: ['bigc.liaise@gmail.com'],
-                              //     attachmentPaths: [
-                              //       screenshotFilePath,
-                              //     ],
-                              //     isHTML: false,
-                              //   );
-                              //   await FlutterEmailSender.send(email);
-                              // });
-                              showCustomDialog(
+                          Tooltip(
+                            message: 'Clear all',
+                            child: FloatingActionButton(
+                              onPressed: () => showCustomDialog(
                                   context: context,
                                   title: 'Clear Notifications',
                                   content: 'You cannot undo this action.',
@@ -157,35 +144,29 @@ class _HomePageState extends State<HomePage>
                                         .clearNotification();
                                     if (!mounted) return;
                                     Navigator.of(context).pop();
-                                  });
-                            },
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .secondaryContainer,
-                            foregroundColor: Theme.of(context)
-                                .colorScheme
-                                .onSecondaryContainer,
-                            child: const Icon(Icons.clear_all_rounded),
+                                  }),
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .secondaryContainer,
+                              foregroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .onSecondaryContainer,
+                              child: const Icon(Icons.clear_all_rounded),
+                            ),
                           ),
-                          FloatingActionButton.large(
-                              onPressed: () async =>
-                                  Provider.of<NotificationProvider>(context,
-                                          listen: false)
-                                      .markAsReadAll(),
-                              child: const Icon(Icons.done_all))
+                          CustomFAB(
+                            text: 'Read All',
+                            func: () async => Provider.of<NotificationProvider>(
+                                    context,
+                                    listen: false)
+                                .markAsReadAll(),
+                            tooltip: 'Read all',
+                            icon: Icons.done_all,
+                          ),
                         ],
                       )
                     : _pageNavigatorP.getPageIndex == 4
-                        ? CustomFAB(
-                            key: const Key('logoutFAB'),
-                            text: 'Logout',
-                            icon: Icons.logout,
-                            func: Provider.of<LogoutFABProvider>(context)
-                                .getOnPressedHandler,
-                            foreground: Theme.of(context).colorScheme.onError,
-                            background: Theme.of(context).colorScheme.error,
-                            tooltip: 'Logout',
-                          )
+                        ? const LogoutFAB()
                         : null,
         bottomNavigationBar: NavigationBar(
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,

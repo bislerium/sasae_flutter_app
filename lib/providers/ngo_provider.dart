@@ -72,7 +72,7 @@ class NGOProvider with ChangeNotifier {
           Uri.parse('${getHostName()}$ngosEndpoint'),
           headers: {
             'Accept': 'application/json',
-            'Authorization': 'Token ${_authP.auth!.tokenKey}'
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}'
           },
         ).timeout(timeOutDuration);
         final responseData = json.decode(response.body);
@@ -197,7 +197,7 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> initFetchNGO({int? ngoID}) async {
-    _ngo = await fetchNGO(ngoID: ngoID, auth: _authP.auth!);
+    _ngo = await fetchNGO(ngoID: ngoID, auth: _authP.getAuth!);
   }
 
   Future<void> refreshNGO({int? ngoID}) async {
