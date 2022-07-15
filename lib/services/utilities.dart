@@ -26,6 +26,8 @@ Future<XFile> imageURLToXFile(String imageURL) async => XFile(
       (await DefaultCacheManager().getSingleFile(imageURL)).path,
     );
 
+int getUniqueID() => DateTime.now().millisecondsSinceEpoch.remainder(2);
+
 Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
   final Directory output = await getTemporaryDirectory();
   final String screenshotFilePath =

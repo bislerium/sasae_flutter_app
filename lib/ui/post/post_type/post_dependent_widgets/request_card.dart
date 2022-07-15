@@ -78,9 +78,6 @@ class _RequestCardState extends State<RequestCard> {
                 ),
               ],
             ),
-            const SizedBox(
-              height: 15,
-            ),
             SizedBox(
               height: 400,
               child: RequestRadialVisualization(

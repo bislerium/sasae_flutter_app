@@ -19,13 +19,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return AppBar(
       title: Text(
         widget.title,
-        style: Theme.of(context).textTheme.headline6?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface,
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              color: Theme.of(context).colorScheme.onBackground,
             ),
       ),
       actions: widget.action,
-      backgroundColor: Colors.transparent,
-      foregroundColor: Theme.of(context).colorScheme.onSurface,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      foregroundColor: Theme.of(context).colorScheme.primary,
       elevation: 0,
     );
   }

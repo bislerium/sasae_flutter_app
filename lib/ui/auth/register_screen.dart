@@ -7,6 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -451,146 +452,149 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     var isLastStep = _currentStep == getSteps().length - 1;
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Register',
-      ),
-      body: Stepper(
-        type: StepperType.vertical,
-        steps: getSteps(),
-        currentStep: _currentStep,
-        onStepContinue: () async {
-          if (_isLoading) return;
-          if (isLastStep) {
-            if (_stepErrors.contains(true)) {
-              showSnackBar(
-                context: context,
-                message: 'Please fill required fields',
-                errorSnackBar: true,
-              );
-            } else {
-              if (!isInternetConnected(context)) return;
-              setState(() => _isLoading = true);
-              _personalInfoFormKey.currentState!.save();
-              _contactFormKey.currentState!.save();
-              _addressFormKey.currentState!.save();
-              _accountFormKey.currentState!.save();
-              _verifyFormKey.currentState!.save();
-
-              bool success =
-                  await Provider.of<PeopleProvider>(context, listen: false)
-                      .registerPeople(
-                username: _username!,
-                email: _email!,
-                password: _passwordTEC.text,
-                fullname: _fullname!,
-                gender: _gender!,
-                dob: _birthdate!,
-                address:
-                    '$_stAddressHouseNum, $_cityLocality, $_province, $_country',
-                phone: _phone.toString(),
-                displayPicture: _displayPicture,
-                citizenshipPhoto: _citizenshipPhoto,
-              );
-              setState(() => _isLoading = false);
-
-              if (success) {
-                if (!mounted) return;
-                Navigator.of(context).pop();
+    return AnnotatedScaffold(
+      child: Scaffold(
+        appBar: const CustomAppBar(
+          title: 'Register',
+        ),
+        body: Stepper(
+          type: StepperType.vertical,
+          steps: getSteps(),
+          currentStep: _currentStep,
+          onStepContinue: () async {
+            if (_isLoading) return;
+            if (isLastStep) {
+              if (_stepErrors.contains(true)) {
                 showSnackBar(
                   context: context,
-                  message: 'Successfully registered',
-                );
-              } else {
-                showSnackBar(
-                  context: context,
+                  message: 'Please fill required fields',
                   errorSnackBar: true,
                 );
+              } else {
+                if (!isInternetConnected(context)) return;
+                setState(() => _isLoading = true);
+                _personalInfoFormKey.currentState!.save();
+                _contactFormKey.currentState!.save();
+                _addressFormKey.currentState!.save();
+                _accountFormKey.currentState!.save();
+                _verifyFormKey.currentState!.save();
+
+                bool success =
+                    await Provider.of<PeopleProvider>(context, listen: false)
+                        .registerPeople(
+                  username: _username!,
+                  email: _email!,
+                  password: _passwordTEC.text,
+                  fullname: _fullname!,
+                  gender: _gender!,
+                  dob: _birthdate!,
+                  address:
+                      '$_stAddressHouseNum, $_cityLocality, $_province, $_country',
+                  phone: _phone.toString(),
+                  displayPicture: _displayPicture,
+                  citizenshipPhoto: _citizenshipPhoto,
+                );
+                setState(() => _isLoading = false);
+
+                if (success) {
+                  if (!mounted) return;
+                  Navigator.of(context).pop();
+                  showSnackBar(
+                    context: context,
+                    message: 'Successfully registered',
+                  );
+                } else {
+                  showSnackBar(
+                    context: context,
+                    errorSnackBar: true,
+                  );
+                }
               }
+            } else {
+              var valid = validity()[_currentStep]();
+              setState(() {
+                _stepErrors[_currentStep] = !valid;
+                _currentStep++;
+              });
             }
-          } else {
-            var valid = validity()[_currentStep]();
+          },
+          onStepCancel: () {
+            if (_currentStep == 0) {
+              null;
+            } else {
+              setState(() {
+                _currentStep--;
+              });
+            }
+          },
+          onStepTapped: (value) {
             setState(() {
-              _stepErrors[_currentStep] = !valid;
-              _currentStep++;
-            });
-          }
-        },
-        onStepCancel: () {
-          if (_currentStep == 0) {
-            null;
-          } else {
-            setState(() {
-              _currentStep--;
-            });
-          }
-        },
-        onStepTapped: (value) {
-          setState(() {
-            if (!isLastStep) {
-              for (int i = 0; i < value; i++) {
-                _stepErrors[i] = !validity()[i]();
+              if (!isLastStep) {
+                for (int i = 0; i < value; i++) {
+                  _stepErrors[i] = !validity()[i]();
+                }
               }
-            }
-            _currentStep = value;
-          });
-        },
-        controlsBuilder: (BuildContext context, ControlsDetails details) {
-          return Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            height: 60,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ElevatedButton(
-                  onPressed: details.onStepContinue,
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: _isLoading ? 32 : 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        isLastStep & _isLoading
-                            ? LoadingAnimationWidget.horizontalRotatingDots(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryContainer,
-                                size: 50,
-                              )
-                            : isLastStep & !_isLoading
-                                ? const Icon(Icons.how_to_reg)
-                                : const Icon(
-                                    Icons.navigate_next,
-                                  ),
-                        if ((!_isLoading & isLastStep) || !isLastStep) ...[
-                          const SizedBox(
-                            width: 6,
-                          ),
-                          Text(
-                            isLastStep ? 'Register' : 'Next',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
+              _currentStep = value;
+            });
+          },
+          controlsBuilder: (BuildContext context, ControlsDetails details) {
+            return Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              height: 60,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton(
+                    onPressed: details.onStepContinue,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: _isLoading ? 32 : 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          isLastStep & _isLoading
+                              ? LoadingAnimationWidget.horizontalRotatingDots(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  size: 50,
+                                )
+                              : isLastStep & !_isLoading
+                                  ? const Icon(Icons.how_to_reg)
+                                  : const Icon(
+                                      Icons.navigate_next,
+                                    ),
+                          if ((!_isLoading & isLastStep) || !isLastStep) ...[
+                            const SizedBox(
+                              width: 6,
+                            ),
+                            Text(
+                              isLastStep ? 'Register' : 'Next',
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  child: TextButton(
-                    onPressed: details.onStepCancel,
-                    child: const Text(
-                      'Back',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: details.onStepCancel,
+                      child: const Text(
+                        'Back',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

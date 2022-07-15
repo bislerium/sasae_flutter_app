@@ -13,7 +13,7 @@ class ThemeProvider with ChangeNotifier {
         _themeKey = 'theme',
         _themeModeKey = 'theme-mode',
         _themeColorKey = 'theme-color',
-        _themeMode = ThemeMode.light,
+        _themeMode = ThemeMode.system,
         _brandingColor = Colors.deepPurple;
 
   ThemeMode _themeMode;

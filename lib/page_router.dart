@@ -35,26 +35,14 @@ class _PageRouterState extends State<PageRouter> {
 
   @override
   Widget build(BuildContext context) {
-    var colors = Theme.of(context).colorScheme;
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        systemNavigationBarColor: ElevationOverlay.colorWithOverlay(
-            colors.surface, colors.primary, 3.0),
-        statusBarIconBrightness:
-            Theme.of(context).brightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light,
-      ),
-      child: FutureBuilder(
-        future: _autoLoginFuture,
-        builder: (ctx, authSnapshot) =>
-            authSnapshot.connectionState == ConnectionState.waiting
-                ? const CustomLoading()
-                : _authP.getIsAuth
-                    ? const HomePage()
-                    : const AuthScreen(),
-      ),
+    return FutureBuilder(
+      future: _autoLoginFuture,
+      builder: (ctx, authSnapshot) =>
+          authSnapshot.connectionState == ConnectionState.waiting
+              ? const CustomLoading()
+              : _authP.getIsAuth
+                  ? const HomePage()
+                  : const AuthScreen(),
     );
   }
 }

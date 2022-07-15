@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/ui/profile/profile_update_button.dart';
+import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -50,27 +51,29 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Update Profile'),
-      body: FutureBuilder(
-        future: _fetchPeopleUpdateFUTURE,
-        builder: (context, snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? const CustomLoading()
-                : Consumer<PeopleProvider>(
-                    builder: (context, peopleP, child) =>
-                        peopleP.getPeopleUpdate == null
-                            ? const ErrorView()
-                            : PeopleProfileEditForm(
-                                peopleUpdate: peopleP.getPeopleUpdate!,
-                                scrollController: _scrollController,
-                                formKey: _formKey),
-                  ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: ProfileUpdateButton(
-        formKey: _formKey,
-        scrollController: _scrollController,
+    return AnnotatedScaffold(
+      child: Scaffold(
+        appBar: const CustomAppBar(title: 'Update Profile'),
+        body: FutureBuilder(
+          future: _fetchPeopleUpdateFUTURE,
+          builder: (context, snapshot) =>
+              snapshot.connectionState == ConnectionState.waiting
+                  ? const CustomLoading()
+                  : Consumer<PeopleProvider>(
+                      builder: (context, peopleP, child) =>
+                          peopleP.getPeopleUpdate == null
+                              ? const ErrorView()
+                              : PeopleProfileEditForm(
+                                  peopleUpdate: peopleP.getPeopleUpdate!,
+                                  scrollController: _scrollController,
+                                  formKey: _formKey),
+                    ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: ProfileUpdateButton(
+          formKey: _formKey,
+          scrollController: _scrollController,
+        ),
       ),
     );
   }

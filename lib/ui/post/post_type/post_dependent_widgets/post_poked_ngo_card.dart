@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 
 class PokedNGOCard extends StatelessWidget {
   final List<NGO__Model> list;
@@ -36,10 +38,11 @@ class PokedNGOCard extends StatelessWidget {
                         key: ValueKey(e.id),
                         labelPadding:
                             const EdgeInsets.symmetric(horizontal: 4.0),
-                        avatar: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            e.orgPhoto,
-                          ),
+                        avatar: CustomImage(
+                          imageURL: e.orgPhoto,
+                          onTapViewImage: false,
+                          includeHero: false,
+                          loadingSize: 20,
                         ),
                         label: Text(
                           e.orgName,
@@ -47,11 +50,11 @@ class PokedNGOCard extends StatelessWidget {
                               Theme.of(context).textTheme.subtitle2?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
-                                        .onTertiaryContainer,
+                                        .onSecondaryContainer,
                                   ),
                         ),
                         backgroundColor:
-                            Theme.of(context).colorScheme.tertiaryContainer,
+                            Theme.of(context).colorScheme.secondaryContainer,
                         pressElevation: 2,
                         onPressed: () {
                           if (!isInternetConnected(context)) return;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -58,41 +59,44 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Update the Post'),
-      body: FutureBuilder(
-        future: Future.wait(<Future>[
-          _fetchNGOOptionsFUTURE,
-          _fetchrRelatedToOptionsFUTURE,
-          _fetchRetrieveUpdatePeopleFUTURE,
-        ]),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? const CustomLoading()
-                : Consumer2<PostUpdateProvider, PostCreateProvider>(
-                    builder: (context, postUpdateP, postCreateP, child) =>
-                        postCreateP.getNGOOptionsData == null ||
-                                postCreateP.getPostRelatedToData == null ||
-                                postUpdateP.getUpdatePostType == null
-                            ? const ErrorView()
-                            : PostUpdateForm(
-                                snapshotNGOList: postCreateP.getNGOOptionsData!,
-                                snapshotRelatedList:
-                                    postCreateP.getPostRelatedToData!,
-                                scrollController: _scrollController,
-                              ),
-                  ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Consumer2<PostUpdateProvider, PostCreateProvider>(
-        builder: (context, postUpdateP, postCreateP, child) =>
-            postCreateP.getNGOOptionsData == null ||
-                    postCreateP.getPostRelatedToData == null ||
-                    postUpdateP.getUpdatePostType == null
-                ? const SizedBox.shrink()
-                : PostUpdateButton(
-                    scrollController: _scrollController,
-                  ),
+    return AnnotatedScaffold(
+      child: Scaffold(
+        appBar: const CustomAppBar(title: 'Update the Post'),
+        body: FutureBuilder(
+          future: Future.wait(<Future>[
+            _fetchNGOOptionsFUTURE,
+            _fetchrRelatedToOptionsFUTURE,
+            _fetchRetrieveUpdatePeopleFUTURE,
+          ]),
+          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
+              snapshot.connectionState == ConnectionState.waiting
+                  ? const CustomLoading()
+                  : Consumer2<PostUpdateProvider, PostCreateProvider>(
+                      builder: (context, postUpdateP, postCreateP, child) =>
+                          postCreateP.getNGOOptionsData == null ||
+                                  postCreateP.getPostRelatedToData == null ||
+                                  postUpdateP.getUpdatePostType == null
+                              ? const ErrorView()
+                              : PostUpdateForm(
+                                  snapshotNGOList:
+                                      postCreateP.getNGOOptionsData!,
+                                  snapshotRelatedList:
+                                      postCreateP.getPostRelatedToData!,
+                                  scrollController: _scrollController,
+                                ),
+                    ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Consumer2<PostUpdateProvider, PostCreateProvider>(
+          builder: (context, postUpdateP, postCreateP, child) =>
+              postCreateP.getNGOOptionsData == null ||
+                      postCreateP.getPostRelatedToData == null ||
+                      postUpdateP.getUpdatePostType == null
+                  ? const SizedBox.shrink()
+                  : PostUpdateButton(
+                      scrollController: _scrollController,
+                    ),
+        ),
       ),
     );
   }

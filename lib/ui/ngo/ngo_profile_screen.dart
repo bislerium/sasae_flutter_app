@@ -4,6 +4,7 @@ import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_info_tab.dart';
 import 'package:sasae_flutter_app/ui/profile/info_post_tab.dart';
+import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_donation_button.dart';
 import 'package:sasae_flutter_app/ui/profile/user_post_tab.dart';
@@ -34,31 +35,34 @@ class _NGOProfileScreenState extends State<NGOProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'View NGO',
-      ),
-      body: InfoPostTab(
-        infoTab: NGOInfoTab(
-          ngoID: widget.ngoID,
-          scrollController: _infoScrollController,
+    return AnnotatedScaffold(
+      child: Scaffold(
+        appBar: const CustomAppBar(
+          title: 'View NGO',
         ),
-        postTab: UserPostTab(
-          userID: widget.ngoID,
-          userType: UserType.ngo,
-          scrollController: _postScrollController,
+        body: InfoPostTab(
+          infoTab: NGOInfoTab(
+            ngoID: widget.ngoID,
+            scrollController: _infoScrollController,
+          ),
+          postTab: UserPostTab(
+            userID: widget.ngoID,
+            userType: UserType.ngo,
+            scrollController: _postScrollController,
+          ),
+          infoScrollController: _infoScrollController,
+          postScrollController: _postScrollController,
+          tabBarMargin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+          fabType: FABType.donation,
         ),
-        infoScrollController: _infoScrollController,
-        postScrollController: _postScrollController,
-        tabBarMargin: const EdgeInsets.symmetric(vertical: 0, horizontal: 20),
-        fabType: FABType.donation,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton:
+            Provider.of<DonationFABProvider>(context).getShowFAB
+                ? NGODonationButton(
+                    scrollController: _infoScrollController,
+                  )
+                : null,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Provider.of<DonationFABProvider>(context).getShowFAB
-          ? NGODonationButton(
-              scrollController: _infoScrollController,
-            )
-          : null,
     );
   }
 }

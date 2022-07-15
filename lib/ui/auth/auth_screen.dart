@@ -10,6 +10,8 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
+import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -307,34 +309,36 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: height * 0.17),
-            _logo(),
-            SizedBox(height: height * 0.05),
-            _loginForm(),
-            SizedBox(height: height * 0.025),
-            Row(
-              children: [
-                Expanded(
-                  flex: 10,
-                  child: _forgetButton(),
-                ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: _loginButton(),
-                ),
-              ],
-            ),
-            SizedBox(height: height * 0.20),
-            _createAccountLabel(),
-          ],
+    return AnnotatedScaffold(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 40.0),
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: height * 0.17),
+              _logo(),
+              SizedBox(height: height * 0.05),
+              _loginForm(),
+              SizedBox(height: height * 0.025),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 10,
+                    child: _forgetButton(),
+                  ),
+                  const Spacer(
+                    flex: 1,
+                  ),
+                  Expanded(
+                    flex: 6,
+                    child: _loginButton(),
+                  ),
+                ],
+              ),
+              SizedBox(height: height * 0.20),
+              _createAccountLabel(),
+            ],
+          ),
         ),
       ),
     );
