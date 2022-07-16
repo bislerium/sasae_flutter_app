@@ -274,9 +274,9 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 ),
               ),
               child: IconButton(
-                onPressed: () {
+                onPressed: () async {
                   if (!isInternetConnected(context)) return;
-                  showDeleteDialog();
+                  await showDeleteDialog();
                 },
                 icon: const Icon(Icons.person_remove_rounded),
                 color: Theme.of(context).colorScheme.onTertiaryContainer,
@@ -295,9 +295,9 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                   : const CircleBorder(),
             ),
             child: IconButton(
-              onPressed: () {
+              onPressed: () async {
                 if (!isInternetConnected(context)) return;
-                showPasswordChangeModal();
+                await showPasswordChangeModal();
               },
               icon: const Icon(Icons.password_rounded),
               color: Theme.of(context).colorScheme.onSecondaryContainer,

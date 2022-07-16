@@ -3,6 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 
 class PostCreateButton extends StatefulWidget {
   const PostCreateButton({Key? key}) : super(key: key);
@@ -41,10 +42,8 @@ class _PostCreateButtonState extends State<PostCreateButton> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _isLoading
-                  ? LoadingAnimationWidget.horizontalRotatingDots(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      size: 50,
-                    )
+                  ? ButtomLoading(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer)
                   : const Icon(
                       Icons.post_add_rounded,
                     ),

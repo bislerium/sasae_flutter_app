@@ -60,7 +60,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
           future: _fetchRequestPostFUTURE,
           builder: (context, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<RequestPostProvider>(
                   builder: (context, postP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

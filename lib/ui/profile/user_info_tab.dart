@@ -92,7 +92,7 @@ class _UserInfoTabState extends State<UserInfoTab>
       future: _fetchUserFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<ProfileProvider>(
                   builder: (context, profileP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

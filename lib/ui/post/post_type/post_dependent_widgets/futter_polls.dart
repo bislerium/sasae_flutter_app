@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 
 // FlutterPolls widget.
 // This widget is used to display a poll.
@@ -295,6 +296,7 @@ class FlutterPolls extends HookWidget {
                                   votedOption.value!, totalVotes.value);
                               isLoading.value = false;
                               if (success) {
+                                pollOption.votes++;
                                 totalVotes.value++;
                                 userHasVoted.value = true;
                               }
@@ -323,13 +325,7 @@ class FlutterPolls extends HookWidget {
                               child: Center(
                                 child: isLoading.value &&
                                         pollOption.id == votedOption.value!.id
-                                    ? LoadingAnimationWidget
-                                        .horizontalRotatingDots(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimaryContainer,
-                                        size: 50,
-                                      )
+                                    ? const ButtomLoading()
                                     : pollOption.title,
                               ),
                             ),
@@ -369,5 +365,5 @@ class PollOption {
 
   final int? id;
   final Widget title;
-  final int votes;
+  int votes;
 }

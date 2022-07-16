@@ -3,6 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 
 class PostUpdateButton extends StatefulWidget {
@@ -31,20 +32,11 @@ class _PostUpdateButtonState extends State<PostUpdateButton> {
             await postUpdateP.getPostUpdateHandler!();
             setState(() => _isLoading = false);
           },
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(16.0),
-            ),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          elevation: 3,
           tooltip: 'Done',
           enableFeedback: true,
           child: _isLoading
-              ? LoadingAnimationWidget.horizontalRotatingDots(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  size: 50,
-                )
+              ? ButtomLoading(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer)
               : const Icon(
                   Icons.done_rounded,
                 ),

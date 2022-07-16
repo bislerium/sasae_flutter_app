@@ -74,7 +74,7 @@ class _FormCardNormalPostState extends State<FormCardNormalPost>
                 previewWidth: width,
                 previewHeight: width,
                 maxImages: 1,
-                iconColor: Theme.of(context).colorScheme.secondary,
+                iconColor: Theme.of(context).colorScheme.secondaryContainer,
                 onSaved: (list) => list == null || list.isEmpty
                     ? _normalPostCU.setPostImage = null
                     : _normalPostCU.setPostImage = list.first,

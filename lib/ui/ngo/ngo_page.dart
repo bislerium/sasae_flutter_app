@@ -34,7 +34,7 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
       future: _fetchNGOFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Column(
                   children: [
                     const Padding(

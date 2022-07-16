@@ -151,37 +151,16 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
               .toList(),
           initialValue:
               widget.isUpdateMode ? _requestPostCU.getRequestType : null,
-          onSaved: (value) => _requestPostCU.setRequestType = value as String?,
+          // onSaved: (value) => _requestPostCU.setRequestType = value as String?,
           onChanged: (value) {
-            if (value == 'Petition') {
-              _maxTEC.clear();
-            }
+            setState(() {
+              _requestPostCU.setRequestType = value as String?;
+              if (value == 'Petition') {
+                _maxTEC.clear();
+              }
+            });
           },
         ),
-      );
-
-  Widget datetimeField() => FormBuilderDateTimePicker(
-        name: 'RequestDuration',
-        inputType: InputType.both,
-        decoration: const InputDecoration(
-          labelText: 'End Time',
-        ),
-        firstDate: widget.isUpdateMode
-            ? _requestPostCU.getRequestDuration
-            : DateTime.now(),
-        lastDate: DateTime.now().add(const Duration(days: 365 * 6)),
-        initialValue:
-            widget.isUpdateMode ? _requestPostCU.getRequestDuration : null,
-        validator: FormBuilderValidators.compose(
-          [
-            FormBuilderValidators.required(),
-            (value) =>
-                value!.isBefore(DateTime.now().add(const Duration(hours: 1)))
-                    ? 'Must have minimum one hour duration'
-                    : null
-          ],
-        ),
-        onSaved: (value) => _requestPostCU.setRequestDuration = value,
       );
 
   @override
@@ -228,7 +207,10 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
               const SizedBox(
                 height: 20,
               ),
-              datetimeField(),
+              RequestPostDateTimeField(
+                isUpdateMode: widget.isUpdateMode,
+                requestPostCU: _requestPostCU,
+              ),
             ],
           ),
         ),
@@ -238,4 +220,41 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class RequestPostDateTimeField extends StatelessWidget {
+  final RequestPostCUModel requestPostCU;
+  final bool isUpdateMode;
+  const RequestPostDateTimeField(
+      {Key? key, required this.requestPostCU, required this.isUpdateMode})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilderDateTimePicker(
+      name: 'RequestDuration',
+      inputType: InputType.both,
+      decoration: InputDecoration(
+        labelText: requestPostCU.getRequestType == null
+            ? 'DateTime'
+            : requestPostCU.getRequestType == 'Join'
+                ? 'Start DateTime'
+                : 'End DateTime',
+      ),
+      firstDate:
+          isUpdateMode ? requestPostCU.getRequestDuration : DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 6)),
+      initialValue: isUpdateMode ? requestPostCU.getRequestDuration : null,
+      validator: FormBuilderValidators.compose(
+        [
+          FormBuilderValidators.required(),
+          (value) =>
+              value!.isBefore(DateTime.now().add(const Duration(hours: 1)))
+                  ? 'Must have minimum one hour duration'
+                  : null
+        ],
+      ),
+      onSaved: (value) => requestPostCU.setRequestDuration = value,
+    );
+  }
 }

@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -64,10 +65,8 @@ class _ProfileUpdateButtonState extends State<ProfileUpdateButton> {
                 tooltip: 'Done',
                 enableFeedback: true,
                 child: _isLoading
-                    ? LoadingAnimationWidget.horizontalRotatingDots(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        size: 50,
-                      )
+                    ? ButtomLoading(
+                        color: Theme.of(context).colorScheme.onPrimaryContainer)
                     : const Icon(
                         Icons.done_rounded,
                       ),

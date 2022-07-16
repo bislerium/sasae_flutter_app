@@ -60,7 +60,7 @@ class _NotificationPageState extends State<NotificationPage>
       future: _fetchNotificationFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<NotificationProvider>(
                   builder: (context, notificationP, child) =>
                       notificationP.getNotifications.isNotEmpty

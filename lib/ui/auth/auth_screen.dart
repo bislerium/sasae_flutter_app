@@ -4,14 +4,12 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/ui/auth/module/login_button.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
-import 'package:sasae_flutter_app/ui/home_screen.dart';
 import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
@@ -89,50 +87,9 @@ class _AuthScreenState extends State<AuthScreen> {
         keyboardType: TextInputType.visiblePassword,
       );
 
-  Widget _loginButton() => Consumer<AuthProvider>(
-        builder: ((context, authP, child) => ElevatedButton(
-              key: const Key('loginAB'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(14),
-              ),
-              onPressed: () async {
-                if (authP.isAuthenticating) return;
-                if (!isInternetConnected(context)) return;
-                final isValid = _loginFormKey.currentState!.validate();
-                FocusScope.of(context).unfocus();
-                if (isValid) {
-                  await authP.login(
-                    username: _userNameTEC.text,
-                    password: _passwordTEC.text,
-                  );
-                  if (authP.getIsAuth) {
-                    if (!mounted) return;
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        HomePage.routeName, (Route<dynamic> route) => false);
-                  } else {
-                    showSnackBar(
-                      context: context,
-                      message: 'Unable to login',
-                      errorSnackBar: true,
-                    );
-                  }
-                }
-              },
-              child: authP.isAuthenticating
-                  ? Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: LoadingAnimationWidget.fallingDot(
-                        color:
-                            Theme.of(context).colorScheme.onSecondaryContainer,
-                        size: 46,
-                      ),
-                    )
-                  : Icon(
-                      Icons.navigate_next_rounded,
-                      size: 50,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-            )),
+  Widget _loginButton() => LoginButton(
+        loginFormKey: _loginFormKey,
+        credential: Cred(_userNameTEC.text, _passwordTEC.text),
       );
 
   Widget _forgetButton() => TextButton(
@@ -154,9 +111,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Widget _createAccountLabel() => InkWell(
         borderRadius: BorderRadius.circular(25),
-        onTap: () {
+        onTap: () async {
           if (!isInternetConnected(context)) return;
-          Navigator.of(context).pushNamed(
+          await Navigator.of(context).pushNamed(
             RegisterScreen.routeName,
           );
         },
@@ -208,9 +165,6 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           children: <Widget>[
             _userName(),
-            const SizedBox(
-              height: 1,
-            ),
             _passwordField(),
           ],
         ),
@@ -313,31 +267,41 @@ class _AuthScreenState extends State<AuthScreen> {
       child: Scaffold(
         body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 40.0),
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: height * 0.17),
-              _logo(),
-              SizedBox(height: height * 0.05),
-              _loginForm(),
-              SizedBox(height: height * 0.025),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 10,
-                    child: _forgetButton(),
-                  ),
-                  const Spacer(
-                    flex: 1,
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: _loginButton(),
-                  ),
-                ],
-              ),
-              SizedBox(height: height * 0.20),
-              _createAccountLabel(),
-            ],
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                Column(
+                  children: <Widget>[
+                    SizedBox(height: height * 0.17),
+                    _logo(),
+                    SizedBox(height: height * 0.04),
+                    _loginForm(),
+                    SizedBox(height: height * 0.026),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 10,
+                          child: _forgetButton(),
+                        ),
+                        const Spacer(
+                          flex: 1,
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: _loginButton(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                  child: _createAccountLabel(),
+                )
+              ],
+            ),
           ),
         ),
       ),

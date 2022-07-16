@@ -71,7 +71,7 @@ class _PostPageState extends State<PostPage>
       future: _fetchPostFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<PostProvider>(
                   builder: (context, postP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

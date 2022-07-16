@@ -70,7 +70,7 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
           ]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
-                  ? const CustomLoading()
+                  ? const ScreenLoading()
                   : Consumer2<PostUpdateProvider, PostCreateProvider>(
                       builder: (context, postUpdateP, postCreateP, child) =>
                           postCreateP.getNGOOptionsData == null ||
@@ -86,7 +86,7 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
                                 ),
                     ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Consumer2<PostUpdateProvider, PostCreateProvider>(
           builder: (context, postUpdateP, postCreateP, child) =>
               postCreateP.getNGOOptionsData == null ||

@@ -56,7 +56,7 @@ class _PostCreateFormScreenState extends State<PostCreateFormScreen>
           ]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
-                  ? const CustomLoading()
+                  ? const ScreenLoading()
                   : Consumer<PostCreateProvider>(
                       builder: (context, postCreateP, child) =>
                           RefreshIndicator(

@@ -67,7 +67,7 @@ class _UserPostTabState extends State<UserPostTab>
       future: _fetchUserPostFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<ProfileProvider>(
                   builder: (context, profilePostP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

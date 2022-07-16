@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class LogoutFAB extends StatefulWidget {
@@ -52,9 +53,8 @@ class _LogoutFABState extends State<LogoutFAB> {
         tooltip: 'Logout',
         enableFeedback: true,
         child: _isLoading
-            ? LoadingAnimationWidget.horizontalRotatingDots(
+            ? ButtomLoading(
                 color: Theme.of(context).colorScheme.onError,
-                size: 50,
               )
             : const Icon(
                 Icons.logout_rounded,

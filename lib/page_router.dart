@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
@@ -39,7 +38,7 @@ class _PageRouterState extends State<PageRouter> {
       future: _autoLoginFuture,
       builder: (ctx, authSnapshot) =>
           authSnapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : _authP.getIsAuth
                   ? const HomePage()
                   : const AuthScreen(),

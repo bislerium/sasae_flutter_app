@@ -66,7 +66,7 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
           future: _fetchNormalPostFUTURE,
           builder: (context, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<NormalPostProvider>(
                   builder: (context, postP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

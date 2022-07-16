@@ -58,7 +58,7 @@ class _PeopleProfileEditScreenState extends State<PeopleProfileEditScreen> {
           future: _fetchPeopleUpdateFUTURE,
           builder: (context, snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
-                  ? const CustomLoading()
+                  ? const ScreenLoading()
                   : Consumer<PeopleProvider>(
                       builder: (context, peopleP, child) =>
                           peopleP.getPeopleUpdate == null

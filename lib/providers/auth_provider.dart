@@ -10,18 +10,15 @@ import 'package:sasae_flutter_app/models/auth.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthModel? _authModel;
-  bool _isAuthenticating;
   final SessionManager _sessionManager;
   final String _authModelKey;
 
   AuthProvider()
       : _sessionManager = SessionManager(),
-        _authModelKey = 'auth',
-        _isAuthenticating = false;
+        _authModelKey = 'auth';
 
   bool get getIsAuth => _authModel != null;
   AuthModel? get getAuth => _authModel;
-  bool get isAuthenticating => _isAuthenticating;
 
   AuthModel _randAuth() => AuthModel(
         tokenKey: faker.jwt.secret,
@@ -35,7 +32,6 @@ class AuthProvider with ChangeNotifier {
       {required String username,
       required String password,
       bool isDemo = demo}) async {
-    _isAuthenticating = true;
     try {
       if (isDemo) {
         await delay();
@@ -66,8 +62,6 @@ class AuthProvider with ChangeNotifier {
     } catch (error) {
       _authModel = null;
     }
-    _isAuthenticating = false;
-    notifyListeners();
   }
 
   Future<void> flushAuthCredential(AuthModel authModel) async {
@@ -228,4 +222,11 @@ class AuthProvider with ChangeNotifier {
       return false;
     }
   }
+}
+
+class Cred {
+  final String username;
+  final String password;
+
+  Cred(this.username, this.password);
 }

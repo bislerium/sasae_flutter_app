@@ -230,6 +230,7 @@ class UpdatePicture extends StatelessWidget {
               labelText: labelText,
               border: InputBorder.none,
             ),
+            iconColor: Theme.of(context).colorScheme.secondaryContainer,
             previewWidth: width,
             previewHeight: width,
             maxImages: 1,

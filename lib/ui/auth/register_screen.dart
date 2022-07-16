@@ -9,6 +9,7 @@ import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -229,6 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         decoration: const InputDecoration(
           labelText: 'Display picture',
         ),
+        iconColor: Theme.of(context).colorScheme.secondaryContainer,
         previewWidth: MediaQuery.of(context).size.width * 0.8,
         previewHeight: MediaQuery.of(context).size.width * 0.8,
         onSaved: (value) => _displayPicture = value?.first,
@@ -544,21 +546,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ElevatedButton(
-                    onPressed: details.onStepContinue,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: _isLoading ? 32 : 12),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: details.onStepCancel,
+                      child: const Text(
+                        'Back',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: details.onStepContinue,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           isLastStep & _isLoading
-                              ? LoadingAnimationWidget.horizontalRotatingDots(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
-                                  size: 50,
-                                )
+                              ? const ButtomLoading()
                               : isLastStep & !_isLoading
                                   ? const Icon(Icons.how_to_reg)
                                   : const Icon(
@@ -570,23 +576,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             Text(
                               isLastStep ? 'Register' : 'Next',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      onPressed: details.onStepCancel,
-                      child: const Text(
-                        'Back',
-                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

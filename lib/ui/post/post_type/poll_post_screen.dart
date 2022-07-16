@@ -58,7 +58,7 @@ class _PollPostScreenState extends State<PollPostScreen> {
           future: _fetchPollPostFUTURE,
           builder: (context, snapshot) => snapshot.connectionState ==
                   ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<PollPostProvider>(
                   builder: (context, postP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(

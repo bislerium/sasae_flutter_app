@@ -7,6 +7,7 @@ import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form_card_poll_post.dart';
 import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form_card_request_post.dart';
@@ -149,14 +150,19 @@ class _PostCreateFormState extends State<PostCreateForm> {
           return ListTile(
             key: ObjectKey(data),
             leading: ClipOval(
-              child: Image.network(
-                data.orgPhoto,
+              child: CustomImage(
+                imageURL: data.orgPhoto,
                 height: 40,
                 width: 40,
-                fit: BoxFit.cover,
               ),
             ),
-            title: Text(data.orgName),
+            title: SizedBox(
+              width: double.infinity,
+              child: Text(
+                data.orgName,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
             onTap: () => state.selectSuggestion(data),
           );
         },

@@ -396,7 +396,7 @@ class PostUpdateProvider with ChangeNotifier {
   void nullifyNormalPostCU() => _normalPostCU = null;
   void nullifyPollPostCU() => _pollPostCU = null;
   void nullifyRequestPostCU() => _requestPostCU = null;
-  void nullifyPostType() => _updatePostType = null;
+  void nullifyUpdatePostType() => _updatePostType = null;
 
   void nullfyPerPostType() {
     switch (_updatePostType) {
@@ -414,7 +414,7 @@ class PostUpdateProvider with ChangeNotifier {
         nullifyPollPostCU();
         nullifyRequestPostCU();
     }
-    nullifyPostType();
+    nullifyUpdatePostType();
   }
 
   Future<void> Function()? _postUpdateHandler;

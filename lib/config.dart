@@ -1,6 +1,7 @@
 import 'package:faker/faker.dart';
 
-const bool demo = true;
+const bool demo = false;
+var hostingMode = HostingMode.local;
 const Duration timeOutDuration = Duration(seconds: 10);
 
 Future<dynamic> delay({int min = 1, int max = 4, bool random = false}) =>
@@ -24,7 +25,7 @@ const Map _ipHost = {
 };
 //----------------------------------------------
 
-String getHostName({HostingMode hostingMode = HostingMode.local}) {
+String getHostName() {
   late Map config;
   switch (hostingMode) {
     case HostingMode.local:
@@ -34,8 +35,7 @@ String getHostName({HostingMode hostingMode = HostingMode.local}) {
       config = _ipHost;
       break;
     case HostingMode.internet:
-      config = _internetHost;
-      break;
+      return 'https://${_internetHost['host']}/';
   }
   return 'http://${config['host']}:${config['port']}/';
 }

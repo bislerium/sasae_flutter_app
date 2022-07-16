@@ -64,7 +64,7 @@ class _NGOInfoTabState extends State<NGOInfoTab>
       future: _fetchNGOFUTURE,
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
-              ? const CustomLoading()
+              ? const ScreenLoading()
               : Consumer<NGOProvider>(
                   builder: (context, ngoP, child) => RefreshIndicator(
                     onRefresh: () async => await refreshCallBack(
