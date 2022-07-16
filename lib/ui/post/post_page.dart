@@ -20,46 +20,58 @@ class _PostPageState extends State<PostPage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController;
   late final Future<void> _fetchPostFUTURE;
+  late final PostProvider postP;
+  late final PostFABProvider _postFABP;
 
   _PostPageState() : _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    postP = Provider.of<PostProvider>(context, listen: false);
+    _postFABP = Provider.of<PostFABProvider>(context, listen: false);
     _scrollController.addListener(postfabListenScroll);
-    _fetchPostFUTURE = _fetchPost();
+    _scrollController.addListener(postPaginationListenScroll);
+    _fetchPostFUTURE = _initFetchPost();
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(postfabListenScroll);
+    _scrollController.removeListener(postPaginationListenScroll);
     _scrollController.dispose();
     super.dispose();
   }
 
   void postfabListenScroll() {
-    var a = Provider.of<PostFABProvider>(context, listen: false);
     var direction = _scrollController.position.userScrollDirection;
     direction == ScrollDirection.reverse
-        ? a.setShowFAB = false
-        : a.setShowFAB = true;
+        ? _postFABP.setShowFAB = false
+        : _postFABP.setShowFAB = true;
   }
 
-  Future<void> _fetchPost() async {
-    var pProvider = Provider.of<PostProvider>(context, listen: false);
-    await pProvider.intiFetchPosts();
-    var data = pProvider.getPostData;
+  void postPaginationListenScroll() {
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.offset) {
+      _fetchPosts();
+    }
+  }
+
+  Future<void> _fetchPosts() async => await postP.fetchPosts();
+
+  Future<void> _initFetchPost() async {
+    await _fetchPosts();
+    var data = postP.getPostData;
     if (!mounted) return;
-    var pfProvider = Provider.of<PostFABProvider>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (data == null) {
-        pfProvider.setOnPressedHandler = null;
-        pfProvider.setShowFAB = false;
+        _postFABP.setOnPressedHandler = null;
+        _postFABP.setShowFAB = false;
       } else {
-        pfProvider.setOnPressedHandler = () => Navigator.pushNamed(
+        _postFABP.setOnPressedHandler = () => Navigator.pushNamed(
             context, PostCreateFormScreen.routeName,
             arguments: {'isUpdateMode': false});
-        pfProvider.setShowFAB = true;
+        _postFABP.setShowFAB = true;
       }
     });
   }
@@ -85,7 +97,7 @@ class _PostPageState extends State<PostPage>
                                 errorMessage: 'No post yet 😒...',
                               )
                             : PostList(
-                                posts: postP.getPostData!,
+                                postInterface: postP,
                                 scrollController: _scrollController,
                               ),
                   ),

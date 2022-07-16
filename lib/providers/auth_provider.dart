@@ -22,7 +22,7 @@ class AuthProvider with ChangeNotifier {
 
   AuthModel _randAuth() => AuthModel(
         tokenKey: faker.jwt.secret,
-        group: faker.randomGenerator.element(['General', 'NGO']),
+        group: faker.randomGenerator.element(UserGroup.values),
         accountID: faker.randomGenerator.integer(1000000),
         profileID: faker.randomGenerator.integer(1000000),
         isVerified: faker.randomGenerator.boolean(),

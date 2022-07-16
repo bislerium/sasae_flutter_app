@@ -15,9 +15,10 @@ import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/post_interface.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 
-class PostProvider with ChangeNotifier {
+class PostProvider with ChangeNotifier implements IPost {
   late AuthProvider _authP;
   List<Post_Model>? _posts;
   final Dio _dio;
@@ -31,14 +32,15 @@ class PostProvider with ChangeNotifier {
           ),
         );
 
+  @override
   List<Post_Model>? get getPostData => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
   static List<Post_Model> randPosts() {
     var random = Random();
-    int length = random.nextInt(100 - 20) + 20;
+    // int length = random.nextInt(100 - 20) + 20;
     return List.generate(
-      length,
+      limit,
       (index) {
         return Post_Model(
           id: index,
@@ -58,37 +60,52 @@ class PostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> intiFetchPosts({bool isDemo = demo}) async {
-    if (isDemo) {
-      await delay();
-      _posts = randPosts();
-    } else {
-      _posts = await fetchPosts();
-    }
+  String? _url = postsEndpoint;
+  bool _hasMore = true;
+  bool _isLoading = false;
+
+  @override
+  bool get getHasMore => _hasMore;
+
+  Future<void> fetchPosts({bool isDemo = demo}) async {
+    if (_isLoading) return;
+    if (!_hasMore) return;
+    _isLoading = true;
+    try {
+      List<Post_Model> fetchedPosts;
+      if (isDemo) {
+        await delay();
+        fetchedPosts = randPosts();
+      } else {
+        var response = await _dio.get(
+          _url!,
+          options: Options(
+            headers: {
+              'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
+            },
+          ),
+        );
+
+        _url = response.data['next'];
+        if (_url == null) _hasMore = false;
+        fetchedPosts = (response.data['results'] as List)
+            .map((element) => Post_Model.fromAPIResponse(element))
+            .toList();
+      }
+      _posts ??= [];
+      _posts?.addAll(fetchedPosts);
+      // ignore: empty_catches
+    } on DioError {}
+    _isLoading = false;
     notifyListeners();
   }
 
-  Future<List<Post_Model>?> fetchPosts() async {
-    try {
-      var response = await _dio.get(
-        postsEndpoint,
-        options: Options(
-          headers: {
-            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
-          },
-        ),
-      );
-      return (response.data['results'] as List)
-          .map((element) => Post_Model.fromAPIResponse(element))
-          .toList();
-    } on DioError catch (e) {
-      print(e.response?.data);
-      return null;
-    }
-  }
-
   Future<void> refreshPosts() async {
-    await intiFetchPosts();
+    _url = postsEndpoint;
+    _hasMore = true;
+    _posts = null;
+    _isLoading = false;
+    await fetchPosts();
   }
 
   Future<bool> report({required int postID, bool isDemo = demo}) async {

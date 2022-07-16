@@ -3,7 +3,7 @@ import 'dart:convert';
 
 class AuthModel {
   final String tokenKey;
-  final String group;
+  final UserGroup group;
   final int accountID;
   final int profileID;
   bool isVerified;
@@ -17,7 +17,7 @@ class AuthModel {
 
   AuthModel copyWith({
     String? tokenKey,
-    String? group,
+    UserGroup? group,
     int? accountID,
     int? profileID,
     bool? isVerified,
@@ -34,7 +34,7 @@ class AuthModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'tokenKey': tokenKey,
-      'group': group,
+      'group': group.name,
       'accountID': accountID,
       'profileID': profileID,
       'isVerified': isVerified,
@@ -44,17 +44,21 @@ class AuthModel {
   factory AuthModel.fromAPIResponse(Map<String, dynamic> map) {
     return AuthModel(
       tokenKey: map['key'] ?? '',
-      group: map['group'] ?? '',
+      group: getUserGroupFromString(map['group'] ?? ''),
       accountID: map['account_id']?.toInt() ?? 0,
       profileID: map['profile_id']?.toInt() ?? 0,
       isVerified: map['is_verified'] ?? false,
     );
   }
 
+  static UserGroup getUserGroupFromString(String group) {
+    return UserGroup.values.byName(group.toLowerCase());
+  }
+
   factory AuthModel.fromMap(Map<String, dynamic> map) {
     return AuthModel(
       tokenKey: map['tokenKey'] as String,
-      group: map['group'] as String,
+      group: getUserGroupFromString(map['group'] ?? ''),
       accountID: map['accountID'] as int,
       profileID: map['profileID'] as int,
       isVerified: map['isVerified'] as bool,
@@ -72,11 +76,10 @@ class AuthModel {
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant AuthModel other) {
     if (identical(this, other)) return true;
 
-    return other is AuthModel &&
-        other.tokenKey == tokenKey &&
+    return other.tokenKey == tokenKey &&
         other.group == group &&
         other.accountID == accountID &&
         other.profileID == profileID &&
@@ -92,3 +95,5 @@ class AuthModel {
         isVerified.hashCode;
   }
 }
+
+enum UserGroup { general, ngo }

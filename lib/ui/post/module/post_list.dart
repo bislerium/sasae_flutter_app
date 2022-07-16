@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/models/post/post_.dart';
+import 'package:sasae_flutter_app/providers/post_interface.dart';
 import 'package:sasae_flutter_app/ui/post/module/post_card.dart';
+import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 
 class PostList extends StatefulWidget {
-  final List<Post_Model> posts;
+  final IPost postInterface;
   final ScrollController? scrollController;
   final bool isActionable;
 
   const PostList(
       {Key? key,
-      required this.posts,
+      required this.postInterface,
       this.scrollController,
       this.isActionable = false})
       : super(key: key);
@@ -20,20 +21,30 @@ class PostList extends StatefulWidget {
 
 class _PostListState extends State<PostList> {
   @override
-  Widget build(BuildContext context) => ListView.builder(
-        key: ValueKey(widget.posts.hashCode),
-        controller: widget.scrollController,
-        padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: widget.posts.length,
-        itemBuilder: ((context, index) {
-          var post = widget.posts[index];
+  Widget build(BuildContext context) {
+    var postData = widget.postInterface.getPostData!;
+    return ListView.builder(
+      key: ValueKey(widget.postInterface.getPostData.hashCode),
+      controller: widget.scrollController,
+      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: postData.length + 1,
+      itemBuilder: ((context, index) {
+        if (index < postData.length) {
+          var post = postData[index];
           return PostCard(
             key: ValueKey(post.id),
             post: post,
             isActionable: widget.isActionable,
           );
-        }),
-      );
+        } else {
+          return Center(
+            child:
+                widget.postInterface.getHasMore ? const ButtomLoading() : null,
+          );
+        }
+      }),
+    );
+  }
 }

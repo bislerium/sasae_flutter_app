@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
@@ -28,36 +30,52 @@ class UserPostTab extends StatefulWidget {
 class _UserPostTabState extends State<UserPostTab>
     with AutomaticKeepAliveClientMixin {
   late final Future<void> _fetchUserPostFUTURE;
+  late final ProfileProvider _profileP;
+  late final ProfileSettingFABProvider _profileSettingFABP;
 
   @override
   void initState() {
     super.initState();
+    _profileP = Provider.of<ProfileProvider>(context, listen: false);
+    _profileSettingFABP =
+        Provider.of<ProfileSettingFABProvider>(context, listen: false);
+    _fetchUserPostFUTURE = _fetchProfilePost();
     if (widget.scrollController != null) {
       widget.scrollController!.addListener(profleCreatefabListenScroll);
+      widget.scrollController!.addListener(postPaginationListenScroll);
     }
-    _fetchUserPostFUTURE = _fetchProfilePost();
   }
 
   @override
   void dispose() {
     widget.scrollController?.removeListener(profleCreatefabListenScroll);
+    widget.scrollController?.removeListener(postPaginationListenScroll);
     super.dispose();
   }
 
   Future<void> _fetchProfilePost() async {
-    var pProvider = Provider.of<ProfileProvider>(context, listen: false);
-    await pProvider.intiFetchUserPosts(
+    _profileP.setURL(
       userID: widget.userID,
       userType: widget.userType,
     );
+    await _fetchPosts();
+    print(_profileP.getPostData?.length);
   }
 
+  Future<void> _fetchPosts() async => await _profileP.fetchUserPosts();
+
   void profleCreatefabListenScroll() {
-    var a = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController!.position.userScrollDirection;
     direction == ScrollDirection.reverse
-        ? a.setShowFAB = false
-        : a.setShowFAB = true;
+        ? _profileSettingFABP.setShowFAB = false
+        : _profileSettingFABP.setShowFAB = true;
+  }
+
+  void postPaginationListenScroll() {
+    if (widget.scrollController!.position.maxScrollExtent ==
+        widget.scrollController!.offset) {
+      _fetchPosts();
+    }
   }
 
   @override
@@ -77,14 +95,14 @@ class _UserPostTabState extends State<UserPostTab>
                         userType: widget.userType,
                       ),
                     ),
-                    child: profilePostP.getUserPostData == null
+                    child: profilePostP.getPostData == null
                         ? const ErrorView()
-                        : profilePostP.getUserPostData!.isEmpty
+                        : profilePostP.getPostData!.isEmpty
                             ? const ErrorView(
                                 errorMessage: 'Nothing posted yet 😅...',
                               )
                             : PostList(
-                                posts: profilePostP.getUserPostData!,
+                                postInterface: profilePostP,
                                 scrollController: widget.scrollController,
                                 isActionable: widget.actionablePost,
                               ),

@@ -1,8 +1,9 @@
 import 'package:faker/faker.dart';
 
-const bool demo = false;
-var hostingMode = HostingMode.local;
-const Duration timeOutDuration = Duration(seconds: 10);
+const demo = false;
+const hostingMode = HostingMode.local;
+const limit = 6;
+const timeOutDuration = Duration(seconds: 10);
 
 Future<dynamic> delay({int min = 1, int max = 4, bool random = false}) =>
     Future.delayed(Duration(
@@ -55,7 +56,7 @@ const String peopleAddEndpoint = 'api/people/add/';
 const String peopleUpdateEndpoint = 'api/people/update/';
 const String peopleDeleteEndpoint = 'api/people/delete/';
 
-const String postsEndpoint = 'api/posts/';
+const String postsEndpoint = 'api/posts/?limit=$limit';
 const String postEndpoint = 'api/post/';
 const String postNormalPostEndpoint = 'api/post/normal/';
 const String postPollPostEndpoint = 'api/post/poll/';

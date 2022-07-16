@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path/path.dart';
 import 'package:sasae_flutter_app/config.dart';
+import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
+import 'package:sasae_flutter_app/providers/post_interface.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 
-class ProfileProvider with ChangeNotifier {
+class ProfileProvider with ChangeNotifier implements IPost {
   late AuthProvider _authP;
   final Dio _dio;
   UserModel? _user;
@@ -24,19 +27,21 @@ class ProfileProvider with ChangeNotifier {
         );
 
   UserModel? get getUserData => _user;
-  List<Post_Model>? get getUserPostData => _userPosts;
+
+  @override
+  List<Post_Model>? get getPostData => _userPosts;
 
   set setAuthP(AuthProvider authP) => _authP = authP;
 
   Future<void> initFetchUser({bool isDemo = demo}) async {
     switch (_authP.getAuth!.group) {
-      case 'General':
+      case UserGroup.general:
         _user = await PeopleProvider.fetchPeople(
           isDemo: isDemo,
           auth: _authP.getAuth!,
         );
         break;
-      case 'NGO':
+      case UserGroup.ngo:
         _user = await NGOProvider.fetchNGO(
           isDemo: isDemo,
           auth: _authP.getAuth!,
@@ -50,51 +55,68 @@ class ProfileProvider with ChangeNotifier {
     await initFetchUser();
   }
 
-  Future<void> intiFetchUserPosts(
-      {int? userID, UserType? userType, isDemo = demo}) async {
-    if (isDemo) {
-      await delay();
-      _userPosts = PostProvider.randPosts();
-    } else {
-      _userPosts = await fetchUserPosts(userID: userID, userType: userType);
-    }
-  }
+  String? _url;
+  bool _hasMore = true;
+  bool _isLoading = false;
 
-  Future<List<Post_Model>?> fetchUserPosts(
-      {int? userID, UserType? userType}) async {
-    late String endpoint;
+  @override
+  bool get getHasMore => _hasMore;
+
+  void setURL({int? userID, UserType? userType}) {
     if (userID == null || userType == null) {
       switch (_authP.getAuth!.group) {
-        case 'General':
-          endpoint = '$peopleEndpoint${_authP.getAuth!.profileID}/posts/';
+        case UserGroup.general:
+          _url =
+              '$peopleEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
           break;
-        case 'NGO':
-          endpoint = '$ngoEndpoint${_authP.getAuth!.profileID}/posts/';
+        case UserGroup.ngo:
+          _url = '$ngoEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
           break;
       }
     } else {
-      endpoint = 'api/${userType.name}/$userID/posts/';
+      _url = 'api/${userType.name}/$userID/posts/?limit=$limit';
     }
+    print(_url);
+  }
+
+  Future<void> fetchUserPosts({bool isDemo = demo}) async {
+    if (_isLoading) return;
+    if (!_hasMore) return;
+    _isLoading = true;
     try {
-      var response = await _dio.get(
-        endpoint,
-        options: Options(
-          headers: {
-            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
-          },
-        ),
-      );
-      return (response.data['results'] as List)
-          .map((element) => Post_Model.fromAPIResponse(element))
-          .toList();
-    } on DioError catch (e) {
-      print(e.response?.data);
-      return null;
-    }
+      List<Post_Model> fetchedPosts;
+      if (isDemo) {
+        await delay();
+        fetchedPosts = PostProvider.randPosts();
+      } else {
+        var response = await _dio.get(
+          _url!,
+          options: Options(
+            headers: {
+              'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
+            },
+          ),
+        );
+        _url = response.data['next'];
+        if (_url == null) _hasMore = false;
+        fetchedPosts = (response.data['results'] as List)
+            .map((element) => Post_Model.fromAPIResponse(element))
+            .toList();
+      }
+      _userPosts ??= [];
+      _userPosts?.addAll(fetchedPosts);
+      // ignore: empty_catches
+    } on DioError {}
+    _isLoading = false;
+    notifyListeners();
   }
 
   Future<void> refreshUserPosts({int? userID, UserType? userType}) async {
-    await intiFetchUserPosts(userID: userID, userType: userType);
+    setURL(userID: userID, userType: userType);
+    _hasMore = true;
+    _userPosts = null;
+    _isLoading = false;
+    await fetchUserPosts();
     notifyListeners();
   }
 
