@@ -5,3 +5,5 @@ abstract class IPost {
 
   bool get getHasMore;
 }
+
+// abstract class IUserPost implements IPost {}

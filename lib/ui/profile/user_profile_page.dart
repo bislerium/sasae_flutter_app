@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/ui/profile/info_post_tab.dart';
-import 'package:sasae_flutter_app/ui/profile/user_info_tab.dart';
-import 'package:sasae_flutter_app/ui/profile/user_post_tab.dart';
+import 'package:sasae_flutter_app/ui/profile/tab/user_info_tab.dart';
+import 'package:sasae_flutter_app/ui/profile/tab/user_post_tab.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({Key? key}) : super(key: key);

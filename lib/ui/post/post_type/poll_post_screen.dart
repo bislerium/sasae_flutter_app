@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/extension/post_poll_card.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_description_card.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_related_card.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_tail_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_poked_ngo_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/poll_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_author_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_description_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_related_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post_tail_card.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_poked_ngo_card.dart';
+import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_author_card.dart';
 
 class PollPostScreen extends StatefulWidget {
   static const routeName = '/post/poll/';
