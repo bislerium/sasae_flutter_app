@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:path/path.dart';
 import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/post/post_.dart';
@@ -11,11 +10,10 @@ import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_interface.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 
-class ProfileProvider with ChangeNotifier implements IPost {
+class ProfileProvider with ChangeNotifier {
   late AuthProvider _authP;
   final Dio _dio;
   UserModel? _user;
-  List<Post_Model>? _userPosts;
 
   ProfileProvider()
       : _dio = Dio(
@@ -27,9 +25,6 @@ class ProfileProvider with ChangeNotifier implements IPost {
         );
 
   UserModel? get getUserData => _user;
-
-  @override
-  List<Post_Model>? get getPostData => _userPosts;
 
   set setAuthP(AuthProvider authP) => _authP = authP;
 
@@ -51,10 +46,44 @@ class ProfileProvider with ChangeNotifier implements IPost {
     notifyListeners();
   }
 
-  Future<void> refreshUser() async {
-    await initFetchUser();
+  Future<bool> deletePost({required int postID, bool isDemo = demo}) async {
+    try {
+      if (isDemo) {
+        await delay();
+      } else {
+        await _dio.delete(
+          '$postEndpoint$postID/delete/',
+          options: Options(headers: {
+            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
+          }),
+        );
+      }
+      return true;
+    } on DioError catch (e) {
+      print(e.response?.data);
+      return false;
+    }
   }
+}
 
+class ProfilePostProvider with ChangeNotifier implements IPost {
+  late AuthProvider _authP;
+  final Dio _dio;
+  List<Post_Model>? _profilePosts;
+
+  ProfilePostProvider()
+      : _dio = Dio(
+          BaseOptions(
+            baseUrl: getHostName(),
+            receiveDataWhenStatusError: true,
+            connectTimeout: 10 * 1000,
+          ),
+        );
+
+  @override
+  List<Post_Model>? get getPosts => _profilePosts;
+
+  set setAuthP(AuthProvider authP) => _authP = authP;
   String? _url;
   bool _hasMore = true;
   bool _isLoading = false;
@@ -62,24 +91,7 @@ class ProfileProvider with ChangeNotifier implements IPost {
   @override
   bool get getHasMore => _hasMore;
 
-  void setURL({int? userID, UserType? userType}) {
-    if (userID == null || userType == null) {
-      switch (_authP.getAuth!.group) {
-        case UserGroup.general:
-          _url =
-              '$peopleEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
-          break;
-        case UserGroup.ngo:
-          _url = '$ngoEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
-          break;
-      }
-    } else {
-      _url = 'api/${userType.name}/$userID/posts/?limit=$limit';
-    }
-    print(_url);
-  }
-
-  Future<void> fetchUserPosts({bool isDemo = demo}) async {
+  Future<void> fetchProfilePosts({bool isDemo = demo}) async {
     if (_isLoading) return;
     if (!_hasMore) return;
     _isLoading = true;
@@ -103,42 +115,46 @@ class ProfileProvider with ChangeNotifier implements IPost {
             .map((element) => Post_Model.fromAPIResponse(element))
             .toList();
       }
-      _userPosts ??= [];
-      _userPosts?.addAll(fetchedPosts);
+      _profilePosts ??= [];
+      _profilePosts?.addAll(fetchedPosts);
       // ignore: empty_catches
     } on DioError {}
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<void> refreshUserPosts({int? userID, UserType? userType}) async {
-    setURL(userID: userID, userType: userType);
+  Future<void> refreshProfilePosts() async {
     _hasMore = true;
-    _userPosts = null;
+    _profilePosts = null;
     _isLoading = false;
-    await fetchUserPosts();
+    await fetchProfilePosts();
     notifyListeners();
   }
 
-  Future<bool> deletePost({required int postID, bool isDemo = demo}) async {
-    try {
-      if (isDemo) {
-        await delay();
-      } else {
-        await _dio.delete(
-          '$postEndpoint$postID/delete/',
-          options: Options(headers: {
-            'Authorization': 'Token ${_authP.getAuth!.tokenKey}',
-          }),
-        );
-      }
+  void resetProfilePosts() {
+    _url = null;
+    _profilePosts = null;
+    _hasMore = true;
+    _isLoading = false;
+  }
+}
 
-      _userPosts!.removeWhere((element) => element.id == postID);
-      notifyListeners();
-      return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
-      return false;
+class NGOProfilePostProvider extends ProfilePostProvider {
+  void setURL({required int userID, required UserType userType}) {
+    _url = 'api/${userType.name}/$userID/posts/?limit=$limit';
+  }
+}
+
+class UserProfilePostProvider extends ProfilePostProvider {
+  void setURL() {
+    switch (_authP.getAuth!.group) {
+      case UserGroup.general:
+        _url =
+            '$peopleEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
+        break;
+      case UserGroup.ngo:
+        _url = '$ngoEndpoint${_authP.getAuth!.profileID}/posts/?limit=$limit';
+        break;
     }
   }
 }

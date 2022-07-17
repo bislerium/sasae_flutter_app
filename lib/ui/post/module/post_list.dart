@@ -22,9 +22,9 @@ class PostList extends StatefulWidget {
 class _PostListState extends State<PostList> {
   @override
   Widget build(BuildContext context) {
-    var postData = widget.postInterface.getPostData!;
+    var postData = widget.postInterface.getPosts!;
     return ListView.builder(
-      key: ValueKey(widget.postInterface.getPostData.hashCode),
+      key: ValueKey(widget.postInterface.getPosts.hashCode),
       controller: widget.scrollController,
       padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,

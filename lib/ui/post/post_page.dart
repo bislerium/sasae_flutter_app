@@ -61,7 +61,7 @@ class _PostPageState extends State<PostPage>
 
   Future<void> _initFetchPost() async {
     await _fetchPosts();
-    var data = postP.getPostData;
+    var data = postP.getPosts;
     if (!mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (data == null) {
@@ -90,9 +90,9 @@ class _PostPageState extends State<PostPage>
                       context: context,
                       func: postP.refreshPosts,
                     ),
-                    child: postP.getPostData == null
+                    child: postP.getPosts == null
                         ? const ErrorView()
-                        : postP.getPostData!.isEmpty
+                        : postP.getPosts!.isEmpty
                             ? const ErrorView(
                                 errorMessage: 'No post yet 😒...',
                               )

@@ -33,7 +33,7 @@ class PostProvider with ChangeNotifier implements IPost {
         );
 
   @override
-  List<Post_Model>? get getPostData => _posts;
+  List<Post_Model>? get getPosts => _posts;
   set setAuthP(AuthProvider auth) => _authP = auth;
 
   static List<Post_Model> randPosts() {

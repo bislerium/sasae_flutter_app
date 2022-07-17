@@ -193,6 +193,16 @@ List<SingleChildWidget> _providers() => [
         update: (context, authP, profileP) =>
             ProfileProvider()..setAuthP = authP,
       ),
+      ChangeNotifierProxyProvider<AuthProvider, NGOProfilePostProvider>(
+        create: (context) => NGOProfilePostProvider(),
+        update: (context, authP, profileP) =>
+            NGOProfilePostProvider()..setAuthP = authP,
+      ),
+      ChangeNotifierProxyProvider<AuthProvider, UserProfilePostProvider>(
+        create: (context) => UserProfilePostProvider(),
+        update: (context, authP, profileP) =>
+            UserProfilePostProvider()..setAuthP = authP,
+      ),
     ];
 
 class MyApp extends StatefulWidget {
