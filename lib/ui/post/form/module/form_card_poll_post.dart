@@ -194,6 +194,8 @@ class _FormCardPollPostState extends State<FormCardPollPost>
   bool get wantKeepAlive => true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 class DissmissableTile extends StatelessWidget {
   final String item;
   final void Function(String) removeHandler;

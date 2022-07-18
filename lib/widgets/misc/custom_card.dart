@@ -15,7 +15,7 @@ class CustomCard extends StatelessWidget {
     this.elevation = 0,
     this.shadowColor,
     this.cardColor,
-    this.margin = const EdgeInsets.symmetric(vertical: 8),
+    this.margin = const EdgeInsets.symmetric(vertical: 6),
   }) : super(key: key);
 
   @override

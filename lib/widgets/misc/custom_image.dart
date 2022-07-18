@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:sasae_flutter_app/ui/image_view_screen.dart';
+import 'package:sasae_flutter_app/image_view_screen.dart';
 
 class CustomImage extends StatelessWidget {
   final String imageURL;

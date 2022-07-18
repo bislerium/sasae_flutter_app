@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
@@ -28,6 +29,8 @@ class _PageRouterState extends State<PageRouter> {
 
   Future<void> tryAutoLogin() async {
     _authP = Provider.of<AuthProvider>(context, listen: false);
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.none) return;
     await _authP.tryAutoLogin();
     FlutterNativeSplash.remove();
   }

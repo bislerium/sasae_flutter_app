@@ -4,10 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
+import 'package:sasae_flutter_app/ui/post/module/post_list.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/ui/post/post_create_form_screen.dart';
-import 'module/post_list.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);

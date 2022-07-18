@@ -22,12 +22,12 @@ import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
-import 'package:sasae_flutter_app/ui/image_view_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_create_form_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/normal_post_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/poll_post_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/request_post_screen.dart';
-import 'package:sasae_flutter_app/ui/post/post_update_form_screen.dart';
+import 'package:sasae_flutter_app/image_view_screen.dart';
+import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
+import 'package:sasae_flutter_app/ui/post/form/post_update_form_screen.dart';
+import 'package:sasae_flutter_app/ui/post/type/normal_post_screen.dart';
+import 'package:sasae_flutter_app/ui/post/type/poll_post_screen.dart';
+import 'package:sasae_flutter_app/ui/post/type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
 
 void main() async {
@@ -224,7 +224,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return KhaltiScope(
-      publicKey: "test_public_key_30e12814fed64afa9a7d4a92a2194aeb",
+      publicKey: "test_public_key_3b3e8b05ec734b83ab799166196c98e8",
       builder: (context, navigatorKey) {
         return MultiProvider(
           providers: _providers(),

@@ -85,6 +85,7 @@ class AuthProvider with ChangeNotifier {
     var authData = await _sessionManager.get(_authModelKey);
     if (authData == null) return;
     _authModel = AuthModel.fromJson(authData);
+
     try {
       if (isDemo) {
         await delay();
@@ -100,7 +101,6 @@ class AuthProvider with ChangeNotifier {
 
       http.StreamedResponse response =
           await request.send().timeout(timeOutDuration);
-
       if (response.statusCode >= 400) {
         throw HttpException(await response.stream.bytesToString());
       }

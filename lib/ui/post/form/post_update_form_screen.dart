@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form/form_card_normal_post.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form/form_card_poll_post.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/form/form_card_request_post.dart';
+import 'package:sasae_flutter_app/ui/post/form/module/form_card_normal_post.dart';
+import 'package:sasae_flutter_app/ui/post/form/module/form_card_poll_post.dart';
+import 'package:sasae_flutter_app/ui/post/form/module/form_card_request_post.dart';
 import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';

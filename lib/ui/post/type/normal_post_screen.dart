@@ -4,17 +4,17 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/extension/post_normal_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_description_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_poked_ngo_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_related_card.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_tail_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/super/post_poked_ngo_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/extension/post_normal_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/super/post_author_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/super/post_description_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/super/post_related_card.dart';
+import 'package:sasae_flutter_app/ui/post/type/super/post_tail_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
-import 'package:sasae_flutter_app/ui/post/post_type/post_dependent_widgets/post/super/post_author_card.dart';
 
 class NormalPostScreen extends StatefulWidget {
   static const routeName = '/post/normal/';

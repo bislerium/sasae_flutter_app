@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/fab_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_info_tab.dart';
@@ -173,10 +175,9 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                           .pay(
                         config: PaymentConfig(
                           amount: int.parse(_amountTEC.text) * 100,
-                          productIdentity: 'dells-sssssg5-g5510-2021',
-                          productName: 'NGO Donation: $donationTo',
-                          // mobile: epayAccount,
-                          // mobileReadOnly: true,
+                          productIdentity:
+                              '[${Provider.of<AuthProvider>(context, listen: false).getAuth!.accountID}] [${donationTo.toLowerCase()}]',
+                          productName: 'NGO Donation',
                         ),
                         preferences: [
                           // Not providing this will enable all the payment methods.
@@ -193,12 +194,16 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                         onFailure: (fa) {
                           showSnackBar(
                             context: context,
+                            errorSnackBar: true,
                             message: 'Donation Failed',
                           );
                         },
                         onCancel: () {
                           showSnackBar(
-                              context: context, message: 'Donation Cancelled');
+                            context: context,
+                            errorSnackBar: true,
+                            message: 'Donation Cancelled',
+                          );
                         },
                       )
                           .then((value) {
