@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "130377137924",
-    "project_id": "sasae-notification",
-    "storage_bucket": "sasae-notification.appspot.com"
+    "project_number": "1013249264178",
+    "project_id": "sasae-notification-v2",
+    "storage_bucket": "sasae-notification-v2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:130377137924:android:3e230dff319e8baa6c9a51",
+        "mobilesdk_app_id": "1:1013249264178:android:5359c89a70189bca4b4a2b",
         "android_client_info": {
-          "package_name": "com.example.sasae_flutter_app"
+          "package_name": "com.bishalgc.sasae.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "130377137924-v9hv6t2i0to8jh2jaosad6ea554fdgbu.apps.googleusercontent.com",
+          "client_id": "1013249264178-hnla8hst740s8ol6sveslac9nvue8ae2.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBPoYKKiJKNLR3whzp3iXyaAzhQoUCpH6U"
+          "current_key": "AIzaSyCoS5rduTL6GSKVB-p2F09iBDINNB4GxDQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "130377137924-v9hv6t2i0to8jh2jaosad6ea554fdgbu.apps.googleusercontent.com",
+              "client_id": "1013249264178-hnla8hst740s8ol6sveslac9nvue8ae2.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
