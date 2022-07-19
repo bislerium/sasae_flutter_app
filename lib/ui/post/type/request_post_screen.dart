@@ -74,21 +74,13 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                         : ListView(
                             controller: _scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                            padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
                             children: [
                               PostRelatedCard(
                                   list: postP.requestPostData!.relatedTo),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (postP
-                                  .requestPostData!.pokedNGO.isNotEmpty) ...[
+                              if (postP.requestPostData!.pokedNGO.isNotEmpty)
                                 PokedNGOCard(
                                     list: postP.requestPostData!.pokedNGO),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               RequestCard(
                                 key: ValueKey(postP.requestPostData!.hashCode),
                                 min: postP.requestPostData!.min,
@@ -99,30 +91,17 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                                     postP.requestPostData!.reaction.length,
                                 endsOn: postP.requestPostData!.endsOn,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
                               PostContentCard(
                                 content: postP.requestPostData!.postContent,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (!postP.requestPostData!.isAnonymous) ...[
+                              if (!postP.requestPostData!.isAnonymous)
                                 PostAuthorCard(
                                   author: postP.requestPostData!.author!,
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               PostTailCard(
                                 postID: postP.requestPostData!.id,
                                 createdOn: postP.requestPostData!.createdOn,
                                 modifiedOn: postP.requestPostData!.modifiedOn,
-                              ),
-                              const SizedBox(
-                                height: 15,
                               ),
                             ],
                           ),

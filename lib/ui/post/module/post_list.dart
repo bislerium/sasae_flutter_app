@@ -37,7 +37,7 @@ class _PostListState extends State<PostList> {
     return ListView.builder(
       key: ValueKey(widget.postInterface.getPosts.hashCode),
       controller: widget.scrollController,
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 8),
+      padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const AlwaysScrollableScrollPhysics(),
       itemCount: postData.length + 1,

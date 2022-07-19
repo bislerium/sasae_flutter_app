@@ -21,7 +21,6 @@ class _PostAuthorCardState extends State<PostAuthorCard> {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      margin: EdgeInsets.zero,
       borderRadius: 30,
       child: InkWell(
         borderRadius: BorderRadius.circular(30),

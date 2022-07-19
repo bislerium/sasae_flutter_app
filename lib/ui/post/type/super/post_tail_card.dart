@@ -46,7 +46,6 @@ class PostTailCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      margin: EdgeInsets.zero,
       borderRadius: 30,
       cardColor: modifiedOn == null
           ? null

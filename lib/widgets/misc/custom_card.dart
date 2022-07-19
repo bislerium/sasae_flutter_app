@@ -21,6 +21,7 @@ class CustomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      key: UniqueKey(),
       elevation: elevation,
       shape: borderRadius == null
           ? null

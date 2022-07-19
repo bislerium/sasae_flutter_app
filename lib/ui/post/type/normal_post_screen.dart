@@ -81,54 +81,32 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                         : ListView(
                             controller: _scrollController,
                             physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                            padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
                             children: [
                               PostRelatedCard(
                                 list: postP.getNormalPostData!.relatedTo,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (postP
-                                  .getNormalPostData!.pokedNGO.isNotEmpty) ...[
+                              if (postP.getNormalPostData!.pokedNGO.isNotEmpty)
                                 PokedNGOCard(
                                   list: postP.getNormalPostData!.pokedNGO,
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               if (postP.getNormalPostData!.attachedImage !=
-                                  null) ...[
+                                  null)
                                 NormalImageAttachmentCard(
                                   imageURL:
                                       postP.getNormalPostData!.attachedImage!,
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               PostContentCard(
                                 content: postP.getNormalPostData!.postContent,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (!postP.getNormalPostData!.isAnonymous) ...[
+                              if (!postP.getNormalPostData!.isAnonymous)
                                 PostAuthorCard(
                                   author: postP.getNormalPostData!.author!,
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               PostTailCard(
                                 postID: postP.getNormalPostData!.id,
                                 createdOn: postP.getNormalPostData!.createdOn,
                                 modifiedOn: postP.getNormalPostData!.modifiedOn,
-                              ),
-                              const SizedBox(
-                                height: 15,
                               ),
                             ],
                           ),

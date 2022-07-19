@@ -70,20 +70,13 @@ class _PollPostScreenState extends State<PollPostScreen> {
                         ? const ErrorView()
                         : ListView(
                             physics: const AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
+                            padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
                             children: [
                               PostRelatedCard(
                                   list: postP.pollPostData!.relatedTo),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (postP.pollPostData!.pokedNGO.isNotEmpty) ...[
+                              if (postP.pollPostData!.pokedNGO.isNotEmpty)
                                 PokedNGOCard(
                                     list: postP.pollPostData!.pokedNGO),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               PollCard(
                                 key: ObjectKey(postP.pollPostData),
                                 pollModel: PollModel(
@@ -92,30 +85,17 @@ class _PollPostScreenState extends State<PollPostScreen> {
                                   endsOn: postP.pollPostData!.endsOn,
                                 ),
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
                               PostContentCard(
                                 content: postP.pollPostData!.postContent,
                               ),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              if (!postP.pollPostData!.isAnonymous) ...[
+                              if (!postP.pollPostData!.isAnonymous)
                                 PostAuthorCard(
                                   author: postP.pollPostData!.author!,
                                 ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
                               PostTailCard(
                                 postID: postP.pollPostData!.id,
                                 createdOn: postP.pollPostData!.createdOn,
                                 modifiedOn: postP.pollPostData!.modifiedOn,
-                              ),
-                              const SizedBox(
-                                height: 15,
                               ),
                             ],
                           ),

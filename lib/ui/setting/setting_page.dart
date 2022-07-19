@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/ui/setting/module/branding_color_tile.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
 
 class SettingScreen extends StatefulWidget {
@@ -12,13 +13,26 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen>
     with AutomaticKeepAliveClientMixin {
   _SettingScreenState()
-      : _applicationName = 'Sasae',
-        _applicationVersion = 'v0.0.1',
-        _applicationLegalese =
+      : _applicationLegalese =
             'A Social Service Application to bind NGOs and enthuhsiasts for social work.\n\n@BishalGhartiChhetri',
         _applicationIcon = const Icon(Icons.flutter_dash_rounded);
 
-  final String _applicationName, _applicationVersion, _applicationLegalese;
+  late final PackageInfo _packageInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    setPackageInfo();
+  }
+
+  Future<void> setPackageInfo() async {
+    _packageInfo = await PackageInfo.fromPlatform();
+    _applicationName = _packageInfo.appName;
+    _applicationVersion =
+        'v${_packageInfo.version} (build ${_packageInfo.buildNumber})';
+  }
+
+  late final String _applicationName, _applicationVersion, _applicationLegalese;
   final Icon _applicationIcon;
 
   Widget about() => ListTile(

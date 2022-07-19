@@ -411,7 +411,7 @@ packages:
     source: hosted
     version: "7.3.1"
   flutter_hooks:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
@@ -485,6 +485,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.6"
+  flutter_polls:
+    dependency: "direct main"
+    description:
+      name: flutter_polls
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.9"
   flutter_secure_storage:
     dependency: transitive
     description:
@@ -786,7 +793,7 @@ packages:
     source: hosted
     version: "2.1.0"
   package_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info_plus
       url: "https://pub.dartlang.org"
@@ -905,7 +912,7 @@ packages:
     source: hosted
     version: "1.11.1"
   percent_indicator:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: percent_indicator
       url: "https://pub.dartlang.org"
