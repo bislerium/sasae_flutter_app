@@ -11,7 +11,7 @@ import 'package:sasae_flutter_app/page_router.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
 import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
@@ -129,9 +129,6 @@ List<SingleChildWidget> _providers() => [
       ChangeNotifierProvider(
         create: (_) => InternetConnetionProvider(),
       ),
-      // ChangeNotifierProvider(
-      //   create: (_) => ThemeProvider(),
-      // ),
       ChangeNotifierProvider(
         create: (_) => PageNavigatorProvider(),
       ),
@@ -149,6 +146,9 @@ List<SingleChildWidget> _providers() => [
       ),
       ChangeNotifierProvider(
         create: (_) => NotificationActionFABProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => NavigationBarProvider(),
       ),
       ChangeNotifierProxyProvider<AuthProvider, NGOProvider>(
         create: (context) => NGOProvider(),

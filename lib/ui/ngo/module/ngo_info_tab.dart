@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';

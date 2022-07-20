@@ -5,37 +5,25 @@ import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
 
-class NGOList extends StatefulWidget {
+class NGOList extends StatelessWidget {
   final List<NGO_Model> ngoList;
+  final ScrollController scrollController;
 
-  const NGOList({Key? key, required this.ngoList}) : super(key: key);
-
-  @override
-  State<NGOList> createState() => _NGOListState();
-}
-
-class _NGOListState extends State<NGOList> {
-  final ScrollController listScroll;
-
-  _NGOListState() : listScroll = ScrollController();
-
-  @override
-  void dispose() {
-    listScroll.dispose();
-    super.dispose();
-  }
+  const NGOList(
+      {Key? key, required this.ngoList, required this.scrollController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      controller: listScroll,
+      controller: scrollController,
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 6),
       keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       physics: const AlwaysScrollableScrollPhysics(),
-      itemCount: widget.ngoList.length,
+      itemCount: ngoList.length,
       itemBuilder: (context, index) => NGOCard(
-        key: ValueKey('ngoCard${widget.ngoList[index].ngoID}'),
-        ngo_: widget.ngoList[index],
+        key: ValueKey(ngoList[index].ngoID.hashCode),
+        ngo_: ngoList[index],
       ),
     );
   }

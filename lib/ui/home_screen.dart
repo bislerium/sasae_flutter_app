@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
@@ -91,9 +91,14 @@ class _HomePageState extends State<HomePage>
           builder: (context, pageNavigatorP, child) {
         pageNavigatorP.initPageController();
         return Scaffold(
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
             child: PageView(
-              onPageChanged: (index) => _pageNavigatorP.setPageIndex = index,
+              onPageChanged: (index) {
+                Provider.of<NavigationBarProvider>(context, listen: false)
+                    .setShowNB = true;
+                _pageNavigatorP.setPageIndex = index;
+              },
               controller: pageNavigatorP.getPageController,
               physics: const ScrollPhysics(parent: BouncingScrollPhysics()),
               children: const [
@@ -173,45 +178,8 @@ class _HomePageState extends State<HomePage>
                       : _pageNavigatorP.getPageIndex == 4
                           ? const LogoutFAB()
                           : null,
-          bottomNavigationBar: NavigationBar(
-            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-            destinations: const [
-              NavigationDestination(
-                key: Key('profileNB'),
-                icon: Icon(Icons.account_circle_outlined),
-                selectedIcon: Icon(Icons.account_circle),
-                label: 'Profile',
-              ),
-              NavigationDestination(
-                key: Key('ngoNB'),
-                icon: Icon(Icons.health_and_safety_outlined),
-                selectedIcon: Icon(Icons.health_and_safety),
-                label: 'NGO',
-              ),
-              NavigationDestination(
-                key: Key('feedNB'),
-                icon: Icon(Icons.feed_outlined),
-                selectedIcon: Icon(Icons.feed),
-                label: 'Feed',
-              ),
-              NavigationDestination(
-                key: Key('notificationNB'),
-                icon: Icon(Icons.notifications_outlined),
-                selectedIcon: Icon(Icons.notifications),
-                label: 'Notification',
-              ),
-              NavigationDestination(
-                key: Key('settingNB'),
-                icon: Icon(Icons.settings_outlined),
-                selectedIcon: Icon(Icons.settings),
-                label: 'Setting',
-              ),
-            ],
-            selectedIndex: _pageNavigatorP.getPageIndex, //New
-            onDestinationSelected: (index) {
-              _pageNavigatorP.setPageIndex = index;
-              _pageNavigatorP.navigateToPage();
-            },
+          bottomNavigationBar: AnimatedNavigationBar(
+            pageNavigatorP: _pageNavigatorP,
           ),
         );
       }),
@@ -220,4 +188,61 @@ class _HomePageState extends State<HomePage>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class AnimatedNavigationBar extends StatelessWidget {
+  final PageNavigatorProvider pageNavigatorP;
+
+  const AnimatedNavigationBar({Key? key, required this.pageNavigatorP})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<NavigationBarProvider>(
+      builder: (context, value, child) => AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: value.getShowNB ? 80 : 0,
+        child: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          destinations: const [
+            NavigationDestination(
+              key: Key('profileNB'),
+              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.account_circle),
+              label: 'Profile',
+            ),
+            NavigationDestination(
+              key: Key('ngoNB'),
+              icon: Icon(Icons.health_and_safety_outlined),
+              selectedIcon: Icon(Icons.health_and_safety),
+              label: 'NGO',
+            ),
+            NavigationDestination(
+              key: Key('feedNB'),
+              icon: Icon(Icons.feed_outlined),
+              selectedIcon: Icon(Icons.feed),
+              label: 'Feed',
+            ),
+            NavigationDestination(
+              key: Key('notificationNB'),
+              icon: Icon(Icons.notifications_outlined),
+              selectedIcon: Icon(Icons.notifications),
+              label: 'Notification',
+            ),
+            NavigationDestination(
+              key: Key('settingNB'),
+              icon: Icon(Icons.settings_outlined),
+              selectedIcon: Icon(Icons.settings),
+              label: 'Setting',
+            ),
+          ],
+          selectedIndex: pageNavigatorP.getPageIndex, //New
+          onDestinationSelected: (index) {
+            pageNavigatorP.setPageIndex = index;
+            pageNavigatorP.navigateToPage();
+          },
+        ),
+      ),
+    );
+  }
 }

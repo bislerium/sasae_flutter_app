@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -17,15 +19,40 @@ class NGOPage extends StatefulWidget {
 
 class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
   late final Future<void> _fetchNGOFUTURE;
+  final ScrollController _scrollController;
+  late final NavigationBarProvider _navigationBarP;
+  late final NGOProvider _ngoP;
+
+  _NGOPageState() : _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _navigationBarP =
+        Provider.of<NavigationBarProvider>(context, listen: false);
+    _ngoP = Provider.of<NGOProvider>(context, listen: false);
+    _scrollController.addListener(ngoListLS);
     _fetchNGOFUTURE = _fetchNGO();
   }
 
+  @override
+  void dispose() {
+    _scrollController.removeListener(ngoListLS);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Future<void> _fetchNGO() async {
-    await Provider.of<NGOProvider>(context, listen: false).fetchNGOs();
+    await _ngoP.fetchNGOs();
+  }
+
+  void ngoListLS() {
+    var direction = _scrollController.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse) {
+      _navigationBarP.setShowNB = false;
+    } else {
+      _navigationBarP.setShowNB = true;
+    }
   }
 
   @override
@@ -58,6 +85,7 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                                       child: Text('No NGO found 🧐...'),
                                     )
                                   : NGOList(
+                                      scrollController: _scrollController,
                                       ngoList: ngoP.getNGOs!,
                                     ),
                         ),
@@ -103,14 +131,15 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
 
   Future<void> showFilterModal() async {
     await showModalSheet(
-      ctx: context,
+      context: context,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Text(
             'Filter by Field of Work',
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onPrimaryContainer),
           ),
         ),
         Container(
@@ -130,10 +159,10 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               spacing: 10,
               runSpacing: -5,
               selectedColor: Theme.of(context).colorScheme.primaryContainer,
-              labelStyle: TextStyle(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              // labelStyle: TextStyle(
+              //   color: Theme.of(context).colorScheme.onPrimaryContainer,
+              // ),
+              // backgroundColor: Theme.of(context).colorScheme.surface,
               alignment: WrapAlignment.center,
             ),
           ),
@@ -189,87 +218,98 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NGOProvider>(
-      builder: ((context, ngoP, child) {
-        bool isDataUnavailable = ngoP.getIsFetchError ||
-            (ngoP.getNGOs!.isEmpty &&
-                !ngoP.getIsFiltered &&
-                !ngoP.getIsSearched);
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.search,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: TextField(
-                            keyboardType: TextInputType.text,
-                            controller: _searchTEC,
-                            enabled: isDataUnavailable ? false : true,
-                            onTap: () {
-                              if (ngoP.getIsFiltered) ngoP.clear();
-                            },
-                            onChanged: (value) {
-                              ngoP.searchByName(value.trim());
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Search NGO by name',
-                            ),
-                            textInputAction: TextInputAction.search,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      height: Provider.of<NavigationBarProvider>(context).getShowNB ? 80 : 0,
+      child: Consumer<NGOProvider>(
+        builder: ((context, ngoP, child) {
+          bool isDataUnavailable = ngoP.getIsFetchError ||
+              (ngoP.getNGOs!.isEmpty &&
+                  !ngoP.getIsFiltered &&
+                  !ngoP.getIsSearched);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        const FittedBox(
+                          child: Icon(
+                            Icons.search,
                           ),
                         ),
-                      ),
-                      if (_searchTEC.text.isNotEmpty)
-                        InkWell(
-                          onTap: () {
-                            ngoP.clear();
-                            _searchTEC.clear();
-                            FocusScope.of(context).unfocus();
-                          },
-                          child: Icon(
-                            Icons.clear,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: TextField(
+                              keyboardType: TextInputType.text,
+                              controller: _searchTEC,
+                              enabled: isDataUnavailable ? false : true,
+                              onTap: () {
+                                if (ngoP.getIsFiltered) ngoP.clear();
+                              },
+                              onChanged: (value) {
+                                ngoP.searchByName(value.trim());
+                              },
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Search NGO by name',
+                              ),
+                              textInputAction: TextInputAction.search,
+                            ),
                           ),
-                        )
-                    ],
+                        ),
+                        if (_searchTEC.text.isNotEmpty)
+                          InkWell(
+                            onTap: () {
+                              ngoP.clear();
+                              _searchTEC.clear();
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: FittedBox(
+                              child: Icon(
+                                Icons.clear,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                  ),
-                  onPressed: isDataUnavailable
-                      ? null
-                      : () async {
-                          if (ngoP.getIsSearched) {
-                            ngoP.clear();
-                          }
-                          _searchTEC.clear();
-                          await showFilterModal();
-                        },
-                  child: const Icon(
-                    Icons.filter_list,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(16),
+                    ),
+                    onPressed: isDataUnavailable
+                        ? null
+                        : () async {
+                            if (ngoP.getIsSearched) {
+                              ngoP.clear();
+                            }
+                            FocusScope.of(context).unfocus();
+                            _searchTEC.clear();
+                            await showFilterModal();
+                          },
+                    child: const FittedBox(
+                      child: Icon(
+                        Icons.filter_list,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
-      }),
+              ],
+            ),
+          );
+        }),
+      ),
     );
   }
 }

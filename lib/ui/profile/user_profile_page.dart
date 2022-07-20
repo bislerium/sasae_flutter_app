@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/info_post_tab_view.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/user_info_tab.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/profile_post_tab.dart';

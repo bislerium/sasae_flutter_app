@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
@@ -21,6 +21,7 @@ class _PostPageState extends State<PostPage>
   final ScrollController _scrollController;
   late final Future<void> _fetchPostFUTURE;
   late final PostProvider postP;
+  late final NavigationBarProvider _navigationBarP;
   late final PostFABProvider _postFABP;
 
   _PostPageState() : _scrollController = ScrollController();
@@ -30,6 +31,8 @@ class _PostPageState extends State<PostPage>
     super.initState();
     postP = Provider.of<PostProvider>(context, listen: false);
     _postFABP = Provider.of<PostFABProvider>(context, listen: false);
+    _navigationBarP =
+        Provider.of<NavigationBarProvider>(context, listen: false);
     _scrollController.addListener(postfabListenScroll);
     _scrollController.addListener(postPaginationListenScroll);
     _fetchPostFUTURE = _initFetchPost();
@@ -45,9 +48,13 @@ class _PostPageState extends State<PostPage>
 
   void postfabListenScroll() {
     var direction = _scrollController.position.userScrollDirection;
-    direction == ScrollDirection.reverse
-        ? _postFABP.setShowFAB = false
-        : _postFABP.setShowFAB = true;
+    if (direction == ScrollDirection.reverse) {
+      _postFABP.setShowFAB = false;
+      _navigationBarP.setShowNB = false;
+    } else {
+      _postFABP.setShowFAB = true;
+      _navigationBarP.setShowNB = true;
+    }
   }
 
   void postPaginationListenScroll() {

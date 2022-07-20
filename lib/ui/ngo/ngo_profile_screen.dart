@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_info_tab.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/info_post_tab_view.dart';
@@ -103,7 +103,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
 
   void showDonationModalSheet(String epayAccount, String donationTo) =>
       showModalSheet(
-        ctx: context,
+        context: context,
         topPadding: 40,
         bottomPadding: 20,
         leftPadding: 30,

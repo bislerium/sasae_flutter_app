@@ -5,7 +5,7 @@ import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
-import 'package:sasae_flutter_app/providers/fab_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
@@ -27,6 +27,7 @@ class UserInfoTab extends StatefulWidget {
 class _UserInfoTabState extends State<UserInfoTab>
     with AutomaticKeepAliveClientMixin {
   late final Future<void> _fetchUserFUTURE;
+  late final NavigationBarProvider _navigationBarP;
   late final ProfileSettingFABProvider profileSettingFABP;
   late final ProfileProvider profileP;
 
@@ -35,6 +36,8 @@ class _UserInfoTabState extends State<UserInfoTab>
     super.initState();
     profileSettingFABP =
         Provider.of<ProfileSettingFABProvider>(context, listen: false);
+    _navigationBarP =
+        Provider.of<NavigationBarProvider>(context, listen: false);
     profileP = Provider.of<ProfileProvider>(context, listen: false);
     widget.scrollController.addListener(profleEditfabListenScroll);
     _fetchUserFUTURE = _fetchUser();
@@ -76,12 +79,14 @@ class _UserInfoTabState extends State<UserInfoTab>
   }
 
   void profleEditfabListenScroll() {
-    var a = Provider.of<ProfileSettingFABProvider>(context, listen: false);
     var direction = widget.scrollController.position.userScrollDirection;
-    if (profileP.getUserData is PeopleModel) {
-      direction == ScrollDirection.reverse
-          ? a.setShowFAB = false
-          : a.setShowFAB = true;
+    var a = profileP.getUserData is PeopleModel;
+    if (direction == ScrollDirection.reverse) {
+      if (a) profileSettingFABP.setShowFAB = false;
+      _navigationBarP.setShowNB = false;
+    } else {
+      if (a) profileSettingFABP.setShowFAB = true;
+      _navigationBarP.setShowNB = true;
     }
   }
 

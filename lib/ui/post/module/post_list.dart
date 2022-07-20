@@ -98,7 +98,7 @@ class PostCard extends StatelessWidget {
         onLongPress: isActionable
             ? () {
                 showModalSheet(
-                  ctx: context,
+                  context: context,
                   children: [
                     ListTile(
                       leading: const Icon(Icons.edit),

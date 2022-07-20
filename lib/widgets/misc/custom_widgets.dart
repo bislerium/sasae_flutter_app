@@ -45,18 +45,20 @@ void showSnackBar({
 }
 
 Future<void> showModalSheet({
-  required BuildContext ctx,
+  required BuildContext context,
   required List<Widget> children,
   double topPadding = 15,
-  double bottomPadding = 10,
+  double bottomPadding = 0,
   double leftPadding = 15,
   double rightPadding = 15,
   double? height,
 }) async {
+  var colors = Theme.of(context).colorScheme;
   await showModalBottomSheet(
-    context: ctx,
+    context: context,
     isScrollControlled: true,
-    backgroundColor: Theme.of(ctx).colorScheme.surface,
+    backgroundColor:
+        ElevationOverlay.colorWithOverlay(colors.surface, colors.primary, 3.0),
     builder: (_) {
       return Padding(
         padding: EdgeInsets.only(

@@ -43,7 +43,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
 
   Future<void> showPasswordChangeModal() async {
     showModalSheet(
-      ctx: context,
+      context: context,
       topPadding: 40,
       bottomPadding: 20,
       leftPadding: 30,

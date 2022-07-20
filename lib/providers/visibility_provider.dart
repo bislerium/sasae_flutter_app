@@ -122,3 +122,18 @@ class NotificationActionFABProvider with ChangeNotifier {
 }
 
 enum FABType { editProfile, donation }
+
+class NavigationBarProvider with ChangeNotifier {
+  bool _showNB;
+
+  NavigationBarProvider() : _showNB = true;
+
+  bool get getShowNB => _showNB;
+
+  set setShowNB(bool show) {
+    if (_showNB != show) {
+      _showNB = show;
+      notifyListeners();
+    }
+  }
+}
