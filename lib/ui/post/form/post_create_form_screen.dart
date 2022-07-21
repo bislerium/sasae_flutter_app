@@ -378,9 +378,6 @@ class _PostCreateFormState extends State<PostCreateForm> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       children: [
         superPostFields(),
-        const SizedBox(
-          height: 10,
-        ),
         Consumer<PostCreateProvider>(
           builder: (context, postCreateP, child) => IndexedStack(
             index: postCreateP.getCreatePostType.index,
@@ -404,7 +401,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
           ),
         ),
         const SizedBox(
-          height: 10,
+          height: 6,
         ),
       ],
     );

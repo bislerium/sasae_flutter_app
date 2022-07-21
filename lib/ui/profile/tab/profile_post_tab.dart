@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
+import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
 import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
@@ -116,20 +118,25 @@ class _UserProfilePostTabState extends State<UserProfilePostTab>
     with AutomaticKeepAliveClientMixin {
   late final Future<void> _fetchUserPostFUTURE;
   late final UserProfilePostProvider _userProfilePostP;
+  late final NavigationBarProvider _navigationBarP;
 
   @override
   void initState() {
     super.initState();
     _userProfilePostP =
         Provider.of<UserProfilePostProvider>(context, listen: false);
+    _navigationBarP =
+        Provider.of<NavigationBarProvider>(context, listen: false);
     _fetchUserPostFUTURE = fetchProfilePost();
     widget.scrollController?.addListener(postPaginationListenScroll);
+    widget.scrollController?.addListener(navigationBarListenScroll);
   }
 
   @override
   void dispose() {
     _userProfilePostP.resetProfilePosts();
     widget.scrollController?.removeListener(postPaginationListenScroll);
+    widget.scrollController?.removeListener(navigationBarListenScroll);
     super.dispose();
   }
 
@@ -147,6 +154,15 @@ class _UserProfilePostTabState extends State<UserProfilePostTab>
     if (widget.scrollController?.position.maxScrollExtent ==
         widget.scrollController?.offset) {
       _userProfilePostP.fetchProfilePosts();
+    }
+  }
+
+  void navigationBarListenScroll() {
+    var direction = widget.scrollController?.position.userScrollDirection;
+    if (direction == ScrollDirection.reverse) {
+      _navigationBarP.setShowNB = false;
+    } else {
+      _navigationBarP.setShowNB = true;
     }
   }
 

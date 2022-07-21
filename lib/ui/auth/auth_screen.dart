@@ -173,10 +173,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> showResetPasswordModal() async => showModalSheet(
         context: context,
-        topPadding: 30,
-        bottomPadding: 20,
-        leftPadding: 30,
-        rightPadding: 30,
+        horizontal: 30,
         children: [
           Text(
             'Forgot Password',

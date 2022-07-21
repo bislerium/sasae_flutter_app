@@ -66,7 +66,7 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
               : Column(
                   children: [
                     const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: EdgeInsets.symmetric(horizontal: 16),
                       child: SearchFilterBar(),
                     ),
                     Expanded(
@@ -133,19 +133,19 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     await showModalSheet(
       context: context,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          child: Text(
-            'Filter by Field of Work',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                color: Theme.of(context).colorScheme.onPrimaryContainer),
-          ),
+        Text(
+          'Filter by Field of Work',
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
+              color: Theme.of(context).colorScheme.onPrimaryContainer),
+        ),
+        const SizedBox(
+          height: 20,
         ),
         Container(
           constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.4),
+              maxHeight: MediaQuery.of(context).size.height * 0.42),
           child: SingleChildScrollView(
+            primary: true,
             child: FormBuilderFilterChip(
               name: 'filter_by_field_of_-work',
               decoration: const InputDecoration(border: InputBorder.none),
@@ -159,57 +159,54 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               spacing: 10,
               runSpacing: -5,
               selectedColor: Theme.of(context).colorScheme.primaryContainer,
-              // labelStyle: TextStyle(
-              //   color: Theme.of(context).colorScheme.onPrimaryContainer,
-              // ),
-              // backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               alignment: WrapAlignment.center,
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SizedBox(
-            height: 60,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 10,
-                  child: TextButton(
-                    child: const Text('Reset'),
-                    onPressed: () {
-                      if (_ngoP.getIsFiltered) {
-                        _ngoP.clear();
-                      }
+        const SizedBox(
+          height: 20,
+        ),
+        SizedBox(
+          height: 60,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 10,
+                child: TextButton(
+                  child: const Text('Reset'),
+                  onPressed: () {
+                    if (_ngoP.getIsFiltered) {
+                      _ngoP.clear();
+                    }
+                    FocusScope.of(context).unfocus();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              const Spacer(
+                flex: 1,
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                flex: 10,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                  ),
+                  onPressed: () {
+                    if (_ngoP.getSelectedFOW.isNotEmpty) {
+                      _ngoP.applyFieldOfWorkFilter();
                       FocusScope.of(context).unfocus();
                       Navigator.of(context).pop();
-                    },
-                  ),
+                    }
+                  },
+                  child: const Text('Apply'),
                 ),
-                const Spacer(
-                  flex: 1,
-                ),
-                Flexible(
-                  fit: FlexFit.tight,
-                  flex: 10,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: const StadiumBorder(),
-                    ),
-                    onPressed: () {
-                      if (_ngoP.getSelectedFOW.isNotEmpty) {
-                        _ngoP.applyFieldOfWorkFilter();
-                        FocusScope.of(context).unfocus();
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: const Text('Apply'),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
@@ -220,93 +217,90 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: Provider.of<NavigationBarProvider>(context).getShowNB ? 80 : 0,
+      height: Provider.of<NavigationBarProvider>(context).getShowNB ? 68 : 0,
       child: Consumer<NGOProvider>(
         builder: ((context, ngoP, child) {
           bool isDataUnavailable = ngoP.getIsFetchError ||
               (ngoP.getNGOs!.isEmpty &&
                   !ngoP.getIsFiltered &&
                   !ngoP.getIsSearched);
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        const FittedBox(
-                          child: Icon(
-                            Icons.search,
-                          ),
+          return Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      const FittedBox(
+                        child: Icon(
+                          Icons.search,
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: TextField(
-                              keyboardType: TextInputType.text,
-                              controller: _searchTEC,
-                              enabled: isDataUnavailable ? false : true,
-                              onTap: () {
-                                if (ngoP.getIsFiltered) ngoP.clear();
-                              },
-                              onChanged: (value) {
-                                ngoP.searchByName(value.trim());
-                              },
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Search NGO by name',
-                              ),
-                              textInputAction: TextInputAction.search,
-                            ),
-                          ),
-                        ),
-                        if (_searchTEC.text.isNotEmpty)
-                          InkWell(
-                            onTap: () {
-                              ngoP.clear();
-                              _searchTEC.clear();
-                              FocusScope.of(context).unfocus();
-                            },
-                            child: FittedBox(
-                              child: Icon(
-                                Icons.clear,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                              ),
-                            ),
-                          )
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(16),
-                    ),
-                    onPressed: isDataUnavailable
-                        ? null
-                        : () async {
-                            if (ngoP.getIsSearched) {
-                              ngoP.clear();
-                            }
-                            FocusScope.of(context).unfocus();
-                            _searchTEC.clear();
-                            await showFilterModal();
-                          },
-                    child: const FittedBox(
-                      child: Icon(
-                        Icons.filter_list,
                       ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: TextField(
+                            keyboardType: TextInputType.text,
+                            controller: _searchTEC,
+                            enabled: isDataUnavailable ? false : true,
+                            onTap: () {
+                              if (ngoP.getIsFiltered) ngoP.clear();
+                            },
+                            onChanged: (value) {
+                              ngoP.searchByName(value.trim());
+                            },
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Search NGO by name',
+                            ),
+                            textInputAction: TextInputAction.search,
+                          ),
+                        ),
+                      ),
+                      if (_searchTEC.text.isNotEmpty)
+                        InkWell(
+                          onTap: () {
+                            ngoP.clear();
+                            _searchTEC.clear();
+                            FocusScope.of(context).unfocus();
+                          },
+                          child: FittedBox(
+                            child: Icon(
+                              Icons.clear,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16),
+                  ),
+                  onPressed: isDataUnavailable
+                      ? null
+                      : () async {
+                          if (ngoP.getIsSearched) {
+                            ngoP.clear();
+                          }
+                          FocusScope.of(context).unfocus();
+                          _searchTEC.clear();
+                          await showFilterModal();
+                        },
+                  child: const FittedBox(
+                    child: Icon(
+                      Icons.filter_list,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           );
         }),
       ),

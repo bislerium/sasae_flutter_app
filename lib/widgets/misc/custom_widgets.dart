@@ -47,37 +47,44 @@ void showSnackBar({
 Future<void> showModalSheet({
   required BuildContext context,
   required List<Widget> children,
-  double topPadding = 15,
-  double bottomPadding = 0,
-  double leftPadding = 15,
-  double rightPadding = 15,
+  double horizontal = 20,
   double? height,
+  Color? backgroundColor,
 }) async {
   var colors = Theme.of(context).colorScheme;
   await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
-    backgroundColor:
+    backgroundColor: backgroundColor ??
         ElevationOverlay.colorWithOverlay(colors.surface, colors.primary, 3.0),
     builder: (_) {
-      return Padding(
+      return Container(
         padding: EdgeInsets.only(
-            top: topPadding,
-            bottom: MediaQuery.of(_).viewInsets.bottom + bottomPadding,
-            left: leftPadding,
-            right: rightPadding),
-        child: SizedBox(
-          height: height,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
-          ),
+          bottom: MediaQuery.of(_).viewInsets.bottom + 20,
+          left: horizontal,
+          right: horizontal,
+        ),
+        height: height,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              height: 5,
+              width: 60,
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              decoration: ShapeDecoration(
+                color: Theme.of(context).colorScheme.surfaceVariant,
+                shape: const StadiumBorder(),
+              ),
+            ),
+            ...children,
+          ],
         ),
       );
     },
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
-        top: Radius.circular(25.0),
+        top: Radius.circular(24.0),
       ),
     ),
   );

@@ -104,10 +104,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
   void showDonationModalSheet(String epayAccount, String donationTo) =>
       showModalSheet(
         context: context,
-        topPadding: 40,
-        bottomPadding: 20,
-        leftPadding: 30,
-        rightPadding: 30,
+        horizontal: 30,
         children: [
           Text(
             'Donate to an NGO',

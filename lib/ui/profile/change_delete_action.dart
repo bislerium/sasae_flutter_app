@@ -44,14 +44,11 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   Future<void> showPasswordChangeModal() async {
     showModalSheet(
       context: context,
-      topPadding: 40,
-      bottomPadding: 20,
-      leftPadding: 30,
-      rightPadding: 30,
+      horizontal: 30,
       children: [
         Text(
           'Change Password',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(
           height: 20,
