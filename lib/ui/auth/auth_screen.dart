@@ -173,28 +173,19 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> showResetPasswordModal() async => showModalSheet(
         context: context,
-        horizontal: 30,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         children: [
           Text(
             'Forgot Password',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(
-            height: 30,
+            height: 20,
           ),
           Text(
-            'Enter your email address associated with your sasae account. We\'ll send you a link to your email for password reset process.',
-            textAlign: TextAlign.justify,
-            style: TextStyle(
-              fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface,
-              // fontWeight: FontWeight.bold,
-            ),
-          ),
+              'Enter your email address associated with your sasae account. We\'ll send you a link to your email for password reset process.',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.subtitle2),
           const SizedBox(
             height: 10,
           ),
@@ -249,9 +240,6 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
               child: const Text(
                 'Request reset link',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
               ),
             ),
           ),

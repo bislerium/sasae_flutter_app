@@ -122,7 +122,21 @@ Route<dynamic>? _screenRoutes(RouteSettings settings) {
   }
 }
 
-List<SingleChildWidget> _providers() => [
+class MyApp extends StatefulWidget {
+  const MyApp({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<ThemeProvider>(context, listen: false).fetchTheme();
+    _providers = [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
       ),
@@ -204,22 +218,29 @@ List<SingleChildWidget> _providers() => [
             UserProfilePostProvider()..setAuthP = authP,
       ),
     ];
-
-class MyApp extends StatefulWidget {
-  const MyApp({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    Provider.of<ThemeProvider>(context, listen: false).fetchTheme();
   }
+
+  late final List<SingleChildWidget> _providers;
+
+  ThemeData getThemeData({required ColorScheme colorScheme}) => ThemeData(
+        visualDensity: VisualDensity.comfortable,
+        platform: TargetPlatform.android,
+        colorScheme: colorScheme,
+        useMaterial3: true,
+        chipTheme: ChipThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: colorScheme.primaryContainer,
+            onPrimary: colorScheme.onPrimaryContainer,
+          ),
+        ),
+        fontFamily: GoogleFonts.robotoFlex().fontFamily,
+        typography: Typography.material2021(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -227,7 +248,7 @@ class _MyAppState extends State<MyApp> {
       publicKey: "test_public_key_3b3e8b05ec734b83ab799166196c98e8",
       builder: (context, navigatorKey) {
         return MultiProvider(
-          providers: _providers(),
+          providers: _providers,
           child: Builder(builder: (context) {
             Color brandingColor =
                 Provider.of<ThemeProvider>(context).getBrandingColor;
@@ -270,32 +291,8 @@ class _MyAppState extends State<MyApp> {
                   KhaltiLocalizations.delegate,
                   FormBuilderLocalizations.delegate,
                 ],
-                theme: ThemeData(
-                  visualDensity: VisualDensity.comfortable,
-                  platform: TargetPlatform.android,
-                  colorScheme: lightColorScheme,
-                  useMaterial3: true,
-                  chipTheme: ChipThemeData(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                  typography: Typography.material2021(),
-                ),
-                darkTheme: ThemeData(
-                  visualDensity: VisualDensity.comfortable,
-                  platform: TargetPlatform.android,
-                  colorScheme: darkColorScheme,
-                  useMaterial3: true,
-                  chipTheme: ChipThemeData(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                  typography: Typography.material2021(),
-                ),
+                theme: getThemeData(colorScheme: lightColorScheme),
+                darkTheme: getThemeData(colorScheme: darkColorScheme),
                 themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
                 title: 'Sasae',
                 home: const PageRouter(),

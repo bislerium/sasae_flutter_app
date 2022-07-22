@@ -70,10 +70,11 @@ Future<void> showModalSheet({
           children: [
             Container(
               height: 5,
-              width: 60,
+              width: 50,
               margin: const EdgeInsets.symmetric(vertical: 20),
+              clipBehavior: Clip.antiAlias,
               decoration: ShapeDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
                 shape: const StadiumBorder(),
               ),
             ),

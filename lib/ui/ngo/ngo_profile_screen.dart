@@ -103,8 +103,8 @@ class _NGODonationButtonState extends State<NGODonationButton> {
 
   void showDonationModalSheet(String epayAccount, String donationTo) =>
       showModalSheet(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         context: context,
-        horizontal: 30,
         children: [
           Text(
             'Donate to an NGO',
@@ -114,27 +114,25 @@ class _NGODonationButtonState extends State<NGODonationButton> {
             height: 20,
           ),
           RichText(
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.center,
             text: TextSpan(
                 text:
                     'Making a donation is the ultimate sign of solidarity. Actions speak louder than words.',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+                style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                 children: [
                   TextSpan(
                     text: '- Ibrahim Hooper',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      height: 1.6,
                     ),
                   )
                 ]),
           ),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
           Column(
             children: [
@@ -144,7 +142,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                   name: 'donationAmount',
                   controller: _amountTEC,
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.money_rounded),
+                    prefixIcon: Icon(Icons.wallet),
                     labelText: 'Amount',
                   ),
                   validator: FormBuilderValidators.compose([
@@ -161,7 +159,9 @@ class _NGODonationButtonState extends State<NGODonationButton> {
               ),
               ConstrainedBox(
                 constraints: const BoxConstraints.tightFor(
-                    height: 60, width: double.infinity),
+                  height: 60,
+                  width: double.infinity,
+                ),
                 child: ElevatedButton(
                   onPressed: () {
                     if (!isInternetConnected(context)) return;
@@ -208,14 +208,8 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                       });
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                  ),
                   child: const Text(
                     'Donate with Khalti',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
                   ),
                 ),
               )

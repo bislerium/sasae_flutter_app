@@ -44,22 +44,35 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   Future<void> showPasswordChangeModal() async {
     showModalSheet(
       context: context,
-      horizontal: 30,
       children: [
         Text(
           'Change Password',
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(
           height: 20,
         ),
-        Text(
-          'Enter your old and new password to proceed password change.',
+        RichText(
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.subtitle2,
+          text: TextSpan(
+            text:
+                'Enter your old and new password to proceed password change. ',
+            style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+            children: [
+              TextSpan(
+                text: '"Change your password every three months".',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         FormBuilder(
           key: _changeformKey,
@@ -82,6 +95,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 validators: FormBuilderValidators.compose(
                   [
                     FormBuilderValidators.required(),
+                    FormBuilderValidators.minLength(12)
                   ],
                 ),
                 keyboardType: TextInputType.visiblePassword,
@@ -142,9 +156,6 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
             },
             child: const Text(
               'Change',
-              style: TextStyle(
-                fontSize: 16,
-              ),
             ),
           ),
         ),

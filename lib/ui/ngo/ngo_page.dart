@@ -133,11 +133,8 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
     await showModalSheet(
       context: context,
       children: [
-        Text(
-          'Filter by Field of Work',
-          style: Theme.of(context).textTheme.titleMedium!.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer),
-        ),
+        Text('Filter by Field of Work',
+            style: Theme.of(context).textTheme.titleLarge),
         const SizedBox(
           height: 20,
         ),
