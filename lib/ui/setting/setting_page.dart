@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/ui/setting/module/branding_color_tile.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
+import 'package:wiredash/wiredash.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -112,6 +113,14 @@ class _SettingScreenState extends State<SettingScreen>
         trailing: const ThemeToggleButton(),
       );
 
+  Widget feedbackSuggestionTile() => ListTile(
+        iconColor: Theme.of(context).colorScheme.secondary,
+        textColor: Theme.of(context).colorScheme.onBackground,
+        leading: const Icon(Icons.feedback_rounded),
+        title: const Text('Feedback & Suggestion'),
+        onTap: () => Wiredash.of(context)?.show(),
+      );
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -123,6 +132,7 @@ class _SettingScreenState extends State<SettingScreen>
         licenses(),
         themeToggleTile(),
         const BrandingColorTile(),
+        feedbackSuggestionTile(),
       ],
     );
   }

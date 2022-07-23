@@ -260,7 +260,7 @@ class _AuthScreenState extends State<AuthScreen> {
               children: [
                 Column(
                   children: <Widget>[
-                    SizedBox(height: height * 0.17),
+                    SizedBox(height: height * 0.16),
                     _logo(),
                     SizedBox(height: height * 0.04),
                     _loginForm(),

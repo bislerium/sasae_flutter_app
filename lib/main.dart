@@ -29,6 +29,7 @@ import 'package:sasae_flutter_app/ui/post/type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/request_post_screen.dart';
 import 'package:sasae_flutter_app/ui/profile/people_profile_edit_screen.dart';
+import 'package:wiredash/wiredash.dart';
 
 void main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -42,86 +43,6 @@ void main() async {
   );
 }
 
-Route<dynamic>? _screenRoutes(RouteSettings settings) {
-  final args = settings.arguments != null ? settings.arguments as Map : {};
-  switch (settings.name) {
-    case (AuthScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => const AuthScreen(),
-        settings: settings,
-      );
-    case (RegisterScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => const RegisterScreen(),
-        settings: settings,
-      );
-    case (HomePage.routeName):
-      return MaterialPageRoute(
-        builder: (context) => const HomePage(),
-        settings: settings,
-      );
-    //-1 as placeholder for post_id in create mode (post-id not required)
-    case (PostUpdateFormScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => PostUpdateFormScreen(
-          postID: args['postID'],
-        ),
-        settings: settings,
-      );
-    case (PostCreateFormScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => const PostCreateFormScreen(),
-        settings: settings,
-      );
-    case (PeopleProfileEditScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => const PeopleProfileEditScreen(),
-        settings: settings,
-      );
-    case (NGOProfileScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => NGOProfileScreen(
-          ngoID: args['ngoID'],
-        ),
-        settings: settings,
-      );
-    case (NormalPostScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => NormalPostScreen(
-          postID: args['postID'],
-        ),
-        settings: settings,
-      );
-    case (PollPostScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) {
-          return PollPostScreen(
-            postID: args['postID'],
-          );
-        },
-        settings: settings,
-      );
-    case (RequestPostScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => RequestPostScreen(
-          postID: args['postID'],
-        ),
-        settings: settings,
-      );
-    case (ImageViewScreen.routeName):
-      return MaterialPageRoute(
-        builder: (context) => ImageViewScreen(
-          title: args['title'],
-          imageURL: args['imageURL'],
-        ),
-        settings: settings,
-      );
-    default:
-      assert(false, 'Need to implement ${settings.name}');
-      return null;
-  }
-}
-
 class MyApp extends StatefulWidget {
   const MyApp({
     Key? key,
@@ -132,6 +53,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late final List<SingleChildWidget> _providers;
+
   @override
   void initState() {
     super.initState();
@@ -220,8 +143,6 @@ class _MyAppState extends State<MyApp> {
     ];
   }
 
-  late final List<SingleChildWidget> _providers;
-
   ThemeData getThemeData({required ColorScheme colorScheme}) => ThemeData(
         visualDensity: VisualDensity.comfortable,
         platform: TargetPlatform.android,
@@ -242,6 +163,86 @@ class _MyAppState extends State<MyApp> {
         typography: Typography.material2021(),
       );
 
+  Route<dynamic>? _screenRoutes(RouteSettings settings) {
+    final args = settings.arguments != null ? settings.arguments as Map : {};
+    switch (settings.name) {
+      case (AuthScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => const AuthScreen(),
+          settings: settings,
+        );
+      case (RegisterScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => const RegisterScreen(),
+          settings: settings,
+        );
+      case (HomePage.routeName):
+        return MaterialPageRoute(
+          builder: (context) => const HomePage(),
+          settings: settings,
+        );
+      //-1 as placeholder for post_id in create mode (post-id not required)
+      case (PostUpdateFormScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => PostUpdateFormScreen(
+            postID: args['postID'],
+          ),
+          settings: settings,
+        );
+      case (PostCreateFormScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => const PostCreateFormScreen(),
+          settings: settings,
+        );
+      case (PeopleProfileEditScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => const PeopleProfileEditScreen(),
+          settings: settings,
+        );
+      case (NGOProfileScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => NGOProfileScreen(
+            ngoID: args['ngoID'],
+          ),
+          settings: settings,
+        );
+      case (NormalPostScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => NormalPostScreen(
+            postID: args['postID'],
+          ),
+          settings: settings,
+        );
+      case (PollPostScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) {
+            return PollPostScreen(
+              postID: args['postID'],
+            );
+          },
+          settings: settings,
+        );
+      case (RequestPostScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => RequestPostScreen(
+            postID: args['postID'],
+          ),
+          settings: settings,
+        );
+      case (ImageViewScreen.routeName):
+        return MaterialPageRoute(
+          builder: (context) => ImageViewScreen(
+            title: args['title'],
+            imageURL: args['imageURL'],
+          ),
+          settings: settings,
+        );
+      default:
+        assert(false, 'Need to implement ${settings.name}');
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return KhaltiScope(
@@ -256,7 +257,6 @@ class _MyAppState extends State<MyApp> {
                 builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
               ColorScheme lightColorScheme;
               ColorScheme darkColorScheme;
-
               if (lightDynamic != null && darkDynamic != null) {
                 // On Android S+ devices, use the provided dynamic color scheme.
                 // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
@@ -265,7 +265,6 @@ class _MyAppState extends State<MyApp> {
                 // want to use a brand color to override the dynamic [ColorScheme.secondary].
                 lightColorScheme =
                     lightColorScheme.copyWith(secondary: brandingColor);
-
                 // Repeat for the dark color scheme.
                 darkColorScheme = darkDynamic.harmonized();
                 darkColorScheme =
@@ -280,23 +279,31 @@ class _MyAppState extends State<MyApp> {
                   brightness: Brightness.dark,
                 );
               }
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
+              return Wiredash(
                 navigatorKey: navigatorKey,
-                supportedLocales: const [
-                  Locale('en', 'US'),
-                  Locale('ne', 'NP'),
-                ],
-                localizationsDelegates: const [
-                  KhaltiLocalizations.delegate,
-                  FormBuilderLocalizations.delegate,
-                ],
-                theme: getThemeData(colorScheme: lightColorScheme),
-                darkTheme: getThemeData(colorScheme: darkColorScheme),
-                themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
-                title: 'Sasae',
-                home: const PageRouter(),
-                onGenerateRoute: (settings) => _screenRoutes(settings),
+                projectId: 'sasae-u9orerr',
+                secret: 'xbVZHRT4V29O3x6ttzIcDZ-7HUL569yo',
+                theme: WiredashThemeData(
+                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
+                ),
+                child: MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  navigatorKey: navigatorKey,
+                  supportedLocales: const [
+                    Locale('en', 'US'),
+                    Locale('ne', 'NP'),
+                  ],
+                  localizationsDelegates: const [
+                    KhaltiLocalizations.delegate,
+                    FormBuilderLocalizations.delegate,
+                  ],
+                  theme: getThemeData(colorScheme: lightColorScheme),
+                  darkTheme: getThemeData(colorScheme: darkColorScheme),
+                  themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
+                  title: 'Sasae',
+                  home: const PageRouter(),
+                  onGenerateRoute: (settings) => _screenRoutes(settings),
+                ),
               );
             });
           }),
