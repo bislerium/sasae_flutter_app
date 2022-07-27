@@ -145,7 +145,7 @@ class _AuthScreenState extends State<AuthScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
-            'assets/images/logo.png',
+            'assets/icons/logo-splash.png',
             height: 120,
           ),
           const SizedBox(
@@ -154,8 +154,9 @@ class _AuthScreenState extends State<AuthScreen> {
           Text(
             'Sasae',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color.fromRGBO(179, 150, 219, 1)
+                      : const Color.fromRGBO(80, 47, 126, 1),
                 ),
           ),
         ],
