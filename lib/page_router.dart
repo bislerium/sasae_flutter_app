@@ -32,7 +32,7 @@ class _PageRouterState extends State<PageRouter> {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult == ConnectivityResult.none) return;
     await _authP.tryAutoLogin();
-    FlutterNativeSplash.remove();
+    // FlutterNativeSplash.remove();
   }
 
   @override
