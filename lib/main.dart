@@ -17,7 +17,7 @@ import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
-import 'package:sasae_flutter_app/providers/theme_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
@@ -36,8 +36,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
   runApp(
-    ChangeNotifierProvider<ThemeProvider>(
-      create: (context) => ThemeProvider(),
+    ChangeNotifierProvider<StartupProvider>(
+      create: (context) => StartupProvider(),
       child: const MyApp(),
     ),
   );
@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Provider.of<ThemeProvider>(context, listen: false).fetchTheme();
+    Provider.of<StartupProvider>(context, listen: false).fetchTheme();
     _providers = [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
@@ -252,7 +252,7 @@ class _MyAppState extends State<MyApp> {
           providers: _providers,
           child: Builder(builder: (context) {
             Color brandingColor =
-                Provider.of<ThemeProvider>(context).getBrandingColor;
+                Provider.of<StartupProvider>(context).getBrandingColor;
             return DynamicColorBuilder(
                 builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
               ColorScheme lightColorScheme;
@@ -299,7 +299,7 @@ class _MyAppState extends State<MyApp> {
                   ],
                   theme: getThemeData(colorScheme: lightColorScheme),
                   darkTheme: getThemeData(colorScheme: darkColorScheme),
-                  themeMode: Provider.of<ThemeProvider>(context).getThemeMode,
+                  themeMode: Provider.of<StartupProvider>(context).getThemeMode,
                   title: 'Sasae',
                   home: const PageRouter(),
                   onGenerateRoute: (settings) => _screenRoutes(settings),

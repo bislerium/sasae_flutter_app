@@ -14,13 +14,13 @@ import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/notification/notification_page.dart';
 import 'package:sasae_flutter_app/ui/setting/module/logout_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_fab.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_page.dart';
 import 'package:sasae_flutter_app/ui/post/post_page.dart';
 import 'package:sasae_flutter_app/ui/profile/user_profile_page.dart';
 import 'package:sasae_flutter_app/ui/setting/setting_page.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 // import 'package:shake/shake.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,9 +41,12 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     _subscription = getConnectivitySubscription(context);
-
     _pageNavigatorP =
         Provider.of<PageNavigatorProvider>(context, listen: false);
+    initNotificationService();
+  }
+
+  void initNotificationService() {
     NotificationService.getInstance().initialize(context);
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       RemoteNotification? notification = event.notification;

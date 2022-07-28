@@ -10,9 +10,9 @@ import 'package:sasae_flutter_app/ui/post/form/post_update_form_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/request_post_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class PostList extends StatefulWidget {
   final IPost postInterface;

@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:randexp/randexp.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 Future<void> refreshCallBack(
     {required BuildContext context,

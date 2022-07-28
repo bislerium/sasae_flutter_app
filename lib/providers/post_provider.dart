@@ -16,6 +16,7 @@ import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/models/post/request_post.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/post_interface.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 
 class PostProvider with ChangeNotifier implements IPost {
@@ -67,13 +68,13 @@ class PostProvider with ChangeNotifier implements IPost {
   @override
   bool get getHasMore => _hasMore;
 
-  Future<void> fetchPosts({bool isDemo = demo}) async {
+  Future<void> fetchPosts() async {
     if (_isLoading) return;
     if (!_hasMore) return;
     _isLoading = true;
     try {
       List<Post_Model> fetchedPosts;
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         fetchedPosts = randPosts();
       } else {
@@ -101,16 +102,20 @@ class PostProvider with ChangeNotifier implements IPost {
   }
 
   Future<void> refreshPosts() async {
+    disposePosts();
+    await fetchPosts();
+  }
+
+  void disposePosts() {
     _url = postsEndpoint;
     _hasMore = true;
     _posts = null;
     _isLoading = false;
-    await fetchPosts();
   }
 
-  Future<bool> report({required int postID, bool isDemo = demo}) async {
+  Future<bool> report({required int postID}) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(
@@ -122,8 +127,7 @@ class PostProvider with ChangeNotifier implements IPost {
       }
 
       return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return false;
     }
   }
@@ -172,8 +176,8 @@ class PostCreateProvider with ChangeNotifier {
     await initNGOOptions();
   }
 
-  Future<List<String>?> getPostRelatedTo({isDemo = demo}) async {
-    if (isDemo) {
+  Future<List<String>?> getPostRelatedTo() async {
+    if (StartupProvider.getIsDemo) {
       await delay(random: false);
       return faker.lorem.words(faker.randomGenerator.integer(30, min: 5));
     }
@@ -185,8 +189,7 @@ class PostCreateProvider with ChangeNotifier {
         }),
       );
       return response.data['options'].cast<String>();
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return null;
     }
   }
@@ -200,9 +203,9 @@ class PostCreateProvider with ChangeNotifier {
         ),
       );
 
-  Future<List<NGO__Model>?> getNGOOptions({bool isDemo = demo}) async {
+  Future<List<NGO__Model>?> getNGOOptions() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay(random: false);
         return _randNGOOptions();
       }
@@ -215,8 +218,7 @@ class PostCreateProvider with ChangeNotifier {
       return (response.data as List)
           .map((e) => NGO__Model.fromAPIResponse(e))
           .toList();
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return null;
     }
   }
@@ -251,9 +253,9 @@ class PostCreateProvider with ChangeNotifier {
   PollPostCUModel get getPollPostCreate => _pollPostCreate;
   RequestPostCUModel get getRequestPostCreate => _requestPostCreate;
 
-  Future<bool> createNormalPost({bool isDemo = demo}) async {
+  Future<bool> createNormalPost() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -293,14 +295,13 @@ class PostCreateProvider with ChangeNotifier {
       }
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
 
-  Future<bool> createPollPost({bool isDemo = demo}) async {
+  Future<bool> createPollPost() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         var headers = {
@@ -339,14 +340,13 @@ class PostCreateProvider with ChangeNotifier {
       }
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
 
-  Future<bool> createRequestPost({bool isDemo = demo}) async {
+  Future<bool> createRequestPost() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         var headers = {
@@ -389,7 +389,6 @@ class PostCreateProvider with ChangeNotifier {
 
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
@@ -488,7 +487,6 @@ class PostUpdateProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (error) {
-      print(error);
       _normalPostCU = null;
       _pollPostCU = null;
       _requestPostCU = null;
@@ -589,7 +587,6 @@ class PostUpdateProvider with ChangeNotifier {
       }
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
@@ -648,9 +645,8 @@ class NormalPostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> initFetchNormalPost(
-      {required int postID, bool isDemo = demo}) async {
-    if (isDemo) {
+  Future<void> initFetchNormalPost({required int postID}) async {
+    if (StartupProvider.getIsDemo) {
       await delay();
       _normalPost = _randNormalPost();
     } else {
@@ -668,8 +664,7 @@ class NormalPostProvider with ChangeNotifier {
         }),
       );
       return NormalPostModel.fromAPIResponse(response.data);
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return null;
     }
   }
@@ -678,10 +673,11 @@ class NormalPostProvider with ChangeNotifier {
     await initFetchNormalPost(postID: postID);
   }
 
-  Future<bool> toggleReaction(NormalPostReactionType type,
-      {bool isDemo = demo}) async {
+  Future<bool> toggleReaction(
+    NormalPostReactionType type,
+  ) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         late String uri;
@@ -701,8 +697,7 @@ class NormalPostProvider with ChangeNotifier {
       }
 
       return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return false;
     }
   }
@@ -773,9 +768,8 @@ class PollPostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> initFetchPollPost(
-      {required int postID, bool isDemo = demo}) async {
-    if (isDemo) {
+  Future<void> initFetchPollPost({required int postID}) async {
+    if (StartupProvider.getIsDemo) {
       await delay();
       _pollPost = _randPollPost();
     } else {
@@ -793,8 +787,7 @@ class PollPostProvider with ChangeNotifier {
         }),
       );
       return PollPostModel.fromAPIResponse(response.data);
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return null;
     }
   }
@@ -803,9 +796,9 @@ class PollPostProvider with ChangeNotifier {
     await initFetchPollPost(postID: postID);
   }
 
-  Future<bool> pollTheOption({required int optionID, isDemo = demo}) async {
+  Future<bool> pollTheOption({required int optionID}) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(
@@ -817,8 +810,7 @@ class PollPostProvider with ChangeNotifier {
       }
 
       return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return false;
     }
   }
@@ -885,9 +877,8 @@ class RequestPostProvider with ChangeNotifier {
     );
   }
 
-  Future<void> intiFetchRequestPost(
-      {required int postID, bool isDemo = demo}) async {
-    if (isDemo) {
+  Future<void> intiFetchRequestPost({required int postID}) async {
+    if (StartupProvider.getIsDemo) {
       await delay();
       _requestPost = _randRequestPost();
     } else {
@@ -905,8 +896,7 @@ class RequestPostProvider with ChangeNotifier {
         }),
       );
       return RequestPostModel.fromAPIResponse(response.data);
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return null;
     }
   }
@@ -916,9 +906,9 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   //Sign for petition and join for Joinform
-  Future<bool> considerRequest({isDemo = demo}) async {
+  Future<bool> considerRequest() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(
@@ -933,8 +923,7 @@ class RequestPostProvider with ChangeNotifier {
 
       notifyListeners();
       return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return false;
     }
   }

@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/notification_provider.dart';
 import 'package:sasae_flutter_app/ui/notification/module/notification_list.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({Key? key}) : super(key: key);
@@ -39,6 +39,7 @@ class _NotificationPageState extends State<NotificationPage>
   void dispose() {
     _scrollController.removeListener(notificationActionFABListenScroll);
     _scrollController.dispose();
+    _notificationP.disposeNotifications();
     super.dispose();
   }
 

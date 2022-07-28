@@ -7,6 +7,7 @@ import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 
 class AuthProvider with ChangeNotifier {
   AuthModel? _authModel;
@@ -29,11 +30,9 @@ class AuthProvider with ChangeNotifier {
       );
 
   Future<void> _authenticate(
-      {required String username,
-      required String password,
-      bool isDemo = demo}) async {
+      {required String username, required String password}) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         _authModel = _randAuth();
       } else {
@@ -81,13 +80,13 @@ class AuthProvider with ChangeNotifier {
         password: password,
       );
 
-  Future<void> tryAutoLogin({isDemo = demo}) async {
+  Future<void> tryAutoLogin() async {
     var authData = await _sessionManager.get(_authModelKey);
     if (authData == null) return;
     _authModel = AuthModel.fromJson(authData);
 
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return;
       }
@@ -110,9 +109,9 @@ class AuthProvider with ChangeNotifier {
   }
 
   // return type: bool represents if the method executed successfully.
-  Future<bool> logout({bool isDemo = demo}) async {
+  Future<bool> logout() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         final response = await http.post(
@@ -132,9 +131,11 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> resetPassword(String email, {bool isDemo = demo}) async {
+  Future<bool> resetPassword(
+    String email,
+  ) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -156,9 +157,9 @@ class AuthProvider with ChangeNotifier {
     return true;
   }
 
-  Future<bool> deleteUser({isDemo = demo}) async {
+  Future<bool> deleteUser() async {
     try {
-      if (!isDemo) {
+      if (!StartupProvider.getIsDemo) {
         var headers = {
           'Accept': 'application/json',
           'Authorization': 'Token ${_authModel!.tokenKey}',
@@ -190,10 +191,9 @@ class AuthProvider with ChangeNotifier {
   Future<bool> changePassword(
       {required String oldPassword,
       required String newPassword1,
-      required String newPassword2,
-      bool isDemo = demo}) async {
+      required String newPassword2}) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return true;
       }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/image_view_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_material_tile.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_image.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_material_tile.dart';
 
 class CustomImageTile extends StatelessWidget {
   final String title;

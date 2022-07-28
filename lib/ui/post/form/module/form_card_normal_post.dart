@@ -4,7 +4,7 @@ import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
 
 class FormCardNormalPost extends StatefulWidget {
   final bool isUpdateMode;

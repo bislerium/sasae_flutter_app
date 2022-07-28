@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
 
 class ImageViewScreen extends StatelessWidget {
   static const String routeName = '/image/view';

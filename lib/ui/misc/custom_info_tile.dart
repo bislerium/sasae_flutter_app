@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_material_tile.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_material_tile.dart';
 
-class CustomInfoTile extends StatefulWidget {
+class CustomInfoTile extends StatelessWidget {
   final IconData? leadingIcon;
   final String trailing;
   final String? leading;
@@ -15,37 +15,35 @@ class CustomInfoTile extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<CustomInfoTile> createState() => _CustomInfoTileState();
-}
-
-class _CustomInfoTileState extends State<CustomInfoTile> {
-  @override
   Widget build(BuildContext context) => CustomMaterialTile(
-        func: widget.func,
+        func: func,
         borderRadius: 12,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              widget.leading == null
+              leading == null
                   ? Icon(
-                      widget.leadingIcon,
+                      leadingIcon,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     )
                   : Text(
-                      widget.leading!,
+                      leading!,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+              const SizedBox(
+                width: 20,
+              ),
               Expanded(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   reverse: true,
                   child: Text(
-                    widget.trailing,
+                    trailing,
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,

@@ -4,11 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_list.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class NGOPage extends StatefulWidget {
   const NGOPage({Key? key}) : super(key: key);
@@ -39,6 +39,7 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
   void dispose() {
     _scrollController.removeListener(ngoListLS);
     _scrollController.dispose();
+    _ngoP.disposeNGOs();
     super.dispose();
   }
 

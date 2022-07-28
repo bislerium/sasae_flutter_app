@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/theme_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 
 class ThemeToggleButton extends StatefulWidget {
   const ThemeToggleButton({Key? key}) : super(key: key);
@@ -12,12 +12,12 @@ class ThemeToggleButton extends StatefulWidget {
 class _ThemeToggleButtonState extends State<ThemeToggleButton> {
   // System, Light, Dark
   final List<bool> _toggleButtonsState = [false, false, false];
-  late final ThemeProvider themeP;
+  late final StartupProvider themeP;
 
   @override
   void initState() {
     super.initState();
-    themeP = Provider.of<ThemeProvider>(context, listen: false);
+    themeP = Provider.of<StartupProvider>(context, listen: false);
     _toggleButtonsState[themeP.getThemeMode.index] = true;
   }
 

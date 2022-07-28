@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
 
 class PostAuthorCard extends StatefulWidget {
   final String author;

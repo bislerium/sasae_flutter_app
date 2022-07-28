@@ -9,6 +9,7 @@ import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/providers/post_interface.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 
 class ProfileProvider with ChangeNotifier {
   late AuthProvider _authP;
@@ -28,17 +29,15 @@ class ProfileProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider authP) => _authP = authP;
 
-  Future<void> initFetchUser({bool isDemo = demo}) async {
+  Future<void> initFetchUser() async {
     switch (_authP.getAuth!.group) {
       case UserGroup.general:
         _user = await PeopleProvider.fetchPeople(
-          isDemo: isDemo,
           auth: _authP.getAuth!,
         );
         break;
       case UserGroup.ngo:
         _user = await NGOProvider.fetchNGO(
-          isDemo: isDemo,
           auth: _authP.getAuth!,
         );
         break;
@@ -46,9 +45,11 @@ class ProfileProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> deletePost({required int postID, bool isDemo = demo}) async {
+  void disposeUserProfile() => _user = null;
+
+  Future<bool> deletePost({required int postID}) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.delete(
@@ -59,8 +60,7 @@ class ProfileProvider with ChangeNotifier {
         );
       }
       return true;
-    } on DioError catch (e) {
-      print(e.response?.data);
+    } on DioError {
       return false;
     }
   }
@@ -91,13 +91,13 @@ class ProfilePostProvider with ChangeNotifier implements IPost {
   @override
   bool get getHasMore => _hasMore;
 
-  Future<void> fetchProfilePosts({bool isDemo = demo}) async {
+  Future<void> fetchProfilePosts() async {
     if (_isLoading) return;
     if (!_hasMore) return;
     _isLoading = true;
     try {
       List<Post_Model> fetchedPosts;
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         fetchedPosts = PostProvider.randPosts();
       } else {
@@ -131,7 +131,7 @@ class ProfilePostProvider with ChangeNotifier implements IPost {
     notifyListeners();
   }
 
-  void resetProfilePosts() {
+  void disposeProfilePosts() {
     _url = null;
     _profilePosts = null;
     _hasMore = true;

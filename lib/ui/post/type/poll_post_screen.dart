@@ -8,10 +8,10 @@ import 'package:sasae_flutter_app/ui/post/type/super/post_description_card.dart'
 import 'package:sasae_flutter_app/ui/post/type/super/post_related_card.dart';
 import 'package:sasae_flutter_app/ui/post/type/super/post_tail_card.dart';
 import 'package:sasae_flutter_app/ui/post/type/super/post_poked_ngo_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 
 class PollPostScreen extends StatefulWidget {
   static const routeName = '/post/poll/';

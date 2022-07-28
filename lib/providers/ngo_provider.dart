@@ -10,6 +10,7 @@ import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 
 class NGOProvider with ChangeNotifier {
@@ -20,14 +21,12 @@ class NGOProvider with ChangeNotifier {
   List<String> _selectedFOW;
   bool _isFiltered;
   bool _isSearched;
-  bool _isNGOsLoading;
   //Can be used to know if fetching was unsucessful or the fetched data is empty
 
   NGOProvider()
       : _fieldOfWork = {},
         _isFiltered = false,
         _isSearched = false,
-        _isNGOsLoading = false,
         _selectedFOW = [];
 
   set setAuthP(AuthProvider auth) => _authP = auth;
@@ -40,10 +39,9 @@ class NGOProvider with ChangeNotifier {
   bool get getIsFetchError => _ngos == null;
   bool get getIsFiltered => _isFiltered;
   bool get getIsSearched => _isSearched;
-  bool get getIsNGOsLoading => _isNGOsLoading;
 
   void _randNGOs() {
-    int length = Random().nextInt(100 - 20) + 20;
+    int length = Random().nextInt(40 - 20) + 20;
     _ngosToShow = _ngos = List.generate(
       length,
       (index) {
@@ -62,8 +60,8 @@ class NGOProvider with ChangeNotifier {
     );
   }
 
-  Future<void> fetchNGOs({bool isDemo = demo}) async {
-    if (isDemo) {
+  Future<void> fetchNGOs() async {
+    if (StartupProvider.getIsDemo) {
       await delay();
       _randNGOs();
     } else {
@@ -88,11 +86,6 @@ class NGOProvider with ChangeNotifier {
     }
     if (_ngos != null && _ngos!.isNotEmpty) await _extractFoW();
     _isFiltered = false;
-  }
-
-  void setRefreshingStatus(bool value) {
-    _isNGOsLoading = value;
-    notifyListeners();
   }
 
   Future<void> refreshNGOs() async {
@@ -146,6 +139,14 @@ class NGOProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void disposeNGOs() {
+    _ngosToShow = _ngos = null;
+    _isFiltered = false;
+    _isSearched = false;
+    _selectedFOW = [];
+    _fieldOfWork.clear();
+  }
+
   //----------------------------- NGO -----------------------------------------
   NGOModel? _ngo;
 
@@ -168,7 +169,7 @@ class NGOProvider with ChangeNotifier {
         (index) => faker.lorem.word(),
       ),
       estDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
-      address: faker.address.city(),
+      address: faker.address.city() + faker.address.streetAddress(),
       phone: getRandPhoneNumber(),
       email: faker.internet.email(),
       postedPosts: Set<int>.of(List.generate(faker.randomGenerator.integer(250),
@@ -207,12 +208,9 @@ class NGOProvider with ChangeNotifier {
 
   void nullifyNGO() => _ngo = null;
 
-  static Future<NGOModel?> fetchNGO({
-    int? ngoID,
-    required AuthModel auth,
-    bool isDemo = demo,
-  }) async {
-    if (isDemo) {
+  static Future<NGOModel?> fetchNGO(
+      {int? ngoID, required AuthModel auth}) async {
+    if (StartupProvider.getIsDemo) {
       await delay();
       return randNGO();
     } else {

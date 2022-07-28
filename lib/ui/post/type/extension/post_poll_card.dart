@@ -4,9 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/poll/poll_option.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
 
 class PollCard extends StatefulWidget {
   final PollModel pollModel;

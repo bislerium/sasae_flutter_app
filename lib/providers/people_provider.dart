@@ -9,6 +9,7 @@ import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/auth.dart';
 import 'package:sasae_flutter_app/models/people.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 
 class PeopleProvider with ChangeNotifier {
@@ -57,20 +58,20 @@ class PeopleProvider with ChangeNotifier {
   //Always nullify the _people attribute on disposing the screen
   void nullifyPeople() => _people = null;
 
-  Future<bool> registerPeople(
-      {required String username,
-      required String email,
-      required String password,
-      required String fullname,
-      required DateTime dob,
-      required String gender,
-      required String phone,
-      required String address,
-      XFile? displayPicture,
-      XFile? citizenshipPhoto,
-      bool isDemo = demo}) async {
+  Future<bool> registerPeople({
+    required String username,
+    required String email,
+    required String password,
+    required String fullname,
+    required DateTime dob,
+    required String gender,
+    required String phone,
+    required String address,
+    XFile? displayPicture,
+    XFile? citizenshipPhoto,
+  }) async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -104,7 +105,6 @@ class PeopleProvider with ChangeNotifier {
       }
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
@@ -134,9 +134,9 @@ class PeopleProvider with ChangeNotifier {
             await imageURLToXFile(faker.image.image(random: true))
         ..setIsVerified = faker.randomGenerator.boolean();
 
-  Future<void> retrieveUpdatePeople({isDemo = demo}) async {
+  Future<void> retrieveUpdatePeople() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         _peopleUpdate = await _randPeopleUpdateModel();
       } else {
@@ -168,7 +168,6 @@ class PeopleProvider with ChangeNotifier {
         if (displayPictureLink != null) {
           _peopleUpdate!.setDisplayPicture =
               await imageURLToXFile(displayPictureLink);
-          print(_peopleUpdate!.getDisplayPicture!.name);
         }
 
         if (citizenshipPhotoLink != null) {
@@ -178,7 +177,6 @@ class PeopleProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (error) {
-      print(error);
       _peopleUpdate = null;
     }
   }
@@ -187,9 +185,9 @@ class PeopleProvider with ChangeNotifier {
     await retrieveUpdatePeople();
   }
 
-  Future<bool> updatePeople({bool isDemo = demo}) async {
+  Future<bool> updatePeople() async {
     try {
-      if (isDemo) {
+      if (StartupProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -222,8 +220,6 @@ class PeopleProvider with ChangeNotifier {
 
       request.headers.addAll(headers);
 
-      print(_peopleUpdate!.getDisplayPicture!.name);
-
       http.StreamedResponse response =
           await request.send().timeout(timeOutDuration);
       if (response.statusCode >= 400) {
@@ -232,7 +228,6 @@ class PeopleProvider with ChangeNotifier {
 
       return true;
     } catch (error) {
-      print(error);
       return false;
     }
   }
@@ -241,9 +236,8 @@ class PeopleProvider with ChangeNotifier {
   static Future<PeopleModel?> fetchPeople({
     int? peopleID,
     required AuthModel auth,
-    bool isDemo = demo,
   }) async {
-    if (isDemo) {
+    if (StartupProvider.getIsDemo) {
       await delay();
       return randPeople();
     }

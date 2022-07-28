@@ -4,8 +4,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/models/post/post_create_update.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class FormCardPollPost extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;

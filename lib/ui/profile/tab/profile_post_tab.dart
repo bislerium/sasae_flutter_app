@@ -4,8 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 import 'package:sasae_flutter_app/ui/post/module/post_list.dart';
 
 class NGOProfilePostTab extends StatefulWidget {
@@ -41,8 +41,8 @@ class _NGOProfilePostTabState extends State<NGOProfilePostTab>
 
   @override
   void dispose() {
-    _ngoProfilePostP.resetProfilePosts();
     widget.scrollController?.removeListener(postPaginationListenScroll);
+    _ngoProfilePostP.disposeProfilePosts();
     super.dispose();
   }
 
@@ -134,9 +134,9 @@ class _UserProfilePostTabState extends State<UserProfilePostTab>
 
   @override
   void dispose() {
-    _userProfilePostP.resetProfilePosts();
     widget.scrollController?.removeListener(postPaginationListenScroll);
     widget.scrollController?.removeListener(navigationBarListenScroll);
+    _userProfilePostP.disposeProfilePosts();
     super.dispose();
   }
 

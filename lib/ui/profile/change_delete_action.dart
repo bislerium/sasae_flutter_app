@@ -3,14 +3,13 @@ import 'dart:ui';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_obscure_text_field.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class ChangeDeleteAction extends StatefulWidget {
   final bool deletable;
@@ -22,6 +21,7 @@ class ChangeDeleteAction extends StatefulWidget {
 
 class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
   final GlobalKey<FormBuilderState> _deleteformKey, _changeformKey;
+  late final BuildContext _context;
   final TextEditingController _oldPasswordTEC,
       _newPassword1TEC,
       _newPassword2TEC;
@@ -39,6 +39,12 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
     _newPassword1TEC.dispose();
     _newPassword2TEC.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    _context = context;
+    super.didChangeDependencies();
   }
 
   Future<void> showPasswordChangeModal() async {
@@ -95,7 +101,9 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 validators: FormBuilderValidators.compose(
                   [
                     FormBuilderValidators.required(),
-                    FormBuilderValidators.minLength(12)
+                    FormBuilderValidators.minLength(8,
+                        errorText: 'Password must be 8 to 20 characters long'),
+                    FormBuilderValidators.maxLength(20),
                   ],
                 ),
                 keyboardType: TextInputType.visiblePassword,
@@ -225,21 +233,20 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 bool isValid = _deleteformKey.currentState!.validate();
                 if (isValid) {
                   Navigator.of(context).pop();
-                  if (!isInternetConnected(context)) return;
+                  if (!isInternetConnected(_context)) return;
                   bool success =
-                      await Provider.of<AuthProvider>(context, listen: false)
+                      await Provider.of<AuthProvider>(_context, listen: false)
                           .deleteUser();
                   if (success) {
-                    await SessionManager().remove('auth_data');
                     showSnackBar(
-                        context: context,
+                        context: _context,
                         message: 'Account deleted successfully');
                     if (!mounted) return;
-                    Navigator.of(context).pushNamedAndRemoveUntil(
+                    Navigator.of(_context).pushNamedAndRemoveUntil(
                         AuthScreen.routeName, (Route<dynamic> route) => false);
                   } else {
                     showSnackBar(
-                        context: context,
+                        context: _context,
                         message: 'Something went wrong',
                         errorSnackBar: true);
                   }

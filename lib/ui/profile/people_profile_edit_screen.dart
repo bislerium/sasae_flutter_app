@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/people.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_scroll_animated_fab.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class PeopleProfileEditScreen extends StatefulWidget {
   static const String routeName = '/profile/edit';

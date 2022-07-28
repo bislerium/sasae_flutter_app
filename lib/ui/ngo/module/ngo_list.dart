@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sasae_flutter_app/models/ngo_.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_image.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_image.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
 
 class NGOList extends StatelessWidget {

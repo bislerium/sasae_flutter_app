@@ -6,10 +6,10 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/people_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/auth/register';
@@ -266,8 +266,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(),
-            FormBuilderValidators.minLength(12,
-                errorText: 'Password must be 12 to 20 characters long'),
+            FormBuilderValidators.minLength(8,
+                errorText: 'Password must be 8 to 20 characters long'),
             FormBuilderValidators.maxLength(20),
           ],
         ),

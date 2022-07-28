@@ -4,6 +4,7 @@ import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/config.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
@@ -80,8 +81,10 @@ class NotificationProvider extends ChangeNotifier {
     await jsonStore.commitBatch(batch);
   }
 
+  void disposeNotifications() => _notifications.clear();
+
   Future<void> fetchNotifications() async {
-    if (demo) {
+    if (StartupProvider.getIsDemo) {
       await delay();
       _notifications = _randNotifications();
     } else {

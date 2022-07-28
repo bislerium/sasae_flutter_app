@@ -6,8 +6,8 @@ import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
 import 'package:sasae_flutter_app/ui/post/module/post_list.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class _PostPageState extends State<PostPage>
     with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController;
   late final Future<void> _fetchPostFUTURE;
-  late final PostProvider postP;
+  late final PostProvider _postP;
   late final NavigationBarProvider _navigationBarP;
   late final PostFABProvider _postFABP;
 
@@ -29,7 +29,7 @@ class _PostPageState extends State<PostPage>
   @override
   void initState() {
     super.initState();
-    postP = Provider.of<PostProvider>(context, listen: false);
+    _postP = Provider.of<PostProvider>(context, listen: false);
     _postFABP = Provider.of<PostFABProvider>(context, listen: false);
     _navigationBarP =
         Provider.of<NavigationBarProvider>(context, listen: false);
@@ -43,6 +43,7 @@ class _PostPageState extends State<PostPage>
     _scrollController.removeListener(postfabListenScroll);
     _scrollController.removeListener(postPaginationListenScroll);
     _scrollController.dispose();
+    _postP.disposePosts();
     super.dispose();
   }
 
@@ -64,11 +65,11 @@ class _PostPageState extends State<PostPage>
     }
   }
 
-  Future<void> _fetchPosts() async => await postP.fetchPosts();
+  Future<void> _fetchPosts() async => await _postP.fetchPosts();
 
   Future<void> _initFetchPost() async {
     await _fetchPosts();
-    var data = postP.getPosts;
+    var data = _postP.getPosts;
     if (!mounted) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (data == null) {

@@ -7,7 +7,7 @@ import 'package:sasae_flutter_app/services/notification_service.dart';
 import 'package:sasae_flutter_app/ui/post/type/normal_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/poll_post_screen.dart';
 import 'package:sasae_flutter_app/ui/post/type/request_post_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
 
 class NotificationList extends StatelessWidget {
   final List<NotificationModel> notifications;

@@ -1,6 +1,6 @@
 import 'package:faker/faker.dart';
 
-const demo = true;
+// const demo = true;
 const hostingMode = HostingMode.internet;
 const limit = 10;
 const timeOutDuration = Duration(seconds: 10);

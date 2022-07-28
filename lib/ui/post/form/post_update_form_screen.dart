@@ -4,18 +4,18 @@ import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/ui/post/form/module/form_card_normal_post.dart';
 import 'package:sasae_flutter_app/ui/post/form/module/form_card_poll_post.dart';
 import 'package:sasae_flutter_app/ui/post/form/module/form_card_request_post.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_loading.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/fetch_error.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_scroll_animated_fab.dart';
+import 'package:sasae_flutter_app/ui/misc/fetch_error.dart';
 import 'package:flutter_chips_input/flutter_chips_input.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class PostUpdateFormScreen extends StatefulWidget {
   static const routeName = '/post/update/';

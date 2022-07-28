@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sasae_flutter_app/providers/theme_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 
 class BrandingColorTile extends StatefulWidget {
   const BrandingColorTile({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class BrandingColorTile extends StatefulWidget {
 }
 
 class _BrandingColorTileState extends State<BrandingColorTile> {
-  late final ThemeProvider _themeP;
+  late final StartupProvider _themeP;
   // create some values
   late Color _pickedColor;
   late Color _selectedColor;
@@ -21,7 +21,7 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
   @override
   void initState() {
     super.initState();
-    _themeP = Provider.of<ThemeProvider>(context, listen: false);
+    _themeP = Provider.of<StartupProvider>(context, listen: false);
     _pickedColor = _selectedColor = _themeP.getBrandingColor;
   }
 

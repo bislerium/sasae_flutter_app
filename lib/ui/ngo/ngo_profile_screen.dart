@@ -5,17 +5,17 @@ import 'package:sasae_flutter_app/providers/visibility_provider.dart';
 import 'package:sasae_flutter_app/providers/profile_provider.dart';
 import 'package:sasae_flutter_app/ui/ngo/module/ngo_info_tab.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/info_post_tab_view.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_appbar.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
 import 'package:sasae_flutter_app/ui/profile/tab/profile_post_tab.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:sasae_flutter_app/providers/ngo_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_scroll_animated_fab.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_fab.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_scroll_animated_fab.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 
 class NGOProfileScreen extends StatefulWidget {
   static const String routeName = '/ngo/profile';

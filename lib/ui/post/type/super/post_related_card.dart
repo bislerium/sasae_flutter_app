@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_card.dart';
-import 'package:sasae_flutter_app/widgets/misc/wrapped_chips.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_card.dart';
+import 'package:sasae_flutter_app/ui/misc/wrapped_chips.dart';
 
 class PostRelatedCard extends StatelessWidget {
   final List<String> list;

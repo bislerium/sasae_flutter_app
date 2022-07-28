@@ -6,11 +6,12 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
-import 'package:sasae_flutter_app/widgets/misc/annotated_scaffold.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_obscure_text_field.dart';
-import 'package:sasae_flutter_app/widgets/misc/custom_widgets.dart';
+import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_obscure_text_field.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
 
@@ -144,9 +145,24 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _logo() => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
-            'assets/icons/logo-splash.png',
-            height: 120,
+          Stack(
+            children: <Widget>[
+              Image.asset(
+                'assets/icons/logo-splash.png',
+                height: 120,
+              ),
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(60),
+                    onDoubleTap: () =>
+                        Provider.of<StartupProvider>(context, listen: false)
+                            .toogleDemo(context),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 10,
