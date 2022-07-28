@@ -71,7 +71,7 @@ class PeopleProvider with ChangeNotifier {
     XFile? citizenshipPhoto,
   }) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -136,7 +136,7 @@ class PeopleProvider with ChangeNotifier {
 
   Future<void> retrieveUpdatePeople() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         _peopleUpdate = await _randPeopleUpdateModel();
       } else {
@@ -187,7 +187,7 @@ class PeopleProvider with ChangeNotifier {
 
   Future<bool> updatePeople() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -237,7 +237,7 @@ class PeopleProvider with ChangeNotifier {
     int? peopleID,
     required AuthModel auth,
   }) async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       return randPeople();
     }

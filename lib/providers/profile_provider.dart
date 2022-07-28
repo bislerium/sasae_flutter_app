@@ -49,7 +49,7 @@ class ProfileProvider with ChangeNotifier {
 
   Future<bool> deletePost({required int postID}) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.delete(
@@ -97,7 +97,7 @@ class ProfilePostProvider with ChangeNotifier implements IPost {
     _isLoading = true;
     try {
       List<Post_Model> fetchedPosts;
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         fetchedPosts = PostProvider.randPosts();
       } else {

@@ -12,12 +12,12 @@ class ThemeToggleButton extends StatefulWidget {
 class _ThemeToggleButtonState extends State<ThemeToggleButton> {
   // System, Light, Dark
   final List<bool> _toggleButtonsState = [false, false, false];
-  late final StartupProvider themeP;
+  late final StartupConfigProvider themeP;
 
   @override
   void initState() {
     super.initState();
-    themeP = Provider.of<StartupProvider>(context, listen: false);
+    themeP = Provider.of<StartupConfigProvider>(context, listen: false);
     _toggleButtonsState[themeP.getThemeMode.index] = true;
   }
 

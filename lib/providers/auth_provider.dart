@@ -32,7 +32,7 @@ class AuthProvider with ChangeNotifier {
   Future<void> _authenticate(
       {required String username, required String password}) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         _authModel = _randAuth();
       } else {
@@ -86,7 +86,7 @@ class AuthProvider with ChangeNotifier {
     _authModel = AuthModel.fromJson(authData);
 
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return;
       }
@@ -111,7 +111,7 @@ class AuthProvider with ChangeNotifier {
   // return type: bool represents if the method executed successfully.
   Future<bool> logout() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         final response = await http.post(
@@ -135,7 +135,7 @@ class AuthProvider with ChangeNotifier {
     String email,
   ) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -159,7 +159,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> deleteUser() async {
     try {
-      if (!StartupProvider.getIsDemo) {
+      if (!StartupConfigProvider.getIsDemo) {
         var headers = {
           'Accept': 'application/json',
           'Authorization': 'Token ${_authModel!.tokenKey}',
@@ -193,7 +193,7 @@ class AuthProvider with ChangeNotifier {
       required String newPassword1,
       required String newPassword2}) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return true;
       }

@@ -61,7 +61,7 @@ class NGOProvider with ChangeNotifier {
   }
 
   Future<void> fetchNGOs() async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       _randNGOs();
     } else {
@@ -210,7 +210,7 @@ class NGOProvider with ChangeNotifier {
 
   static Future<NGOModel?> fetchNGO(
       {int? ngoID, required AuthModel auth}) async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       return randNGO();
     } else {

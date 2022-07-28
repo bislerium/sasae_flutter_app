@@ -156,9 +156,10 @@ class _AuthScreenState extends State<AuthScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     borderRadius: BorderRadius.circular(60),
-                    onDoubleTap: () =>
-                        Provider.of<StartupProvider>(context, listen: false)
-                            .toogleDemo(context),
+                    onDoubleTap: () => Provider.of<StartupConfigProvider>(
+                            context,
+                            listen: false)
+                        .toogleDemo(context),
                   ),
                 ),
               ),

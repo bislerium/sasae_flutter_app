@@ -13,7 +13,7 @@ class BrandingColorTile extends StatefulWidget {
 }
 
 class _BrandingColorTileState extends State<BrandingColorTile> {
-  late final StartupProvider _themeP;
+  late final StartupConfigProvider _themeP;
   // create some values
   late Color _pickedColor;
   late Color _selectedColor;
@@ -21,7 +21,7 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
   @override
   void initState() {
     super.initState();
-    _themeP = Provider.of<StartupProvider>(context, listen: false);
+    _themeP = Provider.of<StartupConfigProvider>(context, listen: false);
     _pickedColor = _selectedColor = _themeP.getBrandingColor;
   }
 

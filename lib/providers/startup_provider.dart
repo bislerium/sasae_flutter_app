@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
+import 'package:shake/shake.dart';
 
-class StartupProvider with ChangeNotifier {
+class StartupConfigProvider with ChangeNotifier {
   final JsonStore _jsonStore;
   final String _themeKey;
   final String _themeModeKey;
   final String _themeColorKey;
   final String _isDemoKey;
-  static late bool _isDemo;
+  final String _shakeToFeedbackKey;
 
   // Default Value
-  StartupProvider()
+  StartupConfigProvider()
       : _jsonStore = JsonStore(),
         _themeKey = 'theme',
         _themeModeKey = 'theme-mode',
         _themeColorKey = 'theme-color',
         _isDemoKey = 'is-demo',
+        _shakeToFeedbackKey = 'shake-to-feedback',
         _themeMode = ThemeMode.system,
-        _brandingColor = Colors.deepPurple {
+        _brandingColor = Colors.deepPurple,
+        _shakeToFeedback = true {
     _isDemo = false;
   }
 
@@ -29,7 +32,7 @@ class StartupProvider with ChangeNotifier {
   set setThemeMode(ThemeMode themeMode) {
     if (_themeMode == themeMode) return;
     _themeMode = themeMode;
-    flushTheme();
+    flushStartupConfig();
     notifyListeners();
   }
 
@@ -40,9 +43,11 @@ class StartupProvider with ChangeNotifier {
   set setBrandingColor(Color brandingColor) {
     if (_brandingColor == brandingColor) return;
     _brandingColor = brandingColor;
-    flushTheme();
+    flushStartupConfig();
     notifyListeners();
   }
+
+  static late bool _isDemo;
 
   static bool get getIsDemo => _isDemo;
 
@@ -53,26 +58,47 @@ class StartupProvider with ChangeNotifier {
       message: '${_isDemo ? 'Demo' : 'Live'} mode',
       errorSnackBar: _isDemo,
     );
-    flushTheme();
+    flushStartupConfig();
   }
 
-  Future<void> flushTheme() async {
+  late bool _shakeToFeedback;
+
+  bool get getShakeToFeedback => _shakeToFeedback;
+
+  late final ShakeDetector _detector;
+
+  set setShakeDetector(ShakeDetector value) => _detector = value;
+
+  void toggleShakeListening() =>
+      _shakeToFeedback ? _detector.startListening() : _detector.stopListening();
+
+  void setShakeToFeedback(bool value) {
+    if (value != _shakeToFeedback) {
+      _shakeToFeedback = value;
+      toggleShakeListening();
+      flushStartupConfig();
+    }
+  }
+
+  Future<void> flushStartupConfig() async {
     await _jsonStore.setItem(
       _themeKey,
       {
         _themeModeKey: _themeMode.index,
         _themeColorKey: _brandingColor.value,
         _isDemoKey: _isDemo,
+        _shakeToFeedbackKey: _shakeToFeedback
       },
     );
   }
 
-  Future<void> fetchTheme() async {
+  Future<void> fetchStartupConfig() async {
     Map<String, dynamic>? themeJSON = await _jsonStore.getItem(_themeKey);
     if (themeJSON == null) return;
     _themeMode = ThemeMode.values[themeJSON[_themeModeKey]];
     _brandingColor = Color(themeJSON[_themeColorKey]);
     _isDemo = themeJSON[_isDemoKey];
+    _shakeToFeedback = themeJSON[_shakeToFeedbackKey];
     notifyListeners();
   }
 }

@@ -84,7 +84,7 @@ class NotificationProvider extends ChangeNotifier {
   void disposeNotifications() => _notifications.clear();
 
   Future<void> fetchNotifications() async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       _notifications = _randNotifications();
     } else {

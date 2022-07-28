@@ -74,7 +74,7 @@ class PostProvider with ChangeNotifier implements IPost {
     _isLoading = true;
     try {
       List<Post_Model> fetchedPosts;
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         fetchedPosts = randPosts();
       } else {
@@ -115,7 +115,7 @@ class PostProvider with ChangeNotifier implements IPost {
 
   Future<bool> report({required int postID}) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(
@@ -177,7 +177,7 @@ class PostCreateProvider with ChangeNotifier {
   }
 
   Future<List<String>?> getPostRelatedTo() async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay(random: false);
       return faker.lorem.words(faker.randomGenerator.integer(30, min: 5));
     }
@@ -205,7 +205,7 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<List<NGO__Model>?> getNGOOptions() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay(random: false);
         return _randNGOOptions();
       }
@@ -255,7 +255,7 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<bool> createNormalPost() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
         return true;
       }
@@ -301,7 +301,7 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<bool> createPollPost() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         var headers = {
@@ -346,7 +346,7 @@ class PostCreateProvider with ChangeNotifier {
 
   Future<bool> createRequestPost() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         var headers = {
@@ -646,7 +646,7 @@ class NormalPostProvider with ChangeNotifier {
   }
 
   Future<void> initFetchNormalPost({required int postID}) async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       _normalPost = _randNormalPost();
     } else {
@@ -677,7 +677,7 @@ class NormalPostProvider with ChangeNotifier {
     NormalPostReactionType type,
   ) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         late String uri;
@@ -769,7 +769,7 @@ class PollPostProvider with ChangeNotifier {
   }
 
   Future<void> initFetchPollPost({required int postID}) async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       _pollPost = _randPollPost();
     } else {
@@ -798,7 +798,7 @@ class PollPostProvider with ChangeNotifier {
 
   Future<bool> pollTheOption({required int optionID}) async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(
@@ -878,7 +878,7 @@ class RequestPostProvider with ChangeNotifier {
   }
 
   Future<void> intiFetchRequestPost({required int postID}) async {
-    if (StartupProvider.getIsDemo) {
+    if (StartupConfigProvider.getIsDemo) {
       await delay();
       _requestPost = _randRequestPost();
     } else {
@@ -908,7 +908,7 @@ class RequestPostProvider with ChangeNotifier {
   //Sign for petition and join for Joinform
   Future<bool> considerRequest() async {
     try {
-      if (StartupProvider.getIsDemo) {
+      if (StartupConfigProvider.getIsDemo) {
         await delay();
       } else {
         await _dio.post(

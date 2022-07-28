@@ -36,8 +36,8 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp();
   runApp(
-    ChangeNotifierProvider<StartupProvider>(
-      create: (context) => StartupProvider(),
+    ChangeNotifierProvider<StartupConfigProvider>(
+      create: (context) => StartupConfigProvider(),
       child: const MyApp(),
     ),
   );
@@ -58,7 +58,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Provider.of<StartupProvider>(context, listen: false).fetchTheme();
+    Provider.of<StartupConfigProvider>(context, listen: false)
+        .fetchStartupConfig();
     _providers = [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
@@ -252,7 +253,7 @@ class _MyAppState extends State<MyApp> {
           providers: _providers,
           child: Builder(builder: (context) {
             Color brandingColor =
-                Provider.of<StartupProvider>(context).getBrandingColor;
+                Provider.of<StartupConfigProvider>(context).getBrandingColor;
             return DynamicColorBuilder(
                 builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
               ColorScheme lightColorScheme;
@@ -280,12 +281,9 @@ class _MyAppState extends State<MyApp> {
                 );
               }
               return Wiredash(
-                navigatorKey: navigatorKey,
                 projectId: 'sasae-u9orerr',
                 secret: 'xbVZHRT4V29O3x6ttzIcDZ-7HUL569yo',
-                theme: WiredashThemeData(
-                  fontFamily: GoogleFonts.robotoFlex().fontFamily,
-                ),
+                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
                 child: MaterialApp(
                   debugShowCheckedModeBanner: false,
                   navigatorKey: navigatorKey,
@@ -299,7 +297,8 @@ class _MyAppState extends State<MyApp> {
                   ],
                   theme: getThemeData(colorScheme: lightColorScheme),
                   darkTheme: getThemeData(colorScheme: darkColorScheme),
-                  themeMode: Provider.of<StartupProvider>(context).getThemeMode,
+                  themeMode:
+                      Provider.of<StartupConfigProvider>(context).getThemeMode,
                   title: 'Sasae',
                   home: const PageRouter(),
                   onGenerateRoute: (settings) => _screenRoutes(settings),
