@@ -2,26 +2,34 @@ import 'package:flutter/material.dart';
 
 class ErrorView extends StatelessWidget {
   final double fraction;
-  final String errorMessage;
+  final IconData errorIcon;
 
   const ErrorView({
     Key? key,
-    this.fraction = 0.84,
-    this.errorMessage = 'Something went wrong 😞...',
+    this.fraction = 0.875,
+    this.errorIcon = Icons.link_off_rounded,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * fraction,
-          child: Center(
-            child: Text(errorMessage),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * fraction,
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                errorIcon,
+                size: 60,
+                color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 }

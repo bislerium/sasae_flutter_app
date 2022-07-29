@@ -79,11 +79,18 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                           ),
                           child: ngoP.getIsFetchError
                               ? const ErrorView(
-                                  fraction: 0.75,
+                                  fraction: 0.794,
                                 )
                               : ngoP.getNGOs!.isEmpty
-                                  ? const Center(
-                                      child: Text('No NGO found 🧐...'),
+                                  ? Center(
+                                      child: Icon(
+                                        Icons.search_off_rounded,
+                                        size: 60,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary
+                                            .withOpacity(0.5),
+                                      ),
                                     )
                                   : NGOList(
                                       scrollController: _scrollController,
@@ -229,9 +236,10 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
                     children: [
-                      const FittedBox(
+                      FittedBox(
                         child: Icon(
                           Icons.search,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                       Expanded(
@@ -265,9 +273,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                           child: FittedBox(
                             child: Icon(
                               Icons.clear,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
+                              color: Theme.of(context).colorScheme.secondary,
                             ),
                           ),
                         )

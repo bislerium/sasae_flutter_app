@@ -38,6 +38,8 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<StartupConfigProvider>(context, listen: false)
+        .setWireDashBuildContext = context;
     subscription = getConnectivitySubscription(context);
   }
 

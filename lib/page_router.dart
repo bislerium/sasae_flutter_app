@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
+import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
-// import 'package:shake/shake.dart';
 
 class PageRouter extends StatefulWidget {
   const PageRouter({Key? key}) : super(key: key);
@@ -24,6 +24,8 @@ class _PageRouterState extends State<PageRouter> {
   @override
   void initState() {
     super.initState();
+    Provider.of<StartupConfigProvider>(context, listen: false)
+        .initShakeDetector();
     _autoLoginFuture = tryAutoLogin();
   }
 

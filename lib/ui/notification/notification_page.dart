@@ -77,7 +77,7 @@ class _NotificationPageState extends State<NotificationPage>
                               notifications: notificationP.getNotifications,
                             )
                           : const ErrorView(
-                              errorMessage: 'No Notifications yet 😴...',
+                              errorIcon: Icons.notifications_paused_rounded,
                             ),
                 ),
     );

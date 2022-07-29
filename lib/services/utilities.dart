@@ -95,6 +95,8 @@ Future<void> copyToClipboard(
   showSnackBar(context: ctx, message: 'Copied to clipboard');
 }
 
+bool isFirstConnection = true;
+
 StreamSubscription<ConnectivityResult> getConnectivitySubscription(
     BuildContext context) {
   return Connectivity()
@@ -112,11 +114,13 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
     } else {
       Provider.of<InternetConnetionProvider>(context, listen: false)
           .setIsConnected = true;
-      showSnackBar(
-        context: context,
-        icon: Icons.cloud_outlined,
-        message: 'Internet connected',
-      );
+      isFirstConnection
+          ? isFirstConnection = false
+          : showSnackBar(
+              context: context,
+              icon: Icons.cloud_outlined,
+              message: 'Internet connected',
+            );
     }
   });
 }

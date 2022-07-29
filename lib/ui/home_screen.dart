@@ -22,9 +22,6 @@ import 'package:sasae_flutter_app/ui/post/post_page.dart';
 import 'package:sasae_flutter_app/ui/profile/user_profile_page.dart';
 import 'package:sasae_flutter_app/ui/setting/setting_page.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
-import 'package:shake/shake.dart';
-import 'package:wiredash/wiredash.dart';
-// import 'package:shake/shake.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -38,27 +35,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
-  late final StartupConfigProvider _startupP;
   late final StreamSubscription<ConnectivityResult> _subscription;
-  late final ShakeDetector _detector;
 
   @override
   void initState() {
     super.initState();
     _subscription = getConnectivitySubscription(context);
-    _startupP = Provider.of<StartupConfigProvider>(context, listen: false);
     _pageNavigatorP =
         Provider.of<PageNavigatorProvider>(context, listen: false);
+    Provider.of<StartupConfigProvider>(context, listen: false)
+        .setWireDashBuildContext = context;
     initNotificationService();
-    initShakeToFeedbackService();
-  }
-
-  void initShakeToFeedbackService() {
-    _detector = ShakeDetector.waitForStart(onPhoneShake: () {
-      Wiredash.of(context).show(inheritMaterialTheme: true);
-    });
-    _startupP.setShakeDetector = _detector;
-    _startupP.toggleShakeListening();
   }
 
   void initNotificationService() {
@@ -95,7 +82,6 @@ class _HomePageState extends State<HomePage>
   void dispose() {
     _subscription.cancel();
     _pageNavigatorP.reset();
-    _detector.stopListening();
     super.dispose();
   }
 

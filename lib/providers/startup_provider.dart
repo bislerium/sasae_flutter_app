@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_store/json_store.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 import 'package:shake/shake.dart';
+import 'package:wiredash/wiredash.dart';
 
 class StartupConfigProvider with ChangeNotifier {
   final JsonStore _jsonStore;
@@ -25,6 +26,8 @@ class StartupConfigProvider with ChangeNotifier {
     _isDemo = false;
   }
 
+//------------------------------------------------------------------------------
+
   ThemeMode _themeMode;
 
   ThemeMode get getThemeMode => _themeMode;
@@ -36,6 +39,8 @@ class StartupConfigProvider with ChangeNotifier {
     notifyListeners();
   }
 
+//------------------------------------------------------------------------------
+
   Color _brandingColor;
 
   Color get getBrandingColor => _brandingColor;
@@ -46,6 +51,8 @@ class StartupConfigProvider with ChangeNotifier {
     flushStartupConfig();
     notifyListeners();
   }
+
+//------------------------------------------------------------------------------
 
   static late bool _isDemo;
 
@@ -61,24 +68,40 @@ class StartupConfigProvider with ChangeNotifier {
     flushStartupConfig();
   }
 
-  late bool _shakeToFeedback;
+//------------------------------------------------------------------------------
+
+  bool _shakeToFeedback;
 
   bool get getShakeToFeedback => _shakeToFeedback;
 
-  late final ShakeDetector _detector;
+  late final ShakeDetector? _detector;
 
-  set setShakeDetector(ShakeDetector value) => _detector = value;
+  ShakeDetector? get getShakeDetector => _detector;
 
-  void toggleShakeListening() =>
-      _shakeToFeedback ? _detector.startListening() : _detector.stopListening();
+  late BuildContext _context;
+
+  set setWireDashBuildContext(BuildContext value) => _context = value;
+
+  void initShakeDetector() {
+    _detector = ShakeDetector.waitForStart(onPhoneShake: () {
+      Wiredash.of(_context).show(inheritMaterialTheme: true);
+    });
+    _toggleShakeListening();
+  }
+
+  void _toggleShakeListening() => _shakeToFeedback
+      ? _detector?.startListening()
+      : _detector?.stopListening();
 
   void setShakeToFeedback(bool value) {
     if (value != _shakeToFeedback) {
       _shakeToFeedback = value;
-      toggleShakeListening();
+      _toggleShakeListening();
       flushStartupConfig();
     }
   }
+
+//------------------------------------------------------------------------------
 
   Future<void> flushStartupConfig() async {
     await _jsonStore.setItem(
@@ -99,6 +122,5 @@ class StartupConfigProvider with ChangeNotifier {
     _brandingColor = Color(themeJSON[_themeColorKey]);
     _isDemo = themeJSON[_isDemoKey];
     _shakeToFeedback = themeJSON[_shakeToFeedbackKey];
-    notifyListeners();
   }
 }

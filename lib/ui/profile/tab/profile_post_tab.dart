@@ -83,7 +83,7 @@ class _NGOProfilePostTabState extends State<NGOProfilePostTab>
                         ? const ErrorView()
                         : profilePostP.getPosts!.isEmpty
                             ? const ErrorView(
-                                errorMessage: 'Nothing posted yet 😅...',
+                                errorIcon: Icons.post_add,
                               )
                             : PostList(
                                 postInterface: profilePostP,
@@ -184,7 +184,7 @@ class _UserProfilePostTabState extends State<UserProfilePostTab>
                         ? const ErrorView()
                         : profilePostP.getPosts!.isEmpty
                             ? const ErrorView(
-                                errorMessage: 'Nothing posted yet 😅...',
+                                errorIcon: Icons.post_add_rounded,
                               )
                             : PostList(
                                 postInterface: profilePostP,

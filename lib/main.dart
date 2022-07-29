@@ -38,10 +38,44 @@ void main() async {
   runApp(
     ChangeNotifierProvider<StartupConfigProvider>(
       create: (context) => StartupConfigProvider(),
-      child: const MyApp(),
+      child: const StartupResourceLoader(),
     ),
   );
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+class StartupResourceLoader extends StatefulWidget {
+  const StartupResourceLoader({Key? key}) : super(key: key);
+
+  @override
+  State<StartupResourceLoader> createState() => _StartupResourceLoaderState();
+}
+
+class _StartupResourceLoaderState extends State<StartupResourceLoader> {
+  late final Future fetchStartupConfigFUTURE;
+
+  @override
+  void initState() {
+    fetchStartupConfigFUTURE =
+        Provider.of<StartupConfigProvider>(context, listen: false)
+            .fetchStartupConfig();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder(
+        future: fetchStartupConfigFUTURE,
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox();
+          }
+          return const MyApp();
+        },
+      );
+}
+
+////////////////////////////////////////////////////////////////////////////////
 
 class MyApp extends StatefulWidget {
   const MyApp({
@@ -58,8 +92,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    Provider.of<StartupConfigProvider>(context, listen: false)
-        .fetchStartupConfig();
     _providers = [
       ChangeNotifierProvider(
         create: (_) => AuthProvider(),
@@ -142,6 +174,14 @@ class _MyAppState extends State<MyApp> {
             UserProfilePostProvider()..setAuthP = authP,
       ),
     ];
+  }
+
+  @override
+  void dispose() {
+    Provider.of<StartupConfigProvider>(context)
+        .getShakeDetector
+        ?.stopListening();
+    super.dispose();
   }
 
   ThemeData getThemeData({required ColorScheme colorScheme}) => ThemeData(

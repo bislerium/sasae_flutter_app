@@ -37,11 +37,9 @@ class _SettingScreenState extends State<SettingScreen>
   late final String _applicationName, _applicationVersion, _applicationLegalese;
   final Icon _applicationIcon;
 
-  Widget about() => ListTile(
-        leading: const Icon(Icons.info_rounded),
-        iconColor: Theme.of(context).colorScheme.secondary,
-        textColor: Theme.of(context).colorScheme.onBackground,
-        title: const Text('About'),
+  Widget about() => SettingTile(
+        leadingIcon: Icons.info_rounded,
+        title: 'About',
         onTap: () => showDialog<void>(
           context: context,
           builder: (BuildContext context) {
@@ -90,11 +88,9 @@ class _SettingScreenState extends State<SettingScreen>
         ),
       );
 
-  Widget licenses() => ListTile(
-        leading: const Icon(Icons.source_rounded),
-        iconColor: Theme.of(context).colorScheme.secondary,
-        textColor: Theme.of(context).colorScheme.onBackground,
-        title: const Text('Licenses'),
+  Widget licenses() => SettingTile(
+        leadingIcon: Icons.source_rounded,
+        title: 'Licenses',
         onTap: () {
           showLicensePage(
             context: context,
@@ -106,35 +102,34 @@ class _SettingScreenState extends State<SettingScreen>
         },
       );
 
-  Widget themeToggleTile() => ListTile(
-        iconColor: Theme.of(context).colorScheme.secondary,
-        textColor: Theme.of(context).colorScheme.onBackground,
-        leading: const Icon(Icons.contrast_rounded),
-        title: const Text('Mode'),
-        trailing: const ThemeToggleButton(),
+  Widget themeToggleTile() => const SettingTile(
+        leadingIcon: Icons.contrast_rounded,
+        title: 'Mode',
+        trailing: ThemeToggleButton(),
       );
 
-  Widget shakeToFeedback() => ListTile(
-        iconColor: Theme.of(context).colorScheme.secondary,
-        textColor: Theme.of(context).colorScheme.onBackground,
-        leading: const Icon(Icons.feedback_rounded),
-        title: const Text('Shake to feedback'),
-        trailing: const ToggleShapeToFeedbackSwitch(),
+  Widget shakeToFeedback() => const SettingTile(
+        leadingIcon: Icons.feedback_rounded,
+        title: 'Shake to feedback',
+        trailing: ToggleShapeToFeedbackSwitch(),
       );
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        about(),
-        licenses(),
-        themeToggleTile(),
-        const BrandingColorTile(),
-        shakeToFeedback(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          about(),
+          licenses(),
+          themeToggleTile(),
+          const BrandingColorTile(),
+          shakeToFeedback(),
+        ],
+      ),
     );
   }
 
@@ -142,6 +137,35 @@ class _SettingScreenState extends State<SettingScreen>
   // ignore: todo
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
+}
+
+class SettingTile extends StatelessWidget {
+  final IconData leadingIcon;
+  final String title;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const SettingTile(
+      {Key? key,
+      required this.leadingIcon,
+      required this.title,
+      this.trailing,
+      this.onTap})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: ListTile(
+          shape: const StadiumBorder(),
+          iconColor: Theme.of(context).colorScheme.secondary,
+          textColor: Theme.of(context).colorScheme.onBackground,
+          leading: Icon(leadingIcon),
+          title: Text(title),
+          trailing: trailing,
+          onTap: onTap,
+        ),
+      );
 }
 
 class ToggleShapeToFeedbackSwitch extends StatefulWidget {
@@ -166,12 +190,13 @@ class _ToggleShapeToFeedbackSwitchState
 
   @override
   Widget build(BuildContext context) => Switch(
-      value: _toggleValue,
-      activeColor: Theme.of(context).colorScheme.primary,
-      onChanged: ((value) {
-        if (_toggleValue != value) {
-          _startupP.setShakeToFeedback(value);
-          setState(() => _toggleValue = value);
-        }
-      }));
+        value: _toggleValue,
+        activeColor: Theme.of(context).colorScheme.primary,
+        onChanged: ((value) {
+          if (_toggleValue != value) {
+            _startupP.setShakeToFeedback(value);
+            setState(() => _toggleValue = value);
+          }
+        }),
+      );
 }

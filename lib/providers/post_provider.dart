@@ -39,7 +39,6 @@ class PostProvider with ChangeNotifier implements IPost {
 
   static List<Post_Model> randPosts() {
     var random = Random();
-    // int length = random.nextInt(100 - 20) + 20;
     return List.generate(
       limit,
       (index) {

@@ -4,6 +4,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/startup_provider.dart';
+import 'package:sasae_flutter_app/ui/setting/setting_page.dart';
 
 class BrandingColorTile extends StatefulWidget {
   const BrandingColorTile({Key? key}) : super(key: key);
@@ -93,11 +94,9 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      iconColor: Theme.of(context).colorScheme.secondary,
-      textColor: Theme.of(context).colorScheme.onBackground,
-      leading: const Icon(Icons.palette_rounded),
-      title: const Text('Color'),
+    return SettingTile(
+      leadingIcon: Icons.palette_rounded,
+      title: 'Color',
       trailing: GestureDetector(
         onTap: showColorPickerDialog,
         child: CircleAvatar(
