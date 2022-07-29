@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
+import 'package:sasae_flutter_app/ui/map.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_image.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_image_tile.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_info_tile.dart';
@@ -74,13 +75,13 @@ class NGOProfile extends StatelessWidget {
                 CustomInfoTile(
                   leadingIcon: Icons.location_pin,
                   trailing: ngoData.address,
-                  func: () {
-                    launchMap(
-                      title: ngoData.orgName,
-                      lat: ngoData.latitude,
-                      lon: ngoData.longitude,
-                    );
-                  },
+                  func: () => Navigator.of(context).pushNamed(
+                    OSM.routeName,
+                    arguments: {
+                      'lat': ngoData.latitude,
+                      'lng': ngoData.longitude,
+                    },
+                  ),
                 ),
                 CustomInfoTile(
                   leadingIcon: Icons.phone_android_rounded,

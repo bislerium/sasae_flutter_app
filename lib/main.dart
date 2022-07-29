@@ -21,6 +21,7 @@ import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
+import 'package:sasae_flutter_app/ui/map.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/image_view_screen.dart';
 import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
@@ -220,6 +221,14 @@ class _MyAppState extends State<MyApp> {
       case (HomePage.routeName):
         return MaterialPageRoute(
           builder: (context) => const HomePage(),
+          settings: settings,
+        );
+      case (OSM.routeName):
+        return MaterialPageRoute(
+          builder: (context) => OSM(
+            latitude: args['lat'],
+            longitude: args['lng'],
+          ),
           settings: settings,
         );
       //-1 as placeholder for post_id in create mode (post-id not required)
