@@ -8,7 +8,6 @@ import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:map_launcher/map_launcher.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:randexp/randexp.dart';
@@ -77,17 +76,6 @@ String numToK(int number) {
 
 //Generates Nepal Phone Number
 String getRandPhoneNumber() => RandExp(RegExp(r'(^[9][678][0-9]{8}$)')).gen();
-
-Future<void> launchMap(
-    {required String title, required double lat, required double lon}) async {
-  final availableMaps = await MapLauncher.installedMaps;
-  if (availableMaps.isNotEmpty) {
-    await availableMaps.first.showMarker(
-      coords: Coords(lat, lon),
-      title: title,
-    );
-  }
-}
 
 Future<void> copyToClipboard(
     {required BuildContext ctx, required String text}) async {

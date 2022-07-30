@@ -157,9 +157,8 @@ class NGOProvider with ChangeNotifier {
     var ngoName = faker.company.name();
     return NGOModel(
       id: faker.randomGenerator.integer(1000),
-      latitude: faker.randomGenerator.decimal(scale: (90 - (-90)), min: -90),
-      longitude:
-          faker.randomGenerator.decimal(scale: (180 - (-180)), min: -180),
+      latitude: faker.randomGenerator.decimal(scale: (27 - (22)), min: 22),
+      longitude: faker.randomGenerator.decimal(scale: (90 - (75)), min: 75),
       isVerified: isVerified,
       displayPicture: faker.image.image(width: 600, height: 600, random: true),
       username: faker.person.firstName(),

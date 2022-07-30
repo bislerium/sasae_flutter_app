@@ -83,9 +83,11 @@ class StartupConfigProvider with ChangeNotifier {
   set setWireDashBuildContext(BuildContext value) => _context = value;
 
   void initShakeDetector() {
-    _detector = ShakeDetector.waitForStart(onPhoneShake: () {
-      Wiredash.of(_context).show(inheritMaterialTheme: true);
-    });
+    _detector = ShakeDetector.waitForStart(
+        minimumShakeCount: 2,
+        onPhoneShake: () {
+          Wiredash.of(_context).show(inheritMaterialTheme: true);
+        });
     _toggleShakeListening();
   }
 

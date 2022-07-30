@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sasae_flutter_app/page_router.dart';
 import 'package:sasae_flutter_app/providers/internet_connection_provider.dart';
+import 'package:sasae_flutter_app/providers/map_provider.dart';
 import 'package:sasae_flutter_app/providers/page_navigator_provider.dart';
 import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/visibility_provider.dart';
@@ -21,7 +22,7 @@ import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/ui/auth/auth_screen.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
-import 'package:sasae_flutter_app/ui/map.dart';
+import 'package:sasae_flutter_app/ui/geolocation/map_screen.dart';
 import 'package:sasae_flutter_app/ui/ngo/ngo_profile_screen.dart';
 import 'package:sasae_flutter_app/image_view_screen.dart';
 import 'package:sasae_flutter_app/ui/post/form/post_create_form_screen.dart';
@@ -99,6 +100,9 @@ class _MyAppState extends State<MyApp> {
       ),
       ChangeNotifierProvider(
         create: (_) => InternetConnetionProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MapProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => PageNavigatorProvider(),
@@ -223,11 +227,12 @@ class _MyAppState extends State<MyApp> {
           builder: (context) => const HomePage(),
           settings: settings,
         );
-      case (OSM.routeName):
+      case (MapScreen.routeName):
         return MaterialPageRoute(
-          builder: (context) => OSM(
+          builder: (context) => MapScreen(
             latitude: args['lat'],
             longitude: args['lng'],
+            markerTitle: args['title'],
           ),
           settings: settings,
         );
