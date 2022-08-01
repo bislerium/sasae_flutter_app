@@ -105,6 +105,12 @@ class _MyAppState extends State<MyApp> {
         create: (_) => MapProvider(),
       ),
       ChangeNotifierProvider(
+        create: (_) => CompassProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MapLauncherProvider(),
+      ),
+      ChangeNotifierProvider(
         create: (_) => PageNavigatorProvider(),
       ),
       ChangeNotifierProvider(

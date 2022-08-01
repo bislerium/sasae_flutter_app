@@ -132,7 +132,7 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
         ConstrainedBox(
           constraints:
               const BoxConstraints.tightFor(height: 60, width: double.infinity),
-          child: ElevatedButton(
+          child: ElevatedButton.icon(
             onPressed: () async {
               final isValid = _changeformKey.currentState!.validate();
               if (isValid) {
@@ -162,7 +162,8 @@ class _ChangeDeleteActionState extends State<ChangeDeleteAction> {
                 _newPassword2TEC.clear();
               }
             },
-            child: const Text(
+            icon: const Icon(Icons.sync_rounded),
+            label: const Text(
               'Change',
             ),
           ),

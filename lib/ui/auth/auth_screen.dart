@@ -14,6 +14,7 @@ import 'package:sasae_flutter_app/ui/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:sasae_flutter_app/ui/home_screen.dart';
+import 'package:sasae_flutter_app/ui/misc/splash_over.dart';
 
 class AuthScreen extends StatefulWidget {
   static const routeName = '/auth';
@@ -147,25 +148,15 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget _logo() => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Stack(
-            children: <Widget>[
-              Image.asset(
-                'assets/icons/logo-splash.png',
-                height: 120,
-              ),
-              Positioned.fill(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(60),
-                    onDoubleTap: () => Provider.of<StartupConfigProvider>(
-                            context,
-                            listen: false)
-                        .toogleDemo(context),
-                  ),
-                ),
-              ),
-            ],
+          SplashOver(
+            onDoubleTap: () =>
+                Provider.of<StartupConfigProvider>(context, listen: false)
+                    .toogleDemo(context),
+            borderRadius: BorderRadius.circular(60),
+            child: Image.asset(
+              'assets/icons/logo-splash.png',
+              height: 120,
+            ),
           ),
           const SizedBox(
             height: 10,
@@ -232,7 +223,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ConstrainedBox(
             constraints: const BoxConstraints.tightFor(
                 height: 60, width: double.infinity),
-            child: ElevatedButton(
+            child: ElevatedButton.icon(
               onPressed: () async {
                 if (!isInternetConnected(context)) return;
                 final isValid = _passwordResetFormKey.currentState!.validate();
@@ -255,11 +246,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   }
                 }
               },
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-              ),
-              child: const Text(
-                'Request reset link',
+              icon: const Icon(Icons.start_rounded),
+              label: const Text(
+                'Request Reset Link',
               ),
             ),
           ),

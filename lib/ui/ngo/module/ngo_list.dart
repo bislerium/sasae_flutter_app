@@ -51,7 +51,6 @@ class NGOCard extends StatelessWidget {
               CustomImage(
                 imageURL: ngo_.orgPhoto,
                 width: 100.0,
-                radius: 12,
                 onTapViewImage: false,
                 includeHero: false,
               ),

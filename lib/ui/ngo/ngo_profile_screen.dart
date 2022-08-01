@@ -107,7 +107,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
         context: context,
         children: [
           Text(
-            'Donate to an NGO',
+            'Support the NGO',
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(
@@ -162,7 +162,7 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                   height: 60,
                   width: double.infinity,
                 ),
-                child: ElevatedButton(
+                child: ElevatedButton.icon(
                   onPressed: () {
                     if (!isInternetConnected(context)) return;
                     final isValid = _donationFormKey.currentState!.validate();
@@ -208,7 +208,10 @@ class _NGODonationButtonState extends State<NGODonationButton> {
                       });
                     }
                   },
-                  child: const Text(
+                  icon: const Icon(
+                    Icons.support_rounded,
+                  ),
+                  label: const Text(
                     'Donate with Khalti',
                   ),
                 ),

@@ -11,30 +11,28 @@ class NormalImageAttachmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Text(
               'Image Attachment:',
               style: Theme.of(context).textTheme.headline6?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                   ),
             ),
-            const SizedBox(
-              height: 15,
-            ),
-            CustomImage(
-              imageURL: imageURL,
-              title: 'View Attached Image',
-              onTapViewImage: true,
-              aspectRatio: 1 / 1,
-              radius: 10,
-              includeHero: true,
-            ),
-          ],
-        ),
+          ),
+          CustomImage(
+            imageURL: imageURL,
+            title: 'View Attached Image',
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(12)),
+            onTapViewImage: true,
+            aspectRatio: 1 / 1,
+            includeHero: true,
+          ),
+        ],
       ),
     );
   }

@@ -22,6 +22,7 @@ class PeopleProfile extends StatelessWidget {
         ),
         CustomImage(
           width: size.width * 0.4,
+          borderRadius: BorderRadius.circular(36.0),
           imageURL: peopleData.displayPicture,
           title: 'Display Picture',
         ),
@@ -118,8 +119,7 @@ class PeopleProfile extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (peopleData.isVerified &&
-                    peopleData.citizenshipPhoto != null)
+                if (peopleData.citizenshipPhoto != null)
                   CustomImageTile(
                     title: 'Citizenship photo',
                     imageURL: peopleData.citizenshipPhoto!,

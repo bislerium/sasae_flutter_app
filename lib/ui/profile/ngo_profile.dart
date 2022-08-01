@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/geolocation/map_screen.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_image.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_image_tile.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_info_tile.dart';
+import 'package:sasae_flutter_app/ui/misc/custom_material_tile.dart';
+import 'package:sasae_flutter_app/ui/misc/splash_over.dart';
 import 'package:sasae_flutter_app/ui/misc/verified_chip.dart';
 import 'package:sasae_flutter_app/ui/misc/wrapped_chips.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -30,6 +34,7 @@ class NGOProfile extends StatelessWidget {
           width: size.width * 0.4,
           imageURL: ngoData.displayPicture,
           title: 'Display Picture',
+          borderRadius: BorderRadius.circular(36.0),
         ),
         const SizedBox(
           height: 20,
@@ -65,24 +70,18 @@ class NGOProfile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
             child: Column(
               children: [
                 CustomInfoTile(
-                  leadingIcon: Icons.calendar_today_rounded,
+                  leadingIcon: Icons.today_rounded,
                   trailing: DateFormat.yMMMd().format(ngoData.estDate),
                 ),
-                CustomInfoTile(
-                  leadingIcon: Icons.location_pin,
-                  trailing: ngoData.address,
-                  func: () => Navigator.of(context).pushNamed(
-                    MapScreen.routeName,
-                    arguments: {
-                      'lat': ngoData.latitude,
-                      'lng': ngoData.longitude,
-                      'title': ngoData.orgName,
-                    },
-                  ),
+                CustomMapInfoTile(
+                  orgName: ngoData.orgName,
+                  address: ngoData.address,
+                  latitude: ngoData.latitude,
+                  longitude: ngoData.longitude,
                 ),
                 CustomInfoTile(
                   leadingIcon: Icons.phone_android_rounded,
@@ -200,6 +199,118 @@ class NGOProfile extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+class CustomMapInfoTile extends StatelessWidget {
+  final String address;
+  final String orgName;
+  final double latitude;
+  final double longitude;
+  const CustomMapInfoTile(
+      {Key? key,
+      required this.address,
+      required this.orgName,
+      required this.latitude,
+      required this.longitude})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final location = LatLng(latitude, longitude);
+    final mapSize = MediaQuery.of(context).size.width - 20;
+    return CustomMaterialTile(
+      borderRadius: 12,
+      child: Wrap(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.location_pin,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    reverse: true,
+                    child: Text(
+                      address,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SplashOver(
+            onTap: () => Navigator.of(context).pushNamed(
+              MapScreen.routeName,
+              arguments: {
+                'lat': latitude,
+                'lng': longitude,
+                'title': orgName,
+              },
+            ),
+            borderRadius:
+                const BorderRadius.vertical(bottom: Radius.circular(12)),
+            child: ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(bottom: Radius.circular(12)),
+              child: SizedBox(
+                width: mapSize,
+                height: mapSize,
+                child: FlutterMap(
+                  key: ValueKey(location.hashCode),
+                  options: MapOptions(
+                    center: location,
+                    zoom: 14,
+                    maxZoom: 18.4,
+                    interactiveFlags: InteractiveFlag.none,
+                  ),
+                  layers: [
+                    TileLayerOptions(
+                      urlTemplate:
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      userAgentPackageName: 'com.bishalgc.sasae.app',
+                      tileProvider: NetworkTileProvider(),
+                      backgroundColor: Theme.of(context).colorScheme.background,
+                      tilesContainerBuilder:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? darkModeTilesContainerBuilder
+                              : null,
+                    ),
+                    MarkerLayerOptions(
+                      markers: [
+                        Marker(
+                          rotate: true,
+                          point: location,
+                          builder: (context) => Icon(
+                            Icons.location_pin,
+                            size: 40,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

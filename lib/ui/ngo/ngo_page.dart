@@ -197,10 +197,9 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
               Flexible(
                 fit: FlexFit.tight,
                 flex: 10,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: const StadiumBorder(),
-                  ),
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.check),
+                  label: const Text('Apply'),
                   onPressed: () {
                     if (_ngoP.getSelectedFOW.isNotEmpty) {
                       _ngoP.applyFieldOfWorkFilter();
@@ -208,7 +207,6 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                       Navigator.of(context).pop();
                     }
                   },
-                  child: const Text('Apply'),
                 ),
               ),
             ],
