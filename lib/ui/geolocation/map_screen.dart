@@ -82,7 +82,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   center: _markedlocation,
                   zoom: MapProvider.zoom,
                   maxZoom: 18.4,
-                  interactiveFlags: compassP.getInteractiveFlags,
+                  interactiveFlags: mapP.getIsNavigationMode
+                      ? compassP.getInteractiveFlags -
+                          InteractiveFlag.pinchMove -
+                          InteractiveFlag.drag -
+                          InteractiveFlag.flingAnimation
+                      : compassP.getInteractiveFlags,
                   maxBounds:
                       LatLngBounds(LatLng(-90, -180.0), LatLng(90.0, 180.0)),
                 ),
@@ -116,6 +121,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       Marker(
                         rotate: true,
                         point: _markedlocation,
+                        anchorPos: AnchorPos.align(AnchorAlign.top),
                         builder: (context) => Tooltip(
                           triggerMode: TooltipTriggerMode.tap,
                           preferBelow: false,
@@ -134,6 +140,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                         Marker(
                           rotate: true,
                           point: mapP.getDeviceLocation!,
+                          anchorPos: AnchorPos.align(AnchorAlign.top),
                           builder: (ctx) => RippleAnimation(
                             repeat: true,
                             color:
@@ -234,10 +241,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                                   return;
                                 }
                               }
-                              mapP.resumeDeviceLocationStream();
-                              if (mapP.getDeviceLocation != null) {
-                                mapP.animateMapMove(mapP.getDeviceLocation!);
-                              }
+                              mapP.toggleNavigationMode();
                             },
                             child: mapP.getDeviceLocation == null
                                 ? const Icon(Icons.location_searching_rounded)

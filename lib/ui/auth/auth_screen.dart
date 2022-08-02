@@ -160,16 +160,13 @@ class _AuthScreenState extends State<AuthScreen> {
                     top: 10,
                     left: 10,
                     child: CircleAvatar(
-                      backgroundColor: Theme.of(context)
-                          .colorScheme
-                          .onPrimaryContainer
-                          .withAlpha(210),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
                       radius: 50,
                     ),
                   ),
                   Icon(
                     CustomIcons.sasae,
-                    color: Theme.of(context).colorScheme.primaryContainer,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                     size: 120,
                   ),
                 ],
@@ -180,7 +177,7 @@ class _AuthScreenState extends State<AuthScreen> {
           Text(
             'Sasae',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
           ),
         ],

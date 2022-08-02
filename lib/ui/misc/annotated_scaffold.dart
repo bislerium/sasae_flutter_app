@@ -27,7 +27,10 @@ class AnnotatedScaffold extends StatelessWidget {
             (Theme.of(context).brightness == Brightness.light
                 ? Brightness.dark
                 : Brightness.light),
-        systemNavigationBarIconBrightness: systemNavigationBarIconBrightness,
+        systemNavigationBarIconBrightness: systemNavigationBarIconBrightness ??
+            (Theme.of(context).brightness == Brightness.light
+                ? Brightness.dark
+                : Brightness.light),
       ),
       child: child,
     );

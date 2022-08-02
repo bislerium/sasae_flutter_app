@@ -12,6 +12,7 @@ import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
 class MapProvider with ChangeNotifier {
   static const double zoom = 16;
   late bool _hasLocationPermission;
+  late bool _isNavigationMode;
   late final LocationSettings _locationSettings;
   MapController? _mapController;
   LatLng? _deviceLocation;
@@ -29,6 +30,7 @@ class MapProvider with ChangeNotifier {
   }
 
   void _setInitalValue() {
+    _isNavigationMode = false;
     _hasLocationPermission = false;
     _isDevicePositionStreamPaused = false;
   }
@@ -133,18 +135,24 @@ class MapProvider with ChangeNotifier {
     _devicePositionStreamSub =
         Geolocator.getPositionStream(locationSettings: _locationSettings)
             .listen((Position? position) {
-      if (position == null) return;
-      var latlng = LatLng(position.latitude, position.longitude);
-      if (_deviceLocation == null) {
-        animateMapMove(latlng);
+      if (position != null) {
+        var latlng = LatLng(position.latitude, position.longitude);
+        if (latlng != _deviceLocation) {
+          if (_deviceLocation == null) {
+            animateMapMove(latlng);
+          }
+          _deviceLocation = latlng;
+          _distanceBetweenLocations = Geolocator.distanceBetween(
+              _deviceLocation!.latitude,
+              _deviceLocation!.longitude,
+              _markedlocation!.latitude,
+              _markedlocation!.longitude);
+          if (_isNavigationMode) {
+            _mapController!.move(_deviceLocation!, _mapController!.zoom);
+          }
+          notifyListeners();
+        }
       }
-      _deviceLocation = latlng;
-      _distanceBetweenLocations = Geolocator.distanceBetween(
-          _deviceLocation!.latitude,
-          _deviceLocation!.longitude,
-          _markedlocation!.latitude,
-          _markedlocation!.longitude);
-      notifyListeners();
     })
           ..onError((e) {
             showSnackBar(context: _context!, errorSnackBar: true);
@@ -168,6 +176,18 @@ class MapProvider with ChangeNotifier {
     _isDevicePositionStreamPaused = true;
     _distanceBetweenLocations = null;
     _deviceLocation = null;
+    notifyListeners();
+  }
+
+  get getIsNavigationMode => _isNavigationMode;
+
+  void toggleNavigationMode() {
+    resumeDeviceLocationStream();
+    if (_deviceLocation == null) return;
+    _isNavigationMode = !_isNavigationMode;
+    _isNavigationMode
+        ? animateMapMove(getDeviceLocation!, destZoom: 18)
+        : animateMapMove(getDeviceLocation!);
     notifyListeners();
   }
 
