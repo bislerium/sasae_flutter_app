@@ -227,9 +227,9 @@ class _NGODonationButtonState extends State<NGODonationButton> {
       builder: (context, ngoP, child) => CustomScrollAnimatedFAB(
         scrollController: widget.scrollController,
         child: CustomFAB(
-          text: 'Donate',
+          text: 'Donate & Support',
           icon: Icons.hail_rounded,
-          tooltip: 'Donate',
+          tooltip: 'Donate & Support',
           func: () {
             if (!isInternetConnected(context)) return;
             showDonationModalSheet(

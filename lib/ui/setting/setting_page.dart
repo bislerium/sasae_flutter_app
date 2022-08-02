@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/startup_provider.dart';
+import 'package:sasae_flutter_app/ui/icon/custom_icons.dart';
 import 'package:sasae_flutter_app/ui/setting/module/branding_color_tile.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sasae_flutter_app/ui/setting/module/theme_toggle_button.dart';
@@ -16,8 +17,8 @@ class _SettingScreenState extends State<SettingScreen>
     with AutomaticKeepAliveClientMixin {
   _SettingScreenState()
       : _applicationLegalese =
-            'A Social Service Application to bind NGOs and enthuhsiasts for social work.\n\n@BishalGhartiChhetri',
-        _applicationIcon = const Icon(Icons.flutter_dash_rounded);
+            'A Social Service Application to bind NGOs and enthuhsiasts for effective & efficient social work.\n\n@BishalGhartiChhetri',
+        _applicationIcon = const Icon(CustomIcons.sasae);
 
   late final PackageInfo _packageInfo;
 

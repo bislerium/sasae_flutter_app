@@ -15,7 +15,7 @@ publish_to: 'https://asasae.herokuapp.com' # Remove this line if you wish to pub
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+12
+version: 2.0.0+16
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -74,7 +74,6 @@ dependencies:
   geolocator: ^9.0.1
   simple_ripple_animation: ^0.0.3
   flutter_compass: ^0.7.0
-  flutter_svg: ^1.1.1+1
 
 dev_dependencies:
   flutter_launcher_icons: ^0.9.3
@@ -108,8 +107,6 @@ flutter:
   assets:
     - assets/icons/logo.png
     - assets/icons/logo-splash.png
-    - assets/gif/no_result.gif
-    - assets/svg/compass.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -122,8 +119,14 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
+  fonts:
+    - family:  SasaeIcon
+      fonts:
+       - asset: icons/SasaeIcon.ttf
+    - family:  CompassIcon
+      fonts:
+       - asset: icons/CompassIcon.ttf
+   # - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf

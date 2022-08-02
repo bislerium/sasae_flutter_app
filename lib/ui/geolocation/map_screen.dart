@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:sasae_flutter_app/providers/map_provider.dart';
+import 'package:sasae_flutter_app/ui/icon/custom_icons.dart';
 import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_appbar.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
@@ -188,6 +188,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     return const SizedBox.shrink();
                   }
                   return FloatingActionButton(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.tertiaryContainer,
                     heroTag: 'open-in-map',
                     tooltip: 'Open in ${mapLauncherP.getAvailableMap?.mapName}',
                     onPressed: () => mapLauncherP.launchMap(
@@ -208,6 +210,8 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   FloatingActionButton(
                     heroTag: 'marked-location',
                     tooltip: 'Marked location',
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondaryContainer,
                     onPressed: () => _mapP.animateMapMove(_markedlocation),
                     child: const Icon(
                       Icons.location_pin,
@@ -218,6 +222,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           onLongPress: mapP.pauseDeviceLocationStream,
                           child: FloatingActionButton(
                             heroTag: 'device-location',
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .secondaryContainer,
                             onPressed: () async {
                               if (!mapP.getHasLocationPermission) {
                                 await mapP.checkLocationPermission();
@@ -246,13 +253,12 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           onPressed: compassP.toggleCompass,
                           child: Transform.rotate(
                             angle: (compassP.getCompassRotation * (pi / 180)),
-                            child: SvgPicture.asset(
-                              'assets/svg/compass.svg',
+                            child: Icon(
+                              CustomIcons.compass,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onPrimaryContainer,
-                              height: 70,
-                              semanticsLabel: 'A Compass',
+                              size: 64,
                             ),
                           ),
                         )),

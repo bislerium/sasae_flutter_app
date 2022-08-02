@@ -9,6 +9,7 @@ import 'package:sasae_flutter_app/providers/auth_provider.dart';
 import 'package:sasae_flutter_app/providers/startup_provider.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
 import 'package:sasae_flutter_app/ui/auth/register_screen.dart';
+import 'package:sasae_flutter_app/ui/icon/custom_icons.dart';
 import 'package:sasae_flutter_app/ui/misc/annotated_scaffold.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_obscure_text_field.dart';
 import 'package:sasae_flutter_app/ui/misc/custom_widgets.dart';
@@ -149,24 +150,37 @@ class _AuthScreenState extends State<AuthScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SplashOver(
-            onDoubleTap: () =>
-                Provider.of<StartupConfigProvider>(context, listen: false)
-                    .toogleDemo(context),
-            borderRadius: BorderRadius.circular(60),
-            child: Image.asset(
-              'assets/icons/logo-splash.png',
-              height: 120,
-            ),
-          ),
+              onDoubleTap: () =>
+                  Provider.of<StartupConfigProvider>(context, listen: false)
+                      .toogleDemo(context),
+              borderRadius: BorderRadius.circular(60),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: CircleAvatar(
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onPrimaryContainer
+                          .withAlpha(210),
+                      radius: 50,
+                    ),
+                  ),
+                  Icon(
+                    CustomIcons.sasae,
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    size: 120,
+                  ),
+                ],
+              )),
           const SizedBox(
             height: 10,
           ),
           Text(
             'Sasae',
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color.fromRGBO(179, 150, 219, 1)
-                      : const Color.fromRGBO(80, 47, 126, 1),
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
           ),
         ],

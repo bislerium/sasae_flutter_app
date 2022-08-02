@@ -66,7 +66,7 @@ class MapProvider with ChangeNotifier {
       // App to enable the location services.
       showSnackBar(
           context: _context!,
-          message: 'Location services are disabled',
+          message: 'Location service is disabled',
           errorSnackBar: true);
       _hasLocationPermission = false;
       return;
@@ -83,7 +83,7 @@ class MapProvider with ChangeNotifier {
         // your App should show an explanatory UI now.
         showSnackBar(
             context: _context!,
-            message: 'Location permissions are denied',
+            message: 'Location permission is denied',
             errorSnackBar: true);
         _hasLocationPermission = false;
         return;
@@ -94,7 +94,7 @@ class MapProvider with ChangeNotifier {
       // Permissions are denied forever, handle appropriately.
       showSnackBar(
           context: _context!,
-          message: 'Location permissions are permanently denied',
+          message: 'Permission\'s permanently denied',
           errorSnackBar: true);
       _hasLocationPermission = false;
       return;

@@ -28,7 +28,10 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
   void showColorPickerDialog() => showModalSheet(
         context: context,
         children: [
-          Text('Branding Color', style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            'Branding Color',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(
             height: 20,
           ),
@@ -47,7 +50,7 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
             height: 65,
             spacing: 8,
             runSpacing: 8,
-            wheelDiameter: 280,
+            wheelDiameter: 260,
             padding: EdgeInsets.zero,
             showMaterialName: false,
             enableOpacity: false,
@@ -68,13 +71,11 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
                 Flexible(
                   fit: FlexFit.tight,
                   flex: 10,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.sync_rounded),
-                    label: const Text('Change'),
-                    onPressed: () {
-                      _themeP.setBrandingColor = _pickedColor = _selectedColor;
-                      Navigator.of(context).pop();
-                    },
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Cancel',
+                    ),
                   ),
                 ),
                 const Spacer(
@@ -83,11 +84,13 @@ class _BrandingColorTileState extends State<BrandingColorTile> {
                 Flexible(
                   fit: FlexFit.tight,
                   flex: 10,
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text(
-                      'Cancel',
-                    ),
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.sync_rounded),
+                    label: const Text('Change'),
+                    onPressed: () {
+                      _themeP.setBrandingColor = _pickedColor = _selectedColor;
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
               ],
