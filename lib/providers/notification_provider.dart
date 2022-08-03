@@ -24,8 +24,12 @@ class NotificationProvider extends ChangeNotifier {
       );
       return NotificationModel(
         id: index,
-        title: faker.lorem.words(faker.randomGenerator.integer(5)).join(' '),
-        body: faker.lorem.sentences(faker.randomGenerator.integer(5)).join(' '),
+        title: faker.lorem
+            .words(faker.randomGenerator.integer(3, min: 1))
+            .join(' '),
+        body: faker.lorem
+            .sentences(faker.randomGenerator.integer(4, min: 1))
+            .join(' '),
         channel: channel,
         postType: channel == NotificationChannel.remove
             ? null
