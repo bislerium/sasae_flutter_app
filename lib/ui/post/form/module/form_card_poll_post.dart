@@ -63,7 +63,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
         key: _optionsAddFormKey,
         child: Expanded(
           child: FormBuilderTextField(
-            name: 'pollOption',
+            name: 'poll-option-input',
             controller: _itemTEC,
             decoration: const InputDecoration(
               labelText: 'Option',
@@ -100,7 +100,7 @@ class _FormCardPollPostState extends State<FormCardPollPost>
       );
 
   Widget polls() => FormBuilderField(
-        name: 'pollField',
+        name: 'poll-options',
         validator: FormBuilderValidators.compose([
           (value) => (_pollPostCU.getPollOptions!.isEmpty ||
                   _pollPostCU.getPollOptions!.length < 2)
@@ -132,10 +132,10 @@ class _FormCardPollPostState extends State<FormCardPollPost>
       );
 
   Widget datetimeField() => FormBuilderDateTimePicker(
-      name: 'pollDuration',
+      name: 'poll-ends-on',
       inputType: InputType.both,
       decoration: const InputDecoration(
-        labelText: 'Poll duration',
+        labelText: 'Ends on',
       ),
       firstDate:
           widget.isUpdateMode ? _pollPostCU.getPollDuration : DateTime.now(),

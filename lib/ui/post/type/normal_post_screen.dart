@@ -165,12 +165,16 @@ class _VotingBarState extends State<VotingBar> {
   @override
   void initState() {
     super.initState();
+    setWidgetValues();
+    widget.scrollController.addListener(listenScroll);
+    showVotingBar = true;
+  }
+
+  void setWidgetValues() {
     isUpvoted = widget.isUpvoted;
     isDownvoted = widget.isDownvoted;
     upvoteCount = widget.upvoteCount;
     downvoteCount = widget.downvoteCount;
-    widget.scrollController.addListener(listenScroll);
-    showVotingBar = true;
   }
 
   @override
@@ -192,7 +196,7 @@ class _VotingBarState extends State<VotingBar> {
     if (showVotingBar) setState(() => showVotingBar = false);
   }
 
-  Future<void> react() async {}
+  void onErrorFallBack() => setState(setWidgetValues);
 
   void upvote() {
     if (isUpvoted) {
@@ -222,21 +226,19 @@ class _VotingBarState extends State<VotingBar> {
         children: [
           Text(
             numToK(upvoteCount),
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(
             width: 5,
           ),
           Text(
             'Upvote',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 15,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           )
         ],
       );
@@ -245,41 +247,46 @@ class _VotingBarState extends State<VotingBar> {
         children: [
           Text(
             '-${numToK(downvoteCount)}',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.error,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(
             width: 5,
           ),
           Text(
             'Downvote',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface,
-              fontSize: 15,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
           )
         ],
       );
 
+  Future<void> react(NormalPostReactionType type) async {
+    if (!isInternetConnected(context)) return;
+    if (!isProfileVerified(context)) return;
+    switch (type) {
+      case NormalPostReactionType.upVote:
+        setState(upvote);
+        break;
+      case NormalPostReactionType.downVote:
+        setState(downvote);
+    }
+    bool success = await Provider.of<NormalPostProvider>(context, listen: false)
+        .toggleReaction(type);
+    if (!success) {
+      onErrorFallBack();
+      showSnackBar(
+          context: context,
+          message: 'Something went wrong!',
+          errorSnackBar: true);
+    }
+  }
+
   Widget upvoteButton() => TextButton(
-        onPressed: () async {
-          if (!isInternetConnected(context)) return;
-          if (!isProfileVerified(context)) return;
-          setState(() => upvote());
-          bool success =
-              await Provider.of<NormalPostProvider>(context, listen: false)
-                  .toggleReaction(NormalPostReactionType.upVote);
-          if (!success) {
-            setState(() => upvote());
-            showSnackBar(
-                context: context,
-                message: 'Something went wrong!',
-                errorSnackBar: true);
-          }
-        },
+        onPressed: () => react(NormalPostReactionType.upVote),
         style: TextButton.styleFrom(
             backgroundColor:
                 isUpvoted ? Theme.of(context).colorScheme.primary : null,
@@ -292,21 +299,7 @@ class _VotingBarState extends State<VotingBar> {
       );
 
   Widget downvoteButton() => TextButton(
-        onPressed: () async {
-          if (!isInternetConnected(context)) return;
-          if (!isProfileVerified(context)) return;
-          setState(() => downvote());
-          bool success =
-              await Provider.of<NormalPostProvider>(context, listen: false)
-                  .toggleReaction(NormalPostReactionType.downVote);
-          if (!success) {
-            setState(() => downvote());
-            showSnackBar(
-                context: context,
-                message: 'Something went wrong!',
-                errorSnackBar: true);
-          }
-        },
+        onPressed: () => react(NormalPostReactionType.downVote),
         style: TextButton.styleFrom(
             backgroundColor:
                 isDownvoted ? Theme.of(context).colorScheme.primary : null,
@@ -356,7 +349,7 @@ class _VotingBarState extends State<VotingBar> {
                 ),
               ),
               const SizedBox(
-                width: 10,
+                width: 16,
               ),
               Row(
                 children: [

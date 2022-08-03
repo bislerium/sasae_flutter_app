@@ -127,7 +127,7 @@ class _FormCardRequestPostState extends State<FormCardRequestPost>
 
   Widget requestTypeField() => Expanded(
         child: FormBuilderDropdown(
-          name: 'requestType',
+          name: 'request-type',
           decoration: const InputDecoration(
             labelText: 'Request type',
           ),
@@ -240,8 +240,8 @@ class RequestPostDateTimeField extends StatelessWidget {
         labelText: requestPostCU.getRequestType == null
             ? 'DateTime'
             : requestPostCU.getRequestType == 'Join'
-                ? 'Start DateTime'
-                : 'End DateTime',
+                ? 'Starts on'
+                : 'Ends on',
       ),
       firstDate:
           isUpdateMode ? requestPostCU.getRequestDuration : DateTime.now(),
