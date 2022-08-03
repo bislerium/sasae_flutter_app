@@ -88,7 +88,7 @@ class PeopleProfile extends StatelessWidget {
                       scheme: 'tel',
                       path: peopleData.phone,
                     ),
-                  ),
+                  ).onError((error, stackTrace) => true),
                 ),
                 CustomInfoTile(
                   leadingIcon: Icons.email_rounded,
@@ -98,7 +98,7 @@ class PeopleProfile extends StatelessWidget {
                       scheme: 'mailto',
                       path: peopleData.email,
                     ),
-                  ),
+                  ).onError((error, stackTrace) => true),
                 ),
                 Row(
                   children: [

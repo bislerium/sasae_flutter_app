@@ -91,17 +91,18 @@ class NGOProfile extends StatelessWidget {
                       scheme: 'tel',
                       path: ngoData.phone,
                     ),
-                  ),
+                  ).onError((error, stackTrace) => true),
                 ),
                 CustomInfoTile(
-                    leadingIcon: Icons.email_rounded,
-                    trailing: ngoData.email,
-                    func: () => launchUrl(
-                          Uri(
-                            scheme: 'mailto',
-                            path: ngoData.email,
-                          ),
-                        )),
+                  leadingIcon: Icons.email_rounded,
+                  trailing: ngoData.email,
+                  func: () => launchUrl(
+                    Uri(
+                      scheme: 'mailto',
+                      path: ngoData.email,
+                    ),
+                  ).onError((error, stackTrace) => true),
+                ),
                 if (ngoData.isVerified && ngoData.epayAccount != null)
                   CustomInfoTile(
                     leadingIcon: Icons.account_balance_wallet_rounded,

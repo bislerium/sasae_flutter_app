@@ -121,7 +121,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       Marker(
                         rotate: true,
                         point: _markedlocation,
-                        anchorPos: AnchorPos.align(AnchorAlign.top),
                         builder: (context) => Tooltip(
                           triggerMode: TooltipTriggerMode.tap,
                           preferBelow: false,
@@ -219,7 +218,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                     tooltip: 'Marked location',
                     backgroundColor:
                         Theme.of(context).colorScheme.secondaryContainer,
-                    onPressed: () => _mapP.animateMapMove(_markedlocation),
+                    onPressed: _mapP.moveToMarker,
                     child: const Icon(
                       Icons.location_pin,
                     ),

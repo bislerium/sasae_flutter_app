@@ -188,7 +188,23 @@ class MapProvider with ChangeNotifier {
     _isNavigationMode
         ? animateMapMove(getDeviceLocation!, destZoom: 18)
         : animateMapMove(getDeviceLocation!);
+    showSnackBar(
+      context: _context!,
+      message: 'Navigation mode ${_isNavigationMode ? 'enabled' : 'disabled'}',
+      errorSnackBar: !_isNavigationMode,
+    );
     notifyListeners();
+  }
+
+  void moveToMarker() {
+    if (_isNavigationMode) {
+      showSnackBar(
+          context: _context!,
+          message: 'Navigation mode disabled',
+          errorSnackBar: true);
+      _isNavigationMode = false;
+    }
+    animateMapMove(_markedlocation!);
   }
 
   void animateMapMove(LatLng destLocation, {double destZoom = zoom}) {

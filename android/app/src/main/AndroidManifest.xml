@@ -5,6 +5,14 @@
           <action android:name="android.intent.action.SENDTO" />
           <data android:scheme="mailto" />
         </intent>
+        <intent>
+          <action android:name="android.intent.action.VIEW" />
+          <data android:scheme="sms" />
+        </intent>
+        <intent>
+          <action android:name="android.intent.action.VIEW" />
+          <data android:scheme="tel" />
+        </intent>
       </queries>
     <!-- Required to fetch data from the internet. -->
     <uses-permission android:name="android.permission.INTERNET" />
