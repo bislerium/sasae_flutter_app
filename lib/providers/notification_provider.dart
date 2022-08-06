@@ -75,10 +75,10 @@ class NotificationProvider extends ChangeNotifier {
   Future<void> flushNotifications() async {
     var batch = await jsonStore.startBatch();
     await Future.forEach<NotificationModel>(_notifications,
-        (notificaton) async {
+        (notification) async {
       await jsonStore.setItem(
-        'notification-${notificaton.id}',
-        notificaton.toMap(),
+        'notification-${notification.id}',
+        notification.toMap(),
         batch: batch,
       );
     });
