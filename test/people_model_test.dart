@@ -54,7 +54,7 @@ void main() {
   });
 
   test('Fullname casted', () {
-    expect(peopleModel.fullname, json['full_name']);
+    expect(peopleModel.fullName, json['full_name']);
   });
 
   test('Gender casted', () {

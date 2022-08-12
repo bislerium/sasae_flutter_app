@@ -33,21 +33,21 @@ class _PostPageState extends State<PostPage>
     _postFABP = Provider.of<PostFABProvider>(context, listen: false);
     _navigationBarP =
         Provider.of<NavigationBarProvider>(context, listen: false);
-    _scrollController.addListener(postfabListenScroll);
+    _scrollController.addListener(postFABListenScroll);
     _scrollController.addListener(postPaginationListenScroll);
     _fetchPostFUTURE = _initFetchPost();
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(postfabListenScroll);
+    _scrollController.removeListener(postFABListenScroll);
     _scrollController.removeListener(postPaginationListenScroll);
     _scrollController.dispose();
     _postP.disposePosts();
     super.dispose();
   }
 
-  void postfabListenScroll() {
+  void postFABListenScroll() {
     var direction = _scrollController.position.userScrollDirection;
     if (direction == ScrollDirection.reverse) {
       _postFABP.setShowFAB = false;

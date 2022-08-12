@@ -29,7 +29,7 @@ class PostUpdateFormScreen extends StatefulWidget {
 }
 
 class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
-  late Future<void> _fetchrRelatedToOptionsFUTURE,
+  late Future<void> _fetchRelatedToOptionsFUTURE,
       _fetchNGOOptionsFUTURE,
       _fetchRetrieveUpdatePeopleFUTURE;
   late ScrollController _scrollController;
@@ -43,14 +43,14 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
     _postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
     _postUpdateP = Provider.of<PostUpdateProvider>(context, listen: false);
     _fetchRetrieveUpdatePeopleFUTURE = _fetchRetrieveUpdatePeople();
-    _fetchrRelatedToOptionsFUTURE = _fetchRelatedToOptions();
+    _fetchRelatedToOptionsFUTURE = _fetchRelatedToOptions();
     _fetchNGOOptionsFUTURE = _fetchNGOOptions();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
-    _postUpdateP.nullfyPerPostType();
+    _postUpdateP.nullifyPerPostType();
     super.dispose();
   }
 
@@ -74,7 +74,7 @@ class _PostUpdateFormScreenState extends State<PostUpdateFormScreen> {
         body: FutureBuilder(
           future: Future.wait(<Future>[
             _fetchNGOOptionsFUTURE,
-            _fetchrRelatedToOptionsFUTURE,
+            _fetchRelatedToOptionsFUTURE,
             _fetchRetrieveUpdatePeopleFUTURE,
           ]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
@@ -139,7 +139,8 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
       _normalFormKey;
   late final PostUpdateProvider _postUpdateP;
   final GlobalKey<ChipsInputState> _chipKey;
-  List<int>? pokedNGO;
+  List<int>? _pokedNGO;
+  List<String>? _relatedTo;
 
   _PostUpdateFormState()
       : _superPostKey = GlobalKey<FormBuilderState>(),
@@ -165,6 +166,13 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) => setPostUpdateOnPressed());
+  }
+
+  @override
+  void dispose() {
+    _pokedNGO = null;
+    _relatedTo = null;
+    super.dispose();
   }
 
   void setPostUpdateOnPressed() {
@@ -223,9 +231,10 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
-        initialValue: _postHead.getRelatedTo!,
+        initialValue: _relatedTo = _postHead.getRelatedTo ?? [],
         validator: (value) =>
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
+        onChanged: (value) => _relatedTo = value?.cast<String>(),
         onSaved: (value) {
           var a = value!.cast<String>();
           _postHead.setRelatedTo = a;
@@ -257,11 +266,17 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
             .toList(),
         findSuggestions: (String query) {
           List<NGO__Model> tempList = [];
-          if (pokedNGO == null || pokedNGO!.isEmpty) {
-            tempList = widget.snapshotNGOList;
+          var ngoListBySelectedFOW = _relatedTo == null
+              ? widget.snapshotNGOList
+              : widget.snapshotNGOList
+                  .where((element) => element.fieldOfWork
+                      .any((element) => _relatedTo!.contains(element)))
+                  .toList();
+          if (_pokedNGO == null || _pokedNGO!.isEmpty) {
+            tempList = ngoListBySelectedFOW;
           } else {
-            tempList = widget.snapshotNGOList
-                .where((element) => !pokedNGO!.contains(element.id))
+            tempList = ngoListBySelectedFOW
+                .where((element) => !_pokedNGO!.contains(element.id))
                 .toList();
           }
           if (query.isEmpty) return tempList;
@@ -420,7 +435,7 @@ class _PostUpdateButtonState extends State<PostUpdateButton> {
           tooltip: 'Done',
           enableFeedback: true,
           child: _isLoading
-              ? ButtomLoading(
+              ? ButtonLoading(
                   color: Theme.of(context).colorScheme.onPrimaryContainer)
               : const Icon(
                   Icons.done_rounded,

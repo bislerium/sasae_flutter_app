@@ -110,14 +110,14 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
           labelText: 'Full name',
           icon: Icon(Icons.person),
         ),
-        initialValue: widget.peopleUpdate.getFullname,
+        initialValue: widget.peopleUpdate.getFullName,
         validator: FormBuilderValidators.compose(
           [
             FormBuilderValidators.required(),
           ],
         ),
         keyboardType: TextInputType.name,
-        onSaved: (value) => widget.peopleUpdate.setFullname = value,
+        onSaved: (value) => widget.peopleUpdate.setFullName = value,
       );
 
   Widget genderField() => FormBuilderDropdown(
@@ -165,7 +165,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         name: 'update_birthDate',
         inputType: InputType.date,
         decoration: const InputDecoration(
-          labelText: 'Birthdate',
+          labelText: 'BirthDate',
           icon: Icon(Icons.cake_rounded),
         ),
         initialValue: widget.peopleUpdate.getBirthDate,
@@ -228,7 +228,7 @@ class _PeopleProfileEditFormState extends State<PeopleProfileEditForm> {
         onSavedFunc: (list) => list == null || list.isEmpty
             ? widget.peopleUpdate.setCitizenshipPhoto = null
             : widget.peopleUpdate.setCitizenshipPhoto = list.first,
-        enabled: !widget.peopleUpdate.getIsverified!,
+        enabled: !widget.peopleUpdate.getIsVerified!,
       );
 
   @override
@@ -380,7 +380,7 @@ class _ProfileUpdateButtonState extends State<ProfileUpdateButton> {
                 tooltip: 'Done',
                 enableFeedback: true,
                 child: _isLoading
-                    ? ButtomLoading(
+                    ? ButtonLoading(
                         color: Theme.of(context).colorScheme.onPrimaryContainer)
                     : const Icon(
                         Icons.done_rounded,

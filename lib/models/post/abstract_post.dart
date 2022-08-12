@@ -11,4 +11,5 @@ abstract class AbstractPostModel {
   late final bool isAnonymous;
   late final String postType;
   late final List<NGO__Model> pokedNGO;
+  late final bool isPersonalPost;
 }

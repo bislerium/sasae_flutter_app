@@ -152,7 +152,7 @@ class _AuthScreenState extends State<AuthScreen> {
           SplashOver(
               onDoubleTap: () =>
                   Provider.of<StartupConfigProvider>(context, listen: false)
-                      .toogleDemo(context),
+                      .toggleDemo(context),
               borderRadius: BorderRadius.circular(60),
               child: Stack(
                 children: [

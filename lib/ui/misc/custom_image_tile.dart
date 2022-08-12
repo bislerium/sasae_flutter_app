@@ -5,11 +5,13 @@ import 'package:sasae_flutter_app/ui/misc/custom_material_tile.dart';
 class CustomImageTile extends StatelessWidget {
   final String title;
   final String imageURL;
+  final bool isImageVerified;
 
   const CustomImageTile({
     Key? key,
     required this.title,
     required this.imageURL,
+    this.isImageVerified = true,
   }) : super(key: key);
 
   @override
@@ -21,12 +23,25 @@ class CustomImageTile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                if (!isImageVerified)
+                  Tooltip(
+                    message: 'Verification pending',
+                    child: Icon(
+                      Icons.pending_rounded,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+              ],
             ),
           ),
           CustomImage(

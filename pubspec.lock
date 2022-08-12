@@ -481,9 +481,11 @@ packages:
   flutter_polls:
     dependency: "direct main"
     description:
-      name: flutter_polls
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: main
+      resolved-ref: "70ec4aa8c5273601d2dab821a20da2251c2b5564"
+      url: "https://github.com/gcbishal/flutter_polls.git"
+    source: git
     version: "0.0.9"
   flutter_secure_storage:
     dependency: transitive

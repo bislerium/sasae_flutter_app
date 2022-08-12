@@ -39,13 +39,13 @@ class _UserInfoTabState extends State<UserInfoTab>
     _navigationBarP =
         Provider.of<NavigationBarProvider>(context, listen: false);
     _profileP = Provider.of<ProfileProvider>(context, listen: false);
-    widget.scrollController.addListener(profleEditfabListenScroll);
+    widget.scrollController.addListener(profileEditFABListenScroll);
     _fetchUserFUTURE = _fetchUser();
   }
 
   @override
   void dispose() {
-    widget.scrollController.removeListener(profleEditfabListenScroll);
+    widget.scrollController.removeListener(profileEditFABListenScroll);
     _profileP.disposeUserProfile();
     super.dispose();
   }
@@ -79,7 +79,7 @@ class _UserInfoTabState extends State<UserInfoTab>
     }
   }
 
-  void profleEditfabListenScroll() {
+  void profileEditFABListenScroll() {
     var direction = widget.scrollController.position.userScrollDirection;
     var a = _profileP.getUserData is PeopleModel;
     if (direction == ScrollDirection.reverse) {
@@ -126,6 +126,7 @@ class _UserInfoTabState extends State<UserInfoTab>
                                   ),
                                   NGOProfile(
                                     ngoData: profileP.getUserData! as NGOModel,
+                                    isOwnProfile: true,
                                   ),
                                 ],
                               ),

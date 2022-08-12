@@ -29,25 +29,31 @@ class PostCreateFormScreen extends StatefulWidget {
 
 class _PostCreateFormScreenState extends State<PostCreateFormScreen>
     with SingleTickerProviderStateMixin {
-  late Future<void> _fetchrRelatedToOptionsFUTURE;
+  late final PostCreateProvider _postCreateP;
+  late Future<void> _fetchRelatedToOptionsFUTURE;
   late Future<void> _fetchNGOOptionsFUTURE;
   Future<void> Function()? postHandler;
 
   @override
   void initState() {
     super.initState();
-    _fetchrRelatedToOptionsFUTURE = _fetchRelatedToOptions();
+    _postCreateP = Provider.of<PostCreateProvider>(context, listen: false);
+    _fetchRelatedToOptionsFUTURE = _fetchRelatedToOptions();
     _fetchNGOOptionsFUTURE = _fetchNGOOptions();
   }
 
+  @override
+  void dispose() {
+    _postCreateP.reset();
+    super.dispose();
+  }
+
   Future<void> _fetchRelatedToOptions() async {
-    await Provider.of<PostCreateProvider>(context, listen: false)
-        .initPostRelatedTo();
+    await _postCreateP.initPostRelatedTo();
   }
 
   Future<void> _fetchNGOOptions() async {
-    await Provider.of<PostCreateProvider>(context, listen: false)
-        .initNGOOptions();
+    await _postCreateP.initNGOOptions();
   }
 
   @override
@@ -61,7 +67,7 @@ class _PostCreateFormScreenState extends State<PostCreateFormScreen>
         body: FutureBuilder(
           future: Future.wait(<Future>[
             _fetchNGOOptionsFUTURE,
-            _fetchrRelatedToOptionsFUTURE,
+            _fetchRelatedToOptionsFUTURE,
           ]),
           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
@@ -127,6 +133,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
       _normalFormKey;
   final GlobalKey<ChipsInputState> _chipKey;
   List<int>? _pokedNGO;
+  List<String>? _relatedTo;
 
   _PostCreateFormState()
       : _superPostKey = GlobalKey<FormBuilderState>(),
@@ -169,6 +176,8 @@ class _PostCreateFormState extends State<PostCreateForm> {
     _normalPostCreate.nullifyAll();
     _pollPostCreate.nullifyAll();
     _requestPostCreate.nullifyAll();
+    _relatedTo = null;
+    _pokedNGO = null;
     super.dispose();
   }
 
@@ -188,8 +197,9 @@ class _PostCreateFormState extends State<PostCreateForm> {
         ),
         validator: (value) =>
             value!.isEmpty ? 'Select what\'s your post related to.' : null,
+        onChanged: (value) => _relatedTo = value?.cast<String>(),
         onSaved: (value) {
-          var a = value!.cast<String>();
+          var a = value?.cast<String>();
           _normalPostCreate.setRelatedTo = a;
           _pollPostCreate.setRelatedTo = a;
           _requestPostCreate.setRelatedTo = a;
@@ -220,10 +230,16 @@ class _PostCreateFormState extends State<PostCreateForm> {
         },
         findSuggestions: (String query) {
           List<NGO__Model> tempList = [];
+          var ngoListBySelectedFOW = _relatedTo == null
+              ? widget.snapshotNGOList
+              : widget.snapshotNGOList
+                  .where((element) => element.fieldOfWork
+                      .any((element) => _relatedTo!.contains(element)))
+                  .toList();
           if (_pokedNGO == null || _pokedNGO!.isEmpty) {
-            tempList = widget.snapshotNGOList;
+            tempList = ngoListBySelectedFOW;
           } else {
-            tempList = widget.snapshotNGOList
+            tempList = ngoListBySelectedFOW
                 .where((element) => !_pokedNGO!.contains(element.id))
                 .toList();
           }
@@ -254,7 +270,6 @@ class _PostCreateFormState extends State<PostCreateForm> {
             onTap: () => state.selectSuggestion(data),
           );
         },
-        initialSuggestions: widget.snapshotNGOList,
         onChanged: (value) {
           var selectedNGOs =
               (value as List<NGO__Model>).map((e) => e.id).toList();
@@ -478,7 +493,7 @@ class _PostCreateButtonState extends State<PostCreateButton> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _isLoading
-                  ? ButtomLoading(
+                  ? ButtonLoading(
                       color: Theme.of(context).colorScheme.onPrimaryContainer)
                   : const Icon(
                       Icons.post_add_rounded,

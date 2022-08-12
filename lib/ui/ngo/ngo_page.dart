@@ -82,15 +82,9 @@ class _NGOPageState extends State<NGOPage> with AutomaticKeepAliveClientMixin {
                                   fraction: 0.794,
                                 )
                               : ngoP.getNGOs!.isEmpty
-                                  ? Center(
-                                      child: Icon(
-                                        Icons.search_off_rounded,
-                                        size: 60,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary
-                                            .withOpacity(0.5),
-                                      ),
+                                  ? const ErrorView(
+                                      fraction: 0.794,
+                                      errorIcon: Icons.emoji_nature_rounded,
                                     )
                                   : NGOList(
                                       scrollController: _scrollController,

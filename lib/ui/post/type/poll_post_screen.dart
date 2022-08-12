@@ -66,36 +66,41 @@ class _PollPostScreenState extends State<PollPostScreen> {
                       func: () async =>
                           await postP.refreshPollPost(postID: widget.postID),
                     ),
-                    child: postP.pollPostData == null
+                    child: postP.getPollPostData == null
                         ? const ErrorView()
                         : ListView(
                             physics: const AlwaysScrollableScrollPhysics(),
                             padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
                             children: [
                               PostRelatedCard(
-                                  list: postP.pollPostData!.relatedTo),
-                              if (postP.pollPostData!.pokedNGO.isNotEmpty)
+                                  list: postP.getPollPostData!.relatedTo),
+                              if (postP.getPollPostData!.pokedNGO.isNotEmpty)
                                 PokedNGOCard(
-                                    list: postP.pollPostData!.pokedNGO),
+                                    list: postP.getPollPostData!.pokedNGO),
                               PollCard(
-                                key: ObjectKey(postP.pollPostData),
+                                key: ObjectKey(postP.getPollPostData),
+                                isConsideredVoted:
+                                    postP.getPollPostData!.isPersonalPost,
                                 pollModel: PollModel(
-                                  options: postP.pollPostData!.polls,
-                                  choice: postP.pollPostData!.choice,
-                                  endsOn: postP.pollPostData!.endsOn,
+                                  options: postP.getPollPostData!.polls,
+                                  choice: postP.getPollPostData!.choice,
+                                  endsOn: postP.getPollPostData!.endsOn,
                                 ),
                               ),
                               PostContentCard(
-                                content: postP.pollPostData!.postContent,
+                                content: postP.getPollPostData!.postContent,
                               ),
-                              if (!postP.pollPostData!.isAnonymous)
+                              if (!(postP.getPollPostData!.isPersonalPost ||
+                                  postP.getPollPostData!.isAnonymous))
                                 PostAuthorCard(
-                                  author: postP.pollPostData!.author!,
+                                  author: postP.getPollPostData!.author!,
                                 ),
                               PostTailCard(
-                                postID: postP.pollPostData!.id,
-                                createdOn: postP.pollPostData!.createdOn,
-                                modifiedOn: postP.pollPostData!.modifiedOn,
+                                postID: postP.getPollPostData!.id,
+                                createdOn: postP.getPollPostData!.createdOn,
+                                modifiedOn: postP.getPollPostData!.modifiedOn,
+                                isReportButtonVisible:
+                                    !postP.getPollPostData!.isPersonalPost,
                               ),
                             ],
                           ),

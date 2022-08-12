@@ -26,7 +26,7 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   final MapController _mapController;
-  late final LatLng _markedlocation;
+  late final LatLng _markedLocation;
   late final MapProvider _mapP;
   late final CompassProvider _compassP;
   late final MapLauncherProvider _mapLauncherP;
@@ -39,14 +39,14 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     _mapP = Provider.of<MapProvider>(context, listen: false);
     _compassP = Provider.of<CompassProvider>(context, listen: false);
     _mapLauncherP = Provider.of<MapLauncherProvider>(context, listen: false);
-    _markedlocation = LatLng(widget.latitude, widget.longitude);
+    _markedLocation = LatLng(widget.latitude, widget.longitude);
     initMapProviderService();
   }
 
   initMapProviderService() {
     _mapLauncherP.fetchInstalledMap(notify: true);
     _mapP.setMapController = _mapController;
-    _mapP.setMarkedLocation = _markedlocation;
+    _mapP.setMarkedLocation = _markedLocation;
     _mapP.setBuildContext = context;
     _mapP.setTickerProvider = this;
     _compassP.setMapController = _mapController;
@@ -61,7 +61,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  String _simplfyDistanceUnit(double value) {
+  String _simplifyDistanceUnit(double value) {
     if (value > 1000) {
       return '~${(value / 1000).toStringAsFixed(2)}km away';
     }
@@ -79,7 +79,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           builder: ((context, mapP, compassP, child) => FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  center: _markedlocation,
+                  center: _markedLocation,
                   zoom: MapProvider.zoom,
                   maxZoom: 18.4,
                   interactiveFlags: mapP.getIsNavigationMode
@@ -103,24 +103,11 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                             ? darkModeTilesContainerBuilder
                             : null,
                   ),
-                  if (mapP.getDeviceLocation != null)
-                    PolylineLayerOptions(
-                      polylineCulling: false,
-                      polylines: [
-                        Polyline(
-                          points: [
-                            mapP.getDeviceLocation!,
-                            _markedlocation,
-                          ],
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ],
-                    ),
                   MarkerLayerOptions(
                     markers: [
                       Marker(
                         rotate: true,
-                        point: _markedlocation,
+                        point: _markedLocation,
                         builder: (context) => Tooltip(
                           triggerMode: TooltipTriggerMode.tap,
                           preferBelow: false,
@@ -140,20 +127,29 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                           rotate: true,
                           point: mapP.getDeviceLocation!,
                           anchorPos: AnchorPos.align(AnchorAlign.top),
-                          builder: (ctx) => RippleAnimation(
-                            repeat: true,
-                            color:
-                                Theme.of(context).colorScheme.primaryContainer,
-                            minRadius: 60,
-                            ripplesCount: 6,
-                            child: Icon(
-                              Icons.emoji_people_rounded,
-                              size: 40,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                            ),
-                          ),
+                          builder: (ctx) => mapP.getIsNavigationMode
+                              ? Icon(
+                                  Icons.navigation_rounded,
+                                  size: 40,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                )
+                              : RippleAnimation(
+                                  repeat: true,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                                  minRadius: 60,
+                                  ripplesCount: 6,
+                                  child: Icon(
+                                    Icons.emoji_people_rounded,
+                                    size: 40,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
+                                ),
                         ),
                     ],
                   ),
@@ -165,7 +161,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          _simplfyDistanceUnit(
+                          _simplifyDistanceUnit(
                               mapP.getDistanceBetweenLocations!),
                           style: TextStyle(
                             color: Theme.of(context)
@@ -236,7 +232,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                                 await mapP.checkLocationPermission();
                                 if (mapP.getHasLocationPermission) {
                                   mapP.listenDeviceLocation();
-                                } else {
+                                  mapP.setIsDeviceLocationFocused = true;
                                   return;
                                 }
                               }

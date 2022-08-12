@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 
 const hostingMode = HostingMode.internet;
 const limit = 10;
-const timeOutDuration = Duration(seconds: 10);
+const timeOutDuration = Duration(seconds: 16);
 
 Future<dynamic> delay({int min = 1, int max = 4, bool random = false}) =>
     Future.delayed(Duration(

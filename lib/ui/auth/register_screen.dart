@@ -46,9 +46,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           false,
         ];
 
-  String? _fullname;
+  String? _fullName;
   String? _gender;
-  DateTime? _birthdate;
+  DateTime? _birthDate;
   String? _country;
   String? _province;
   String? _cityLocality;
@@ -78,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget fullnameField() => FormBuilderTextField(
+  Widget fullNameField() => FormBuilderTextField(
         name: 'full_name',
         decoration: const InputDecoration(
           label: Text('Full name'),
@@ -87,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         validator: FormBuilderValidators.compose(
           [FormBuilderValidators.required()],
         ),
-        onSaved: (value) => _fullname = value,
+        onSaved: (value) => _fullName = value,
         textInputAction: TextInputAction.next,
         keyboardType: TextInputType.name,
       );
@@ -114,7 +114,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         name: 'RequestDuration',
         inputType: InputType.date,
         decoration: const InputDecoration(
-          labelText: 'Birthdate',
+          labelText: 'BirthDate',
           icon: Icon(Icons.calendar_today_rounded),
         ),
         firstDate: DateTime.now().subtract(const Duration(days: 365 * 122)),
@@ -128,7 +128,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 : null
           ],
         ),
-        onSaved: (value) => _birthdate = value,
+        onSaved: (value) => _birthDate = value,
       );
 
   Widget countryField() => FormBuilderTextField(
@@ -237,7 +237,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
 
   Widget usernameField() => FormBuilderTextField(
-        name: 'userrname',
+        name: 'username',
         decoration: const InputDecoration(
           label: Text('Username'),
           icon: Icon(Icons.account_circle_rounded),
@@ -317,7 +317,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             key: _personalInfoFormKey,
             child: Column(
               children: [
-                fullnameField(),
+                fullNameField(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -487,9 +487,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   username: _username!,
                   email: _email!,
                   password: _passwordTEC.text,
-                  fullname: _fullname!,
+                  fullName: _fullName!,
                   gender: _gender!,
-                  dob: _birthdate!,
+                  dob: _birthDate!,
                   address:
                       '$_stAddressHouseNum, $_cityLocality, $_province, $_country',
                   phone: _phone.toString(),
@@ -564,7 +564,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           isLastStep & _isLoading
-                              ? const ButtomLoading()
+                              ? const ButtonLoading()
                               : isLastStep & !_isLoading
                                   ? const Icon(Icons.how_to_reg)
                                   : const Icon(

@@ -58,7 +58,7 @@ class StartupConfigProvider with ChangeNotifier {
 
   static bool get getIsDemo => _isDemo;
 
-  void toogleDemo(BuildContext context) {
+  void toggleDemo(BuildContext context) {
     _isDemo = !_isDemo;
     showSnackBar(
       context: context,

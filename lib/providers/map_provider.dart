@@ -13,10 +13,11 @@ class MapProvider with ChangeNotifier {
   static const double zoom = 16;
   late bool _hasLocationPermission;
   late bool _isNavigationMode;
+  late bool _isDeviceLocationFocussed;
   late final LocationSettings _locationSettings;
   MapController? _mapController;
   LatLng? _deviceLocation;
-  LatLng? _markedlocation;
+  LatLng? _markedLocation;
   double? _distanceBetweenLocations;
   BuildContext? _context;
   TickerProvider? _tickerP;
@@ -25,12 +26,13 @@ class MapProvider with ChangeNotifier {
   StreamSubscription<Position>? _devicePositionStreamSub;
 
   MapProvider() {
-    _setInitalValue();
-    _setlocationSettings();
+    _setInitialValue();
+    _setLocationSettings();
   }
 
-  void _setInitalValue() {
+  void _setInitialValue() {
     _isNavigationMode = false;
+    _isDeviceLocationFocussed = false;
     _hasLocationPermission = false;
     _isDevicePositionStreamPaused = false;
   }
@@ -40,15 +42,15 @@ class MapProvider with ChangeNotifier {
   double? get getDistanceBetweenLocations => _distanceBetweenLocations;
 
   set setMapController(MapController value) => _mapController = value;
-  set setMarkedLocation(LatLng value) => _markedlocation = value;
+  set setMarkedLocation(LatLng value) => _markedLocation = value;
   set setBuildContext(BuildContext value) => _context = value;
   set setTickerProvider(TickerProvider value) => _tickerP = value;
 
   Future<void> reset() async {
-    _setInitalValue();
+    _setInitialValue();
     _mapController = null;
     _deviceLocation = null;
-    _markedlocation = null;
+    _markedLocation = null;
     _distanceBetweenLocations = null;
     _context = null;
     _tickerP = null;
@@ -107,7 +109,7 @@ class MapProvider with ChangeNotifier {
     _hasLocationPermission = true;
   }
 
-  void _setlocationSettings() {
+  void _setLocationSettings() {
     const distanceFilter = 0;
     if (defaultTargetPlatform == TargetPlatform.android) {
       _locationSettings = AndroidSettings(
@@ -145,8 +147,8 @@ class MapProvider with ChangeNotifier {
           _distanceBetweenLocations = Geolocator.distanceBetween(
               _deviceLocation!.latitude,
               _deviceLocation!.longitude,
-              _markedlocation!.latitude,
-              _markedlocation!.longitude);
+              _markedLocation!.latitude,
+              _markedLocation!.longitude);
           if (_isNavigationMode) {
             _mapController!.move(_deviceLocation!, _mapController!.zoom);
           }
@@ -156,7 +158,8 @@ class MapProvider with ChangeNotifier {
     })
           ..onError((e) {
             showSnackBar(context: _context!, errorSnackBar: true);
-            _hasLocationPermission = false;
+            _setInitialValue();
+            _animateMapPerNavigationMode();
             _devicePositionStreamSub?.cancel();
             _distanceBetweenLocations = null;
             _deviceLocation = null;
@@ -168,12 +171,16 @@ class MapProvider with ChangeNotifier {
     if (!_isDevicePositionStreamPaused) return;
     _devicePositionStreamSub?.resume();
     _isDevicePositionStreamPaused = false;
+    _isDeviceLocationFocussed = true;
   }
 
   void pauseDeviceLocationStream() {
     if (_isDevicePositionStreamPaused) return;
+    _isNavigationMode = false;
+    _animateMapPerNavigationMode();
     _devicePositionStreamSub?.pause();
     _isDevicePositionStreamPaused = true;
+    _isDeviceLocationFocussed = false;
     _distanceBetweenLocations = null;
     _deviceLocation = null;
     notifyListeners();
@@ -181,20 +188,29 @@ class MapProvider with ChangeNotifier {
 
   get getIsNavigationMode => _isNavigationMode;
 
+  set setIsDeviceLocationFocused(value) => _isDeviceLocationFocussed = value;
+
   void toggleNavigationMode() {
     resumeDeviceLocationStream();
     if (_deviceLocation == null) return;
-    _isNavigationMode = !_isNavigationMode;
-    _isNavigationMode
-        ? animateMapMove(getDeviceLocation!, destZoom: 18)
-        : animateMapMove(getDeviceLocation!);
-    showSnackBar(
-      context: _context!,
-      message: 'Navigation mode ${_isNavigationMode ? 'enabled' : 'disabled'}',
-      errorSnackBar: !_isNavigationMode,
-    );
-    notifyListeners();
+    if (_isDeviceLocationFocussed) {
+      _isNavigationMode = !_isNavigationMode;
+      showSnackBar(
+        context: _context!,
+        message:
+            'Navigation mode ${_isNavigationMode ? 'enabled' : 'disabled'}',
+        errorSnackBar: !_isNavigationMode,
+      );
+      notifyListeners();
+    } else {
+      _isDeviceLocationFocussed = true;
+    }
+    _animateMapPerNavigationMode();
   }
+
+  void _animateMapPerNavigationMode() => _isNavigationMode
+      ? animateMapMove(getDeviceLocation!, destZoom: 18)
+      : animateMapMove(getDeviceLocation!);
 
   void moveToMarker() {
     if (_isNavigationMode) {
@@ -204,7 +220,8 @@ class MapProvider with ChangeNotifier {
           errorSnackBar: true);
       _isNavigationMode = false;
     }
-    animateMapMove(_markedlocation!);
+    _isDeviceLocationFocussed = false;
+    animateMapMove(_markedLocation!);
   }
 
   void animateMapMove(LatLng destLocation, {double destZoom = zoom}) {
@@ -280,10 +297,10 @@ class CompassProvider with ChangeNotifier {
   StreamSubscription<MapEvent>? _mapEventStreamSub;
 
   CompassProvider() {
-    _setInitalValue();
+    _setInitialValue();
   }
 
-  void _setInitalValue() {
+  void _setInitialValue() {
     _compassRotation = 0;
     _interActiveFlags = InteractiveFlag.all;
     _isCompassEventStreamPaused = true;
@@ -295,7 +312,7 @@ class CompassProvider with ChangeNotifier {
   set setMapController(MapController value) => _mapController = value;
 
   Future<void> reset() async {
-    _setInitalValue();
+    _setInitialValue();
     _mapController = null;
     await _compassEventStreamSub?.cancel();
     await _mapEventStreamSub?.cancel();

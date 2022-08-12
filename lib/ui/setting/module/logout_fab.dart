@@ -52,7 +52,7 @@ class _LogoutFABState extends State<LogoutFAB> {
         tooltip: 'Logout',
         enableFeedback: true,
         child: _isLoading
-            ? ButtomLoading(
+            ? ButtonLoading(
                 color: Theme.of(context).colorScheme.onError,
               )
             : const Icon(

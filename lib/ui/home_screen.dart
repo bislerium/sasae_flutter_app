@@ -36,6 +36,7 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   late final PageNavigatorProvider _pageNavigatorP;
   late final StreamSubscription<ConnectivityResult> _subscription;
+  late final StreamSubscription<RemoteMessage> _messageListener;
 
   @override
   void initState() {
@@ -50,7 +51,8 @@ class _HomePageState extends State<HomePage>
 
   void initNotificationService() {
     NotificationService.getInstance().initialize(context);
-    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+    _messageListener =
+        FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       RemoteNotification? notification = event.notification;
       AndroidNotification? android = event.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
@@ -81,6 +83,7 @@ class _HomePageState extends State<HomePage>
   @override
   void dispose() {
     _subscription.cancel();
+    _messageListener.cancel();
     _pageNavigatorP.reset();
     super.dispose();
   }

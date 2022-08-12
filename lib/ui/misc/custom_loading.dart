@@ -15,10 +15,10 @@ class ScreenLoading extends StatelessWidget {
   }
 }
 
-class ButtomLoading extends StatelessWidget {
+class ButtonLoading extends StatelessWidget {
   final double size;
   final Color? color;
-  const ButtomLoading({Key? key, this.size = 50.0, this.color})
+  const ButtonLoading({Key? key, this.size = 50.0, this.color})
       : super(key: key);
 
   @override

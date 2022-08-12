@@ -57,7 +57,7 @@ class PeopleProfile extends StatelessWidget {
               children: [
                 CustomInfoTile(
                   leadingIcon: Icons.person_rounded,
-                  trailing: peopleData.fullname,
+                  trailing: peopleData.fullName,
                 ),
                 Row(
                   children: [
@@ -123,6 +123,7 @@ class PeopleProfile extends StatelessWidget {
                   CustomImageTile(
                     title: 'Citizenship photo',
                     imageURL: peopleData.citizenshipPhoto!,
+                    isImageVerified: peopleData.isVerified,
                   )
               ],
             ),

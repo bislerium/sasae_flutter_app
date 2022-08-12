@@ -52,7 +52,7 @@ class _PostListState extends State<PostList> {
         } else {
           return Center(
             child:
-                widget.postInterface.getHasMore ? const ButtomLoading() : null,
+                widget.postInterface.getHasMore ? const ButtonLoading() : null,
           );
         }
       }),

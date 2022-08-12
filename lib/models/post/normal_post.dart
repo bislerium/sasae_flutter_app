@@ -32,6 +32,9 @@ class NormalPostModel implements AbstractPostModel {
   bool isAnonymous;
 
   @override
+  bool isPersonalPost;
+
+  @override
   DateTime? modifiedOn;
 
   @override
@@ -45,6 +48,7 @@ class NormalPostModel implements AbstractPostModel {
 
   @override
   List<String> relatedTo;
+
   NormalPostModel({
     this.attachedImage,
     required this.upVote,
@@ -56,6 +60,7 @@ class NormalPostModel implements AbstractPostModel {
     required this.createdOn,
     required this.id,
     required this.isAnonymous,
+    required this.isPersonalPost,
     this.modifiedOn,
     required this.pokedNGO,
     required this.postContent,
@@ -74,6 +79,7 @@ class NormalPostModel implements AbstractPostModel {
     DateTime? createdOn,
     int? id,
     bool? isAnonymous,
+    bool? isPersonalPost,
     DateTime? modifiedOn,
     List<NGO__Model>? pokedNGO,
     String? postContent,
@@ -91,6 +97,7 @@ class NormalPostModel implements AbstractPostModel {
       createdOn: createdOn ?? this.createdOn,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      isPersonalPost: isPersonalPost ?? this.isPersonalPost,
       modifiedOn: modifiedOn ?? this.modifiedOn,
       pokedNGO: pokedNGO ?? this.pokedNGO,
       postContent: postContent ?? this.postContent,
@@ -100,7 +107,7 @@ class NormalPostModel implements AbstractPostModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'attachedImage': attachedImage,
       'upVote': upVote,
       'downVote': downVote,
@@ -111,6 +118,7 @@ class NormalPostModel implements AbstractPostModel {
       'createdOn': createdOn.millisecondsSinceEpoch,
       'id': id,
       'isAnonymous': isAnonymous,
+      'isPersonalPost': isPersonalPost,
       'modifiedOn': modifiedOn?.millisecondsSinceEpoch,
       'pokedNGO': pokedNGO.map((x) => x.toMap()).toList(),
       'postContent': postContent,
@@ -131,6 +139,7 @@ class NormalPostModel implements AbstractPostModel {
       createdOn: Jiffy(map['created_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['is_anonymous'] ?? false,
+      isPersonalPost: map['post_normal']['is_personal_post'] as bool,
       modifiedOn: map['modified_on'] != null
           ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
@@ -144,43 +153,47 @@ class NormalPostModel implements AbstractPostModel {
 
   factory NormalPostModel.fromMap(Map<String, dynamic> map) {
     return NormalPostModel(
-      attachedImage: map['attachedImage'],
-      upVote: List<int>.from(map['upVote']),
-      downVote: List<int>.from(map['downVote']),
-      upVoted: map['upVoted'] ?? false,
-      downVoted: map['downVoted'] ?? false,
-      author: map['author'],
-      authorID: map['authorID']?.toInt(),
-      createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
-      id: map['id']?.toInt() ?? 0,
-      isAnonymous: map['isAnonymous'] ?? false,
+      attachedImage:
+          map['attachedImage'] != null ? map['attachedImage'] as String : null,
+      upVote: List<int>.from(map['upVote'] as List<int>),
+      downVote: List<int>.from(map['downVote'] as List<int>),
+      upVoted: map['upVoted'] as bool,
+      downVoted: map['downVoted'] as bool,
+      author: map['author'] != null ? map['author'] as String : null,
+      authorID: map['authorID'] != null ? map['authorID'] as int : null,
+      createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn'] as int),
+      id: map['id'] as int,
+      isAnonymous: map['isAnonymous'] as bool,
+      isPersonalPost: map['isPersonalPost'] as bool,
       modifiedOn: map['modifiedOn'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
+          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'] as int)
           : null,
       pokedNGO: List<NGO__Model>.from(
-          map['pokedNGO']?.map((x) => NGO__Model.fromMap(x))),
-      postContent: map['postContent'] ?? '',
-      postType: map['postType'] ?? '',
-      relatedTo: List<String>.from(map['relatedTo']),
+        (map['pokedNGO'] as List<int>).map<NGO__Model>(
+          (x) => NGO__Model.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      postContent: map['postContent'] as String,
+      postType: map['postType'] as String,
+      relatedTo: List<String>.from(map['relatedTo'] as List<String>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory NormalPostModel.fromJson(String source) =>
-      NormalPostModel.fromMap(json.decode(source));
+      NormalPostModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'NormalPost(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
+    return 'NormalPostModel(attachedImage: $attachedImage, upVote: $upVote, downVote: $downVote, upVoted: $upVoted, downVoted: $downVoted, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, isPersonalPost: $isPersonalPost, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant NormalPostModel other) {
     if (identical(this, other)) return true;
 
-    return other is NormalPostModel &&
-        other.attachedImage == attachedImage &&
+    return other.attachedImage == attachedImage &&
         listEquals(other.upVote, upVote) &&
         listEquals(other.downVote, downVote) &&
         other.upVoted == upVoted &&
@@ -190,6 +203,7 @@ class NormalPostModel implements AbstractPostModel {
         other.createdOn == createdOn &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
+        other.isPersonalPost == isPersonalPost &&
         other.modifiedOn == modifiedOn &&
         listEquals(other.pokedNGO, pokedNGO) &&
         other.postContent == postContent &&
@@ -209,6 +223,7 @@ class NormalPostModel implements AbstractPostModel {
         createdOn.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
+        isPersonalPost.hashCode ^
         modifiedOn.hashCode ^
         pokedNGO.hashCode ^
         postContent.hashCode ^

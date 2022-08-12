@@ -21,7 +21,7 @@ class NGOProvider with ChangeNotifier {
   List<String> _selectedFOW;
   bool _isFiltered;
   bool _isSearched;
-  //Can be used to know if fetching was unsucessful or the fetched data is empty
+  //Can be used to know if fetching was unsuccessful or the fetched data is empty
 
   NGOProvider()
       : _fieldOfWork = {},
@@ -154,6 +154,7 @@ class NGOProvider with ChangeNotifier {
 
   static NGOModel randNGO() {
     var isVerified = faker.randomGenerator.boolean();
+    var isDocumentProvided = isVerified || faker.randomGenerator.boolean();
     var ngoName = faker.company.name();
     return NGOModel(
       id: faker.randomGenerator.integer(1000),
@@ -187,10 +188,10 @@ class NGOProvider with ChangeNotifier {
                   .toString(),
             )
           : null,
-      panCertificateURL: isVerified
+      panCertificateURL: isDocumentProvided
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
-      swcCertificateURL: isVerified
+      swcCertificateURL: isDocumentProvided
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
     );

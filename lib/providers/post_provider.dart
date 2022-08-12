@@ -149,6 +149,12 @@ class PostCreateProvider with ChangeNotifier {
         _pollPostCreate = PollPostCUModel(),
         _requestPostCreate = RequestPostCUModel();
 
+  void reset() {
+    _postRelatedTo = null;
+    _ngoOptions = null;
+    _postCreateHandler = null;
+  }
+
   set setAuthP(AuthProvider auth) => _authP = auth;
 
   List<String>? _postRelatedTo;
@@ -178,7 +184,10 @@ class PostCreateProvider with ChangeNotifier {
   Future<List<String>?> getPostRelatedTo() async {
     if (StartupConfigProvider.getIsDemo) {
       await delay(random: false);
-      return faker.lorem.words(faker.randomGenerator.integer(30, min: 5));
+      return faker.lorem
+          .words(faker.randomGenerator.integer(30, min: 5))
+          .toSet()
+          .toList();
     }
     try {
       var response = await _dio.get(
@@ -199,6 +208,10 @@ class PostCreateProvider with ChangeNotifier {
           id: faker.randomGenerator.integer(50000),
           orgName: faker.company.name(),
           orgPhoto: faker.image.image(random: true),
+          fieldOfWork: faker.randomGenerator
+              .amount((i) => faker.randomGenerator.element(_postRelatedTo!), 12)
+              .toSet()
+              .toList(),
         ),
       );
 
@@ -413,7 +426,7 @@ class PostUpdateProvider with ChangeNotifier {
   void nullifyRequestPostCU() => _requestPostCU = null;
   void nullifyUpdatePostType() => _updatePostType = null;
 
-  void nullfyPerPostType() {
+  void nullifyPerPostType() {
     switch (_updatePostType) {
       case PostType.normal:
         nullifyNormalPostCU();
@@ -612,7 +625,7 @@ class NormalPostProvider with ChangeNotifier {
 
   NormalPostModel _randNormalPost() {
     Random rand = Random();
-    bool upvoted = faker.randomGenerator.boolean();
+    bool upVoted = faker.randomGenerator.boolean();
     return NormalPostModel(
       attachedImage: faker.randomGenerator.boolean()
           ? faker.image.image(random: true)
@@ -621,19 +634,24 @@ class NormalPostProvider with ChangeNotifier {
           .numbers(1500, faker.randomGenerator.integer(1500)),
       downVote: faker.randomGenerator
           .numbers(1500, faker.randomGenerator.integer(1500)),
-      upVoted: upvoted,
-      downVoted: upvoted ? false : faker.randomGenerator.boolean(),
+      upVoted: upVoted,
+      downVoted: upVoted ? false : faker.randomGenerator.boolean(),
       postContent: faker.lorem.sentences(rand.nextInt(20 - 3) + 3).join(' '),
       createdOn:
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
       isAnonymous: faker.randomGenerator.boolean(),
+      isPersonalPost: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
+                fieldOfWork: List.generate(
+                  Random().nextInt(8 - 1) + 1,
+                  (index) => faker.lorem.word(),
+                ),
               )),
       postType: 'Normal',
       relatedTo: List.generate(
@@ -722,7 +740,7 @@ class PollPostProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  PollPostModel? get pollPostData => _pollPost;
+  PollPostModel? get getPollPostData => _pollPost;
 
   PollPostModel _randPollPost() {
     Random rand = Random();
@@ -744,12 +762,17 @@ class PollPostProvider with ChangeNotifier {
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
       isAnonymous: faker.randomGenerator.boolean(),
+      isPersonalPost: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
+                fieldOfWork: List.generate(
+                  Random().nextInt(8 - 1) + 1,
+                  (index) => faker.lorem.word(),
+                ),
               )),
       postType: 'Poll Post',
       relatedTo: List.generate(
@@ -835,7 +858,7 @@ class RequestPostProvider with ChangeNotifier {
 
   set setAuthP(AuthProvider auth) => _authP = auth;
 
-  RequestPostModel? get requestPostData => _requestPost;
+  RequestPostModel? get getRequestPostData => _requestPost;
 
   RequestPostModel _randRequestPost() {
     Random rand = Random();
@@ -851,12 +874,17 @@ class RequestPostProvider with ChangeNotifier {
           faker.date.dateTime(minYear: 2020, maxYear: DateTime.now().year),
       id: faker.randomGenerator.integer(1000),
       isAnonymous: faker.randomGenerator.boolean(),
+      isPersonalPost: faker.randomGenerator.boolean(),
       pokedNGO: List.generate(
           faker.randomGenerator.integer(8, min: 0),
           (index) => NGO__Model(
                 id: faker.randomGenerator.integer(1000),
                 orgName: faker.company.name(),
                 orgPhoto: faker.image.image(random: true),
+                fieldOfWork: List.generate(
+                  Random().nextInt(8 - 1) + 1,
+                  (index) => faker.lorem.word(),
+                ),
               )),
       postType: 'Request Post',
       relatedTo: List.generate(
@@ -904,7 +932,7 @@ class RequestPostProvider with ChangeNotifier {
     await intiFetchRequestPost(postID: postID);
   }
 
-  //Sign for petition and join for Joinform
+  //Sign for petition and join for participate-form
   Future<bool> considerRequest() async {
     try {
       if (StartupConfigProvider.getIsDemo) {

@@ -7,7 +7,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/models/user.dart';
 
 class PeopleModel extends UserModel {
-  final String fullname;
+  final String fullName;
   final String gender;
   final DateTime birthDate;
   final String address;
@@ -18,7 +18,7 @@ class PeopleModel extends UserModel {
     required bool isVerified,
     required String displayPicture,
     required String username,
-    required this.fullname,
+    required this.fullName,
     required this.gender,
     required this.birthDate,
     required this.address,
@@ -43,7 +43,7 @@ class PeopleModel extends UserModel {
     bool? isVerified,
     String? displayPicture,
     String? username,
-    String? fullname,
+    String? fullName,
     String? gender,
     DateTime? birthDate,
     String? address,
@@ -58,7 +58,7 @@ class PeopleModel extends UserModel {
       isVerified: isVerified ?? this.isVerified,
       displayPicture: displayPicture ?? this.displayPicture,
       username: username ?? this.username,
-      fullname: fullname ?? this.fullname,
+      fullName: fullName ?? this.fullName,
       gender: gender ?? this.gender,
       birthDate: birthDate ?? this.birthDate,
       address: address ?? this.address,
@@ -76,7 +76,7 @@ class PeopleModel extends UserModel {
       'isVerified': isVerified,
       'displayPicture': displayPicture,
       'username': username,
-      'fullname': fullname,
+      'fullName': fullName,
       'gender': gender,
       'birthDate': birthDate.millisecondsSinceEpoch,
       'address': address,
@@ -94,7 +94,7 @@ class PeopleModel extends UserModel {
       isVerified: map['is_verified'] ?? false,
       displayPicture: map['display_picture'] ?? '',
       username: map['username'] ?? '',
-      fullname: map['full_name'] ?? '',
+      fullName: map['full_name'] ?? '',
       gender: map['gender'] ?? '',
       birthDate: Jiffy(map['date_of_birth'], 'yyyy-MM-dd').dateTime,
       address: map['address'] ?? '',
@@ -112,7 +112,7 @@ class PeopleModel extends UserModel {
       isVerified: map['isVerified'] ?? false,
       displayPicture: map['displayPicture'] ?? '',
       username: map['username'] ?? '',
-      fullname: map['fullname'] ?? '',
+      fullName: map['fullName'] ?? '',
       gender: map['gender'] ?? '',
       birthDate: DateTime.fromMillisecondsSinceEpoch(map['birthDate']),
       address: map['address'] ?? '',
@@ -131,7 +131,7 @@ class PeopleModel extends UserModel {
 
   @override
   String toString() {
-    return 'People(id: $id, isVerified: $isVerified, displayPicture: $displayPicture, username: $username, fullname: $fullname, gender: $gender, birthDate: $birthDate, address: $address, phone: $phone, email: $email, postedPosts: $postedPosts, joinedDate: $joinedDate, citizenshipPhoto: $citizenshipPhoto)';
+    return 'People(id: $id, isVerified: $isVerified, displayPicture: $displayPicture, username: $username, fullName: $fullName, gender: $gender, birthDate: $birthDate, address: $address, phone: $phone, email: $email, postedPosts: $postedPosts, joinedDate: $joinedDate, citizenshipPhoto: $citizenshipPhoto)';
   }
 
   @override
@@ -143,7 +143,7 @@ class PeopleModel extends UserModel {
         other.isVerified == isVerified &&
         other.displayPicture == displayPicture &&
         other.username == username &&
-        other.fullname == fullname &&
+        other.fullName == fullName &&
         other.gender == gender &&
         other.birthDate == birthDate &&
         other.address == address &&
@@ -160,7 +160,7 @@ class PeopleModel extends UserModel {
         isVerified.hashCode ^
         displayPicture.hashCode ^
         username.hashCode ^
-        fullname.hashCode ^
+        fullName.hashCode ^
         gender.hashCode ^
         birthDate.hashCode ^
         address.hashCode ^
@@ -173,7 +173,7 @@ class PeopleModel extends UserModel {
 }
 
 class PeopleUpdateModel {
-  String? _fullname;
+  String? _fullName;
   String? _gender;
   DateTime? _birthDate;
   String? _address;
@@ -185,13 +185,13 @@ class PeopleUpdateModel {
   String? _citizenshipPhotoLink;
   String? _displayPictureLink;
 
-  String? get getFullname => _fullname;
+  String? get getFullName => _fullName;
   String? get getGender => _gender;
   DateTime? get getBirthDate => _birthDate;
   String? get getAddress => _address;
   String? get getPhone => _phone;
   String? get getEmail => _email;
-  bool? get getIsverified => _isVerified;
+  bool? get getIsVerified => _isVerified;
   XFile? get getCitizenshipPhoto => _citizenshipPhoto;
   XFile? get getDisplayPicture => _displayPicture;
   String? get getCitizenshipPhotoLink => _citizenshipPhotoLink;
@@ -199,7 +199,7 @@ class PeopleUpdateModel {
 
   PeopleUpdateModel();
 
-  set setFullname(String? fullName) => _fullname = fullName;
+  set setFullName(String? fullName) => _fullName = fullName;
   set setGender(String? gender) => _gender = gender;
   set setBirthDate(DateTime? birthDate) => _birthDate = birthDate;
   set setAddress(String? address) => _address = address;
@@ -212,7 +212,7 @@ class PeopleUpdateModel {
   set setIsVerified(bool? isVerified) => _isVerified = isVerified;
 
   void nullifyAll() {
-    _fullname = null;
+    _fullName = null;
     _gender = null;
     _birthDate = null;
     _address = null;
@@ -225,7 +225,7 @@ class PeopleUpdateModel {
 
   factory PeopleUpdateModel.fromAPIResponse(Map<String, dynamic> map) {
     return PeopleUpdateModel()
-      .._fullname = map['full_name'] ?? ''
+      .._fullName = map['full_name'] ?? ''
       .._gender = map['gender'] ?? ''
       .._birthDate = Jiffy(map['date_of_birth'], 'yyyy-MM-dd').dateTime
       .._address = map['address'] ?? ''
@@ -238,6 +238,6 @@ class PeopleUpdateModel {
 
   @override
   String toString() {
-    return 'PeopleUpdate(_fullname: $_fullname, _gender: $_gender, _birthDate: $_birthDate, _address: $_address, _phone: $_phone, _email: $_email, _citizenshipPhoto: $_citizenshipPhoto, _displayPicture: $_displayPicture, _citizenshipPhotoLink: $_citizenshipPhotoLink, _displayPictureLink: $_displayPictureLink)';
+    return 'PeopleUpdate(_fullName: $_fullName, _gender: $_gender, _birthDate: $_birthDate, _address: $_address, _phone: $_phone, _email: $_email, _citizenshipPhoto: $_citizenshipPhoto, _displayPicture: $_displayPicture, _citizenshipPhotoLink: $_citizenshipPhotoLink, _displayPictureLink: $_displayPictureLink)';
   }
 }

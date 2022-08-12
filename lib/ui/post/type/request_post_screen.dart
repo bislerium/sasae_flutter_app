@@ -69,7 +69,7 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                       func: () async =>
                           await postP.refreshRequestPost(postID: widget.postID),
                     ),
-                    child: postP.requestPostData == null
+                    child: postP.getRequestPostData == null
                         ? const ErrorView()
                         : ListView(
                             controller: _scrollController,
@@ -77,31 +77,37 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
                             padding: const EdgeInsets.fromLTRB(12, 2, 12, 6),
                             children: [
                               PostRelatedCard(
-                                  list: postP.requestPostData!.relatedTo),
-                              if (postP.requestPostData!.pokedNGO.isNotEmpty)
+                                  list: postP.getRequestPostData!.relatedTo),
+                              if (postP.getRequestPostData!.pokedNGO.isNotEmpty)
                                 PokedNGOCard(
-                                    list: postP.requestPostData!.pokedNGO),
+                                    list: postP.getRequestPostData!.pokedNGO),
                               RequestCard(
-                                key: ValueKey(postP.requestPostData!.hashCode),
-                                min: postP.requestPostData!.min,
-                                target: postP.requestPostData!.target,
-                                max: postP.requestPostData!.max,
-                                requestType: postP.requestPostData!.requestType,
+                                key: ValueKey(
+                                    postP.getRequestPostData!.hashCode),
+                                min: postP.getRequestPostData!.min,
+                                target: postP.getRequestPostData!.target,
+                                max: postP.getRequestPostData!.max,
+                                requestType:
+                                    postP.getRequestPostData!.requestType,
                                 numReaction:
-                                    postP.requestPostData!.reaction.length,
-                                endsOn: postP.requestPostData!.endsOn,
+                                    postP.getRequestPostData!.reaction.length,
+                                endsOn: postP.getRequestPostData!.endsOn,
                               ),
                               PostContentCard(
-                                content: postP.requestPostData!.postContent,
+                                content: postP.getRequestPostData!.postContent,
                               ),
-                              if (!postP.requestPostData!.isAnonymous)
+                              if (!(postP.getRequestPostData!.isPersonalPost ||
+                                  postP.getRequestPostData!.isAnonymous))
                                 PostAuthorCard(
-                                  author: postP.requestPostData!.author!,
+                                  author: postP.getRequestPostData!.author!,
                                 ),
                               PostTailCard(
-                                postID: postP.requestPostData!.id,
-                                createdOn: postP.requestPostData!.createdOn,
-                                modifiedOn: postP.requestPostData!.modifiedOn,
+                                postID: postP.getRequestPostData!.id,
+                                createdOn: postP.getRequestPostData!.createdOn,
+                                modifiedOn:
+                                    postP.getRequestPostData!.modifiedOn,
+                                isReportButtonVisible:
+                                    !postP.getRequestPostData!.isPersonalPost,
                               ),
                             ],
                           ),
@@ -110,15 +116,18 @@ class _RequestPostScreenState extends State<RequestPostScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Consumer<RequestPostProvider>(
-          builder: (context, postP, child) => postP.requestPostData == null
+          builder: (context, postP, child) => postP.getRequestPostData == null
               ? const SizedBox.shrink()
-              : RequestFAB(
-                  postID: postP.requestPostData!.id,
-                  isRequestConsidered: postP.requestPostData!.isParticipated,
-                  requestType: postP.requestPostData!.requestType,
-                  endsOn: postP.requestPostData!.endsOn,
-                  scrollController: _scrollController,
-                ),
+              : postP.getRequestPostData!.isPersonalPost
+                  ? const SizedBox.shrink()
+                  : RequestFAB(
+                      postID: postP.getRequestPostData!.id,
+                      isRequestConsidered:
+                          postP.getRequestPostData!.isParticipated,
+                      requestType: postP.getRequestPostData!.requestType,
+                      endsOn: postP.getRequestPostData!.endsOn,
+                      scrollController: _scrollController,
+                    ),
         ),
       ),
     );
@@ -203,7 +212,7 @@ class _RequestFABState extends State<RequestFAB> {
         onPressed: requestCallBack,
         elevation: 3,
         child: _isLoading
-            ? ButtomLoading(
+            ? ButtonLoading(
                 color: Theme.of(context).colorScheme.onPrimaryContainer)
             : widget.requestType == 'Petition'
                 ? widget.isRequestConsidered

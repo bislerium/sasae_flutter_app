@@ -99,7 +99,8 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                               PostContentCard(
                                 content: postP.getNormalPostData!.postContent,
                               ),
-                              if (!postP.getNormalPostData!.isAnonymous)
+                              if (!(postP.getNormalPostData!.isPersonalPost ||
+                                  postP.getNormalPostData!.isAnonymous))
                                 PostAuthorCard(
                                   author: postP.getNormalPostData!.author!,
                                 ),
@@ -107,6 +108,8 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
                                 postID: postP.getNormalPostData!.id,
                                 createdOn: postP.getNormalPostData!.createdOn,
                                 modifiedOn: postP.getNormalPostData!.modifiedOn,
+                                isReportButtonVisible:
+                                    !postP.getNormalPostData!.isPersonalPost,
                               ),
                             ],
                           ),
@@ -119,11 +122,13 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
               : VotingBar(
                   key: ObjectKey(postP.getNormalPostData),
                   postID: postP.getNormalPostData!.id,
-                  upvoteCount: postP.getNormalPostData!.upVote.length,
-                  downvoteCount: postP.getNormalPostData!.downVote.length,
-                  isUpvoted: postP.getNormalPostData!.upVoted,
-                  isDownvoted: postP.getNormalPostData!.downVoted,
+                  upVoteCount: postP.getNormalPostData!.upVote.length,
+                  downVoteCount: postP.getNormalPostData!.downVote.length,
+                  isUpVoted: postP.getNormalPostData!.upVoted,
+                  isDownVoted: postP.getNormalPostData!.downVoted,
                   scrollController: _scrollController,
+                  isUpVoteDownVoteButtonVisible:
+                      !postP.getNormalPostData!.isPersonalPost,
                 ),
         ),
       ),
@@ -134,21 +139,23 @@ class _NormalPostScreenState extends State<NormalPostScreen> {
 ////////////////////////////////////////////////////////////////////////////////
 
 class VotingBar extends StatefulWidget {
-  final int upvoteCount;
-  final int downvoteCount;
-  final bool isUpvoted;
-  final bool isDownvoted;
+  final int upVoteCount;
+  final int downVoteCount;
+  final bool isUpVoted;
+  final bool isDownVoted;
   final int postID;
+  final bool isUpVoteDownVoteButtonVisible;
   final ScrollController scrollController;
 
   const VotingBar({
     Key? key,
     required this.postID,
-    required this.upvoteCount,
-    required this.downvoteCount,
-    this.isUpvoted = false,
-    this.isDownvoted = false,
+    required this.upVoteCount,
+    required this.downVoteCount,
+    this.isUpVoted = false,
+    this.isDownVoted = false,
     required this.scrollController,
+    this.isUpVoteDownVoteButtonVisible = true,
   }) : super(key: key);
 
   @override
@@ -156,10 +163,10 @@ class VotingBar extends StatefulWidget {
 }
 
 class _VotingBarState extends State<VotingBar> {
-  late bool isUpvoted;
-  late bool isDownvoted;
-  late int upvoteCount;
-  late int downvoteCount;
+  late bool isUpVoted;
+  late bool isDownVoted;
+  late int upVoteCount;
+  late int downVoteCount;
   late bool showVotingBar;
 
   @override
@@ -171,10 +178,10 @@ class _VotingBarState extends State<VotingBar> {
   }
 
   void setWidgetValues() {
-    isUpvoted = widget.isUpvoted;
-    isDownvoted = widget.isDownvoted;
-    upvoteCount = widget.upvoteCount;
-    downvoteCount = widget.downvoteCount;
+    isUpVoted = widget.isUpVoted;
+    isDownVoted = widget.isDownVoted;
+    upVoteCount = widget.upVoteCount;
+    downVoteCount = widget.downVoteCount;
   }
 
   @override
@@ -198,34 +205,34 @@ class _VotingBarState extends State<VotingBar> {
 
   void onErrorFallBack() => setState(setWidgetValues);
 
-  void upvote() {
-    if (isUpvoted) {
-      isUpvoted = false;
-      upvoteCount--;
+  void upVote() {
+    if (isUpVoted) {
+      isUpVoted = false;
+      upVoteCount--;
     } else {
-      if (isDownvoted) downvoteCount--;
-      isUpvoted = true;
-      isDownvoted = false;
-      upvoteCount++;
+      if (isDownVoted) downVoteCount--;
+      isUpVoted = true;
+      isDownVoted = false;
+      upVoteCount++;
     }
   }
 
-  void downvote() {
-    if (isDownvoted) {
-      isDownvoted = false;
-      downvoteCount--;
+  void downVote() {
+    if (isDownVoted) {
+      isDownVoted = false;
+      downVoteCount--;
     } else {
-      if (isUpvoted) upvoteCount--;
-      isDownvoted = true;
-      isUpvoted = false;
-      downvoteCount++;
+      if (isUpVoted) upVoteCount--;
+      isDownVoted = true;
+      isUpVoted = false;
+      downVoteCount++;
     }
   }
 
-  Widget upvoteCounter() => Row(
+  Widget upVoteCounter() => Row(
         children: [
           Text(
-            numToK(upvoteCount),
+            numToK(upVoteCount),
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                   fontWeight: FontWeight.bold,
@@ -235,7 +242,7 @@ class _VotingBarState extends State<VotingBar> {
             width: 5,
           ),
           Text(
-            'Upvote',
+            'UpVote',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -243,10 +250,10 @@ class _VotingBarState extends State<VotingBar> {
         ],
       );
 
-  Widget downvoteCounter() => Row(
+  Widget downVoteCounter() => Row(
         children: [
           Text(
-            '-${numToK(downvoteCount)}',
+            '-${numToK(downVoteCount)}',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Theme.of(context).colorScheme.error,
                   fontWeight: FontWeight.bold,
@@ -256,7 +263,7 @@ class _VotingBarState extends State<VotingBar> {
             width: 5,
           ),
           Text(
-            'Downvote',
+            'DownVote',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
@@ -269,10 +276,10 @@ class _VotingBarState extends State<VotingBar> {
     if (!isProfileVerified(context)) return;
     switch (type) {
       case NormalPostReactionType.upVote:
-        setState(upvote);
+        setState(upVote);
         break;
       case NormalPostReactionType.downVote:
-        setState(downvote);
+        setState(downVote);
     }
     bool success = await Provider.of<NormalPostProvider>(context, listen: false)
         .toggleReaction(type);
@@ -285,26 +292,26 @@ class _VotingBarState extends State<VotingBar> {
     }
   }
 
-  Widget upvoteButton() => TextButton(
+  Widget upVoteButton() => TextButton(
         onPressed: () => react(NormalPostReactionType.upVote),
         style: TextButton.styleFrom(
             backgroundColor:
-                isUpvoted ? Theme.of(context).colorScheme.primary : null,
+                isUpVoted ? Theme.of(context).colorScheme.primary : null,
             primary:
-                isUpvoted ? Theme.of(context).colorScheme.onPrimary : null),
+                isUpVoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_upward_rounded,
           size: 36,
         ),
       );
 
-  Widget downvoteButton() => TextButton(
+  Widget downVoteButton() => TextButton(
         onPressed: () => react(NormalPostReactionType.downVote),
         style: TextButton.styleFrom(
             backgroundColor:
-                isDownvoted ? Theme.of(context).colorScheme.primary : null,
+                isDownVoted ? Theme.of(context).colorScheme.primary : null,
             primary:
-                isDownvoted ? Theme.of(context).colorScheme.onPrimary : null),
+                isDownVoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_downward_rounded,
           size: 36,
@@ -332,7 +339,7 @@ class _VotingBarState extends State<VotingBar> {
                   fit: BoxFit.scaleDown,
                   child: Row(
                     children: [
-                      upvoteCounter(),
+                      upVoteCounter(),
                       SizedBox(
                         height: 60,
                         child: VerticalDivider(
@@ -343,20 +350,22 @@ class _VotingBarState extends State<VotingBar> {
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                       ),
-                      downvoteCounter(),
+                      downVoteCounter(),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(
-                width: 16,
-              ),
-              Row(
-                children: [
-                  upvoteButton(),
-                  downvoteButton(),
-                ],
-              ),
+              if (widget.isUpVoteDownVoteButtonVisible) ...[
+                const SizedBox(
+                  width: 16,
+                ),
+                Row(
+                  children: [
+                    upVoteButton(),
+                    downVoteButton(),
+                  ],
+                ),
+              ],
             ],
           ),
         ),

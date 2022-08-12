@@ -16,15 +16,18 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NGOProfile extends StatelessWidget {
   final NGOModel ngoData;
+  final bool isOwnProfile;
 
   const NGOProfile({
     Key? key,
     required this.ngoData,
+    this.isOwnProfile = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var isDocumentViewable = isOwnProfile || ngoData.isVerified;
     return Column(
       children: [
         SizedBox(
@@ -112,18 +115,18 @@ class NGOProfile extends StatelessWidget {
                   leadingIcon: Icons.post_add_rounded,
                   trailing: ngoData.postedPosts.length.toString(),
                 ),
-                if (ngoData.isVerified &&
-                    ngoData.swcCertificateURL != null &&
-                    ngoData.panCertificateURL != null) ...[
+                if (isDocumentViewable && ngoData.swcCertificateURL != null)
                   CustomImageTile(
-                    title: 'Social Welfare Council Affilation',
+                    title: 'Social Welfare Council Affiliation',
                     imageURL: ngoData.swcCertificateURL!,
+                    isImageVerified: ngoData.isVerified,
                   ),
+                if (isDocumentViewable && ngoData.panCertificateURL != null)
                   CustomImageTile(
                     title: 'PAN Certificate',
                     imageURL: ngoData.panCertificateURL!,
+                    isImageVerified: ngoData.isVerified,
                   ),
-                ]
               ],
             ),
           ),

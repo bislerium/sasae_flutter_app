@@ -28,7 +28,7 @@ class PeopleProvider with ChangeNotifier {
       postedPosts: Set<int>.of(List.generate(faker.randomGenerator.integer(250),
           (index) => faker.randomGenerator.integer(3000))).toList(),
       username: faker.person.firstName(),
-      fullname: faker.person.name(),
+      fullName: faker.person.name(),
       gender: faker.randomGenerator.element(['Male', 'Female', 'LGBTQ+']),
       birthDate: faker.date.dateTime(
           minYear:
@@ -39,7 +39,7 @@ class PeopleProvider with ChangeNotifier {
       phone: faker.phoneNumber.us(),
       email: faker.internet.email(),
       joinedDate: faker.date.dateTime(maxYear: 2010, minYear: 1900),
-      citizenshipPhoto: isVerified
+      citizenshipPhoto: isVerified || faker.randomGenerator.boolean()
           ? faker.image.image(width: 800, height: 600, random: true)
           : null,
     );
@@ -62,7 +62,7 @@ class PeopleProvider with ChangeNotifier {
     required String username,
     required String email,
     required String password,
-    required String fullname,
+    required String fullName,
     required DateTime dob,
     required String gender,
     required String phone,
@@ -82,7 +82,7 @@ class PeopleProvider with ChangeNotifier {
         'username': username,
         'email': email,
         'password': password,
-        'full_name': fullname,
+        'full_name': fullName,
         'date_of_birth': Jiffy(dob).format('yyyy-MM-dd'),
         'gender': gender,
         'phone': phone,
@@ -117,7 +117,7 @@ class PeopleProvider with ChangeNotifier {
 
   Future<PeopleUpdateModel> _randPeopleUpdateModel() async =>
       PeopleUpdateModel()
-        ..setFullname = faker.person.name()
+        ..setFullName = faker.person.name()
         ..setAddress = faker.address.city()
         ..setBirthDate = faker.date.dateTime(
             minYear:
@@ -201,7 +201,7 @@ class PeopleProvider with ChangeNotifier {
 
       request.fields.addAll({
         'email': _peopleUpdate!.getEmail!,
-        'full_name': _peopleUpdate!.getFullname!,
+        'full_name': _peopleUpdate!.getFullName!,
         'date_of_birth':
             Jiffy(_peopleUpdate!.getBirthDate!).format('yyyy-MM-dd'),
         'gender': _peopleUpdate!.getGender!,

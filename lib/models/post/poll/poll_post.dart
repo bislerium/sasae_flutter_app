@@ -28,6 +28,9 @@ class PollPostModel implements AbstractPostModel {
   bool isAnonymous;
 
   @override
+  bool isPersonalPost;
+
+  @override
   DateTime? modifiedOn;
 
   @override
@@ -51,6 +54,7 @@ class PollPostModel implements AbstractPostModel {
     required this.createdOn,
     required this.id,
     required this.isAnonymous,
+    required this.isPersonalPost,
     this.modifiedOn,
     required this.pokedNGO,
     required this.postContent,
@@ -67,6 +71,7 @@ class PollPostModel implements AbstractPostModel {
     DateTime? createdOn,
     int? id,
     bool? isAnonymous,
+    bool? isPersonalPost,
     DateTime? modifiedOn,
     List<NGO__Model>? pokedNGO,
     String? postContent,
@@ -82,6 +87,7 @@ class PollPostModel implements AbstractPostModel {
       createdOn: createdOn ?? this.createdOn,
       id: id ?? this.id,
       isAnonymous: isAnonymous ?? this.isAnonymous,
+      isPersonalPost: isPersonalPost ?? this.isPersonalPost,
       modifiedOn: modifiedOn ?? this.modifiedOn,
       pokedNGO: pokedNGO ?? this.pokedNGO,
       postContent: postContent ?? this.postContent,
@@ -91,7 +97,7 @@ class PollPostModel implements AbstractPostModel {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    return <String, dynamic>{
       'polls': polls.map((x) => x.toMap()).toList(),
       'endsOn': endsOn?.millisecondsSinceEpoch,
       'choice': choice,
@@ -100,6 +106,7 @@ class PollPostModel implements AbstractPostModel {
       'createdOn': createdOn.millisecondsSinceEpoch,
       'id': id,
       'isAnonymous': isAnonymous,
+      'isPersonalPost': isPersonalPost,
       'modifiedOn': modifiedOn?.millisecondsSinceEpoch,
       'pokedNGO': pokedNGO.map((x) => x.toMap()).toList(),
       'postContent': postContent,
@@ -121,6 +128,7 @@ class PollPostModel implements AbstractPostModel {
       createdOn: Jiffy(map['created_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime,
       id: map['id']?.toInt() ?? 0,
       isAnonymous: map['is_anonymous'] ?? false,
+      isPersonalPost: map['post_poll']['is_personal_post'] as bool,
       modifiedOn: map['modified_on'] != null
           ? Jiffy(map['modified_on'], "yyyy-MM-dd'T'HH:mm:ss").dateTime
           : null,
@@ -135,43 +143,49 @@ class PollPostModel implements AbstractPostModel {
   factory PollPostModel.fromMap(Map<String, dynamic> map) {
     return PollPostModel(
       polls: List<PollOptionModel>.from(
-          map['polls']?.map((x) => PollOptionModel.fromMap(x))),
+        (map['polls'] as List<int>).map<PollOptionModel>(
+          (x) => PollOptionModel.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
       endsOn: map['endsOn'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['endsOn'])
+          ? DateTime.fromMillisecondsSinceEpoch(map['endsOn'] as int)
           : null,
-      choice: map['choice']?.toInt(),
-      author: map['author'],
-      authorID: map['authorID']?.toInt(),
-      createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn']),
-      id: map['id']?.toInt() ?? 0,
-      isAnonymous: map['isAnonymous'] ?? false,
+      choice: map['choice'] != null ? map['choice'] as int : null,
+      author: map['author'] != null ? map['author'] as String : null,
+      authorID: map['authorID'] != null ? map['authorID'] as int : null,
+      createdOn: DateTime.fromMillisecondsSinceEpoch(map['createdOn'] as int),
+      id: map['id'] as int,
+      isAnonymous: map['isAnonymous'] as bool,
+      isPersonalPost: map['isPersonalPost'] as bool,
       modifiedOn: map['modifiedOn'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'])
+          ? DateTime.fromMillisecondsSinceEpoch(map['modifiedOn'] as int)
           : null,
       pokedNGO: List<NGO__Model>.from(
-          map['pokedNGO']?.map((x) => NGO__Model.fromMap(x))),
-      postContent: map['postContent'] ?? '',
-      postType: map['postType'] ?? '',
-      relatedTo: List<String>.from(map['relatedTo']),
+        (map['pokedNGO'] as List<int>).map<NGO__Model>(
+          (x) => NGO__Model.fromMap(x as Map<String, dynamic>),
+        ),
+      ),
+      postContent: map['postContent'] as String,
+      postType: map['postType'] as String,
+      relatedTo: List<String>.from(map['relatedTo'] as List<String>),
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory PollPostModel.fromJson(String source) =>
-      PollPostModel.fromMap(json.decode(source));
+      PollPostModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'PollPost(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
+    return 'PollPostModel(polls: $polls, endsOn: $endsOn, choice: $choice, author: $author, authorID: $authorID, createdOn: $createdOn, id: $id, isAnonymous: $isAnonymous, isPersonalPost: $isPersonalPost, modifiedOn: $modifiedOn, pokedNGO: $pokedNGO, postContent: $postContent, postType: $postType, relatedTo: $relatedTo)';
   }
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant PollPostModel other) {
     if (identical(this, other)) return true;
 
-    return other is PollPostModel &&
-        listEquals(other.polls, polls) &&
+    return listEquals(other.polls, polls) &&
         other.endsOn == endsOn &&
         other.choice == choice &&
         other.author == author &&
@@ -179,6 +193,7 @@ class PollPostModel implements AbstractPostModel {
         other.createdOn == createdOn &&
         other.id == id &&
         other.isAnonymous == isAnonymous &&
+        other.isPersonalPost == isPersonalPost &&
         other.modifiedOn == modifiedOn &&
         listEquals(other.pokedNGO, pokedNGO) &&
         other.postContent == postContent &&
@@ -196,6 +211,7 @@ class PollPostModel implements AbstractPostModel {
         createdOn.hashCode ^
         id.hashCode ^
         isAnonymous.hashCode ^
+        isPersonalPost.hashCode ^
         modifiedOn.hashCode ^
         pokedNGO.hashCode ^
         postContent.hashCode ^

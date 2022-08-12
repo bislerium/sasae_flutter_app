@@ -10,7 +10,10 @@ import 'package:sasae_flutter_app/ui/misc/custom_loading.dart';
 
 class PollCard extends StatefulWidget {
   final PollModel pollModel;
-  const PollCard({Key? key, required this.pollModel}) : super(key: key);
+  final bool isConsideredVoted;
+  const PollCard(
+      {Key? key, required this.pollModel, this.isConsideredVoted = false})
+      : super(key: key);
 
   @override
   State<PollCard> createState() => _PollCardState();
@@ -61,11 +64,12 @@ class _PollCardState extends State<PollCard> {
             FlutterPolls(
               pollId: widget.pollModel.hashCode.toString(),
               hasVoted: (widget.pollModel.choice == null) ? false : true,
-              pollEnded: (widget.pollModel.endsOn == null ||
-                      DateTime.now().isBefore(widget.pollModel.endsOn!))
-                  ? false
-                  : true,
-              votedCheckmark: Icon(
+              pollEnded: (widget.isConsideredVoted ||
+                      (widget.pollModel.endsOn != null &&
+                          DateTime.now().isAfter(widget.pollModel.endsOn!)))
+                  ? true
+                  : false,
+              votedCheckMark: Icon(
                 Icons.check_circle_rounded,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
@@ -77,14 +81,13 @@ class _PollCardState extends State<PollCard> {
                   Theme.of(context).colorScheme.primaryContainer,
               votedPollOptionsRadius: const Radius.circular(12),
               votedBackgroundColor: pollBackgroundColor,
-              // metaWidget: ,
-              leadingVotedProgessColor:
+              leadingVotedProgressColor:
                   Theme.of(context).colorScheme.tertiaryContainer,
               pollOptionsBorder: Border.all(style: BorderStyle.none),
               votesTextStyle: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
-              loadingWidget: const ButtomLoading(),
+              loadingWidget: const ButtonLoading(),
               votedPercentageTextStyle: pollTextStyle,
               pollTitle: const SizedBox.shrink(),
               pollOptions: widget.pollModel.options.map(
