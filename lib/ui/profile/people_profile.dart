@@ -29,12 +29,15 @@ class PeopleProfile extends StatelessWidget {
         const SizedBox(
           height: 15,
         ),
-        Text(
-          peopleData.username,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.onSecondaryContainer,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Text(
+            peopleData.username,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
           ),
         ),
         const SizedBox(

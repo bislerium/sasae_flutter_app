@@ -195,8 +195,9 @@ class _PostCreateFormState extends State<PostCreateForm> {
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.onPrimaryContainer,
         ),
-        validator: (value) =>
-            value!.isEmpty ? 'Select what\'s your post related to.' : null,
+        validator: (value) => value == null || value.isEmpty
+            ? 'Select what\'s your post related to.'
+            : null,
         onChanged: (value) => _relatedTo = value?.cast<String>(),
         onSaved: (value) {
           var a = value?.cast<String>();
@@ -230,7 +231,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
         },
         findSuggestions: (String query) {
           List<NGO__Model> tempList = [];
-          var ngoListBySelectedFOW = _relatedTo == null
+          var ngoListBySelectedFOW = _relatedTo == null || _relatedTo!.isEmpty
               ? widget.snapshotNGOList
               : widget.snapshotNGOList
                   .where((element) => element.fieldOfWork
@@ -389,36 +390,40 @@ class _PostCreateFormState extends State<PostCreateForm> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      children: [
-        superPostFields(),
-        Consumer<PostCreateProvider>(
-          builder: (context, postCreateP, child) => IndexedStack(
-            index: postCreateP.getCreatePostType.index,
-            children: [
-              Visibility(
-                maintainState: true,
-                visible: postCreateP.getCreatePostType == PostType.normal,
-                child: FormCardNormalPost(formKey: _normalFormKey),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          children: [
+            superPostFields(),
+            Consumer<PostCreateProvider>(
+              builder: (context, postCreateP, child) => IndexedStack(
+                index: postCreateP.getCreatePostType.index,
+                children: [
+                  Visibility(
+                    maintainState: true,
+                    visible: postCreateP.getCreatePostType == PostType.normal,
+                    child: FormCardNormalPost(formKey: _normalFormKey),
+                  ),
+                  Visibility(
+                    maintainState: true,
+                    visible: postCreateP.getCreatePostType == PostType.poll,
+                    child: FormCardPollPost(formKey: _pollFormKey),
+                  ),
+                  Visibility(
+                    maintainState: true,
+                    visible: postCreateP.getCreatePostType == PostType.request,
+                    child: FormCardRequestPost(formKey: _requestFormKey),
+                  ),
+                ],
               ),
-              Visibility(
-                maintainState: true,
-                visible: postCreateP.getCreatePostType == PostType.poll,
-                child: FormCardPollPost(formKey: _pollFormKey),
-              ),
-              Visibility(
-                maintainState: true,
-                visible: postCreateP.getCreatePostType == PostType.request,
-                child: FormCardRequestPost(formKey: _requestFormKey),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 6,
+            ),
+          ],
         ),
-        const SizedBox(
-          height: 6,
-        ),
-      ],
+      ),
     );
   }
 }

@@ -301,7 +301,6 @@ class PostCreateProvider with ChangeNotifier {
           await request.send().timeout(timeOutDuration);
 
       var jsonResponse = jsonDecode(await response.stream.bytesToString());
-
       if (response.statusCode >= 400) {
         throw HttpException(jsonResponse);
       }

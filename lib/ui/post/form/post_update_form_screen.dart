@@ -266,7 +266,7 @@ class _PostUpdateFormState extends State<PostUpdateForm> {
             .toList(),
         findSuggestions: (String query) {
           List<NGO__Model> tempList = [];
-          var ngoListBySelectedFOW = _relatedTo == null
+          var ngoListBySelectedFOW = _relatedTo == null || _relatedTo!.isEmpty
               ? widget.snapshotNGOList
               : widget.snapshotNGOList
                   .where((element) => element.fieldOfWork
