@@ -1,6 +1,6 @@
 import 'package:faker/faker.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Map<String, dynamic> json;

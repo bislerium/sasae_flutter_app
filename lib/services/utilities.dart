@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:cross_file/cross_file.dart';
@@ -49,7 +48,7 @@ bool isProfileVerified(BuildContext context) {
 }
 
 bool isInternetConnected(BuildContext context) {
-  if (Provider.of<InternetConnetionProvider>(context, listen: false)
+  if (Provider.of<InternetConnectionProvider>(context, listen: false)
       .getIsConnected) {
     return true;
   }
@@ -91,7 +90,7 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
       .onConnectivityChanged
       .listen((ConnectivityResult result) {
     if (ConnectivityResult.none == result) {
-      Provider.of<InternetConnetionProvider>(context, listen: false)
+      Provider.of<InternetConnectionProvider>(context, listen: false)
           .setIsConnected = false;
       showSnackBar(
         context: context,
@@ -100,7 +99,7 @@ StreamSubscription<ConnectivityResult> getConnectivitySubscription(
         errorSnackBar: true,
       );
     } else {
-      Provider.of<InternetConnetionProvider>(context, listen: false)
+      Provider.of<InternetConnectionProvider>(context, listen: false)
           .setIsConnected = true;
       isFirstConnection
           ? isFirstConnection = false

@@ -23,7 +23,7 @@ class StartupConfigProvider with ChangeNotifier {
         _themeMode = ThemeMode.system,
         _brandingColor = Colors.deepPurple,
         _shakeToFeedback = true {
-    _isDemo = false;
+    _isDemo = true;
   }
 
 //------------------------------------------------------------------------------

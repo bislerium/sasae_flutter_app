@@ -146,7 +146,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
           child: SingleChildScrollView(
             primary: true,
             child: FormBuilderFilterChip(
-              name: 'filter_by_field_of_-work',
+              name: 'filter_by_field_of_work',
               decoration: const InputDecoration(border: InputBorder.none),
               onChanged: (value) =>
                   _ngoP.setSelectedFOW = value!.cast<String>(),
@@ -155,8 +155,7 @@ class _SearchFilterBarState extends State<SearchFilterBar> {
                   .map((e) => FormBuilderChipOption(value: e, child: Text(e)))
                   .toList()
                 ..sort((a, b) => a.value.compareTo(b.value)),
-              spacing: 10,
-              runSpacing: -5,
+              spacing: 8,
               selectedColor: Theme.of(context).colorScheme.primaryContainer,
               backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
               alignment: WrapAlignment.center,

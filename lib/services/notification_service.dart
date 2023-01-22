@@ -31,7 +31,8 @@ class NotificationService {
 
       _notificationsPlugin.initialize(
         initializationSettings,
-        onSelectNotification: (String? route) async {
+        onDidReceiveBackgroundNotificationResponse:
+            (NotificationResponse response) async {
           Navigator.popUntil(
             context,
             ((route) => route.isFirst),

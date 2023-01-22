@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class InternetConnetionProvider with ChangeNotifier {
+class InternetConnectionProvider with ChangeNotifier {
   bool _isConnected;
 
-  InternetConnetionProvider() : _isConnected = false;
+  InternetConnectionProvider() : _isConnected = false;
 
   set setIsConnected(bool isConnected) => _isConnected = isConnected;
   bool get getIsConnected => _isConnected;

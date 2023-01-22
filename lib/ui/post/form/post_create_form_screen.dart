@@ -189,8 +189,7 @@ class _PostCreateFormState extends State<PostCreateForm> {
         options: widget.snapshotRelatedList
             .map((e) => FormBuilderChipOption(value: e, child: Text(e)))
             .toList(),
-        spacing: 10,
-        runSpacing: -5,
+        spacing: 8,
         selectedColor: Theme.of(context).colorScheme.primaryContainer,
         labelStyle: TextStyle(
           color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -491,8 +490,8 @@ class _PostCreateButtonState extends State<PostCreateButton> {
             setState(() => _isLoading = false);
           },
           style: ElevatedButton.styleFrom(
-            primary: Theme.of(context).colorScheme.primaryContainer,
-            onPrimary: Theme.of(context).colorScheme.onPrimaryContainer,
+            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

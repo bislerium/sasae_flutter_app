@@ -1,8 +1,8 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:form_builder_validators/localization/l10n.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
 import 'package:provider/provider.dart';
@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
         create: (_) => AuthProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => InternetConnetionProvider(),
+        create: (_) => InternetConnectionProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => MapProvider(),
@@ -207,8 +207,8 @@ class _MyAppState extends State<MyApp> {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: colorScheme.primaryContainer,
-            onPrimary: colorScheme.onPrimaryContainer,
+            backgroundColor: colorScheme.primaryContainer,
+            foregroundColor: colorScheme.onPrimaryContainer,
           ),
         ),
         fontFamily: GoogleFonts.robotoFlex().fontFamily,
@@ -319,19 +319,9 @@ class _MyAppState extends State<MyApp> {
               ColorScheme lightColorScheme;
               ColorScheme darkColorScheme;
               if (lightDynamic != null && darkDynamic != null) {
-                // On Android S+ devices, use the provided dynamic color scheme.
-                // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
                 lightColorScheme = lightDynamic.harmonized();
-                // (Optional) Customize the scheme as desired. For example, one might
-                // want to use a brand color to override the dynamic [ColorScheme.secondary].
-                lightColorScheme =
-                    lightColorScheme.copyWith(secondary: brandingColor);
-                // Repeat for the dark color scheme.
                 darkColorScheme = darkDynamic.harmonized();
-                darkColorScheme =
-                    darkColorScheme.copyWith(secondary: brandingColor);
               } else {
-                // Otherwise, use fallback schemes.
                 lightColorScheme = ColorScheme.fromSeed(
                   seedColor: brandingColor,
                 );

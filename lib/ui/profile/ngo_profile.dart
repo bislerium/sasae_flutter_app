@@ -284,8 +284,8 @@ class CustomMapInfoTile extends StatelessWidget {
                     maxZoom: 18.4,
                     interactiveFlags: InteractiveFlag.none,
                   ),
-                  layers: [
-                    TileLayerOptions(
+                  children: [
+                    TileLayer(
                       urlTemplate:
                           "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                       userAgentPackageName: 'com.bishalgc.sasae.app',
@@ -296,7 +296,7 @@ class CustomMapInfoTile extends StatelessWidget {
                               ? darkModeTilesContainerBuilder
                               : null,
                     ),
-                    MarkerLayerOptions(
+                    MarkerLayer(
                       markers: [
                         Marker(
                           rotate: true,

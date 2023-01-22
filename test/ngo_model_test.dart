@@ -5,7 +5,7 @@ import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/models/bank.dart';
 import 'package:sasae_flutter_app/models/ngo.dart';
 import 'package:sasae_flutter_app/services/utilities.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Map<String, dynamic> json;

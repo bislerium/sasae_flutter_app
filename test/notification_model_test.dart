@@ -2,7 +2,7 @@ import 'package:faker/faker.dart';
 import 'package:sasae_flutter_app/models/notification.dart';
 import 'package:sasae_flutter_app/providers/post_provider.dart';
 import 'package:sasae_flutter_app/services/notification_service.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Map<String, dynamic> json;

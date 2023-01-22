@@ -297,7 +297,7 @@ class _VotingBarState extends State<VotingBar> {
         style: TextButton.styleFrom(
             backgroundColor:
                 isUpVoted ? Theme.of(context).colorScheme.primary : null,
-            primary:
+            foregroundColor:
                 isUpVoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_upward_rounded,
@@ -310,7 +310,7 @@ class _VotingBarState extends State<VotingBar> {
         style: TextButton.styleFrom(
             backgroundColor:
                 isDownVoted ? Theme.of(context).colorScheme.primary : null,
-            primary:
+            foregroundColor:
                 isDownVoted ? Theme.of(context).colorScheme.onPrimary : null),
         child: const Icon(
           Icons.arrow_downward_rounded,

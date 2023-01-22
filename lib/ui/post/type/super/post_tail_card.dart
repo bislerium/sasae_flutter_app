@@ -96,8 +96,8 @@ class PostTailCard extends StatelessWidget {
                     },
                     icon: const Icon(Icons.report_outlined),
                     style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.error,
-                      onPrimary: Theme.of(context).colorScheme.onError,
+                      backgroundColor: Theme.of(context).colorScheme.error,
+                      foregroundColor: Theme.of(context).colorScheme.onError,
                       shape: const StadiumBorder(),
                     ),
                     label: const Text(

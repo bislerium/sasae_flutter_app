@@ -4,7 +4,7 @@ import 'package:faker/faker.dart';
 import 'package:jiffy/jiffy.dart';
 import 'package:sasae_flutter_app/models/post/ngo__.dart';
 import 'package:sasae_flutter_app/models/post/normal_post.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   late Map<String, dynamic> json;

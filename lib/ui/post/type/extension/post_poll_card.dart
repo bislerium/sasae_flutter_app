@@ -69,7 +69,7 @@ class _PollCardState extends State<PollCard> {
                           DateTime.now().isAfter(widget.pollModel.endsOn!)))
                   ? true
                   : false,
-              votedCheckMark: Icon(
+              votedCheckmark: Icon(
                 Icons.check_circle_rounded,
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
               ),
@@ -81,7 +81,7 @@ class _PollCardState extends State<PollCard> {
                   Theme.of(context).colorScheme.primaryContainer,
               votedPollOptionsRadius: const Radius.circular(12),
               votedBackgroundColor: pollBackgroundColor,
-              leadingVotedProgressColor:
+              leadingVotedProgessColor:
                   Theme.of(context).colorScheme.tertiaryContainer,
               pollOptionsBorder: Border.all(style: BorderStyle.none),
               votesTextStyle: TextStyle(

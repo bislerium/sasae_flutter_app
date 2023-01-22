@@ -34,64 +34,60 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   intl: ^0.17.0
-  faker: ^2.0.0
-  url_launcher: ^6.1.5
-  http: ^0.13.4
-  provider: ^6.0.3
-  map_launcher: ^2.2.3
+  faker: ^2.1.0
+  url_launcher: ^6.1.7
+  http: ^0.13.5
+  provider: ^6.0.5
+  map_launcher: ^2.4.0
   randexp: ^0.0.1
   google_fonts: ^3.0.1
-  syncfusion_flutter_charts: ^20.2.39
-  flutter_form_builder: ^7.4.0
-  form_builder_validators: any
-  form_builder_image_picker: ^2.0.0
+  syncfusion_flutter_charts: ^20.4.43
+  flutter_form_builder: ^7.7.0
+  form_builder_validators: ^8.4.0
+  form_builder_image_picker: ^3.1.0
   flutter_chips_input: ^2.0.0
   flutter_session_manager: ^1.0.3
-  firebase_core: ^1.20.0
-  firebase_messaging: ^12.0.1
-  flutter_local_notifications: ^9.7.0
+  firebase_core: ^2.4.1 
+  firebase_messaging: ^14.2.1
+  flutter_local_notifications: ^12.0.4
   jiffy: ^5.0.0
   dio: ^4.0.6
   path_provider: ^2.0.11
-  loading_animation_widget: ^1.2.0+2
-  json_store: ^2.0.0-nullsafety.0
-  flutter_native_splash: ^2.2.5
-  dcdg: ^4.0.1
+  loading_animation_widget: ^1.2.0+4
+  json_store: ^2.0.0
+  flutter_native_splash: 2.2.16
+  dcdg: ^4.1.0
   photo_view: ^0.14.0
-  cached_network_image: ^3.2.1
-  connectivity_plus: ^2.3.5
-  dynamic_color: ^1.4.0
-  flex_color_picker: ^2.5.0
+  cached_network_image: ^3.2.3
+  connectivity_plus: ^3.0.2
+  dynamic_color: ^1.5.4
+  flex_color_picker: ^3.0.2
   package_info_plus: ^1.4.2
-  flutter_polls:
-    git:
-      url: https://github.com/gcbishal/flutter_polls.git
-      ref: main # branch name
+  flutter_polls: ^0.1.1
   khalti_flutter: ^2.1.0
-  wiredash: ^1.0.0
+  wiredash: ^1.5.0
   flutter_cache_manager: ^3.3.0
-  cross_file: ^0.3.3+1
-  shake: ^2.1.0
-  flutter_map: ^2.1.1
+  cross_file: ^0.3.3+2
+  shake: ^2.2.0
+  flutter_map: ^3.1.0
   latlong2: ^0.8.1
-  geolocator: ^9.0.1
+  geolocator: ^9.0.2
   simple_ripple_animation: ^0.0.3
   flutter_compass: ^0.7.0
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.9.3
+  flutter_launcher_icons: ^0.11.0
   flutter_test:
     sdk: flutter
   integration_test:
     sdk: flutter
-  test: ^1.20.2
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.1
-  dependency_validator: ^3.0.0
+  dependency_validator: ^3.2.2
 
 # dependency_overrides:
 

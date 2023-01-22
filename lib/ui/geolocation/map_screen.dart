@@ -91,8 +91,30 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                   maxBounds:
                       LatLngBounds(LatLng(-90, -180.0), LatLng(90.0, 180.0)),
                 ),
-                layers: [
-                  TileLayerOptions(
+                nonRotatedChildren: [
+                  if (mapP.getDistanceBetweenLocations != null)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _simplifyDistanceUnit(
+                              mapP.getDistanceBetweenLocations!),
+                          style: TextStyle(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
+                        ),
+                      ),
+                    ),
+                  AttributionWidget(
+                    attributionBuilder: (BuildContext context) =>
+                        const CustomAttributionWidget(),
+                  ),
+                ],
+                children: [
+                  TileLayer(
                     urlTemplate:
                         "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                     userAgentPackageName: 'com.bishalgc.sasae.app',
@@ -103,7 +125,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                             ? darkModeTilesContainerBuilder
                             : null,
                   ),
-                  MarkerLayerOptions(
+                  MarkerLayer(
                     markers: [
                       Marker(
                         rotate: true,
@@ -152,28 +174,6 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                                 ),
                         ),
                     ],
-                  ),
-                ],
-                nonRotatedChildren: [
-                  if (mapP.getDistanceBetweenLocations != null)
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          _simplifyDistanceUnit(
-                              mapP.getDistanceBetweenLocations!),
-                          style: TextStyle(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
-                          ),
-                        ),
-                      ),
-                    ),
-                  AttributionWidget(
-                    attributionBuilder: (BuildContext context) =>
-                        const CustomAttributionWidget(),
                   ),
                 ],
               )),
